@@ -1,0 +1,39 @@
+--- mdadm-3.2.1/Makefile.static	2011-03-27 22:31:20.000000000 -0400
++++ mdadm-3.2.1/Makefile	2011-03-28 10:16:55.277900184 -0400
+@@ -68,11 +68,11 @@ CONFFILEFLAGS = -DCONFFILE=\"$(CONFFILE)
+ # pivotroot from early boot to late boot.
+ # /dev is an odd place to put this, but it is the only directory that
+ # meets the requirements.
+-MAP_DIR=/dev/.mdadm
+-MAP_FILE = map
+-MDMON_DIR = /dev/.mdadm
++MAP_DIR=/dev/md
++MAP_FILE = md-device-map
++MDMON_DIR = /dev/md
+ # place for autoreplace cookies
+-FAILED_SLOTS_DIR = /dev/.mdadm/failed-slots
++FAILED_SLOTS_DIR = /dev/md/failed-slots
+ DIRFLAGS = -DMAP_DIR=\"$(MAP_DIR)\" -DMAP_FILE=\"$(MAP_FILE)\"
+ DIRFLAGS += -DMDMON_DIR=\"$(MDMON_DIR)\"
+ DIRFLAGS += -DFAILED_SLOTS_DIR=\"$(FAILED_SLOTS_DIR)\"
+@@ -238,16 +238,16 @@ install : mdadm mdmon install-man instal
+ 	$(INSTALL) -D $(STRIP) -m 755 mdmon $(DESTDIR)$(BINDIR)/mdmon
+ 
+ install-static : mdadm.static install-man
+-	$(INSTALL) -D $(STRIP) -m 755 mdadm.static $(DESTDIR)$(BINDIR)/mdadm
++	$(INSTALL) -D $(STRIP) -m 755 mdadm.static $(DESTDIR)$(BINDIR)/mdadm.static
+ 
+ install-tcc : mdadm.tcc install-man
+-	$(INSTALL) -D $(STRIP) -m 755 mdadm.tcc $(DESTDIR)$(BINDIR)/mdadm
++	$(INSTALL) -D $(STRIP) -m 755 mdadm.tcc $(DESTDIR)$(BINDIR)/mdadm.tcc
+ 
+ install-uclibc : mdadm.uclibc install-man
+-	$(INSTALL) -D $(STRIP) -m 755 mdadm.uclibc $(DESTDIR)$(BINDIR)/mdadm
++	$(INSTALL) -D $(STRIP) -m 755 mdadm.uclibc $(DESTDIR)$(BINDIR)/mdadm.uclibc
+ 
+ install-klibc : mdadm.klibc install-man
+-	$(INSTALL) -D $(STRIP) -m 755 mdadm.klibc $(DESTDIR)$(BINDIR)/mdadm
++	$(INSTALL) -D $(STRIP) -m 755 mdadm.klibc $(DESTDIR)$(BINDIR)/mdadm.klibc
+ 
+ install-man: mdadm.8 md.4 mdadm.conf.5 mdmon.8
+ 	$(INSTALL) -D -m 644 mdadm.8 $(DESTDIR)$(MAN8DIR)/mdadm.8

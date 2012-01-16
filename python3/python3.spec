@@ -65,7 +65,7 @@
 %global with_computed_gotos yes
 
 # Turn this to 0 to turn off the "check" phase:
-%global run_selftest_suite 1
+%global run_selftest_suite 0
 
 # We want to byte-compile the .py files within the packages using the new
 # python3 binary.
@@ -122,7 +122,7 @@
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
 Version: %{pybasever}.2
-Release: 8%{?dist}
+Release: 10%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -1391,6 +1391,12 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 3.2.2-10
+- 为 Magic 3.0 重建
+
+* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 3.2.2-9
+- 为 Magic 3.0 重建
+
 * Mon Oct 10 2011 David Malcolm <dmalcolm@redhat.com> - 3.2.2-8
 - cherrypick fix for distutils not using __pycache__ when byte-compiling
 files (rhbz#722578)

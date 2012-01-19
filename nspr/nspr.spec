@@ -1,7 +1,7 @@
 Summary:        Netscape Portable Runtime
 Name:           nspr
 Version:        4.9
-Release:        0.1%{?dist}.beta3
+Release:        0.2%{?dist}.beta3
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
@@ -144,6 +144,9 @@ done
 %{_bindir}/nspr-config
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9-0.2.beta3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Oct 06 2011 Elio Maldonado <emaldona@redhat.com> - 4.9-0.1.beta3
 - Update to NSPR_4_9_BETA3
 

@@ -1,0 +1,102 @@
+diff -up net-tools-1.60/man/en_US/netstat.8.interface net-tools-1.60/man/en_US/netstat.8
+--- net-tools-1.60/man/en_US/netstat.8.interface	2011-12-07 16:13:46.800161134 +0100
++++ net-tools-1.60/man/en_US/netstat.8	2011-12-07 16:13:46.807161046 +0100
+@@ -46,9 +46,9 @@ netstat \- Print network connections, ro
+ .RB [delay]
+ .P
+ .B netstat
+-.RB { \-\-interfaces | \-i }
++.RB { \-\-interfaces | \-I | \-i }
+ .RB [ \-\-all | \-a ]
+-.RB [ \-\-extend | \-e  [ \-\-extend | \-e] ]
++.RB [ \-\-extend | \-e  ]
+ .RB [ \-\-verbose | \-v ]
+ .RB [ \-\-program | \-p ]
+ .RB [ \-\-numeric | \-n ]
+@@ -130,8 +130,8 @@ and
+ produce the same output.
+ .SS "\-\-groups , \-g"
+ Display multicast group membership information for IPv4 and IPv6.
+-.SS "\-\-interfaces, \-i"
+-Display a table of all network interfaces.
++.SS "\-\-interfaces=\fIiface \fR, \fB\-I=\fIiface \fR, \fB\-i"
++Display a table of all network interfaces, or the specified \fIiface\fR.
+ .SS "\-\-masquerade , \-M"
+ Display a list of masqueraded connections.
+ .SS "\-\-statistics , \-s"
+diff -up net-tools-1.60/netstat.c.interface net-tools-1.60/netstat.c
+--- net-tools-1.60/netstat.c.interface	2011-12-07 16:13:46.787161296 +0100
++++ net-tools-1.60/netstat.c	2011-12-07 16:14:41.331479399 +0100
+@@ -135,6 +135,7 @@ char *Release = RELEASE, *Version = "net
+ #define E_IOCTL -3
+ 
+ int flag_int = 0;
++char *flag_int_name = NULL;
+ int flag_rou = 0;
+ int flag_mas = 0;
+ int flag_sta = 0;
+@@ -1611,6 +1612,7 @@ static int ipx_info(void)
+ static int iface_info(void)
+ {
+     static int count=0;
++    struct interface *ife = NULL;
+ 
+     if (skfd < 0) {
+ 	if ((skfd = sockets_open(0)) < 0) {
+@@ -1625,7 +1627,11 @@ static int iface_info(void)
+ 	    printf(_("Iface   MTU Met   RX-OK RX-ERR RX-DRP RX-OVR    TX-OK TX-ERR TX-DRP TX-OVR Flg\n"));
+     }
+ 
+-    if (for_all_interfaces(do_if_print, &flag_all) < 0) {
++    if (flag_int_name) {
++        ife = lookup_interface(flag_int_name);
++        do_if_print(ife, &flag_all);
++    }
++    else if (for_all_interfaces(do_if_print, &flag_all) < 0) {
+ 	perror(_("missing interface information"));
+ 	exit(1);
+     }
+@@ -1651,9 +1657,10 @@ static void usage(void)
+ {
+     fprintf(stderr, _("usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}\n"));
+     fprintf(stderr, _("       netstat [-vWnNcaeol] [<Socket> ...]\n"));
+-    fprintf(stderr, _("       netstat { [-vWeenNac] -i | [-cnNe] -M | -s [-6tuw] } [delay]\n\n"));
++    fprintf(stderr, _("       netstat { [-vWeenNac] -I[<Iface>] | [-veenNac] -i | [-cnNe] -M | -s [-6tuw] } [delay]\n\n"));
+ 
+     fprintf(stderr, _("        -r, --route              display routing table\n"));
++    fprintf(stderr, _("        -I, --interfaces=<Iface> display interface table for <Iface>\n"));
+     fprintf(stderr, _("        -i, --interfaces         display interface table\n"));
+     fprintf(stderr, _("        -g, --groups             display multicast group memberships\n"));
+     fprintf(stderr, _("        -s, --statistics         display networking statistics (like SNMP)\n"));
+@@ -1693,7 +1700,7 @@ int main
+     {
+ 	AFTRANS_OPTS,
+ 	{"version", 0, 0, 'V'},
+-	{"interfaces", 0, 0, 'i'},
++	{"interfaces", 2, 0, 'I'},
+ 	{"help", 0, 0, 'h'},
+ 	{"route", 0, 0, 'r'},
+ #if HAVE_FW_MASQUERADE
+@@ -1734,7 +1741,7 @@ int main
+     getroute_init();		/* Set up AF routing support */
+ 
+     afname[0] = '\0';
+-    while ((i = getopt_long(argc, argv, "A:CFMacdeghilnNoprsStuUvVWwx64?", longopts, &lop)) != EOF)
++    while ((i = getopt_long(argc, argv, "A:CFMacdeghiI::lnNoprsStuUvVWwx64?", longopts, &lop)) != EOF)
+ 	switch (i) {
+ 	case -1:
+ 	    break;
+@@ -1775,6 +1782,13 @@ int main
+ 	case 'p':
+ 	    flag_prg++;
+ 	    break;
++	case 'I':
++	    if (optarg && strcmp(optarg, "(null)"))
++		if (optarg[0] == '=') optarg++;
++	    if (optarg && strcmp(optarg, "(null)"))
++		flag_int_name = strdup(optarg);
++	    flag_int++;
++	    break;
+ 	case 'i':
+ 	    flag_int++;
+ 	    break;

@@ -1,8 +1,8 @@
 Name: netmanager
 Summary: Networking manager tools
-Summary(zh_CN.UTF-8): 一霉
+Summary(zh_CN.UTF-8): 一个网络管理工具
 Version: 0.1.6
-Release: 2mgc
+Release: 2%{?dist}
 License: GPL v2
 Group: System Environment/Base
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -37,7 +37,7 @@ Author:
 	stronghill
 
 %description -l zh_CN.UTF-8
-一虻サ摺
+一个网络管理工具。
 
 %prep
 %setup -q
@@ -90,7 +90,3 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Dec 20 2011 Liu Di <liudidi@gmail.com> - 0.1.6-2mgc
 - 为 Magic 3.0 重建
-
-* Mon Apr 5 2010 Version 0.1.6. Package rebuild with Easy RPM Builder
-- 0.1.6 2010-04-05
-- 澧炲姞浜嗘棤绾跨綉缁渨pa鍔犲瘑鏂瑰紡鐨勬敮鎸侊紝鍦╳pa-psk鐨則kip妯″紡涓嬫祴璇曢

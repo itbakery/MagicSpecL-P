@@ -2,7 +2,7 @@ Name:		ots
 Summary:	A text summarizer
 Summary(zh_CN.UTF-8): 一个文本统计器
 Version:	0.5.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 
 License:	GPLv2+
 URL:		http://libots.sourceforge.net/
@@ -105,5 +105,8 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Jan 20 2012 Liu Di <liudidi@gmail.com> - 0.5.0-4
+- 为 Magic 3.0 重建
+
 * Tue Oct 25 2011 Liu Di <liudidi@gmail.com> - 0.5.0-3
 - 为 Magic 3.0 重建

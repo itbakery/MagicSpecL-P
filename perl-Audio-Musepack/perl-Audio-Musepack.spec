@@ -5,8 +5,8 @@
 
 Summary: An OOP interface to Musepack file information and APE tag fields
 Name: perl-Audio-Musepack
-Version: 0.7
-Release: 0.1mgc
+Version: 1.0.1
+Release: 1%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic

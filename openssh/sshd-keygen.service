@@ -1,0 +1,13 @@
+[Unit]
+Description=SSH server keys generation.
+After=syslog.target
+Before=sshd.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/sshd
+ExecStart=/usr/sbin/sshd-keygen
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

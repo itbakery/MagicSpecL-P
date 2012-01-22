@@ -3,7 +3,7 @@
 %define pre_release rc1 
 Name:           python-xlib
 Version:        0.15
-Release:        0.5.%{pre_release}%{?dist}
+Release:        0.6.%{pre_release}%{?dist}
 Summary:        X client library for Python
 
 Group:          Development/Languages
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 22 2012 Liu Di <liudidi@gmail.com> - 0.15-0.6.rc1
+- 为 Magic 3.0 重建
+
 * Sat Jun 04 2011 Luke Macken <lmacken@redhat.com> - 0.15-0.5.rc1
 - Apply a couple of patches from upstream:
     * r139 - Accept IPv6 addresses in Xlib.display.Display

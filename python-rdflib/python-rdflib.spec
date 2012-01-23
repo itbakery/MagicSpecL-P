@@ -5,7 +5,7 @@
 
 Name:           python-rdflib
 Version:        3.1.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python library for working with RDF
 
 Group:          Development/Languages
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
+* Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 3.1.0-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 28 2011 David Malcolm <dmalcolm@redhat.com> - 3.1.0-1
 - 3.1.0; converting from arch-specific to noarch (sitearch -> sitelib);
 removing rdfpipe and various other extensions

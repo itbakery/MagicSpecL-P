@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan
 Version:        6.04
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Perl module to print improved warning messages
 
 Group:          Development/Libraries
@@ -11,8 +11,10 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+%if !%{defined perl_bootstrap}
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Object::Deadly)
+%endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -25,17 +27,6 @@ which shall never be blamed for any error.
 
 %prep
 %setup -q -n Carp-Clan-%{version}
-
-# Filter unwanted Provides:
-cat << EOF > %{name}-prov
-#!/bin/sh
-%{__perl_provides} $* |\
-  sed -e '/perl(DB)/d'
-EOF
-
-%define __perl_provides %{_builddir}/Carp-Clan-%{version}/%{name}-prov
-chmod +x %{__perl_provides}
-
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -51,8 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
+%if !%{defined perl_bootstrap}
 make test
-
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -66,8 +58,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 6.04-4
+* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 6.04-6
 - 为 Magic 3.0 重建
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.04-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Jun 28 2011 Marcela Mašláňová <mmaslano@redhat.com> - 6.04-4
+- rebuild with Perl 5.14.1
+- use perl_bootstrap macro
 
 * Wed Dec 15 2010 Marcela Maslanova <mmaslano@redhat.com> - 6.04-3
 - 661697 rebuild for fixing problems with vendorach/lib

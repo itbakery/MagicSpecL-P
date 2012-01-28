@@ -1,6 +1,6 @@
 Name:           perl-Bit-Vector
 Version:        7.1
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
 
 Group:          Development/Libraries
@@ -8,11 +8,12 @@ Group:          Development/Libraries
 License:        (GPLv2+ or Artistic) and LGPLv2+
 URL:            http://search.cpan.org/dist/Bit-Vector/
 Source0:        http://www.cpan.org/authors/id/S/ST/STBEY/Bit-Vector-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(Carp::Clan) >= 5.4
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 Bit::Vector is an efficient C library which allows you to handle bit
@@ -31,22 +32,11 @@ chmod 644 examples/*.pl
 %{__perl} -pi -e 's|^#!perl\b|#!%{__perl}|' \
     examples/{benchmk{2,3},primes,SetObject}.pl
 
-# Filter unwanted Provides:
-cat << \EOF > %{name}-prov
-#!/bin/sh
-%{__perl_provides} $* |\
-  sed -e '/perl(Bit::Vector)$/d'
-EOF
-
-%define __perl_provides %{_builddir}/Bit-Vector-%{version}/%{name}-prov
-chmod +x %{__perl_provides}
-
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
@@ -56,12 +46,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 %check
 make test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Artistic.txt GNU_GPL.txt GNU_LGPL.txt
 %doc CHANGES.txt CREDITS.txt README.txt examples/
 %{perl_vendorarch}/Bit/
@@ -70,8 +55,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 7.1-6
+* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 7.1-9
 - 为 Magic 3.0 重建
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Aug  2 2011 Marcela Mašláňová <mmaslano@redhat.com> - 7.1-7
+- filter *.so library incorectly provided by package
+- clean spec file
+
+* Wed Jun 29 2011 Marcela Mašláňová <mmaslano@redhat.com> - 7.1-6
+- Perl mass rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

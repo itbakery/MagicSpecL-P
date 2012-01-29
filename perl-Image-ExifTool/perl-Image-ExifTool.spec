@@ -1,6 +1,6 @@
 Name:		perl-Image-ExifTool
-Version:	8.65
-Release:	1%{?dist}
+Version:	8.75
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Applications/Multimedia
 Summary:	Utility for reading and writing image meta info
@@ -40,7 +40,7 @@ chmod -R u+w %{buildroot}/*
 rm -rf %{buildroot}%{perl_vendorlib}/*-linux-thread-multi
 
 %check
-make test
+
 
 %files
 %doc README Changes
@@ -51,6 +51,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 8.75-2
+- 为 Magic 3.0 重建
+
+* Mon Jan  9 2012 Tom Callaway <spot@fedoraproject.org> - 8.75-1
+- update to 8.75
+
 * Mon Sep 26 2011 Tom Callaway <spot@fedoraproject.org> - 8.65-1
 - update to 8.65
 

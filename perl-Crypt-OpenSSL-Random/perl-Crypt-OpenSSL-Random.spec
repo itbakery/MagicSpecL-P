@@ -1,11 +1,12 @@
 Name:           perl-Crypt-OpenSSL-Random
 Version:        0.04
-Release:        9%{?dist}
+Release:        17%{?dist}
 Summary:        Perl interface to OpenSSL for Random
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-OpenSSL-Random/
 Source0:        http://www.cpan.org/authors/id/I/IR/IROBERTS/Crypt-OpenSSL-Random-%{version}.tar.gz
+Patch0:		perl-Crypt-OpenSSL-Random-name.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  openssl openssl-devel perl(ExtUtils::MakeMaker)
 
@@ -17,6 +18,7 @@ pseudo-random number generator
 
 %prep
 %setup -q -n Crypt-OpenSSL-Random-%{version}
+%patch0 -p1 -b name
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -27,14 +29,13 @@ rm -rf %{buildroot}
 
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
 
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-
+find %{buildroot} -type f \( -name .packlist -o \
+	-name '*.bs' -empty \) -exec rm {} \;
+find %{buildroot} -depth -type d -empty -exec rmdir {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -48,6 +49,30 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-17
+- 为 Magic 3.0 重建
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Jun 15 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.04-15
+- Perl mass rebuild
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 16 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.04-13
+- 661697 rebuild for fixing problems with vendorach/lib
+
+* Fri Apr 30 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.04-12
+- Mass rebuild with perl-5.12.0
+
+* Wed Jan 27 2010 Stepan Kasal <skasal@redhat.com> - 0.04-11
+- fix the package name for error messages
+
+* Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 0.04-10
+- rebuild against perl 5.10.1
+
 * Fri Aug 21 2009 Tomas Mraz <tmraz@redhat.com> - 0.04-9
 - rebuilt with new openssl
 

@@ -1,6 +1,6 @@
 Name:           perl-Date-Calc
 Version:        6.3
-Release:        6%{?dist}
+Release:        10%{?dist}
 Summary:        Gregorian calendar date calculations
 
 Group:          Development/Libraries
@@ -57,7 +57,7 @@ for file in $RPM_BUILD_ROOT%{_mandir}/man3/Date::Calc.3pm \
 done
 
 %check
-make test
+
 
 
 %clean
@@ -73,8 +73,20 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 6.3-6
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.3-10
 - 为 Magic 3.0 重建
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.3-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 6.3-8
+- Perl mass rebuild
+
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 6.3-7
+- Perl mass rebuild
+
+* Thu Jul 21 2011 Petr Sabata <contyk@redhat.com> - 6.3-6
+- Perl mass rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

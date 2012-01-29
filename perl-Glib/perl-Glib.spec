@@ -1,16 +1,11 @@
 Name:           perl-Glib
-Version:        1.242
-Release:        1%{?dist}
+Version:        1.241
+Release:        3%{?dist}
 Summary:        Perl interface to GLib
-Summary(zh_CN): GLib 的 perl 接口
-
 Group:          Development/Libraries
-Group(zh_CN):	开发/库
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/Glib/
 Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/Glib-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildRequires:  perl >= 2:5.8.0
 BuildRequires:  glib2-devel
 BuildRequires:  perl(ExtUtils::Depends), perl(ExtUtils::PkgConfig)
@@ -19,15 +14,21 @@ BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
-This module provides perl access to Glib and GLib's GObject libraries.
+This module provides perl access to GLib and GLib's GObject libraries.
 GLib is a portability and utility library; GObject provides a generic
 type system with inheritance and a powerful signal system.  Together
 these libraries are used as the foundation for many of the libraries
 that make up the Gnome environment, and are used in many unrelated
 projects.
 
-%description -l zh_CN
-GLib 的 perl 接口。
+%package devel
+Summary:	Development part of Perl interface to GLib
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description devel
+Development part of package perl-Glib, the Perl module providing interface
+to GLib and GObject libraries.
 
 %prep
 %setup -q -n Glib-%{version}
@@ -40,37 +41,167 @@ __EOF__
 %define __perl_provides %{_builddir}/Glib-%{version}/%{name}-perl.prov
 chmod +x %{__perl_provides}
 
-
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-
 %check
 %ifnarch ppc ppc64
-make test
+
 %endif
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
-%doc AUTHORS LICENSE NEWS README TODO
+%doc AUTHORS ChangeLog.pre-git LICENSE NEWS README TODO
 %{perl_vendorarch}/auto/Glib/
 %{perl_vendorarch}/Glib*
 %{_mandir}/man3/*.3pm*
+%exclude %{perl_vendorarch}/Glib/*/*.h
+%exclude %{perl_vendorarch}/Glib/MakeHelper.pm
+%exclude %{perl_vendorarch}/Glib/devel.pod
+%exclude %{perl_vendorarch}/Glib/xsapi.pod
+%exclude %{_mandir}/man3/Glib::MakeHelper.3pm.gz
+%exclude %{_mandir}/man3/Glib::devel.3pm.gz
+%exclude %{_mandir}/man3/Glib::xsapi.3pm.gz
 
+%files devel
+%{perl_vendorarch}/Glib/*/*.h
+%{perl_vendorarch}/Glib/MakeHelper.pm
+%{perl_vendorarch}/Glib/devel.pod
+%{perl_vendorarch}/Glib/xsapi.pod
+%{_mandir}/man3/Glib::MakeHelper.3pm.gz
+%{_mandir}/man3/Glib::devel.3pm.gz
+%{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.241-3
+- 为 Magic 3.0 重建
 
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.241-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Nov 23 2011 Tom Callaway <spot@fedoraproject.org> - 1.241-1
+- update to 1.241
+
+* Thu Oct 20 2011 Tom Callaway <spot@fedoraproject.org> - 1.240-1
+- update to 1.240
+
+* Sun Jun 19 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1.223-3
+- Perl mass rebuild
+
+* Thu Dec 16 2010 Marcela Maslanova <mmaslano@redhat.com> - 1.223-2
+- 661697 rebuild for fixing problems with vendorach/lib
+
+* Thu Jul 01 2010 Tom "spot" Callaway <tcallawa@redhat.com> - 1.223-1
+- update to 1.223
+
+* Sun May 02 2010 Marcela Maslanova <mmaslano@redhat.com> - 1.201-5
+- Mass rebuild with perl-5.12.0
+
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.201-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Fri Jul 17 2009 Stepan Kasal <skasal@redhat.com> - 1.201-3
+- create devel subpackage, so that the main one does not require
+  the whole perl-devel (#509419)
+
+* Fri Mar 13 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 1.201-2
+- dont run the tests on ppc
+
+* Fri Mar 13 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 1.201-1
+- update to 1.201
+
+* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.183-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Thu Sep 11 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1.183-1
+- update to 1.183
+
+* Wed Feb 27 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1.162-5
+- Rebuild for perl 5.10 (again)
+
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 1.162-4
+- Autorebuild for GCC 4.3
+
+* Tue Feb  5 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1.162-3
+- rebuild for new perl
+
+* Tue Jan 15 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 1.162-2
+- disable smp_mflags, they break on massively SMP boxes (bz 428911)
+
+* Mon Dec 17 2007 Tom "spot" Callaway <tcallawa@redhat.com> - 1.162-1
+- 1.162
+
+* Tue Oct 16 2007 Tom "spot" Callaway <tcallawa@redhat.com> - 1.144-1.2
+- add BR: perl(Test::More)
+
+* Tue Oct 16 2007 Tom "spot" Callaway <tcallawa@redhat.com> - 1.144-1.1
+- correct license tag
+- add BR: perl(ExtUtils::MakeMaker)
+
+* Mon Feb 26 2007 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.144-1
+- Update to 1.144.
+
+* Sun Feb 11 2007 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.143-1
+- Update to 1.143.
+
+* Thu Dec  7 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.142-1
+- Update to 1.142.
+
+* Wed Nov 22 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.141-1
+- Update to 1.141.
+
+* Wed Sep  6 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.140-1
+- Update to 1.140.
+
+* Tue Mar 14 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.120-1
+- Update to 1.120.
+
+* Mon Feb 13 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.105-2
+- make tag problem.
+
+* Mon Feb 13 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.105-1
+- Update to 1.105.
+
+* Mon Feb  6 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.104-1
+- Update to 1.104 (fails one test in perl 5.8.8).
+
+* Thu Jan 19 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.103-1
+- Update to 1.103.
+- Provides list: filtered out perl(MY) (#177956).
+
+* Wed Nov 30 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.102-1
+- Update to 1.102.
+
+* Thu Oct  6 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.101-1
+- Update to 1.101.
+
+* Thu Sep  8 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.100-1
+- Update to 1.100.
+
+* Mon Jun 27 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.082-1
+- Update to 1.082.
+
+* Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
+- rebuilt
+
+* Tue Mar  8 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.080-1
+- Update to 1.080.
+
+* Tue Feb 15 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0:1.062-1
+- Update to 1.062.
+
+* Mon Oct 18 2004 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0:1.061-0.fdr.2
+- Removed irrelevant documentation file - Glib.exports.
+
+* Sun Oct  3 2004 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0:1.061-0.fdr.1
+- Update to 1.061.
+
+* Sun Jul 18 2004 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0:1.043-0.fdr.1
+- First build.

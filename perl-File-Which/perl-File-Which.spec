@@ -1,18 +1,19 @@
 Name:           perl-File-Which
 Version:        1.09
-Release:        1%{?dist}
+Release:        8%{?dist}
 Summary:        Portable implementation of the 'which' utility
-Summary(zh_CN.UTF-8): 可移植的 'which' 工具实现
 
 Group:          Development/Libraries
-Group(zh_CN.UTF-8):	开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/File-Which/
-Source0:        http://www.cpan.org/authors/id/P/PE/PEREINAR/File-Which-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/File-Which-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+%if !%{defined perl_bootstrap}
+BuildRequires:  perl(Test::Script)
+%endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -22,8 +23,6 @@ installed somewhere in your PATH, or just check for its existence. It
 includes the command-line utility 'pwhich' which has the same function
 as 'which'.
 
-%description -l zh_CN.UTF-8
-可移植的 'which' 工具实现
 
 %prep
 %setup -q -n File-Which-%{version}
@@ -43,6 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
+%if !%{defined perl_bootstrap}
+
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -58,4 +60,49 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.09-8
+- 为 Magic 3.0 重建
 
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Jun 28 2011 Marcela Mašláňová <mmaslano@redhat.com> - 1.09-6
+- Perl mass rebuild
+- add perl_bootstrap macro
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Thu Dec 16 2010 Marcela Maslanova <mmaslano@redhat.com> - 1.09-4
+- 661697 rebuild for fixing problems with vendorach/lib
+
+* Sat May 01 2010 Marcela Maslanova <mmaslano@redhat.com> - 1.09-3
+- Mass rebuild with perl-5.12.0
+
+* Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 1.09-2
+- rebuild against perl 5.10.1
+
+* Mon Oct  5 2009 Stepan Kasal <skasal@redhat.com> - 1.09-1
+- new upstream version
+
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Wed Feb 27 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0.05-4
+- Rebuild for perl 5.10 (again)
+
+* Fri Jan 11 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0.05-3
+- rebuild for new perl
+
+* Mon Oct 15 2007 Tom "spot" Callaway <tcallawa@redhat.com> - 0.05-2.1
+- correct license tag
+- add BR: perl(ExtUtils::MakeMaker)
+
+* Mon Dec 18 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0.05-2
+- find: fixed arguments order.
+
+* Sun Dec 17 2006 Jose Pedro Oliveira <jpo at di.uminho.pt> - 0.05-1
+- First build.

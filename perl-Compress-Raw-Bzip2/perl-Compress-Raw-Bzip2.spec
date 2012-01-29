@@ -1,7 +1,7 @@
 Name:           perl-Compress-Raw-Bzip2
 Summary:        Low-level interface to bzip2 compression library
 Version:        2.045
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Compress-Raw-Bzip2/
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/Compress::Raw::Bzip2.3pm*
 
 %changelog
+* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.045-3
+- 为 Magic 3.0 重建
+
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 2.045-2
 - Rebuild for gcc 4.7 in Rawhide
 

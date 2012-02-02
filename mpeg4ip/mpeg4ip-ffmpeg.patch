@@ -1,0 +1,148 @@
+diff -ur mpeg4ip-1.6.1.orig/configure.in mpeg4ip-1.6.1/configure.in
+--- mpeg4ip-1.6.1.orig/configure.in	2012-01-17 17:42:39.000000000 -0500
++++ mpeg4ip-1.6.1/configure.in	2012-01-17 17:42:55.000000000 -0500
+@@ -487,7 +487,7 @@
+   if test x$have_ffmpeg_arg = xtrue; then
+      AC_MSG_NOTICE([have enable ffmpeg $enable_ffmpeg])
+      FFMPEG_INC=-I${enable_ffmpeg}/libavcodec
+-     FFMPEG_LIB="${enable_ffmpeg}/libavcodec/libavcodec.a -lz"
++     FFMPEG_LIB="-lavcodec -lz"
+      saveCFLAGS="$CFLAGS"
+      CFLAGS="$CFLAGS $FFMPEG_INC"
+      AC_CHECK_TYPES([AVRational], , , [#include <avcodec.h>])
+@@ -512,7 +512,7 @@
+      if test x$have_ffmpeg = xtrue; then
+         AC_DEFINE(HAVE_FFMPEG_INSTALLED, 1, [defined if ffmpeg is installed])
+         FFMPEG_INC=
+-        FFMPEG_LIB="-lavcodec -lz $ffmpeg_add_libs"
++        FFMPEG_LIB="-lavcodec -lz $ffmpeg_add_libs $(pkg-config libswscale --libs --silence-errors)"
+         AC_CHECK_TYPES([AVRational], , , [#include <ffmpeg/avcodec.h>])
+ 	AC_CHECK_MEMBERS(AVCodecContext.time_base, , , [#include <ffmpeg/avcodec.h>])
+ 	AC_CHECK_DECLS([avcodec_decode_audio2], , ,[#include <ffmpeg/avcodec.h>])
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/ffmpeg.cpp mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp
+--- mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/ffmpeg.cpp	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.cpp	2012-01-17 17:43:30.000000000 -0500
+@@ -221,8 +221,12 @@
+ 
+   do {
+ #if HAVE_DECL_AVCODEC_DECODE_AUDIO2 != 1
+-    used = avcodec_decode_audio(ffmpeg->m_c, (short *)ffmpeg->m_outbuf,
+-				&outsize, buffer, left);
++    AVPacket apkt;
++    av_init_packet(&apkt);
++    apkt.data = buffer;
++    apkt.size = left;
++    used = avcodec_decode_audio3(ffmpeg->m_c, (short *)ffmpeg->m_outbuf,
++				&outsize, &apkt);
+ #else
+     outsize = AVCODEC_MAX_AUDIO_FRAME_SIZE;
+     used = avcodec_decode_audio2(ffmpeg->m_c, (int16_t *)ffmpeg->m_outbuf,
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/ffmpeg.h mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h
+--- mpeg4ip-1.6.1.orig/player/plugin/audio/ffmpeg/ffmpeg.h	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/player/plugin/audio/ffmpeg/ffmpeg.h	2012-01-17 17:42:55.000000000 -0500
+@@ -26,7 +26,7 @@
+ #include "codec_plugin.h"
+ extern "C" {
+ #ifdef HAVE_FFMPEG_INSTALLED
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ #else
+ #include <avcodec.h>
+ #endif
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/ffmpeg.cpp mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp
+--- mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/ffmpeg.cpp	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.cpp	2012-01-17 17:43:52.000000000 -0500
+@@ -295,11 +295,14 @@
+       uint32_t offset = 0;
+       do {
+ 	int got_picture;
+-	offset += avcodec_decode_video(ffmpeg->m_c, 
++	AVPacket apkt;
++    	av_init_packet(&apkt);
++    	apkt.data = (uint8_t *)userdata + offset;
++    	apkt.size = ud_size - offset;
++	offset += avcodec_decode_video2(ffmpeg->m_c, 
+ 				       ffmpeg->m_picture,
+ 				       &got_picture,
+-				       (uint8_t *)userdata + offset, 
+-				       ud_size - offset);
++				       &apkt );
+       } while (offset < ud_size);
+     }
+ 	
+@@ -442,11 +445,14 @@
+   int ret;
+   do {
+     int local_got_picture;
+-    ret = avcodec_decode_video(ffmpeg->m_c, 
++    AVPacket apkt;
++    av_init_packet(&apkt);
++    apkt.data = buffer + bytes_used;
++    apkt.size = buflen - bytes_used;
++    ret = avcodec_decode_video2(ffmpeg->m_c, 
+ 			       ffmpeg->m_picture,
+ 			       &local_got_picture,
+-			       buffer + bytes_used, 
+-			       buflen - bytes_used);
++			       &apkt );
+     bytes_used += ret;
+     //ffmpeg_message(LOG_CRIT, "ffmpeg", "used %d %d", ret, local_got_picture);
+     got_picture |= local_got_picture;
+@@ -585,10 +591,16 @@
+ 	from.data[ix] = ffmpeg->m_picture->data[ix];
+ 	from.linesize[ix] = ffmpeg->m_picture->linesize[ix];
+       }
+-      
+-      img_convert(&to, PIX_FMT_YUV420P,
+-		  &from, ffmpeg->m_c->pix_fmt,
+-		  ffmpeg->m_c->width, ffmpeg->m_c->height);
++#ifdef HAVE_FFMPEG_INSTALLED
++      SwsContext *pSWSCtx;
++      pSWSCtx = sws_getContext(ffmpeg->m_c->width, ffmpeg->m_c->height,
++			       ffmpeg->m_c->pix_fmt,
++			       ffmpeg->m_c->width, ffmpeg->m_c->height,
++			       PIX_FMT_YUV420P, SWS_BICUBIC, 0, 0, 0);
++      sws_scale(pSWSCtx, from.data, from.linesize, 0, ffmpeg->m_c->height,
++		to.data, to.linesize);
++      sws_freeContext(pSWSCtx);
++#endif
+       ffmpeg->m_vft->video_filled_buffer(ffmpeg->m_ifptr,
+ 					 ffmpeg->have_cached_ts ?
+ 					 ffmpeg->cached_ts : ts);
+diff -ur mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/ffmpeg.h mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.h
+--- mpeg4ip-1.6.1.orig/player/plugin/video/ffmpeg/ffmpeg.h	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/player/plugin/video/ffmpeg/ffmpeg.h	2012-01-17 17:42:55.000000000 -0500
+@@ -27,7 +27,8 @@
+ #include "codec_plugin.h"
+ extern "C" {
+ #ifdef HAVE_FFMPEG_INSTALLED
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
++#include <libswscale/swscale.h>
+ #else
+ #include <avcodec.h>
+ #endif
+diff -ur mpeg4ip-1.6.1.orig/server/mp4live/audio_ffmpeg.h mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.h
+--- mpeg4ip-1.6.1.orig/server/mp4live/audio_ffmpeg.h	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/server/mp4live/audio_ffmpeg.h	2012-01-17 17:42:55.000000000 -0500
+@@ -25,7 +25,7 @@
+ #include "audio_encoder.h"
+ extern "C" {
+ #ifdef HAVE_FFMPEG_INSTALLED
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ #else
+ #include <avcodec.h>
+ #endif
+diff -ur mpeg4ip-1.6.1.orig/server/mp4live/video_ffmpeg.h mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.h
+--- mpeg4ip-1.6.1.orig/server/mp4live/video_ffmpeg.h	2012-01-17 17:42:40.000000000 -0500
++++ mpeg4ip-1.6.1/server/mp4live/video_ffmpeg.h	2012-01-17 17:42:55.000000000 -0500
+@@ -25,7 +25,7 @@
+ #include "video_encoder.h"
+ extern "C" {
+ #ifdef HAVE_FFMPEG_INSTALLED
+-#include <ffmpeg/avcodec.h>
++#include <libavcodec/avcodec.h>
+ #else
+ #include <avcodec.h>
+ #endif

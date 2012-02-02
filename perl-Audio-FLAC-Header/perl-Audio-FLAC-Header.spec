@@ -7,7 +7,7 @@ Summary: Access to FLAC audio metadata
 Summary(zh_CN): 对于 FLAC 音频元数据的访问
 Name: perl-Audio-FLAC-Header
 Version: 2.4
-Release: 2%{?dis}
+Release: 2%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic

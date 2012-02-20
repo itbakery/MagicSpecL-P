@@ -1,13 +1,14 @@
+%global checkout 06c8f81
 
 Name:		linux-firmware
-Version:	20110731
-Release:	2%{?dist}
+Version:	20120206
+Release:	0.1.git%{checkout}%{?dist}
 Summary:	Firmware files used by the Linux kernel
 
 Group:		System Environment/Kernel
 License:	GPL+ and GPLv2+ and MIT and Redistributable, no modification permitted
 URL:		http://www.kernel.org/
-Source0:	ftp://ftp.kernel.org/pub/linux/kernel/people/dwmw2/firmware/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kernel.org/pub/linux/kernel/people/dwmw2/firmware/%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
 Provides:	kernel-firmware = %{version} xorg-x11-drv-ati-firmware = 7.0
@@ -23,7 +24,7 @@ Kernel-firmware includes firmware files required for some devices to
 operate.
 
 %prep
-%setup -q -n linux-firmware-%{version} 
+%setup -q -n linux-firmware-%{checkout}
 
 %build
 # Remove firmware shipped in separate packages already
@@ -57,6 +58,12 @@ rm -rf $RPM_BUILD_ROOT
 /lib/firmware/*
 
 %changelog
+* Tue Feb 07 2012 Josh Boyer <jwboyer@redhat.com>
+- Update to latest upstream git snapshot.  Fixes rhbz 786937
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20110731-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Aug 04 2011 Tom Callaway <spot@fedoraproject.org> 20110731-2
 - resolve conflict with netxen-firmware
 

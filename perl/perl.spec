@@ -24,7 +24,7 @@
 Name:           perl
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        210%{?dist}
+Release:        213%{?dist}
 Epoch:          %{perl_epoch}
 Summary:        Practical Extraction and Report Language
 Group:          Development/Languages
@@ -83,6 +83,17 @@ Patch11:        perl-5.14.2-Don-t-leak-memory-when-accessing-named-capt.patch
 
 # Fix interrupted reading, rhbz#767931, fixed after 5.15.3.
 Patch12:        perl-5.14.2-add-a-couple-missing-LEAVEs-in-perlio_async_run.patch
+
+# Fix searching for Unicode::Collate::Locale data, rhbz#756118, CPANRT#72666,
+# fixed in Unicode-Collate-0.87.
+Patch13:        perl-5.14.2-locale-search-inc.patch
+
+# Run safe signal handlers before returning from sigsuspend() and pause(),
+# rhbz#771228, RT#107216, fixed after 5.15.6.
+Patch14:        perl-5.14.2-Signal-handlers-must-run-before-sigsuspend-returns.patch
+
+# Stop !$^V from leaking, rhbz#787613, RT#109762, fixed after 5.15.7.
+Patch15:        perl-5.14.2-Stop-V-from-leaking.patch
 
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
@@ -1248,6 +1259,9 @@ tarball from perl.org.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
+%patch14 -p1
+%patch15 -p1
 
 #copy the example script
 cp -a %{SOURCE5} .
@@ -1450,6 +1464,9 @@ pushd %{build_archlib}/CORE/
     'Fedora Patch10: Change Perl_repeatcpy() to allow count above 2^31' \
     'Fedora Patch11: Fix leak with non-matching named captures' \
     'Fedora Patch12: Fix interrupted reading' \
+    'Fedora Patch13: Fix searching for Unicode::Collate::Locale data' \
+    'Fedora Patch14: Run signal handlers before returning from sigsuspend' \
+    'Fedora Patch15: Stop !$^V from leaking' \
     %{nil}
 
 rm patchlevel.bak
@@ -1879,13 +1896,8 @@ sed \
 
 # Scalar-List-Utils
 %exclude %{archlib}/List/
-%exclude %{archlib}/List/Util/
-%exclude %{archlib}/List/Util.pm
 %exclude %{archlib}/Scalar/
-%exclude %{archlib}/Scalar/Util/
-%exclude %{archlib}/Scalar/Util.pm
 %exclude %{archlib}/auto/List/
-%exclude %{archlib}/auto/List/Util/
 %exclude %{_mandir}/man3/List::Util*
 %exclude %{_mandir}/man3/Scalar::Util*
 
@@ -2327,13 +2339,8 @@ sed \
 
 %files Scalar-List-Utils
 %{archlib}/List/
-%{archlib}/List/Util/
-%{archlib}/List/Util.pm
 %{archlib}/Scalar/
-%{archlib}/Scalar/Util/
-%{archlib}/Scalar/Util.pm
 %{archlib}/auto/List/
-%{archlib}/auto/List/Util/
 %{_mandir}/man3/List::Util*
 %{_mandir}/man3/Scalar::Util*
 
@@ -2407,6 +2414,19 @@ sed \
 
 # Old changelog entries are preserved in CVS.
 %changelog
+* Wed Feb 22 2012 Liu Di <liudidi@gmail.com> - 4:5.14.2-213
+- 为 Magic 3.0 重建
+
+* Wed Feb 22 2012 Liu Di <liudidi@gmail.com> - 4:5.14.2-212
+- 为 Magic 3.0 重建
+
+* Mon Feb 06 2012 Petr Pisar <ppisar@redhat.com> - 4:5.14.2-211
+- Fix searching for Unicode::Collate::Locale data (bug #756118)
+- Run safe signal handlers before returning from sigsuspend() and pause()
+  (bug #771228)
+- Correct perl-Scalar-List-Utils files list
+- Stop !$^V from leaking (bug #787613)
+
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 4:5.14.2-210
 - Rebuild again now that perl dependency generator is fixed (#772632, #772699)
 

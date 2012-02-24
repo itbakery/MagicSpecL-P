@@ -7,7 +7,7 @@
 Summary: Mesa demos
 Name: mesa-demos
 Version: 7.10
-Release: 6.%{gitdate}%{?dist}
+Release: 7.%{gitdate}%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -85,8 +85,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/man1/xdriinfo.1*
 
 %changelog
-* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 7.10-6.20101028
+* Fri Feb 24 2012 Liu Di <liudidi@gmail.com> - 7.10-7.20101028
 - 为 Magic 3.0 重建
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.10-6.20101028
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jun 20 2011 ajax@redhat.com - 7.10-5.20101028
 - Rebuild for new glew soname

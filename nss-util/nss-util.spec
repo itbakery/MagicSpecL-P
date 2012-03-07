@@ -2,7 +2,7 @@
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.13.1
+Version:          3.13.3
 Release:          1%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
@@ -51,7 +51,6 @@ Header and library files for doing development with Network Security Services.
 
 %prep
 %setup -q
-
 
 %build
 
@@ -202,6 +201,15 @@ done
 %{_includedir}/nss3/utilrename.h
 
 %changelog
+* Thu Mar 01 2012 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.1-4
+- Update to NSS_3_13_3_RTM
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Nov 28 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-2
+- Fix a gnuc def typo
+
 * Thu Nov 03 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-1
 - Update to NSS_3_13_1_RTM
 

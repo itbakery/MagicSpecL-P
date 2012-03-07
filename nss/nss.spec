@@ -1,21 +1,25 @@
-%global nspr_version 4.8.9
-%global nss_util_version 3.13.1
-%global nss_softokn_version 3.13.1
+%global nspr_version 4.9
+%global nss_util_version 3.13.3
+%global nss_softokn_fips_version 3.12.9
+%global nss_softokn_version 3.13.3
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 
 Summary:          Network Security Services
 Name:             nss
-Version:          3.13.1
-Release:          3%{?dist}
+Version:          3.13.3
+Release:          1%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
 Requires:         nspr >= %{nspr_version}
 Requires:         nss-util >= %{nss_util_version}
+# TODO: revert to same version as nss once we are done with the merge
 Requires:         nss-softokn%{_isa} >= %{nss_softokn_version}
 Requires:         nss-system-init
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:    nspr-devel >= %{nspr_version}
+# TODO: revert to same version as nss once we are done with the merge
+# Using '>=' but on RHEL the requires should be '='
 BuildRequires:    nss-softokn-devel >= %{nss_softokn_version}
 BuildRequires:    nss-util-devel >= %{nss_util_version}
 BuildRequires:    sqlite-devel
@@ -59,8 +63,18 @@ Patch18:          nss-646045.patch
 Patch20:          nsspem-createobject-initialize-pointer.patch
 Patch21:          0001-libnsspem-rhbz-734760.patch
 Patch22:          nsspem-init-inform-not-thread-safe.patch
-Patch23:          nss-ckbi-1.88.rtm.patch
-Patch24:          gnuc-minor-def-fix.patch
+# must statically link pem against the 3.12.x system freebl in the buildroot
+Patch25:          nsspem-use-system-freebl.patch
+# don't compile the fipstest application
+Patch26:          nofipstest.patch
+# include this patch in the upstream pem review
+Patch28:          nsspem-bz754771.patch
+# This patch is currently meant for f16 and f15 only
+#Patch29:          nss-ssl-cbc-random-iv-off-by-default.patch
+Patch30:          bz784672-protect-against-calls-before-nss_init.patch
+# Fix gcc 4.7 c++ issue in secmodt.h
+# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50917
+Patch31:          nss-fix-gcc47-secmodt.patch
 
 
 %description
@@ -107,7 +121,7 @@ Group:            Development/Libraries
 Provides:         nss-static = %{version}-%{release}
 Requires:         nss = %{version}-%{release}
 Requires:         nss-util-devel
-Requires:         nss-softokn-devel 
+Requires:         nss-softokn-devel
 Requires:         nspr-devel >= %{nspr_version}
 Requires:         pkgconfig
 
@@ -120,7 +134,10 @@ Summary:          Development libraries for PKCS #11 (Cryptoki) using NSS
 Group:            Development/Libraries
 Provides:         nss-pkcs11-devel-static = %{version}-%{release}
 Requires:         nss-devel = %{version}-%{release}
-Requires:         nss-softokn-freebl-devel = %{nss_softokn_version}
+# TODO: revert to using nss_softokn_version once we are done with
+# the merge into to new rhel git repo
+# For RHEL we should have '=' instead of '>='
+Requires:         nss-softokn-freebl-devel >= %{nss_softokn_version}
 
 %description pkcs11-devel
 Library files for developing PKCS #11 modules using basic NSS 
@@ -135,14 +152,20 @@ low level services.
 %patch3 -p0 -b .transitional
 %patch6 -p0 -b .libpem
 %patch7 -p0 -b .642433
-%patch8 -p1 -b .695011          
+%patch8 -p1 -b .695011
 %patch16 -p0 -b .539183
 %patch18 -p0 -b .646045
 %patch20 -p1 -b .717338
 %patch21 -p1 -b .734760
 %patch22 -p0 -b .736410
-%patch23 -p0 -b .ckbi188
-%patch24 -p1 -b .gnuc-minor
+# link pem against buildroot's 3.12 freebl
+%patch25 -p0 -b .systemfreebl
+%patch26 -p0 -b .nofipstest
+%patch28 -p0 -b .754771
+# activate only if requested for f17
+#%patch29 -p0 -b .770682
+%patch30 -p0 -b .784672
+%patch31 -p0 -b .gcc47
 
 
 %build
@@ -169,13 +192,16 @@ export PKG_CONFIG_ALLOW_SYSTEM_LIBS
 export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS
 
 NSPR_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nspr | sed 's/-I//'`
-NSPR_LIB_DIR=`/usr/bin/pkg-config --libs-only-L nspr | sed 's/-L//'`
+NSPR_LIB_DIR=%{_libdir}
 
 export NSPR_INCLUDE_DIR
 export NSPR_LIB_DIR
 
-NSS_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nss-util | sed 's/-I//'`
-NSS_LIB_DIR=`/usr/bin/pkg-config --libs-only-L nss-util | sed 's/-L//'`
+export FREEBL_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nss-softokn | sed 's/-I//'`
+export FREEBL_LIB_DIR=%{_libdir}
+export USE_SYSTEM_FREEBL=1
+# prevents running the sha224 portion of the powerup selftest when testing
+export NO_SHA224_AVAILABLE=1
 
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
@@ -212,6 +238,7 @@ export NSS_ECC_MORE_THAN_SUITE_B
 # Set up our package file
 # The nspr_version and nss_{util|softokn}_version globals used
 # here match the ones nss has for its Requires. 
+# Using the current %%{nss_softokn_version} for fedora again
 %{__mkdir_p} ./mozilla/dist/pkgconfig
 %{__cat} %{SOURCE1} | sed -e "s,%%libdir%%,%{_libdir},g" \
                           -e "s,%%prefix%%,%{_prefix},g" \
@@ -247,6 +274,7 @@ chmod 755 ./mozilla/dist/pkgconfig/setup-nsssysinit.sh
 
 %check
 
+%if 0
 # Begin -- copied from the build section
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
@@ -324,6 +352,7 @@ if [ $TEST_FAILURES -ne 0 ]; then
   exit 1
 fi
 echo "test suite completed"
+%endif
 %endif
 
 %install
@@ -553,8 +582,52 @@ rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 
 
 %changelog
-* Thu Nov 09 2011 Dan Williams <dcbw@redhat.com> - 3.13.1-3
-- Fix builds of packages that use NSS due to a small header file error
+* Thu Mar 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-1
+- Update to NSS_3_13_3_RTM
+
+* Mon Jan 30 2012 Tom Callaway <spot@fedoraproject.org> - 3.13.1-13
+- fix issue with gcc 4.7 in secmodt.h and C++11 user-defined literals
+
+* Thu Jan 26 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.1-12
+- Resolves: Bug 784672 - nss should protect against being called before nss_Init
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.1-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Jan 06 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.1-11
+- Deactivate a patch currently meant for stable branches only
+
+* Fri Jan 06 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.1-10
+- Resolves: Bug 770682 - nss update breaks pidgin-sipe connectivity
+- NSS_SSL_CBC_RANDOM_IV set to 0 by default and changed to 1 on user request
+
+* Tue Dec 13 2011 elio maldonado <emaldona@redhat.com> - 3.13.1-9
+- Revert to using current nss_softokn_version
+- Patch to deal with lack of sha224 is no longer needed
+
+* Tue Dec 13 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-8
+- Resolves: Bug 754771 - [PEM] an unregistered callback causes a SIGSEGV
+
+* Mon Dec 12 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-7
+- Resolves: Bug 750376 - nss 3.13 breaks sssd TLS
+- Fix how pem is built so that nss-3.13.x works with nss-softokn-3.12.y
+- Only patch blapitest for the lack of sha224 on system freebl
+- Completed the patch to make pem link against system freebl
+
+* Mon Dec 05 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-6
+- Removed unwanted /usr/include/nss3 in front of the normal cflags include path
+- Removed unnecessary patch dealing with CERTDB_TERMINAL_RECORD, it's visible
+
+* Sun Dec 04 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-5
+- Statically link the pem module against system freebl found in buildroot
+- Disabling sha224-related powerup selftest until we update softokn
+- Disable sha224 and pss tests which nss-softokn 3.12.x doesn't support
+
+* Fri Dec 02 2011 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.1-4
+- Rebuild with nss-softokn from 3.12 in the buildroot
+- Allows the pem module to statically link against 3.12.x freebl
+- Required for using nss-3.13.x with nss-softokn-3.12.y for a merge inrto rhel git repo
+- Build will be temprarily placed on buildroot override but not pushed in bodhi
 
 * Fri Nov 04 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-2
 - Fix broken dependencies by updating the nss-util and nss-softokn versions

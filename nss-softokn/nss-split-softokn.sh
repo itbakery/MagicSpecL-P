@@ -35,87 +35,66 @@ softokn_dir=${name}-softokn-${version}
 #   mozilla/security/nss/lib         --- top files only
 #   mozilla/security/nss/lib/freebl  --- full directory
 #   mozilla/security/nss/lib/softoken --- full directory
+#   mozilla/security/nss/lib/softoken/dbm --- full directory
 #-------------------------------------------------------
 
-WORK_DIR=work
-rm -rf ${WORK_DIR}
-mkdir ${WORK_DIR}
+SOFTOKN_WORK=${softokn_dir}-work
+rm -rf ${SOFTOKN_WORK}
+mkdir ${SOFTOKN_WORK}
 
 # copy everything
-cp -a ${nss_source_dir} ${WORK_DIR}/${softokn_dir}
+cp -a ${nss_source_dir} ${SOFTOKN_WORK}/${softokn_dir}
 
 # remove subdirectories that we don't want
-rm -rf ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-rm -rf ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/tests
-rm -rf ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib
-rm -rf ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/pkg
-# start with an empty lib directory and copy only what we need
-mkdir ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib
+rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests
+rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
+rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/pkg
+# rstart with an empty lib directory and copy only what we need
+mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
 # copy entire freebl and softoken directories recursively
-cp -a ${nss_source_dir}/mozilla/security/nss/lib/freebl ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib/freebl
-cp -a ${nss_source_dir}/mozilla/security/nss/lib/softoken ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib/softoken
-# On boostrapping we may need to copy util because some headers have changed
-# Alternatively, we can bootsrap by rebasing nss and nss-util first and
-# when the system is boostrap then rebase nss-sotokn
-# cp -a ${nss_source_dir}/mozilla/security/nss/lib/util ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib/util
+cp -a ${nss_source_dir}/mozilla/security/nss/lib/freebl ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib/freebl
+cp -a ${nss_source_dir}/mozilla/security/nss/lib/softoken ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib/softoken
 
 # and some Makefiles and related files
-cp ${nss_source_dir}/mozilla/security/nss/Makefile ${WORK_DIR}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/manifest.mn ${WORK_DIR}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/trademarks.txt ${WORK_DIR}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/lib/Makefile ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib
-cp ${nss_source_dir}/mozilla/security/nss/lib/manifest.mn ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/lib
+cp ${nss_source_dir}/mozilla/security/nss/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
+cp ${nss_source_dir}/mozilla/security/nss/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
+cp ${nss_source_dir}/mozilla/security/nss/trademarks.txt ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
+cp ${nss_source_dir}/mozilla/security/nss/lib/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
+cp ${nss_source_dir}/mozilla/security/nss/lib/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
 
-# we do need shlibsign from cmd and other things
-mkdir ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-# copy some files at the top and selected subdirectories
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/Makefile ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/manifest.mn ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platlibs.mk ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platrules.mk ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
+# we do need bltest, lib, and shlibsign from cmd
+mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+# copy some files at the top and the slhlib subdirectory
+cp -p ${nss_source_dir}/mozilla/security/nss/cmd/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+cp -p ${nss_source_dir}/mozilla/security/nss/cmd/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platlibs.mk ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platrules.mk ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
 
-cp -a ${nss_source_dir}/mozilla/security/nss/cmd/shlibsign ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd/shlibsign
-#
-# copy the bltest, fipstests, lib, and subdirectories for testing
-#for d in "bltest fipstest lib shlibsign"; do
-src=${nss_source_dir}/mozilla/security/nss/cmd
-dst=${WORK_DIR}/${softokn_dir}/mozilla/security/nss/cmd
-# uncomment this line when we are to resume testing as part of the build
-# for bootstrapping make it ts=" " so they don't get copied
-ts="bltest fipstest lib"
-for t in $ts; do
-  cp -a ${src}/$t ${dst}/$t
+cp -a ${nss_source_dir}/mozilla/security/nss/cmd/bltest ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/bltest
+cp -a ${nss_source_dir}/mozilla/security/nss/cmd/fipstest ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/fipstest
+cp -a ${nss_source_dir}/mozilla/security/nss/cmd/lib ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/lib
+cp -a ${nss_source_dir}/mozilla/security/nss/cmd/shlibsign ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/shlibsign
+
+# plus common and crypto from nss/tests
+mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests
+topFiles=`find ${nss_source_dir}/mozilla/security/nss/tests/ -maxdepth 1 -mindepth 1 -type f`
+for f in $topFiles; do
+  cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests/
+done
+keepers="cipher common"
+for t in $keepers; do
+  cp -a ${nss_source_dir}/mozilla/security/nss/tests/$t ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests/$t
 done
 
-
-# we also need some test scripts and dtest data from tests
-mkdir ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/tests
-
-# copy the files at the top
-fs="all.sh clean_tbx core_watch dll_version.sh header jssdir \
-jss_dll_version.sh jssqa mksymlinks \
-nssdir nsspath nssqa path_uniq platformlist \
-platformlist.tbx qaclean qa_stage qa_stat \
-README.txt run_niscc.sh set_environment"
-for f in $fs; do
- cp -p ${nss_source_dir}/mozilla/security/nss/tests/$f \
-       ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/tests
-done
-
-# copy the subdirectories that we need
-cp -a ${nss_source_dir}/mozilla/security/nss/tests/common \
-      ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/tests
-cp -a ${nss_source_dir}/mozilla/security/nss/tests/cipher \
-      ${WORK_DIR}/${softokn_dir}/mozilla/security/nss/tests
-
-pushd ${WORK_DIR}
+pushd ${SOFTOKN_WORK}
 # the compressed tar ball for nss-softokn
 tar -cjf ../${name}-softokn-${version}-stripped.tar.bz2 ${softokn_dir}
 popd
 
 # cleanup after ourselves
 rm -fr ${nss_source_dir}
-rm -rf ${WORK_DIR}
+rm -rf ${SOFTOKN_WORK}
 
 
 

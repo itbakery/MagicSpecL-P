@@ -1,6 +1,6 @@
 %global nspr_version 4.9
 %global nss_name nss
-%global nss_util_version 3.13.1
+%global nss_util_version 3.13.3
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 %global saved_files_dir %{_libdir}/nss/saved
 
@@ -10,13 +10,13 @@
     %{__arch_install_post} \
     %{__os_install_post} \
     $RPM_BUILD_ROOT/%{unsupported_tools_directory}/shlibsign -i $RPM_BUILD_ROOT/%{_libdir}/libsoftokn3.so \
-    $RPM_BUILD_ROOT/%{unsupported_tools_directory}/shlibsign -i $RPM_BUILD_ROOT/%{_lib}/libfreebl3.so \
+    $RPM_BUILD_ROOT/%{unsupported_tools_directory}/shlibsign -i $RPM_BUILD_ROOT/%{_libdir}/libfreebl3.so \
     $RPM_BUILD_ROOT/%{unsupported_tools_directory}/shlibsign -i $RPM_BUILD_ROOT/%{_libdir}/libnssdbm3.so \
 %{nil}
 
 Summary:          Network Security Services Softoken Module
 Name:             nss-softokn
-Version:          3.13.1
+Version:          3.13.3
 Release:          1%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
@@ -49,8 +49,22 @@ Source1:          nss-split-softokn.sh
 Source2:          nss-softokn.pc.in
 Source3:          nss-softokn-config.in
 
-Patch2:           nss-softokn-3.12.4-prelink.patch
-Patch4:           softoken-minimal-test-dependencies.patch
+Patch1:           add-relro-linker-option.patch
+# Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=562116
+Patch5:           drbg.patch
+# TODO: Open upstream bug and submmit a patch for this
+Patch8:           softoken-minimal-test-dependencies.patch
+# This patch uses the gcc-iquote dir option  documented at
+# http://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html#Directory-Options
+# to place the in-tree directories at the head of the list on list of directories
+# to be searched for for header files. This is ensures a build even when system freebl 
+# headers are older. Such is the case when we are starting a major update.
+# NSSUTIL_INCLUDE_DIR, after all, contains both util and freebl headers. 
+# Once has been bootstapped the patch may be removed, but it doesn't hurt to keep it.
+Patch9:           iquote.patch
+# Fix gcc 4.7 c++ issue in secmodt.h
+# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50917
+Patch10:          nss-softokn-fix-gcc47-secmodt.patch
 
 %description
 Network Security Services Softoken Cryptographic Module
@@ -60,6 +74,7 @@ Summary:          Freebl library for the Network Security Services
 Group:            System Environment/Base
 Conflicts:        nss < 3.12.2.99.3-5
 Conflicts:        prelink < 0.4.3
+Conflicts:        filesystem < 3
 
 %description freebl
 NSS Softoken Cryptographic Module Freelb Library
@@ -100,19 +115,25 @@ Header and Library files for doing development with Network Security Services.
 %prep
 %setup -q
 
-#cp ./mozilla/security/nss/lib/util/seccomon.h ./mozilla/security/nss/freebl
+%patch1 -p0 -b .relro
+%patch5 -p0 -b .drbg
+%patch8 -p0 -b .crypto
+# activate if needed when doing a major update with new apis
+#%patch9 -p0 -b .iquote
+%patch10 -p0 -b .gcc47
 
-%patch2 -p0 -b .prelink
-# FIXME uncomment these when we are ready
-# to resume testing of part of the build
-%patch4 -p0 -b .crypto
-
-#rm -rf ./mozilla/security/nss/lib/util
 
 %build
 
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
+
+# Must export FREEBL_LOWHASH=1 for nsslowhash.h so that it gets
+# copied to dist and the rpm install phase can find it
+# This due of the upstream changes to fix
+# https://bugzilla.mozilla.org/show_bug.cgi?id=717906
+FREEBL_LOWHASH=1
+export FREEBL_LOWHASH
 
 FREEBL_USE_PRELINK=1
 export FREEBL_USE_PRELINK
@@ -151,6 +172,9 @@ export NSS_USE_SYSTEM_SQLITE
 USE_64=1
 export USE_64
 %endif
+
+# uncomment if the iguote patch is activated
+#export IN_TREE_FREEBL_HEADERS_FIRST=1
 
 # Compile softokn plus needed support
 %{__make} -C ./mozilla/security/coreconf
@@ -239,8 +263,6 @@ HOST=localhost DOMSUF=localdomain PORT=$MYRAND NSS_CYCLES=%{?nss_cycles} NSS_TES
 
 cd ../../../../
 
-#killall $RANDSERV || :
-
 TEST_FAILURES=`grep -c FAILED ./mozilla/tests_results/security/localhost.1/output.log` || :
 # test suite is failing on arm and has for awhile let's run the test suite but make it non fatal on arm
 %ifnarch %{arm}
@@ -260,30 +282,14 @@ echo "test suite completed"
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/nss3
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_bindir}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}
-%{__mkdir_p} $RPM_BUILD_ROOT/%{_lib}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{unsupported_tools_directory}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 %{__mkdir_p} $RPM_BUILD_ROOT/%{saved_files_dir}
 
 # Copy the binary libraries we want
-for file in libsoftokn3.so libnssdbm3.so
+for file in libsoftokn3.so libnssdbm3.so libfreebl3.so
 do
   %{__install} -p -m 755 mozilla/dist/*.OBJ/lib/$file $RPM_BUILD_ROOT/%{_libdir}
-done
-
-# Because libcrypt depends on libfreebl3.so, it is special
-# so we install it in /lib{64}, keeping a symbolic link to it
-# back in /usr/lib{64} to keep everyone else working
-for file in libfreebl3.so
-do
-  %{__install} -p -m 755 mozilla/dist/*.OBJ/lib/$file $RPM_BUILD_ROOT/%{_lib}
-  ln -sf ../../%{_lib}/libfreebl3.so $RPM_BUILD_ROOT/%{_libdir}/libfreebl3.so
-done
-
-# Make sure chk files can be found in both places
-for file in libfreebl3.chk
-do
-  ln -s ../../%{_lib}/$file $RPM_BUILD_ROOT/%{_libdir}/$file
 done
 
 # Copy the binaries we ship as unsupported
@@ -337,9 +343,6 @@ done
 
 %files freebl
 %defattr(-,root,root)
-/%{_lib}/libfreebl3.so
-/%{_lib}/libfreebl3.chk
-# and these symbolic links
 %{_libdir}/libfreebl3.so
 %{_libdir}/libfreebl3.chk
 
@@ -374,8 +377,59 @@ done
 %{_includedir}/nss3/shsign.h
 
 %changelog
-* Thu Nov 03 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-1
+* Thu Mar 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-1
+- Update to NSS_3_13_3_RTM
+
+* Wed Feb  1 2012 Tom Callaway <spot@fedoraproject.org> 3.13.1-20
+- re-enable /usrmove changes
+
+* Wed Feb  1 2012 Tom Callaway <spot@fedoraproject.org> 3.13.1-19.1
+- fix issue with gcc 4.7 in secmodt.h and C++11 user-defined literals
+- temporarily revert /usrmove changes. they will be restored in -20 for the f17-usrmove tag.
+
+* Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 3.13.1-19
+- add filesystem guard
+
+* Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 3.13.1-18
+- install everything in /usr
+  https://fedoraproject.org/wiki/Features/UsrMove
+
+* Fri Jan 13 2012 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.1-17
+- Remove unneeded prelink patch afterthe nss update to 3.13.1
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.1-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Dec 30 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-15
+- Bug 770999 - Fix segmentation violation when turning on fips mode
+- Reintroduce the iquote patch but don't apply it unless needed
+
+* Tue Dec 13 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-14
+- Restore the update to 3.13.1
+- Update the patch for freebl to deal with prelinked shared libraries
+- Add additional dbrg power-up self-tests as required by fips
+- Reactivate the tests
+
+* Tue Dec 06 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-13
+- Bug 757005 Build nss-softokn for rhel 7
+- Make it almost like nss-softokn-3.12.9 in rhel 6.2
+- Added a patch to build with Linux 3 and higher
+- Meant to work with nss and nss-utul 3.1.3.1
+- Download only the 3.12.9 sources from the lookaside cache
+
+* Fri Dec 02 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-12
+- Retagging
+
+* Wed Nov 23 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-11
+- Downgrading to 3.12.9 for a merge into new RHEL git repo
+- This build is for the buildroot for a limited time only
+- Do not not push it to update-testing
+
+* Tue Nov 08 2011 Elio Maldonado <emaldona@redhat.com> - 3.13.1-1
 - Update to NSS_3_13_1_RTM
+
+* Wed Oct 12 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-6
+- Fix failure to switch nss-softokn to FIPS mode (#745571)
 
 * Tue Oct 11 2011 Elio Maldonado <emaldona@redhat.com> - 3.13-0.1.rc0.3
 - Update to NSS_3_13_RC0 post bootstrapping
@@ -393,11 +447,8 @@ done
 * Thu Sep  8 2011 Ville Skyttä <ville.skytta@iki.fi> - 3.12.11-3
 - Avoid %%post/un shell invocations and dependencies.
 
-* Wed Aug 17 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.11-2
-- rebuilt as recommended to deal with an rpm issue
-
-* Tue Aug 09 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.11-1
-- Update to NSS_3_12_11_RTM
+* Wed Aug 17 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-5
+- rebuilt as recommended to deal with an rpm 4.9.1 issue
 
 * Wed Jul 20 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-4
 - Adjustements from code review (#715402)

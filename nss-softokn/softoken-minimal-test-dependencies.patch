@@ -1,6 +1,6 @@
-diff -up mozilla/security/nss/cmd/lib/manifest.mn.crypto mozilla/security/nss/cmd/lib/manifest.mn
---- mozilla/security/nss/cmd/lib/manifest.mn.crypto	2011-09-16 12:16:50.000000000 -0700
-+++ mozilla/security/nss/cmd/lib/manifest.mn	2011-10-11 10:40:37.259477337 -0700
+diff -up ./mozilla/security/nss/cmd/lib/manifest.mn.crypto ./mozilla/security/nss/cmd/lib/manifest.mn
+--- ./mozilla/security/nss/cmd/lib/manifest.mn.crypto	2011-09-16 12:16:50.000000000 -0700
++++ ./mozilla/security/nss/cmd/lib/manifest.mn	2012-03-01 13:52:51.826116574 -0800
 @@ -48,11 +48,6 @@ PRIVATE_EXPORTS	= secutil.h \
  		  $(NULL)
  
@@ -13,9 +13,9 @@ diff -up mozilla/security/nss/cmd/lib/manifest.mn.crypto mozilla/security/nss/cm
  		pk11table.c \
  		$(NULL)
  
-diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/lib/secutil.c
---- mozilla/security/nss/cmd/lib/secutil.c.crypto	2011-09-16 12:16:50.000000000 -0700
-+++ mozilla/security/nss/cmd/lib/secutil.c	2011-10-11 11:04:17.699269836 -0700
+diff -up ./mozilla/security/nss/cmd/lib/secutil.c.crypto ./mozilla/security/nss/cmd/lib/secutil.c
+--- ./mozilla/security/nss/cmd/lib/secutil.c.crypto	2011-11-16 11:12:30.000000000 -0800
++++ ./mozilla/security/nss/cmd/lib/secutil.c	2012-03-01 13:58:46.550116160 -0800
 @@ -48,10 +48,7 @@
  #include "prenv.h"
  #include "prnetdb.h"
@@ -27,7 +27,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
  #include <stdarg.h>
  #if !defined(_WIN32_WCE)
  #include <sys/stat.h>
-@@ -62,29 +59,9 @@
+@@ -62,37 +59,16 @@
  #include <unistd.h>
  #endif
  
@@ -54,11 +54,11 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -
 -#include "nssutil.h"
 -#include "ssl.h"
+-
 +extern long DER_GetInteger(SECItem *src);
  
- 
  void 
-@@ -92,7 +69,7 @@ SECU_PrintErrMsg(FILE *out, int level, c
+ SECU_PrintErrMsg(FILE *out, int level, char *progName, char *msg, ...)
  {
      va_list args;
      PRErrorCode err = PORT_GetError();
@@ -67,7 +67,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
  
      va_start(args, msg);
  
-@@ -112,7 +89,7 @@ SECU_PrintError(char *progName, char *ms
+@@ -112,7 +88,7 @@ SECU_PrintError(char *progName, char *ms
  {
      va_list args;
      PRErrorCode err = PORT_GetError();
@@ -76,10 +76,19 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
  
      va_start(args, msg);
  
-@@ -151,436 +128,6 @@ secu_ClearPassword(char *p)
-     }
+@@ -142,446 +118,6 @@ SECU_PrintSystemError(char *progName, ch
+     va_end(args);
  }
  
+-static void
+-secu_ClearPassword(char *p)
+-{
+-    if (p) {
+-	PORT_Memset(p, 0, PORT_Strlen(p));
+-	PORT_Free(p);
+-    }
+-}
+-
 -char *
 -SECU_GetPasswordString(void *arg, char *prompt)
 -{
@@ -510,10 +519,11 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -
 -    return 0;
 -}
- 
+-
  SECStatus
  secu_StdinToItem(SECItem *dst)
-@@ -703,64 +250,6 @@ loser:
+ {
+@@ -703,65 +239,6 @@ loser:
      return SECFailure;
  }
  
@@ -575,10 +585,35 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -    }
 -    return SECSuccess;
 -}
- 
+-
  #define INDENT_MULT	4
  void
-@@ -975,2464 +464,86 @@ SECU_PrintInteger(FILE *out, SECItem *i,
+ SECU_Indent(FILE *out, int level)
+@@ -914,23 +391,6 @@ SECU_PrintBuf(FILE *out, const char *msg
+     }
+ }
+ 
+-SECStatus
+-SECU_StripTagAndLength(SECItem *i)
+-{
+-    unsigned int start;
+-
+-    if (!i || !i->data || i->len < 2) { /* must be at least tag and length */
+-        return SECFailure;
+-    }
+-    start = ((i->data[1] & 0x80) ? (i->data[1] & 0x7f) + 2 : 2);
+-    if (i->len < start) {
+-        return SECFailure;
+-    }
+-    i->data += start;
+-    i->len  -= start;
+-    return SECSuccess;
+-}
+-
+ 
+ /* This expents i->data[0] to be the MSB of the integer.
+ ** if you want to print a DER-encoded integer (with the tag and length)
+@@ -975,2427 +435,100 @@ SECU_PrintInteger(FILE *out, SECItem *i,
  }
  
  static void
@@ -607,7 +642,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -
 -	fprintf(out,"%c", printable[val]); column++;
 -    }
- 
+-
 -    fprintf(out, "\""); column++;
 -    if (column != level*INDENT_MULT || column > 76) {
 -	secu_Newline(out);
@@ -616,36 +651,20 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 +    SECU_PrintInteger(out, &pk->u.rsa.publicExponent, "Exponent", level+1);
 +    if (pk->u.rsa.publicExponent.len == 1 &&
 +        pk->u.rsa.publicExponent.data[0] == 1) {
-+	SECU_Indent(out, level +1); fprintf(out, "Error: INVALID RSA KEY!\n");
++    SECU_Indent(out, level +1); fprintf(out, "Error: INVALID RSA KEY!\n");
      }
  }
  
 -void
 -SECU_PrintString(FILE *out, SECItem *si, char *m, int level)
--{
++static void
++secu_PrintDSAPublicKey(FILE *out, SECKEYPublicKey *pk, char *m, int level)
+ {
 -    SECItem my = *si;
 -
 -    if (SECSuccess != SECU_StripTagAndLength(&my) || !my.len)
 -    	return;
 -    secu_PrintRawString(out, &my, m, level);
--}
--
--/* print an unencoded boolean */
- static void
--secu_PrintBoolean(FILE *out, SECItem *i, const char *m, int level)
-+secu_PrintDSAPublicKey(FILE *out, SECKEYPublicKey *pk, char *m, int level)
- {
--    int val = 0;
--    
--    if ( i->data && i->len ) {
--	val = i->data[0];
--    }
--
--    if (!m) {
--    	m = "Boolean";
--    }
--    SECU_Indent(out, level); 
--    fprintf(out, "%s: %s\n", m, (val ? "True" : "False"));
 +    SECU_Indent(out, level); fprintf(out, "%s:\n", m);
 +    SECU_PrintInteger(out, &pk->u.dsa.params.prime, "Prime", level+1);
 +    SECU_PrintInteger(out, &pk->u.dsa.params.subPrime, "Subprime", level+1);
@@ -653,15 +672,47 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 +    SECU_PrintInteger(out, &pk->u.dsa.publicValue, "PublicValue", level+1);
  }
  
+-/* print an unencoded boolean */
++#ifdef NSS_ENABLE_ECC
+ static void
+-secu_PrintBoolean(FILE *out, SECItem *i, const char *m, int level)
++secu_PrintECPublicKey(FILE *out, SECKEYPublicKey *pk, char *m, int level)
+ {
+-    int val = 0;
+-    
+-    if ( i->data && i->len ) {
+-	val = i->data[0];
+-    }
++    SECItem curveOID = { siBuffer, NULL, 0};
+ 
+-    if (!m) {
+-    	m = "Boolean";
++    SECU_Indent(out, level); fprintf(out, "%s:\n", m);
++    SECU_PrintInteger(out, &pk->u.ec.publicValue, "PublicValue", level+1);
++    /* For named curves, the DEREncodedParams field contains an
++     * ASN Object ID (0x06 is SEC_ASN1_OBJECT_ID).
++     */
++    if ((pk->u.ec.DEREncodedParams.len > 2) &&
++	(pk->u.ec.DEREncodedParams.data[0] == 0x06)) {
++        curveOID.len = pk->u.ec.DEREncodedParams.data[1];
++	curveOID.data = pk->u.ec.DEREncodedParams.data + 2;
++	SECU_PrintObjectID(out, &curveOID, "Curve", level +1);
+     }
+-    SECU_Indent(out, level); 
+-    fprintf(out, "%s: %s\n", m, (val ? "True" : "False"));
+ }
++#endif /* NSS_ENABLE_ECC */
+ 
 -/*
 - * Format and print "time".  If the tag message "m" is not NULL,
 - * do indent formatting based on "level" and add a newline afterward;
 - * otherwise just print the formatted time string only.
 - */
-+#ifdef NSS_ENABLE_ECC
- static void
+-static void
 -secu_PrintTime(FILE *out, int64 time, char *m, int level)
-+secu_PrintECPublicKey(FILE *out, SECKEYPublicKey *pk, char *m, int level)
++#if defined(DEBUG) || defined(FORCE_PR_ASSERT)
++/* Returns true iff a[i].flag has a duplicate in a[i+1 : count-1]  */
++static PRBool HasShortDuplicate(int i, secuCommandFlag *a, int count)
  {
 -    PRExplodedTime printableTime; 
 -    char *timeString;
@@ -677,51 +728,17 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -	SECU_Indent(out, level);
 -	fprintf(out, "%s: ", m);
 -    }
-+    SECItem curveOID = { siBuffer, NULL, 0};
- 
+-
 -    if (PR_FormatTime(timeString, 256, "%a %b %d %H:%M:%S %Y", &printableTime)) {
 -        fputs(timeString, out);
-+    SECU_Indent(out, level); fprintf(out, "%s:\n", m);
-+    SECU_PrintInteger(out, &pk->u.ec.publicValue, "PublicValue", level+1);
-+    /* For named curves, the DEREncodedParams field contains an
-+     * ASN Object ID (0x06 is SEC_ASN1_OBJECT_ID).
-+     */
-+    if ((pk->u.ec.DEREncodedParams.len > 2) &&
-+	(pk->u.ec.DEREncodedParams.data[0] == 0x06)) {
-+        curveOID.len = pk->u.ec.DEREncodedParams.data[1];
-+	curveOID.data = pk->u.ec.DEREncodedParams.data + 2;
-+	SECU_PrintObjectID(out, &curveOID, "Curve", level +1);
-     }
-+}
-+#endif /* NSS_ENABLE_ECC */
- 
+-    }
+-
 -    if (m != NULL)
 -	fprintf(out, "\n");
- 
--    PORT_Free(timeString);
--}
- 
--/*
-- * Format and print the UTC Time "t".  If the tag message "m" is not NULL,
-- * do indent formatting based on "level" and add a newline afterward;
-- * otherwise just print the formatted time string only.
-- */
--void
--SECU_PrintUTCTime(FILE *out, SECItem *t, char *m, int level)
-+#if defined(DEBUG) || defined(FORCE_PR_ASSERT)
-+/* Returns true iff a[i].flag has a duplicate in a[i+1 : count-1]  */
-+static PRBool HasShortDuplicate(int i, secuCommandFlag *a, int count)
- {
--    int64 time;
--    SECStatus rv;
--
--    rv = DER_UTCTimeToTime(&time, t);
--    if (rv != SECSuccess)
--	return;
 +	char target = a[i].flag;
 +	int j;
  
--    secu_PrintTime(out, time, m, level);
+-    PORT_Free(timeString);
 +	/* duplicate '\0' flags are okay, they are used with long forms */
 +	for (j = i+1; j < count; j++) {
 +		if (a[j].flag && a[j].flag == target) {
@@ -730,7 +747,32 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 +	}
 +	return PR_FALSE;
  }
++#endif /* defined(DEBUG) || defined(FORCE_PR_ASSERT) */
  
+-/*
+- * Format and print the UTC Time "t".  If the tag message "m" is not NULL,
+- * do indent formatting based on "level" and add a newline afterward;
+- * otherwise just print the formatted time string only.
+- */
+-void
+-SECU_PrintUTCTime(FILE *out, SECItem *t, char *m, int level)
++/* Returns true iff a[i].longform has a duplicate in a[i+1 : count-1] */
++static PRBool HasLongDuplicate(int i, secuCommandFlag *a, int count)
+ {
+-    int64 time;
+-    SECStatus rv;
++	int j;
++	char *target = a[i].longform;
+ 
+-    rv = DER_UTCTimeToTime(&time, t);
+-    if (rv != SECSuccess)
+-	return;
++	if (!target)
++		return PR_FALSE;
+ 
+-    secu_PrintTime(out, time, m, level);
+-}
+-
 -/*
 - * Format and print the Generalized Time "t".  If the tag message "m"
 - * is not NULL, * do indent formatting based on "level" and add a newline
@@ -738,36 +780,23 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 - */
 -void
 -SECU_PrintGeneralizedTime(FILE *out, SECItem *t, char *m, int level)
-+/* Returns true iff a[i].longform has a duplicate in a[i+1 : count-1] */
-+static PRBool HasLongDuplicate(int i, secuCommandFlag *a, int count)
- {
+-{
 -    int64 time;
 -    SECStatus rv;
 -
-+	int j;	
-+	char *target = a[i].longform;
- 
+-
 -    rv = DER_GeneralizedTimeToTime(&time, t);
 -    if (rv != SECSuccess)
 -	return;
-+	if (!target)
-+		return PR_FALSE;
- 
+-
 -    secu_PrintTime(out, time, m, level);
-+	for (j = i+1; j < count; j++) {
-+		if (a[j].longform && strcmp(a[j].longform, target) == 0) {
-+			return PR_TRUE;
-+		}
-+	}
-+	return PR_FALSE;
- }
- 
+-}
+-
 -/*
 - * Format and print the UTC or Generalized Time "t".  If the tag message
 - * "m" is not NULL, do indent formatting based on "level" and add a newline
 - * afterward; otherwise just print the formatted time string only.
-+/* Returns true iff a has no short or long form duplicates
-  */
+- */
 -void
 -SECU_PrintTimeChoice(FILE *out, SECItem *t, char *m, int level)
 -{
@@ -2772,7 +2801,11 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -	while ((sigInfo = src->signerInfos[iv++]) != NULL) {
 -	    sprintf(om, "Signer Information (%x)", iv);
 -	    secu_PrintSignerInfo(out, sigInfo, om, level + 2);
--	}
++	for (j = i+1; j < count; j++) {
++		if (a[j].longform && strcmp(a[j].longform, target) == 0) {
++			return PR_TRUE;
++		}
+ 	}
 -    }  
 -
 -    return 0;
@@ -2816,13 +2849,15 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -
 -    secu_PrintPKCS7EncContent(out, &src->encContentInfo, 
 -			      "Encrypted Content Information", level + 1);
--}
--
++	return PR_FALSE;
+ }
+ 
 -/*
 -** secu_PrintPKCS7Digested
 -**   Pretty print a PKCS7 digested data type (up to version 1).
 -*/
--static void
++#ifdef NSS_ENABLE_ECC
+ static void
 -secu_PrintPKCS7Digested(FILE *out, SEC_PKCS7DigestedData *src,
 -			const char *m, int level)
 -{
@@ -2997,7 +3032,8 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -
 -int SECU_PrintSignedData(FILE *out, SECItem *der, const char *m,
 -			   int level, SECU_PPFunc inner)
--{
++secu_PrintECPublicKey(FILE *out, SECKEYPublicKey *pk, char *m, int level)
+ {
 -    PRArenaPool *arena = PORT_NewArena(DER_DEFAULT_CHUNKSIZE);
 -    CERTSignedData *sd;
 -    int rv = SEC_ERROR_NO_MEMORY;
@@ -3014,8 +3050,9 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -                            der);
 -    if (rv)
 -	goto loser;
--
--    SECU_Indent(out, level); fprintf(out, "%s:\n", m);
++    SECItem curveOID = { siBuffer, NULL, 0};
+ 
+     SECU_Indent(out, level); fprintf(out, "%s:\n", m);
 -    rv = (*inner)(out, &sd->data, "Data", level+1);
 -
 -    SECU_PrintAlgorithmID(out, &sd->signatureAlgorithm, "Signature Algorithm",
@@ -3050,57 +3087,30 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -    } else if (cert->trust) {
 -	SECU_PrintTrustFlags(stdout, cert->trust,
 -	                     "Certificate Trust Flags", 1);
--    }
++    SECU_PrintInteger(out, &pk->u.ec.publicValue, "PublicValue", level+1);
++    /* For named curves, the DEREncodedParams field contains an
++     * ASN Object ID (0x06 is SEC_ASN1_OBJECT_ID).
++     */
++    if ((pk->u.ec.DEREncodedParams.len > 2) &&
++	(pk->u.ec.DEREncodedParams.data[0] == 0x06)) {
++        curveOID.len = pk->u.ec.DEREncodedParams.data[1];
++	curveOID.data = pk->u.ec.DEREncodedParams.data + 2;
++	SECU_PrintObjectID(out, &curveOID, "Curve", level +1);
+     }
 -
 -    printf("\n");
 -
 -    return(SECSuccess);
--}
--
--#if defined(DEBUG) || defined(FORCE_PR_ASSERT)
--/* Returns true iff a[i].flag has a duplicate in a[i+1 : count-1]  */
--static PRBool HasShortDuplicate(int i, secuCommandFlag *a, int count)
--{
--	char target = a[i].flag;
--	int j;
--
--	/* duplicate '\0' flags are okay, they are used with long forms */
--	for (j = i+1; j < count; j++) {
--		if (a[j].flag && a[j].flag == target) {
--			return PR_TRUE;
--		}
--	}
--	return PR_FALSE;
--}
--
--/* Returns true iff a[i].longform has a duplicate in a[i+1 : count-1] */
--static PRBool HasLongDuplicate(int i, secuCommandFlag *a, int count)
--{
--	int j;	
--	char *target = a[i].longform;
--
--	if (!target)
--		return PR_FALSE;
--
--	for (j = i+1; j < count; j++) {
--		if (a[j].longform && strcmp(a[j].longform, target) == 0) {
--			return PR_TRUE;
--		}
--	}
--	return PR_FALSE;
--}
--
--/* Returns true iff a has no short or long form duplicates
-- */
--PRBool HasNoDuplicates(secuCommandFlag *a, int count)
-+PRBool HasNoDuplicates(secuCommandFlag *a, int count)
- {
-     int i;
+ }
++#endif /* NSS_ENABLE_ECC */
  
-@@ -3611,144 +722,6 @@ SECU_PrintPRandOSError(char *progName) 
+ #if defined(DEBUG) || defined(FORCE_PR_ASSERT)
+ /* Returns true iff a[i].flag has a duplicate in a[i+1 : count-1]  */
+@@ -3610,145 +743,6 @@ SECU_PrintPRandOSError(char *progName) 
+     }
  }
  
- 
+-
 -static char *
 -bestCertName(CERTCertificate *cert) {
 -    if (cert->nickname) {
@@ -3242,10 +3252,11 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
  SECOidTag 
  SECU_StringToSignatureAlgTag(const char *alg)
  {
-@@ -3775,298 +748,6 @@ SECU_StringToSignatureAlgTag(const char 
+@@ -3776,299 +770,6 @@ SECU_StringToSignatureAlgTag(const char 
+     return hashAlgTag;
  }
  
- 
+-
 -SECStatus
 -SECU_StoreCRL(PK11SlotInfo *slot, SECItem *derCrl, PRFileDesc *outFile,
 -              PRBool ascii, char *url)
@@ -3541,10 +3552,11 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
  /* Caller ensures that dst is at least item->len*2+1 bytes long */
  void
  SECU_SECItemToHex(const SECItem * item, char * dst)
-@@ -4130,39 +811,3 @@ SECU_SECItemHexStringToBinary(SECItem* s
+@@ -4131,40 +832,3 @@ SECU_SECItemHexStringToBinary(SECItem* s
+     srcdest->len /= 2;
      return SECSuccess;
  }
- 
+-
 -CERTCertificate*
 -SECU_FindCertByNicknameOrFilename(CERTCertDBHandle *handle,
 -                                  char *name, PRBool ascii,
@@ -3581,9 +3593,9 @@ diff -up mozilla/security/nss/cmd/lib/secutil.c.crypto mozilla/security/nss/cmd/
 -}
 -
 -
-diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/lib/secutil.h
---- mozilla/security/nss/cmd/lib/secutil.h.crypto	2011-09-16 12:16:50.000000000 -0700
-+++ mozilla/security/nss/cmd/lib/secutil.h	2011-10-11 10:40:37.266477442 -0700
+diff -up ./mozilla/security/nss/cmd/lib/secutil.h.crypto ./mozilla/security/nss/cmd/lib/secutil.h
+--- ./mozilla/security/nss/cmd/lib/secutil.h.crypto	2011-11-16 11:12:30.000000000 -0800
++++ ./mozilla/security/nss/cmd/lib/secutil.h	2012-03-01 13:52:51.842116753 -0800
 @@ -38,7 +38,10 @@
  
  #include "seccomon.h"
@@ -3595,7 +3607,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
  #include "prerror.h"
  #include "base64.h"
  #include "key.h"
-@@ -47,109 +50,6 @@
+@@ -47,226 +50,31 @@
  #include "secder.h"
  #include <stdio.h>
  
@@ -3616,8 +3628,8 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -#define NS_CRL_HEADER  "-----BEGIN CRL-----"
 -#define NS_CRL_TRAILER "-----END CRL-----"
 -
--#define SECU_Strerror PORT_ErrorToString
--
+ #define SECU_Strerror PORT_ErrorToString
+ 
 -#ifdef SECUTIL_NEW
 -typedef int (*SECU_PPFunc)(PRFileDesc *out, SECItem *item, 
 -                           char *msg, int level);
@@ -3702,13 +3714,15 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -
 -/* Returns result of getenv("SSL_DIR") or NULL */
 -extern char *SECU_DefaultSSLDir(void);
- 
- /*
- ** Should be called once during initialization to set the default 
-@@ -159,14 +59,6 @@ extern char *SECU_DefaultSSLDir(void);
- */
- extern char *SECU_ConfigDirectory(const char* base);
- 
+-
+-/*
+-** Should be called once during initialization to set the default 
+-**    directory for looking for cert.db, key.db, and cert-nameidx.db files
+-** Removes trailing '/' in 'base' 
+-** If 'base' is NULL, defaults to set to .netscape in home directory.
+-*/
+-extern char *SECU_ConfigDirectory(const char* base);
+-
 -/* 
 -** Basic callback function for SSL_GetClientAuthDataHook
 -*/
@@ -3717,10 +3731,10 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -		       struct CERTDistNamesStr *caNames,
 -		       struct CERTCertificateStr **pRetCert,
 -		       struct SECKEYPrivateKeyStr **pRetKey);
- 
+-
  /* print out an error message */
  extern void SECU_PrintError(char *progName, char *msg, ...);
-@@ -174,99 +66,22 @@ extern void SECU_PrintError(char *progNa
+ 
  /* print out a system error message */
  extern void SECU_PrintSystemError(char *progName, char *msg, ...);
  
@@ -3742,7 +3756,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -extern void
 -SECU_displayVerifyLog(FILE *outfile, CERTVerifyLog *log,
 -                      PRBool verbose);
--
+ 
  /* Read the contents of a file into a SECItem */
  extern SECStatus SECU_FileToItem(SECItem *dst, PRFileDesc *src);
  extern SECStatus SECU_TextFileToItem(SECItem *dst, PRFileDesc *src);
@@ -3820,10 +3834,14 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
  /* Dump contents of an RSA public key */
  extern int SECU_PrintRSAPublicKey(FILE *out, SECItem *der, char *m, int level);
  
-@@ -282,52 +97,9 @@ extern int SECU_PrintPrivateKey(FILE *ou
- extern int SECU_PrintFingerprints(FILE *out, SECItem *derCert, char *m,
-                                   int level);
+@@ -278,55 +86,10 @@ extern int SECU_PrintSubjectPublicKeyInf
+ extern int SECU_PrintPrivateKey(FILE *out, SECItem *der, char *m, int level);
+ #endif
  
+-/* Print the MD5 and SHA1 fingerprints of a cert */
+-extern int SECU_PrintFingerprints(FILE *out, SECItem *derCert, char *m,
+-                                  int level);
+-
 -/* Pretty-print any PKCS7 thing */
 -extern int SECU_PrintPKCS7ContentInfo(FILE *out, SECItem *der, char *m, 
 -				      int level);
@@ -3845,7 +3863,7 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -extern void
 -SECU_PrintCRLInfo(FILE *out, CERTCrl *crl, char *m, int level);
 -
--extern void SECU_PrintString(FILE *out, SECItem *si, char *m, int level);
+ extern void SECU_PrintString(FILE *out, SECItem *si, char *m, int level);
 -extern void SECU_PrintAny(FILE *out, SECItem *i, char *m, int level);
 -
 -extern void SECU_PrintPolicy(FILE *out, SECItem *value, char *msg, int level);
@@ -3869,11 +3887,10 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
 -extern SECStatus DER_PrettyPrint(FILE *out, SECItem *it, PRBool raw);
 -
 -extern char *SECU_SECModDBName(void);
--
+ 
  extern void SECU_PrintPRandOSError(char *progName);
  
- extern SECStatus SECU_RegisterDynamicOids(void);
-@@ -335,70 +107,6 @@ extern SECStatus SECU_RegisterDynamicOid
+@@ -335,70 +98,6 @@ extern SECStatus SECU_RegisterDynamicOid
  /* Identifies hash algorithm tag by its string representation. */
  extern SECOidTag SECU_StringToSignatureAlgTag(const char *alg);
  
@@ -3944,23 +3961,9 @@ diff -up mozilla/security/nss/cmd/lib/secutil.h.crypto mozilla/security/nss/cmd/
  /* Caller ensures that dst is at least item->len*2+1 bytes long */
  void
  SECU_SECItemToHex(const SECItem * item, char * dst);
-@@ -452,13 +160,6 @@ void printflags(char *trusts, unsigned i
- extern int ffs(unsigned int i);
- #endif
- 
--/* Finds certificate by searching it in the DB or by examinig file
-- * in the local directory. */
--CERTCertificate*
--SECU_FindCertByNicknameOrFilename(CERTCertDBHandle *handle,
--                                  char *name, PRBool ascii,
--                                  void *pwarg);
- #include "secerr.h"
--#include "sslerr.h"
- 
- #endif /* _SEC_UTIL_H_ */
-diff -up mozilla/security/nss/cmd/manifest.mn.crypto mozilla/security/nss/cmd/manifest.mn
---- mozilla/security/nss/cmd/manifest.mn.crypto	2010-12-06 09:22:48.000000000 -0800
-+++ mozilla/security/nss/cmd/manifest.mn	2011-10-11 11:30:54.592692661 -0700
+diff -up ./mozilla/security/nss/cmd/manifest.mn.crypto ./mozilla/security/nss/cmd/manifest.mn
+--- ./mozilla/security/nss/cmd/manifest.mn.crypto	2010-12-06 09:22:48.000000000 -0800
++++ ./mozilla/security/nss/cmd/manifest.mn	2012-03-01 13:52:51.842116753 -0800
 @@ -41,46 +41,9 @@ DEPTH	= ../..
  REQUIRES = nss nspr libdbm
  
@@ -3978,7 +3981,7 @@ diff -up mozilla/security/nss/cmd/manifest.mn.crypto mozilla/security/nss/cmd/ma
 - dbtest \
 - derdump  \
 - digest  \
-- fipstest  \
+  fipstest  \
 - makepqg  \
 - multinit \
 - ocspclnt  \
@@ -3995,7 +3998,6 @@ diff -up mozilla/security/nss/cmd/manifest.mn.crypto mozilla/security/nss/cmd/ma
 - selfserv  \
 - signtool \
 - signver \
-+ fipstest \
   shlibsign \
 - smimetools  \
 - ssltap  \
@@ -4009,10 +4011,10 @@ diff -up mozilla/security/nss/cmd/manifest.mn.crypto mozilla/security/nss/cmd/ma
   $(NULL)
  
  TEMPORARILY_DONT_BUILD = \
-diff -up mozilla/security/nss/cmd/platlibs.mk.crypto mozilla/security/nss/cmd/platlibs.mk
---- mozilla/security/nss/cmd/platlibs.mk.crypto	2010-06-11 17:58:33.000000000 -0700
-+++ mozilla/security/nss/cmd/platlibs.mk	2011-10-11 10:40:37.319478239 -0700
-@@ -92,44 +92,13 @@ DEFINES += -DNSS_USE_STATIC_LIBS
+diff -up ./mozilla/security/nss/cmd/platlibs.mk.crypto ./mozilla/security/nss/cmd/platlibs.mk
+--- ./mozilla/security/nss/cmd/platlibs.mk.crypto	2010-06-11 17:58:33.000000000 -0700
++++ ./mozilla/security/nss/cmd/platlibs.mk	2012-03-01 13:52:51.846127126 -0800
+@@ -92,43 +92,13 @@ DEFINES += -DNSS_USE_STATIC_LIBS
  # $(PROGRAM) has explicit dependencies on $(EXTRA_LIBS)
  CRYPTOLIB=$(SOFTOKEN_LIB_DIR)/$(LIB_PREFIX)freebl.$(LIB_SUFFIX)
  
@@ -4053,11 +4055,10 @@ diff -up mozilla/security/nss/cmd/platlibs.mk.crypto mozilla/security/nss/cmd/pl
 -	$(PKIXLIB) \
 -	$(DBMLIB) \
 -	$(DIST)/lib/$(LIB_PREFIX)$(SQLITE_LIB_NAME).$(LIB_SUFFIX) \
--	$(DIST)/lib/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX) \
+ 	$(DIST)/lib/$(LIB_PREFIX)nssutil3.$(LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4.$(LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plds4.$(LIB_SUFFIX) \
- 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)nspr4.$(LIB_SUFFIX) \
-@@ -143,30 +112,9 @@ EXTRA_LIBS += \
+@@ -143,30 +113,9 @@ EXTRA_LIBS += \
  else
  
  EXTRA_LIBS += \
@@ -4088,30 +4089,28 @@ diff -up mozilla/security/nss/cmd/platlibs.mk.crypto mozilla/security/nss/cmd/pl
  	$(NULL)
  
  ifeq ($(OS_ARCH), AIX) 
-@@ -199,9 +147,6 @@ ifeq (,$(filter-out WINNT WINCE,$(OS_ARC
+@@ -199,8 +148,6 @@ ifeq (,$(filter-out WINNT WINCE,$(OS_ARC
  EXTRA_LIBS += \
  	$(DIST)/lib/$(LIB_PREFIX)sectool.$(LIB_SUFFIX) \
  	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nssutil3$(IMPORT_LIB_SUFFIX) \
 -	$(DIST)/lib/$(IMPORT_LIB_PREFIX)smime3$(IMPORT_LIB_SUFFIX) \
 -	$(DIST)/lib/$(IMPORT_LIB_PREFIX)ssl3$(IMPORT_LIB_SUFFIX) \
--	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nss3$(IMPORT_LIB_SUFFIX) \
+ 	$(DIST)/lib/$(IMPORT_LIB_PREFIX)nss3$(IMPORT_LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plc4$(IMPORT_LIB_SUFFIX) \
  	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)plds4$(IMPORT_LIB_SUFFIX) \
- 	$(NSPR_LIB_DIR)/$(NSPR31_LIB_PREFIX)nspr4$(IMPORT_LIB_SUFFIX) \
-@@ -227,9 +172,6 @@ endif
+@@ -227,8 +174,6 @@ endif
  # $(EXTRA_SHARED_LIBS) come before $(OS_LIBS), except on AIX.
  EXTRA_SHARED_LIBS += \
  	-L$(DIST)/lib \
 -	-lssl3 \
 -	-lsmime3 \
--	-lnss3 \
+ 	-lnss3 \
  	-L$(NSSUTIL_LIB_DIR) \
  	-lnssutil3 \
- 	-L$(NSPR_LIB_DIR) \
-diff -up mozilla/security/nss/tests/all.sh.crypto mozilla/security/nss/tests/all.sh
---- mozilla/security/nss/tests/all.sh.crypto	2010-01-29 11:58:40.000000000 -0800
-+++ mozilla/security/nss/tests/all.sh	2011-10-11 11:06:41.884531933 -0700
-@@ -303,18 +303,18 @@ run_cycles()
+diff -up ./mozilla/security/nss/tests/all.sh.crypto ./mozilla/security/nss/tests/all.sh
+--- ./mozilla/security/nss/tests/all.sh.crypto	2010-01-29 11:58:40.000000000 -0800
++++ ./mozilla/security/nss/tests/all.sh	2012-03-01 13:52:51.849115992 -0800
+@@ -303,10 +303,10 @@ run_cycles()
  
  ############################## main code ###############################
  
@@ -4124,16 +4123,6 @@ diff -up mozilla/security/nss/tests/all.sh.crypto mozilla/security/nss/tests/all
  TESTS=${NSS_TESTS:-$tests}
  
  ALL_TESTS=${TESTS}
- 
--nss_ssl_tests="crl bypass_normal normal_bypass fips_normal normal_fips iopr"
-+nss_ssl_tests=""
- NSS_SSL_TESTS="${NSS_SSL_TESTS:-$nss_ssl_tests}"
- 
--nss_ssl_run="cov auth stress"
-+nss_ssl_run=""
- NSS_SSL_RUN="${NSS_SSL_RUN:-$nss_ssl_run}"
- 
- SCRIPTNAME=all.sh
 @@ -328,13 +328,20 @@ if [ -z "${INIT_SOURCED}" -o "${INIT_SOU
  fi
  

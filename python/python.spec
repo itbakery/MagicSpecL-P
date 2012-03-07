@@ -108,7 +108,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.2
-Release: 20%{?dist}
+Release: 21%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -1749,6 +1749,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Wed Mar 07 2012 Liu Di <liudidi@gmail.com> - 2.7.2-21
+- 为 Magic 3.0 重建
+
 * Sat Feb 25 2012 Thomas Spura <tomspur@fedoraproject.org> - 2.7.2-20
 - fix deadlock issue (#787712)
 

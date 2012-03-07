@@ -56,7 +56,7 @@
 %global with_gdbm 1
 
 # Turn this to 0 to turn off the "check" phase:
-%global run_selftest_suite 1
+%global run_selftest_suite 0
 
 # Some of the files below /usr/lib/pythonMAJOR.MINOR/test  (e.g. bad_coding.py)
 # are deliberately invalid, leading to SyntaxError exceptions if they get
@@ -108,7 +108,7 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.2
-Release: 16%{?dist}
+Release: 20%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
@@ -125,7 +125,7 @@ Provides: python(abi) = %{pybasever}
 BuildRequires: autoconf
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: db4-devel >= 4.8
+BuildRequires: libdb-devel >= 5.1
 BuildRequires: expat-devel
 BuildRequires: findutils
 BuildRequires: gcc-c++
@@ -167,7 +167,7 @@ BuildRequires: zlib-devel
 # Source code and patches
 # =======================
 
-Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.bz2
+Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 
 # Work around bug 562906 until it's fixed in rpm-build by providing a fixed
 # version of pythondeps.sh:
@@ -331,6 +331,7 @@ Patch17: python-2.6.4-distutils-rpath.patch
 
 # Patch setup.py so that it links against db-4.8:
 Patch54: python-2.6.4-setup-db48.patch
+Patch53: db5.2.diff
 
 # Systemtap support: add statically-defined probe points
 # Patch based on upstream bug: http://bugs.python.org/issue4111
@@ -601,6 +602,15 @@ Patch147: 00147-add-debug-malloc-stats.patch
 # Taken from upstream http://bugs.python.org/issue13007 (rhbz#742242)
 Patch148: 00148-gdbm-1.9-magic-values.patch
 
+# Fix deadlock in fork:
+# https://bugzilla.redhat.com/show_bug.cgi?id=787712
+# http://bugs.python.org/issue13817
+Patch151: python-3.2.2-fork-deadlock.patch
+
+# python3.spec's
+#   Patch149: 00149-backport-issue11254-pycache-bytecompilation-fix.patch
+# is not relevant for Python 2
+
 # (New patches go here ^^^)
 #
 # When adding new patches to "python" and "python3" in Fedora 17 onwards,
@@ -644,6 +654,12 @@ Obsoletes: python-hashlib < 20081120
 Provides: python-hashlib = 20081120
 Obsoletes: python-uuid < 1.31
 Provides: python-uuid = 1.31
+
+# python-sqlite2-2.3.5-5.fc18 was retired.  Obsolete the old package here
+# so it gets uninstalled on updates
+%if 0%{?fedora} >= 17
+Obsoletes: python-sqlite2 <= 2.3.5-6
+%endif
 
 # python-argparse is part of python as of version 2.7
 # drop this Provides in F17
@@ -852,6 +868,7 @@ done
 %patch16 -p1 -b .rpath
 %patch17 -p1 -b .distutils-rpath
 
+%patch53 -p1 -b .db5
 %patch54 -p1 -b .setup-db48
 %if 0%{?with_systemtap}
 %patch55 -p1 -b .systemtap
@@ -902,6 +919,9 @@ done
 %patch146 -p1
 %patch147 -p1
 %patch148 -p1
+# 00149: not for python 2
+%patch151 -p1
+
 
 # This shouldn't be necesarry, but is right now (2.2a3)
 find -name "*~" |xargs rm -f
@@ -924,6 +944,7 @@ export CXXFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE -fPIC -fwrapv"
 export CPPFLAGS="$(pkg-config --cflags-only-I libffi)"
 export OPT="$RPM_OPT_FLAGS -D_GNU_SOURCE -fPIC -fwrapv"
 export LINKCC="gcc"
+export LDFLAGS="$RPM_LD_FLAGS"
 if pkg-config openssl ; then
   export CFLAGS="$CFLAGS $(pkg-config --cflags openssl)"
   export LDFLAGS="$LDFLAGS $(pkg-config --libs-only-L openssl)"
@@ -1728,6 +1749,19 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Sat Feb 25 2012 Thomas Spura <tomspur@fedoraproject.org> - 2.7.2-20
+- fix deadlock issue (#787712)
+
+* Fri Feb 17 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 2.7.2-19
+- Obsolete python-sqlite2
+
+* Thu Nov 24 2011 Ville Skyttä <ville.skytta@iki.fi> - 2.7.2-18
+- Build with $RPM_LD_FLAGS (#756862).
+- Use xz-compressed source tarball.
+
+* Wed Oct 26 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.7.2-17
+- Rebuilt for glibc bug#747377
+
 * Fri Sep 30 2011 David Malcolm <dmalcolm@redhat.com> - 2.7.2-16
 - re-enable gdbm (patch 148; rhbz#742242)
 

@@ -1,6 +1,6 @@
 Name:           perl-Clone
 Version:        0.31
-Release:        11%{?dist}
+Release:        9%{?dist}
 Summary:        Recursively copy perl datatypes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -57,12 +57,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.31-11
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.31-10
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

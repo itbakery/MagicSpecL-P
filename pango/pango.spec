@@ -8,8 +8,8 @@
 
 Summary: System for layout and rendering of internationalized text
 Name: pango
-Version: 1.29.4
-Release: 1%{?dist}
+Version: 1.29.5
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
@@ -38,7 +38,7 @@ BuildRequires: cairo-gobject-devel
 BuildRequires: gnome-common intltool gtk-doc
 
 # Look for pango.modules in an arch-specific directory
-Patch0: pango-1.21.4-lib64.patch
+Patch0: pango-lib64.patch
 
 %description
 Pango is a library for laying out and rendering of text, with an emphasis
@@ -238,6 +238,12 @@ fi
 
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.29.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Nov 22 2011 Matthias Clasen <mclasen@redhat.com> - 1.29.5-1
+- Update to 1.29.5
+
 * Wed Sep 28 2011 Ray <rstrode@redhat.com> - 1.29.4-1
 - Update to 1.29.4
 

@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-AIO
 Version:        1.1
-Release:        13%{?dist}
+Release:        8%{?dist}
 Summary:        Truly asynchronous file and directrory I/O
 
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-
+make test
 
 
 %clean
@@ -49,21 +49,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.1-13
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.1-12
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.1-11
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.1-10
-- 为 Magic 3.0 重建
-
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.1-9
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

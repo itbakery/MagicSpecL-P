@@ -1,7 +1,7 @@
 Name:		perl-common-sense
 Summary:	"Common sense" Perl defaults 
 Version:	3.4
-Release:	6%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Source0:	http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/common-sense-%{version}.tar.gz 
@@ -51,9 +51,6 @@ rm -rf %{buildroot}
 %{_mandir}/man3/common::sense.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.4-6
-- 为 Magic 3.0 重建
-
 * Sat Jan 21 2012 Paul Howarth <paul@city-fan.org> - 3.4-5
 - Obsolete/provide old -tests subpackage to support upgrades
 

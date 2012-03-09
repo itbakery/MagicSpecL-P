@@ -1,6 +1,6 @@
 Name:           perl-Coro
 Version:        6.07
-Release:        4%{?dist}
+Release:        3%{?dist}
 Summary:        The only real threads in perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -95,6 +95,11 @@ sed -i -e '/^#!/ s|.*|#!%{__perl}|' %wrong_shbangs
 
 
 %build
+# Disable FORTIFY_SOURCE on ARM as it breaks setjmp - RHBZ 750805
+%ifarch %{arm}
+RPM_OPT_FLAGS=$(echo "${RPM_OPT_FLAGS}" | sed -e 's/-Wp,-D_FORTIFY_SOURCE=2/-D_FORTIFY_SOURCE=0/g')
+%endif
+
 # Interractive configuration. Use default values.
 %{__perl} Makefile.PL INSTALLDIRS=perl OPTIMIZE="$RPM_OPT_FLAGS" </dev/null
 make %{?_smp_mflags}
@@ -109,7 +114,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -120,11 +125,8 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.07-4
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.07-3
-- 为 Magic 3.0 重建
+* Tue Feb 21 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 6.07-3
+- Add patch to fix build on ARM. RHBZ 750805
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.07-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

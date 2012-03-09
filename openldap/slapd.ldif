@@ -11,9 +11,9 @@ olcPidFile: /var/run/openldap/slapd.pid
 #
 # TLS settings
 #
-#olcTLSCACertificateFile: /etc/pki/tls/certs/ca-bundle.crt
-#olcTLSCertificateFile: /etc/pki/tls/certs/slapd.pem
-#olcTLSCertificateKeyFile: /etc/pki/tls/certs/slapd.pem
+olcTLSCACertificatePath: /etc/openldap/certs
+olcTLSCertificateFile: "OpenLDAP Server"
+olcTLSCertificateKeyFile: /etc/openldap/certs/password
 #
 # Do not enable referrals until AFTER you have a working directory
 # service AND an understanding of referrals.

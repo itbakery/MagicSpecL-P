@@ -1,6 +1,6 @@
 Name:           perl-IO-Socket-INET6
 Version:        2.69
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Perl Object interface for AF_INET|AF_INET6 domain sockets
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -35,7 +35,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,9 +47,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/IO::Socket::INET6.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.69-2
-- 为 Magic 3.0 重建
-
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> - 2.69-1
 - Update to 2.69:
   - Solved symbol clashes in t/io_multihomed6.t (CPAN RT#72769)

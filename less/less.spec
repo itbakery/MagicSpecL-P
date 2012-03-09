@@ -1,7 +1,7 @@
 Summary: A text file browser similar to more, but better
 Name: less
 Version: 444
-Release: 3%{?dist}
+Release: 5%{?dist}
 License: GPLv3+
 Group: Applications/Text
 Source: http://www.greenwoodsoftware.com/less/%{name}-%{version}.tar.gz
@@ -68,6 +68,12 @@ ls -la $RPM_BUILD_ROOT/etc/profile.d
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Mar 09 2012 Liu Di <liudidi@gmail.com> - 444-5
+- 为 Magic 3.0 重建
+
+* Fri Mar 09 2012 Liu Di <liudidi@gmail.com> - 444-4
+- 为 Magic 3.0 重建
+
 * Mon Aug 23 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 444-3
 - Substitute %%makeinstall macro with make DESTDIR* install (#732557)
 

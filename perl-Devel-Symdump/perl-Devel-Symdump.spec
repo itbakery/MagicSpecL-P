@@ -1,6 +1,6 @@
 Name:           perl-Devel-Symdump
 Version:        2.08
-Release:        9%{?dist}
+Release:        8%{?dist}
 Epoch:          1
 Summary:        A Perl module for inspecting Perl's symbol table
 Group:          Development/Libraries
@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -49,9 +49,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel::Symdump.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:2.08-9
-- 为 Magic 3.0 重建
-
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 1:2.08-8
 - Spec clean-up:
   - Use DESTDIR rather than PERL_INSTALL_ROOT

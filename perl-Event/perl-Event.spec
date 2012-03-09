@@ -1,6 +1,6 @@
 Name:		perl-Event
 Version:	1.20
-Release:	2%{?dist}
+Release:	1%{?dist}
 Summary:	Event loop processing
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -47,7 +47,7 @@ find %{buildroot} -depth -type d -exec rmdir --ignore-fail-on-non-empty {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %files
 %doc ANNOUNCE ChangeLog README README.EV TODO
@@ -61,9 +61,6 @@ find %{buildroot} -depth -type d -exec rmdir --ignore-fail-on-non-empty {} ';'
 %{_mandir}/man3/Event::generic.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.20-2
-- 为 Magic 3.0 重建
-
 * Sun Jan 15 2012 Paul Howarth <paul@city-fan.org> 1.20-1
 - update to 1.20 (test suite fixes)
 - BR: perl(Carp), perl(Config), perl(Exporter)

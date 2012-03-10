@@ -1,15 +1,16 @@
 %global contentdir  /var/www
 # API/ABI check
-%global apiver      20090626
-%global zendver     20090626
+%global apiver      20100412
+%global zendver     20100525
 %global pdover      20080721
 # Extension version
-%global fileinfover 1.0.5-dev
+%global fileinfover 1.0.5
 %global pharver     2.0.1
 %global zipver      1.9.1
 %global jsonver     1.2.1
 
 %global httpd_mmn %(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)
+%global mysql_sock %(mysql_config --socket || echo /var/lib/mysql/mysql.sock)
 
 # Regression tests take a long time, you can skip 'em with this
 %{!?runselftest: %{expand: %%global runselftest 1}}
@@ -30,19 +31,25 @@
 %global isasuffix %nil
 %endif
 
-# Flip these to 1 and zip respectively to enable zip support again
-%global with_zip 0
-%global zipmod %nil
+%if 0%{?fedora} >= 17
+%global with_zip     1
+%global with_libzip  1
+%global zipmod       zip
+%else
+%global with_zip     0
+%global with_libzip  0
+%global zipmod       %nil
+%endif
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.3.8
-Release: 4%{?dist}.4
+Version: 5.4.0
+Release: 1%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
 
-Source0: http://www.php.net/distributions/php-%{version}.tar.bz2
+Source0: http://www.php.net/distributions/php-%{version}%{?rcver}.tar.bz2
 Source1: php.conf
 Source2: php.ini
 Source3: macros.php
@@ -50,45 +57,41 @@ Source4: php-fpm.conf
 Source5: php-fpm-www.conf
 Source6: php-fpm.service
 Source7: php-fpm.logrotate
+Source8: php-fpm.sysconfig
 
 # Build fixes
-Patch1: php-5.3.7-gnusrc.patch
-Patch2: php-5.3.0-install.patch
-Patch3: php-5.2.4-norpath.patch
 Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
-# from http://svn.php.net/viewvc?view=revision&revision=311042
-# and  http://svn.php.net/viewvc?view=revision&revision=311908
-Patch8: php-5.3.8-aconf259.patch
-# from http://svn.php.net/viewvc?view=revision&revision=316281
-# + fix harcoded mysql.sock path
-Patch9: php-5.3.8-mysqlnd.patch
 
 # Fixes for extension modules
-Patch20: php-4.3.11-shutdown.patch
-Patch21: php-5.3.3-macropen.patch
 
 # Functional changes
-Patch40: php-5.0.4-dlopen.patch
-Patch41: php-5.3.0-easter.patch
+Patch40: php-5.4.0-dlopen.patch
+Patch41: php-5.4.0-easter.patch
 Patch42: php-5.3.1-systzdata-v7.patch
 # See http://bugs.php.net/53436
-Patch43: php-5.3.4-phpize.patch
-# http://svn.php.net/viewvc?view=revision&revision=317183
-Patch44: php-5.3.8-isa.patch
+Patch43: php-5.4.0-phpize.patch
+# Use system libzip instead of bundled one
+Patch44: php-5.4.0-system-libzip.patch
 
 # Fixes for tests
-Patch61: php-5.0.4-tests-wddx.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires: bzip2-devel, curl-devel >= 7.9, db4-devel, gmp-devel
+BuildRequires: bzip2-devel, curl-devel >= 7.9, libdb-devel, gmp-devel
 BuildRequires: httpd-devel >= 2.0.46-1, pam-devel
-BuildRequires: libstdc++-devel, openssl-devel, sqlite-devel >= 3.6.0
-BuildRequires: zlib-devel, pcre-devel >= 6.6, smtpdaemon, libedit-devel
+BuildRequires: libstdc++-devel, openssl-devel
+BuildRequires: sqlite-devel >= 3.6.0
+BuildRequires: zlib-devel, smtpdaemon, libedit-devel
+BuildRequires: pcre-devel >= 6.6
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
+BuildRequires: bison
+%if %{with_libzip}
+BuildRequires: libzip-devel >= 0.10
+%endif
 
 Obsoletes: php-dbg, php3, phpfi, stronghold-php, php-zts < 5.3.7
 Provides: php-zts = %{version}-%{release}
@@ -106,9 +109,11 @@ Requires(pre): httpd
 # Don't provides extensions, which are not shared library, as .so
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/php/modules/.*\\.so$
+%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/php-zts/modules/.*\\.so$
 
 
 %description
@@ -133,6 +138,7 @@ Provides: php-readline, php-readline%{?_isa}
 %description cli
 The php-cli package contains the command-line interface 
 executing PHP scripts, /usr/bin/php, and the CGI interface.
+
 
 %if %{with_fpm}
 %package fpm
@@ -159,10 +165,7 @@ any size, especially busier sites.
 %package common
 Group: Development/Languages
 Summary: Common files for PHP
-# Remove this when value change
-Provides: php-api = %{apiver}, php-zend-abi = %{zendver}
-Provides: php(api) = %{apiver}, php(zend-abi) = %{zendver}
-# New ABI/API check - Arch specific
+# ABI/API check - Arch specific
 Provides: php-api = %{apiver}%{isasuffix}, php-zend-abi = %{zendver}%{isasuffix}
 Provides: php(api) = %{apiver}%{isasuffix}, php(zend-abi) = %{zendver}%{isasuffix}
 # Provides for all builtin/shared modules:
@@ -215,6 +218,8 @@ Group: Development/Libraries
 Summary: Files needed for building PHP extensions
 Requires: php%{?_isa} = %{version}-%{release}, autoconf, automake
 Obsoletes: php-pecl-pdo-devel
+Provides: php-zts-devel = %{version}-%{release}
+Provides: php-zts-devel%{?_isa} = %{version}-%{release}
 
 %description devel
 The php-devel package contains the files needed for building PHP
@@ -257,9 +262,7 @@ Summary: A database access abstraction module for PHP applications
 Group: Development/Languages
 Requires: php-common%{?_isa} = %{version}-%{release}
 Obsoletes: php-pecl-pdo-sqlite, php-pecl-pdo
-# Remove this when value change
-Provides: php-pdo-abi = %{pdover}
-# New ABI/API check - Arch specific
+# ABI/API check - Arch specific
 Provides: php-pdo-abi = %{pdover}%{isasuffix}
 Provides: php-sqlite3, php-sqlite3%{?_isa}
 Provides: php-pdo_sqlite, php-pdo_sqlite%{?_isa}
@@ -554,26 +557,19 @@ support for using the enchant library to PHP.
 
 
 %prep
-%setup -q
-%patch1 -p1 -b .gnusrc
-%patch2 -p1 -b .install
-%patch3 -p1 -b .norpath
+%setup -q -n php-%{version}%{?rcver}
+
 %patch5 -p1 -b .includedir
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
-%patch8 -p1 -b .aconf26x
-%patch9 -p1 -b .mysqlnd
-
-%patch20 -p1 -b .shutdown
-%patch21 -p1 -b .macropen
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
 %patch42 -p1 -b .systzdata
-%patch43 -p0 -b .headers
-%patch44 -p4 -b .isa
-
-%patch61 -p1 -b .tests-wddx
+%patch43 -p1 -b .headers
+%if %{with_libzip}
+%patch44 -p1 -b .systzip
+%endif
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -582,7 +578,7 @@ cp ext/ereg/regex/COPYRIGHT regex_COPYRIGHT
 cp ext/gd/libgd/README gd_README
 
 # Multiple builds for multiple SAPIs
-mkdir build-cgi build-apache build-embedded build-zts \
+mkdir build-cgi build-apache build-embedded build-zts build-ztscli \
 %if %{with_fpm}
     build-fpm
 %endif
@@ -598,6 +594,13 @@ rm -f ext/standard/tests/file/bug22414.phpt \
       ext/iconv/tests/bug16069.phpt
 
 # Safety check for API version change.
+pver=$(sed -n '/#define PHP_VERSION /{s/.* "//;s/".*$//;p}' main/php_version.h)
+if test "x${pver}" != "x%{version}%{?rcver}"; then
+   : Error: Upstream PHP version is now ${pver}, expecting %{version}%{?rcver}.
+   : Update the version/rcver macros and rebuild.
+   exit 1
+fi
+
 vapi=`sed -n '/#define PHP_API_VERSION/{s/.* //;p}' main/php.h`
 if test "x${vapi}" != "x%{apiver}"; then
    : Error: Upstream API version is now ${vapi}, expecting %{apiver}.
@@ -680,7 +683,7 @@ PEAR_INSTALLDIR=%{_datadir}/pear; export PEAR_INSTALLDIR
 # Shell function to configure and build a PHP tree.
 build() {
 # bison-1.875-2 seems to produce a broken parser; workaround.
-mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
+# mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -715,11 +718,10 @@ ln -sf ../configure
 	--enable-ucd-snmp-hack \
 	--enable-shmop \
 	--enable-calendar \
-        --without-sqlite \
         --with-libxml-dir=%{_prefix} \
 	--enable-xml \
         --with-system-tzdata \
-        --with-mhash \
+	--with-mhash \
 	$* 
 if test $? != 0; then 
   tail -500 config.log
@@ -732,6 +734,7 @@ make %{?_smp_mflags}
 
 # Build /usr/bin/php-cgi with the CGI SAPI, and all the shared extensions
 pushd build-cgi
+
 build --enable-force-cgi-redirect \
       --libdir=%{_libdir}/php \
       --enable-pcntl \
@@ -746,6 +749,7 @@ build --enable-force-cgi-redirect \
       --enable-mysqlnd=shared \
       --with-mysql=shared,mysqlnd \
       --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=%{mysql_sock} \
       --with-interbase=shared,%{_libdir}/firebird \
       --with-pdo-firebird=shared,%{_libdir}/firebird \
       --enable-dom=shared \
@@ -767,6 +771,9 @@ build --enable-force-cgi-redirect \
       --enable-json=shared \
 %if %{with_zip}
       --enable-zip=shared \
+%endif
+%if %{with_libzip}
+      --with-libzip \
 %endif
       --without-readline \
       --with-libedit \
@@ -823,14 +830,84 @@ build --enable-embed \
       ${without_shared}
 popd
 
+# Build a special thread-safe (mainly for modules)
+pushd build-ztscli
+
+EXTENSION_DIR=%{_libdir}/php-zts/modules
+build --enable-force-cgi-redirect \
+      --includedir=%{_includedir}/php-zts \
+      --libdir=%{_libdir}/php-zts \
+      --enable-maintainer-zts \
+      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+      --enable-pcntl \
+      --with-imap=shared --with-imap-ssl \
+      --enable-mbstring=shared \
+      --enable-mbregex \
+      --with-gd=shared \
+      --enable-bcmath=shared \
+      --enable-dba=shared --with-db4=%{_prefix} \
+      --with-xmlrpc=shared \
+      --with-ldap=shared --with-ldap-sasl \
+      --enable-mysqlnd=shared \
+      --with-mysql=shared,mysqlnd \
+      --with-mysqli=shared,mysqlnd \
+      --with-mysql-sock=%{mysql_sock} \
+      --enable-mysqlnd-threading \
+      --with-interbase=shared,%{_libdir}/firebird \
+      --with-pdo-firebird=shared,%{_libdir}/firebird \
+      --enable-dom=shared \
+      --with-pgsql=shared \
+      --enable-wddx=shared \
+      --with-snmp=shared,%{_prefix} \
+      --enable-soap=shared \
+      --with-xsl=shared,%{_prefix} \
+      --enable-xmlreader=shared --enable-xmlwriter=shared \
+      --with-curl=shared,%{_prefix} \
+      --enable-fastcgi \
+      --enable-pdo=shared \
+      --with-pdo-odbc=shared,unixODBC,%{_prefix} \
+      --with-pdo-mysql=shared,mysqlnd \
+      --with-pdo-pgsql=shared,%{_prefix} \
+      --with-pdo-sqlite=shared,%{_prefix} \
+      --with-pdo-dblib=shared,%{_prefix} \
+      --with-sqlite3=shared,%{_prefix} \
+      --enable-json=shared \
+%if %{with_zip}
+      --enable-zip=shared \
+%endif
+%if %{with_libzip}
+      --with-libzip \
+%endif
+      --without-readline \
+      --with-libedit \
+      --with-pspell=shared \
+      --enable-phar=shared \
+      --with-mcrypt=shared,%{_prefix} \
+      --with-tidy=shared,%{_prefix} \
+      --with-mssql=shared,%{_prefix} \
+      --enable-sysvmsg=shared --enable-sysvshm=shared --enable-sysvsem=shared \
+      --enable-posix=shared \
+      --with-unixODBC=shared,%{_prefix} \
+      --enable-fileinfo=shared \
+      --enable-intl=shared \
+      --with-icu-dir=%{_prefix} \
+      --with-enchant=shared,%{_prefix} \
+      --with-recode=shared,%{_prefix}
+popd
+
 # Build a special thread-safe Apache SAPI
 pushd build-zts
-EXTENSION_DIR=%{_libdir}/php-zts/modules
-build --with-apxs2=%{_sbindir}/apxs ${without_shared} \
+build --with-apxs2=%{_sbindir}/apxs \
+      --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
-      --without-mysql --disable-pdo \
       --enable-maintainer-zts \
-      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d
+      --with-config-file-scan-dir=%{_sysconfdir}/php-zts.d \
+      --enable-pdo=shared \
+      --with-mysql=shared,%{_prefix} \
+      --with-mysqli=shared,%{mysql_config} \
+      --with-pdo-mysql=shared,%{mysql_config} \
+      --with-pdo-sqlite=shared,%{_prefix} \
+      ${without_shared}
 popd
 
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
@@ -858,8 +935,30 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
+# Install the extensions for the ZTS version
+make -C build-ztscli install \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# rename extensions build with mysqlnd
+mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqlnd_mysql.so
+mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqli.so \
+   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysqlnd_mysqli.so
+mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysql.so \
+   $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/pdo_mysqlnd.so
+
+# Install the extensions for the ZTS version modules for libmysql
+make -C build-zts install-modules \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
+
+# rename ZTS binary
+mv $RPM_BUILD_ROOT%{_bindir}/php        $RPM_BUILD_ROOT%{_bindir}/zts-php
+mv $RPM_BUILD_ROOT%{_bindir}/phpize     $RPM_BUILD_ROOT%{_bindir}/zts-phpize
+mv $RPM_BUILD_ROOT%{_bindir}/php-config $RPM_BUILD_ROOT%{_bindir}/zts-php-config
+
 # Install the version for embedded script language in applications + php_embed.h
-make -C build-embedded install-sapi install-headers INSTALL_ROOT=$RPM_BUILD_ROOT
+make -C build-embedded install-sapi install-headers \
+     INSTALL_ROOT=$RPM_BUILD_ROOT
 
 %if %{with_fpm}
 # Install the php-fpm binary
@@ -887,11 +986,10 @@ make -C build-apache install-modules \
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
 install -m 755 -d $RPM_BUILD_ROOT%{contentdir}/icons
-install -m 644    *.gif $RPM_BUILD_ROOT%{contentdir}/icons/
+install -m 644 php.gif $RPM_BUILD_ROOT%{contentdir}/icons/php.gif
 
 # For third-party packaging:
-install -m 755 -d $RPM_BUILD_ROOT%{_libdir}/php/pear \
-                  $RPM_BUILD_ROOT%{_datadir}/php
+install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
 # install the DSO
 install -m 755 -d $RPM_BUILD_ROOT%{_libdir}/httpd/modules
@@ -901,11 +999,11 @@ install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modu
 install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/libphp5-zts.so
 
 # Apache config fragment
-install -m 755 -d $RPM_BUILD_ROOT/etc/httpd/conf.d
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/httpd/conf.d
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
+install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
 
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php.d
-#install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d
 install -m 755 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/php/session
 
@@ -919,17 +1017,19 @@ install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d
 install -m 644 %{SOURCE4} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf
 install -m 644 %{SOURCE5} $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.d/www.conf
 mv $RPM_BUILD_ROOT%{_sysconfdir}/php-fpm.conf.default .
+# tmpfiles.d
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
+install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
 # install systemd unit files and scripts for handling server startup
 install -m 755 -d $RPM_BUILD_ROOT%{_unitdir}
 install -m 644 %{SOURCE6} $RPM_BUILD_ROOT%{_unitdir}/
 # LogRotate
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
 install -m 644 %{SOURCE7} $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/php-fpm
-# tmpfiles.d
-install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d
-install -m 644 php-fpm.tmpfiles $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/php-fpm.conf
+# Environment file
+install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
+install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %endif
-
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
 
@@ -938,16 +1038,23 @@ for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
     mysqlnd mysqlnd_mysql mysqlnd_mysqli pdo_mysqlnd \
     mbstring gd dom xsl soap bcmath dba xmlreader xmlwriter \
     pdo pdo_mysql pdo_pgsql pdo_odbc pdo_sqlite json %{zipmod} \
-    sqlite3 enchant phar fileinfo intl \
+    sqlite3  interbase pdo_firebird \
+    enchant phar fileinfo intl \
     mcrypt tidy pdo_dblib mssql pspell curl wddx \
-    posix sysvshm sysvsem sysvmsg recode interbase pdo_firebird; do
+    posix sysvshm sysvsem sysvmsg recode; do
     cat > $RPM_BUILD_ROOT%{_sysconfdir}/php.d/${mod}.ini <<EOF
+; Enable ${mod} extension module
+extension=${mod}.so
+EOF
+    cat > $RPM_BUILD_ROOT%{_sysconfdir}/php-zts.d/${mod}.ini <<EOF
 ; Enable ${mod} extension module
 extension=${mod}.so
 EOF
     cat > files.${mod} <<EOF
 %attr(755,root,root) %{_libdir}/php/modules/${mod}.so
+%attr(755,root,root) %{_libdir}/php-zts/modules/${mod}.so
 %config(noreplace) %attr(644,root,root) %{_sysconfdir}/php.d/${mod}.ini
+%config(noreplace) %attr(644,root,root) %{_sysconfdir}/php-zts.d/${mod}.ini
 EOF
 done
 
@@ -994,6 +1101,7 @@ install -m 644 -c macros.php \
 
 # Remove unpackaged files
 rm -rf $RPM_BUILD_ROOT%{_libdir}/php/modules/*.a \
+       $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/*.a \
        $RPM_BUILD_ROOT%{_bindir}/{phptar} \
        $RPM_BUILD_ROOT%{_datadir}/pear \
        $RPM_BUILD_ROOT%{_libdir}/libphp5.la
@@ -1055,17 +1163,17 @@ fi
 
 %files common -f files.common
 %defattr(-,root,root)
-%doc CODING_STANDARDS CREDITS EXTENSIONS INSTALL LICENSE NEWS README*
+%doc CODING_STANDARDS CREDITS EXTENSIONS LICENSE NEWS README*
 %doc Zend/ZEND_* TSRM_LICENSE regex_COPYRIGHT
 %doc php.ini-*
 %config(noreplace) %{_sysconfdir}/php.ini
 %dir %{_sysconfdir}/php.d
-#dir %{_sysconfdir}/php-zts.d
+%dir %{_sysconfdir}/php-zts.d
 %dir %{_libdir}/php
 %dir %{_libdir}/php/modules
-#dir %{_libdir}/php-zts/modules
+%dir %{_libdir}/php-zts
+%dir %{_libdir}/php-zts/modules
 %dir %{_localstatedir}/lib/php
-%dir %{_libdir}/php/pear
 %dir %{_datadir}/php
 
 %files cli
@@ -1087,28 +1195,36 @@ fi
 %config(noreplace) %{_sysconfdir}/php-fpm.conf
 %config(noreplace) %{_sysconfdir}/php-fpm.d/www.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/php-fpm
+%config(noreplace) %{_sysconfdir}/sysconfig/php-fpm
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/php-fpm.conf
-%{_sbindir}/php-fpm
 %{_unitdir}/php-fpm.service
+%{_sbindir}/php-fpm
 %dir %{_sysconfdir}/php-fpm.d
 # log owned by apache for log
-%attr(770,apache,apache) %dir %{_localstatedir}/log/php-fpm
+%attr(770,apache,root) %dir %{_localstatedir}/log/php-fpm
 %dir %{_localstatedir}/run/php-fpm
 %{_mandir}/man8/php-fpm.8*
+%{_datadir}/fpm/status.html
 %endif
 
 %files devel
 %defattr(-,root,root)
 %{_bindir}/php-config
+%{_bindir}/zts-php-config
+%{_bindir}/zts-phpize
+# usefull only to test other module during build
+%{_bindir}/zts-php
 %{_includedir}/php
+%{_includedir}/php-zts
 %{_libdir}/php/build
+%{_libdir}/php-zts/build
 %{_mandir}/man1/php-config.1*
 %config %{_sysconfdir}/rpm/macros.php
 
 %files embedded
 %defattr(-,root,root,-)
 %{_libdir}/libphp5.so
-%{_libdir}/libphp5-%{version}.so
+%{_libdir}/libphp5-%{version}%{?rcver}.so
 
 %files pgsql -f files.pgsql
 %files mysql -f files.mysql
@@ -1139,6 +1255,25 @@ fi
 
 
 %changelog
+* Fri Mar 02 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1
+- update to PHP 5.4.0 finale
+
+* Sat Feb 18 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-0.4.RC8
+- update to PHP 5.4.0RC8
+
+* Sat Feb 04 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-0.3.RC7
+- update to PHP 5.4.0RC7
+- provides env file for php-fpm (#784770)
+- add patch to use system libzip (thanks to spot)
+- don't provide INSTALL file
+
+* Wed Jan 25 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-0.2.RC6
+- all binaries in /usr/bin with zts prefix
+
+* Wed Jan 18 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-0.1.RC6
+- update to PHP 5.4.0RC6
+  https://fedoraproject.org/wiki/Features/Php54
+
 * Sun Jan 08 2012 Remi Collet <remi@fedoraproject.org> 5.3.8-4.4
 - fix systemd unit
 

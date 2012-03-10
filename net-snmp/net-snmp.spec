@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.1
-Release: 4%{?dist}
+Release: 6%{?dist}
 Epoch: 1
 
 License: BSD
@@ -509,6 +509,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_initrddir}/snmptrapd
 
 %changelog
+* Sat Mar 10 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-6
+- 为 Magic 3.0 重建
+
+* Sat Mar 10 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

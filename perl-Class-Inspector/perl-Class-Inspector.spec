@@ -1,6 +1,6 @@
 Name: 		perl-Class-Inspector
 Version: 	1.27
-Release: 	2%{?dist}
+Release: 	1%{?dist}
 Summary: 	Get information about a class and its structure
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -51,9 +51,6 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.27-2
-- 为 Magic 3.0 重建
-
 * Fri Jan 27 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.27-1
 - Upstream update.
 - Spec file modernization.

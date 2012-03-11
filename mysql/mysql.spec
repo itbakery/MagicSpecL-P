@@ -1,6 +1,5 @@
-%define runselftest 0
 Name: mysql
-Version: 5.5.19
+Version: 5.5.21
 Release: 1%{?dist}
 
 Summary: MySQL client programs and shared libraries
@@ -11,7 +10,7 @@ URL: http://www.mysql.com
 License: GPLv2 with exceptions
 
 # Regression tests take a long time, you can skip 'em with this
-%{!?runselftest:%global runselftest 1}
+%{!?runselftest:%global runselftest 0}
 
 # Upstream has a mirror redirector for downloads, so the URL is hard to
 # represent statically.  You can get the tarball by following a link from
@@ -33,6 +32,8 @@ Source10: mysql.tmpfiles.d
 Source11: mysqld.service
 Source12: mysqld-prepare-db-dir
 Source13: mysqld-wait-ready
+Source14: rh-skipped-tests-base.list
+Source15: rh-skipped-tests-arm.list
 # Working around perl dependency checking bug in rpm FTTB. Remove later.
 Source999: filter-requires-mysql.sh
 
@@ -45,13 +46,16 @@ Patch5: mysql-stack-guard.patch
 Patch6: mysql-chain-certs.patch
 Patch7: mysql-versioning.patch
 Patch8: mysql-dubious-exports.patch
-Patch9: mysql-disable-test.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
 Patch12: mysql-openssl-test.patch
 Patch13: mysqld-nowatch.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
+Patch16: mysql-logrotate.patch
+Patch17: mysql-plugin-test.patch
+Patch18: mysql-default-cipher.patch
+Patch19: mysql-file-contents.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, readline-devel, openssl-devel
@@ -197,19 +201,29 @@ the MySQL sources.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
+%patch17 -p1
+%patch18 -p1
+%patch19 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
 
 # upstream has fallen down badly on symbol versioning, do it ourselves
 cp %{SOURCE8} libmysql/libmysql.version
+
+# generate a list of tests that fail, but are not disabled by upstream
+cat %{SOURCE14} > mysql-test/rh-skipped-tests.list
+# disable some tests failing on ARM architectures
+%ifarch %{arm}
+cat %{SOURCE15} >> mysql-test/rh-skipped-tests.list
+%endif
 
 %build
 
@@ -304,11 +318,15 @@ cd ../..
   # --force to continue tests after a failure
   # no retries please
   # test SSL with --ssl
+  # skip tests that are listed in rh-skipped-tests.list
   # avoid redundant test runs with --binlog-format=mixed
   # increase timeouts to prevent unwanted failures during mass rebuilds
   (
     cd mysql-test
-    perl ./mysql-test-run.pl --force --retry=0 --ssl --mysqld=--binlog-format=mixed --suite-timeout=720 --testcase-timeout=30
+    perl ./mysql-test-run.pl --force --retry=0 --ssl \
+	--skip-test-list=rh-skipped-tests.list \
+	--mysqld=--binlog-format=mixed \
+	--suite-timeout=720 --testcase-timeout=30
     # cmake build scripts will install the var cruft if left alone :-(
     rm -rf var
   ) 
@@ -341,6 +359,11 @@ sed -e 's/-lprobes_mysql//' -e 's/-lmysqlclient_r/-lmysqlclient/' \
 	${RPM_BUILD_ROOT}%{_bindir}/mysql_config >mysql_config.tmp
 cp -f mysql_config.tmp ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
 chmod 755 ${RPM_BUILD_ROOT}%{_bindir}/mysql_config
+
+# install INFO_SRC, INFO_BIN into libdir (upstream thinks these are doc files,
+# but that's pretty wacko --- see also mysql-file-contents.patch)
+install -m 644 Docs/INFO_SRC ${RPM_BUILD_ROOT}%{_libdir}/mysql/
+install -m 644 Docs/INFO_BIN ${RPM_BUILD_ROOT}%{_libdir}/mysql/
 
 mkdir -p $RPM_BUILD_ROOT/var/log
 touch $RPM_BUILD_ROOT/var/log/mysqld.log
@@ -405,10 +428,14 @@ rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/magic
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/ndb-config-2-node.ini
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql.server
 rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysqld_multi.server
-rm -f ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/comp_err.1*
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-stress-test.pl.1*
 rm -f ${RPM_BUILD_ROOT}%{_mandir}/man1/mysql-test-run.pl.1*
+
+# put logrotate script where it needs to be
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d
+mv ${RPM_BUILD_ROOT}%{_datadir}/mysql/mysql-log-rotate $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/mysqld
+chmod 644 $RPM_BUILD_ROOT%{_sysconfdir}/logrotate.d/mysqld
 
 mkdir -p $RPM_BUILD_ROOT/etc/ld.so.conf.d
 echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
@@ -416,6 +443,9 @@ echo "%{_libdir}/mysql" > $RPM_BUILD_ROOT/etc/ld.so.conf.d/%{name}-%{_arch}.conf
 # copy additional docs into build tree so %%doc will find them
 cp %{SOURCE6} README.mysql-docs
 cp %{SOURCE7} README.mysql-license
+
+# install the list of skipped tests to be available for user runs
+install -m 0644 mysql-test/rh-skipped-tests.list ${RPM_BUILD_ROOT}%{_datadir}/mysql-test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -571,6 +601,9 @@ fi
 
 /usr/libexec/mysqld
 
+%{_libdir}/mysql/INFO_SRC
+%{_libdir}/mysql/INFO_BIN
+
 %{_libdir}/mysql/mysqlbug
 
 %{_libdir}/mysql/plugin
@@ -623,6 +656,7 @@ fi
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
+%config(noreplace) %{_sysconfdir}/logrotate.d/mysqld
 
 %files devel
 %defattr(-,root,root)
@@ -657,6 +691,32 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Mon Feb 27 2012 Tom Lane <tgl@redhat.com> 5.5.21-1
+- Update to MySQL 5.5.21, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html
+- Hack openssl regression test to still work with rawhide's openssl
+- Fix assorted failures in post-install regression tests (mysql-test RPM)
+Resolves: #789530
+
+* Fri Feb 10 2012 Tom Lane <tgl@redhat.com> 5.5.20-2
+- Revise our test-disabling method to make it possible to disable tests on a
+  platform-specific basis, and also to get rid of mysql-disable-test.patch,
+  which broke in just about every upstream update (Honza Horak)
+- Disable cycle-counter-dependent regression tests on ARM, since there is
+  not currently any support for that in Fedora ARM kernels
+Resolves: #773116
+- Add some comments to mysqld.service documenting how to customize it
+Resolves: #785243
+
+* Fri Jan 27 2012 Tom Lane <tgl@redhat.com> 5.5.20-1
+- Update to MySQL 5.5.20, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-20.html
+  as well as security fixes described at
+  http://www.oracle.com/technetwork/topics/security/cpujan2012-366304.html
+Resolves: #783828
+- Re-include the mysqld logrotate script, now that it's not so bogus
+Resolves: #547007
+
 * Wed Jan  4 2012 Tom Lane <tgl@redhat.com> 5.5.19-1
 - Update to MySQL 5.5.19, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-19.html

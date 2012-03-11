@@ -19,12 +19,12 @@
 # We can bootstrap without gdbm
 %bcond_without gdbm
 # We can skip %%check phase
-%bcond_without test
+%bcond_with test
 
 Name:           perl
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        213%{?dist}
+Release:        214%{?dist}
 Epoch:          %{perl_epoch}
 Summary:        Practical Extraction and Report Language
 Group:          Development/Languages
@@ -98,7 +98,7 @@ Patch15:        perl-5.14.2-Stop-V-from-leaking.patch
 # Update some of the bundled modules
 # see http://fedoraproject.org/wiki/Perl/perl.spec for instructions
 
-BuildRequires:  db4-devel, groff, tcsh, zlib-devel, bzip2-devel, systemtap-sdt-devel
+BuildRequires:  libdb-devel, groff, tcsh, zlib-devel, bzip2-devel, systemtap-sdt-devel
 %if %{with gdbm}
 BuildRequires: gdbm-devel
 %endif
@@ -2414,6 +2414,9 @@ sed \
 
 # Old changelog entries are preserved in CVS.
 %changelog
+* Thu Mar 08 2012 Liu Di <liudidi@gmail.com> - 4:5.14.2-214
+- 为 Magic 3.0 重建
+
 * Wed Feb 22 2012 Liu Di <liudidi@gmail.com> - 4:5.14.2-213
 - 为 Magic 3.0 重建
 

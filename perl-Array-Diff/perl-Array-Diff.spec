@@ -1,67 +1,72 @@
+# Only need manual requires for "use base XXX;" prior to rpm 4.9
+%global rpm49 %(rpm --version | perl -pi -e 's/^.* (\\d+)\\.(\\d+).*/sprintf("%d.%03d",$1,$2) ge 4.009 ? 1 : 0/e')
+
 Name:           perl-Array-Diff
 Version:        0.07
-Release:        9%{?dist}
+Release:        7%{?dist}
 # Because 0.07 compares newer than 0.05002 in Perl world
 # but not in RPM world :-(
 Epoch:          1
-Summary:        Diff two arrays
+Summary:        Find the differences between two arrays
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Array-Diff/
 Source0:        http://www.cpan.org/authors/id/T/TY/TYPESTER/Array-Diff-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(Algorithm::Diff)
 BuildRequires:  perl(Class::Accessor::Fast)
-BuildRequires:  perl(Module::Install)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%if ! %{rpm49}
+Requires:       perl(Class::Accessor::Fast)
+%endif
 
 %description
-This module do diff two arrays, and return added and deleted arrays. It's
-simple usage of Algorithm::Diff.
+This module compares two arrays and returns the added or deleted elements in
+two separate arrays. It's a simple wrapper around Algorithm::Diff.
+
+If you need more complex array tools, check Array::Compare.
 
 %prep
 %setup -q -n Array-Diff-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
-%dir %{perl_vendorlib}/Array
+%dir %{perl_vendorlib}/Array/
 %{perl_vendorlib}/Array/Diff.pm
-%{_mandir}/man3/*3pm*
+%{_mandir}/man3/Array::Diff.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:0.07-9
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:0.07-8
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1:0.07-7
-- 为 Magic 3.0 重建
+* Tue Mar  6 2012 Paul Howarth <paul@city-fan.org> - 1:0.07-7
+- Explicitly require perl(Class::Accessor::Fast) unless we have rpm ≥ 4.9,
+  which can auto-detect the dependency
+- Drop buildreq perl(Module::Install) - Makefile.PL explicitly uses the one
+  bundled in inc/
+- Don't need to remove empty directories from buildroot
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Make %%files list more explicit
+- Don't use macros for commands
+- Drop %%defattr, redundant since rpm 4.4
+- Improve %%description and %%summary
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.07-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

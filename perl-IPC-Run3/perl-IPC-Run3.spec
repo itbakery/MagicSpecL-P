@@ -1,6 +1,6 @@
 Name:           perl-IPC-Run3
 Version:        0.045
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Run a subprocess in batch mode
 License:        (GPL+ or Artistic) or BSD
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -48,9 +48,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.045-2
-- 为 Magic 3.0 重建
-
 * Thu Jan 05 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.045-1
 - Upstream update.
 - Modernize spec file.

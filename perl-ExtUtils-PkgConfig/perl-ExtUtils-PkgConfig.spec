@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-PkgConfig
 Version:        1.12
-Release:        12%{?dist}
+Release:        11%{?dist}
 Summary:        Simplistic interface to pkg-config
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -59,9 +59,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.12-12
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

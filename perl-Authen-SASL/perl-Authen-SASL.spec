@@ -1,6 +1,6 @@
 Name:           perl-Authen-SASL
 Version:        2.15
-Release:        6%{?dist}
+Release:        5%{?dist}
 Summary:        SASL Authentication framework for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,9 +51,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 2.15-6
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.15-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

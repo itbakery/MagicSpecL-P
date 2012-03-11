@@ -1,6 +1,6 @@
 Name: 		perl-File-Find-Rule
 Version: 	0.33
-Release: 	3%{?dist}
+Release: 	2%{?dist}
 Summary: 	Perl module implementing an alternative interface to File::Find
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -45,9 +45,6 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-3
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

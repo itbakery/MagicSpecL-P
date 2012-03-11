@@ -1,6 +1,6 @@
 Name:           perl-GTop
 Version:        0.17
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Perl interface to libgtop
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,7 +47,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README TODO examples/ t/
@@ -57,9 +57,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.17-3
-- 为 Magic 3.0 重建
-
 * Tue Jan 17 2012 Iain Arnell <iarnell@gmail.com> - 0.17-2
 - rebuilt again for F17 mass rebuild
 

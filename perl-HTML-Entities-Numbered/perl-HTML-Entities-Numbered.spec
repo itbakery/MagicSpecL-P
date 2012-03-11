@@ -1,6 +1,6 @@
 Name:           perl-HTML-Entities-Numbered
 Version:        0.04
-Release:        8%{?dist}
+Release:        7%{?dist}
 Summary:        Conversion of numbered HTML entities
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,9 +55,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-8
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

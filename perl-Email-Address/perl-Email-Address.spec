@@ -1,6 +1,6 @@
 Name:           perl-Email-Address
 Version:        1.889
-Release:        11%{?dist}
+Release:        10%{?dist}
 Summary:        RFC 2822 Address Parsing and Creation
 
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -55,9 +55,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.889-11
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.889-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -54,7 +54,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 9999.19-4
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 9999.19-4
 - 为 Magic 3.0 重建
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9999.19-3

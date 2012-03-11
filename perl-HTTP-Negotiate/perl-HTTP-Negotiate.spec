@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Negotiate
-Version:        6.00
-Release:        5%{?dist}
+Version:        6.01
+Release:        1%{?dist}
 Summary:        Choose a variant to serve
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -18,9 +18,6 @@ Requires:       perl(HTTP::Headers) >= 6
 Conflicts:      perl-libwww-perl < 6
 
 # Remove underspecified dependencies
-%filter_from_requires /^perl(HTTP::Headers)\s*$/d
-%filter_setup
-
 %global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(HTTP::Headers\\)$
 
 %description
@@ -44,17 +41,16 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.00-5
-- 为 Magic 3.0 重建
+* Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.01-1
+- 6.01 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.00-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

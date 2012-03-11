@@ -1,6 +1,6 @@
 Name:           perl-DBD-MySQL
 Version:        4.020
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A MySQL interface for perl
 
 Group:          Development/Libraries
@@ -22,7 +22,6 @@ Provides:       perl-DBD-mysql = %{version}-%{release}
 %description 
 An implementation of DBI for MySQL for Perl.
 
-
 %prep
 %setup -q -n DBD-mysql-%{version}
 %patch0 -p1
@@ -35,24 +34,20 @@ for file in lib/DBD/mysql.pm ChangeLog; do
   mv -f ${file}{_,}
 done
 
-
 %build
-perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS" --ssl
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}" --ssl
 make %{?_smp_mflags}
 
-
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-%{_fixperms} $RPM_BUILD_ROOT/*
-
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
+find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
+%{_fixperms} %{buildroot}/*
 
 %check
 # Full test coverage requires a live MySQL database
 #make test
-
 
 %files
 %doc ChangeLog INSTALL.html README TODO
@@ -61,8 +56,16 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{perl_vendorarch}/auto/DBD/
 %{_mandir}/man3/*.3*
 
-
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.020-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Aug 22 2011 Petr Sabata <contyk@redhat.com> - 4.020-1
+- 4.020 bump
+
+* Tue Jun 21 2011 Marcela Mašláňová <mmaslano@redhat.com> - 4.019-3
+- Perl mass rebuild
+
 * Fri May 13 2011 Marcela Mašláňová <mmaslano@redhat.com> - 4.019-2
 - apply tested patch from F-15 (is_prefix replaced by strncmp) #703185
 - remove deffattr

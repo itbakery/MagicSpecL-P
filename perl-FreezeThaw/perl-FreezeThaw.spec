@@ -1,6 +1,6 @@
 Name:           perl-FreezeThaw
 Version:        0.5001
-Release:        7%{?dist}
+Release:        6%{?dist}
 Summary:        Convert Perl structures to strings and back
 
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -53,9 +53,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.5001-7
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5001-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

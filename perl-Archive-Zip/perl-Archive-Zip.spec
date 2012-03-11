@@ -1,6 +1,6 @@
 Name:           perl-Archive-Zip
 Version:        1.30
-Release:        9%{?dist}
+Release:        7%{?dist}
 Summary:        Perl library for accessing Zip archives
 
 Group:          Development/Libraries
@@ -67,12 +67,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.30-9
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.30-8
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.30-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

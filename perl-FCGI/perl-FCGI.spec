@@ -43,7 +43,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc ChangeLog README LICENSE.TERMS echo.PL remote.PL threaded.PL
@@ -52,7 +52,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:0.74-3
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 1:0.74-3
 - 为 Magic 3.0 重建
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-2

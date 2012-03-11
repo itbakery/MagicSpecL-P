@@ -1,6 +1,6 @@
 Name:           perl-Exception-Class
 Version:        1.32
-Release:        5%{?dist}
+Release:        4%{?dist}
 Summary:        Module that allows you to declare real exception classes in Perl
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 export IS_MAINTAINER=1
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -53,9 +53,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.32-5
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.32-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

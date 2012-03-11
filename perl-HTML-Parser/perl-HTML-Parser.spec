@@ -52,7 +52,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README TODO eg/
@@ -62,7 +62,7 @@ chmod -R u+w %{buildroot}/*
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.69-4
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 3.69-4
 - 为 Magic 3.0 重建
 
 * Wed Jan 18 2012 Petr Pisar <ppisar@redhat.com> - 3.69-3

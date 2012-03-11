@@ -1,6 +1,6 @@
 Name:           perl-MIME-Types
 Version:        1.31
-Release:        4%{?dist}
+Release:        3%{?dist}
 Summary:        MIME types module for Perl
 
 License:        GPL+ or Artistic
@@ -44,8 +44,8 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
- TEST_FILES="xt/*.t"
+make test
+make test TEST_FILES="xt/*.t"
 
 
 %clean
@@ -60,9 +60,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.31-4
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.31-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Encode-Locale
-Version:        1.02
-Release:        6%{?dist}
+Version:        1.03
+Release:        1%{?dist}
 Summary:        Determine the locale encoding
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -50,8 +50,8 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Encode::Locale.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.02-6
-- 为 Magic 3.0 重建
+* Mon Feb 13 2012 Petr Pisar <ppisar@redhat.com> - 1.03-1
+- 1.03 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

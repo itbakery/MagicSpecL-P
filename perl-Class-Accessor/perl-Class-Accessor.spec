@@ -1,6 +1,6 @@
 Name:           perl-Class-Accessor
 Version:        0.34
-Release:        9%{?dist}
+Release:        8%{?dist}
 Summary:        Automated accessor generation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -43,9 +43,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.34-9
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.34-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

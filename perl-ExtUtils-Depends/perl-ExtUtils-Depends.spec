@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-Depends
 Version:        0.303
-Release:        5%{?dist}
+Release:        4%{?dist}
 Summary:        Easily build XS extensions that depend on XS extensions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -51,9 +51,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.303-5
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.303-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

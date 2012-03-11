@@ -1,17 +1,17 @@
 Name:           perl-B-Keywords
-Version:        1.11
-Release:        2%{?dist}
+Version:        1.12
+Release:        1%{?dist}
 Summary:        Lists of reserved barewords and symbol names
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/B-Keywords/
-Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/B-Keywords-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/B-Keywords-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(YAML)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 
 %description
@@ -23,7 +23,7 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 
@@ -51,8 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.11-2
-- 为 Magic 3.0 重建
+* Fri Feb 10 2012 Paul Howarth <paul@city-fan.org> - 1.12-1
+- Update to 1.12
+  - Add new keyword fc (Unicode casefolding) for 5.16
+  - Added diag before each big t/11keywords.t loop
+- This release by RURBAN -> update source URL
+- Don't use macros for commands
 
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 1.11-1
 - Update to 1.11

@@ -49,7 +49,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -68,7 +68,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::WrapTie.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.110-18
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 2.110-18
 - 为 Magic 3.0 重建
 
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> 2.110-17
@@ -142,7 +142,7 @@ rm -rf %{buildroot}
 
 * Fri Jul 11 2003 Dams <anvil[AT]livna.org> 2.108-0.fdr.2
 - changed Group tag value
-- "" in build section
+- "make test" in build section
 - added missing directory
 
 * Sun Jun 15 2003 Dams <anvil[AT]livna.org> 2.108-0.fdr.1

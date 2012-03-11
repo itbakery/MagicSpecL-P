@@ -1,20 +1,19 @@
-#
-# Rebuild switch:
-#  --with sessiontests		enable session tests
-#
-
 Name:		perl-IO-Socket-SSL
-Version:	1.54
-Release:	2%{?dist}
+Version:	1.58
+Release:	1%{?dist}
 Summary:	Perl library for transparent SSL
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/IO-Socket-SSL/
 Source0:	http://search.cpan.org/CPAN/authors/id/S/SU/SULLR/IO-Socket-SSL-%{version}.tar.gz
+Patch0:		IO-Socket-SSL-1.58-dhe.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
-BuildRequires:	perl(Carp), perl(ExtUtils::MakeMaker), perl(Test::Simple)
-BuildRequires:	perl(IO::Socket::INET6), perl(Net::LibIDN), perl(Net::SSLeay) >= 1.21
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(IO::Socket::INET6)
+BuildRequires:	perl(Net::LibIDN)
+BuildRequires:	perl(Net::SSLeay) >= 1.21
 BuildRequires:	procps
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:	perl(Net::LibIDN)
@@ -31,23 +30,23 @@ mod_perl.
 %prep
 %setup -q -n IO-Socket-SSL-%{version}
 
+# Need to drop back the OPENSSL_VERSION_NUMBER value in the dhe.t workaround
+# because OPENSSL_VERSION_NUMBER is patched in Fedora to look like 1.0.0 beta3
+# even though it's 1.0.1 beta2, which breaks the workaround
+%patch0 -p1
+
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-# Avoid running the session tests (spawns servers, requires 3 free ports
-# and possibly manual configuration).
-%{?!_with_sessiontests:mv t/sessions.t{,.disable}}
-
-%{?!_with_sessiontests:mv t/sessions.t{.disable,}}
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -59,8 +58,31 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Socket::SSL.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.54-2
-- 为 Magic 3.0 重建
+* Mon Feb 27 2012 Paul Howarth <paul@city-fan.org> - 1.58-1
+- Update to 1.58
+  - fix t/dhe.t for openssl 1.0.1 beta by forcing TLSv1, so that it does not
+    complain about the too small RSA key, which it should not use anyway; this
+    workaround is not applied for older openssl versions, where it would cause
+    failures (CPAN RT#75165)
+- Add patch to fiddle the openssl version number in the t/dhe.t workaround
+  because the OPENSSL_VERSION_NUMBER cannot be trusted in Fedora
+- One buildreq per line for readability
+- Drop redundant buildreq perl(Test::Simple)
+- Always run full test suite
+
+* Wed Feb 22 2012 Paul Howarth <paul@city-fan.org> - 1.56-1
+- Update to 1.56
+  - add automatic or explicit (via SSL_hostname) SNI support, needed for
+    multiple SSL hostnames with the same IP (currently only supported for the
+    client)
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- No need to delete empty directories from buildroot
+
+* Mon Feb 20 2012 Paul Howarth <paul@city-fan.org> - 1.55-1
+- Update to 1.55
+  - work around IO::Socket's work around for systems returning EISCONN etc. on
+    connect retry for non-blocking sockets by clearing $! if SUPER::connect
+    returned true (CPAN RT#75101)
 
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 1.54-1
 - Update to 1.54

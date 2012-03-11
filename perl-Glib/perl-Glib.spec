@@ -1,6 +1,6 @@
 Name:           perl-Glib
 Version:        1.241
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Perl interface to GLib
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -54,7 +54,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 %ifnarch ppc ppc64
-
+make test
 %endif
 
 %files
@@ -80,9 +80,6 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.241-3
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.241-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-LWP-MediaTypes
 Version:        6.01
-Release:        5%{?dist}
+Release:        4%{?dist}
 Summary:        Guess media type for a file or a URL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -50,9 +50,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.01-5
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.01-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

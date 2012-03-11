@@ -1,6 +1,6 @@
 Name:           perl-Devel-FindRef
 Version:        1.42
-Release:        15%{?dist}
+Release:        14%{?dist}
 Summary:        Where is that reference to my variable hiding?
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,9 +50,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.42-15
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.42-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

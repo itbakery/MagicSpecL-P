@@ -1,5 +1,5 @@
 Name:           perl-libwww-perl
-Version:        6.03
+Version:        6.04
 Release:        3%{?dist}
 Summary:        A Perl interface to the World-Wide Web
 Group:          Development/Libraries
@@ -96,10 +96,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 # Some optional tests require resolvable hostname
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS Changes README*
 %{_bindir}/*
 %{perl_privlib}/lwp*.pod
@@ -109,8 +108,14 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.03-3
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 6.04-3
 - 为 Magic 3.0 重建
+
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 6.04-2
+- 为 Magic 3.0 重建
+
+* Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.04-1
+- 6.04 bump
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.03-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
@@ -235,7 +240,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 - rebuilt for new gcj
 
 * Sat Apr 02 2005 Warren Togami <wtogami@redhat.com> - 5.803-2
-- skip  (#150363)
+- skip make test (#150363)
 
 * Sat Apr 02 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 5.803-1
 - Update to 5.803.

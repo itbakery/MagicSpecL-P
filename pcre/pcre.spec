@@ -1,7 +1,7 @@
 # This is stable release:
 #%%global rcversion RC1
 Name: pcre
-Version: 8.21
+Version: 8.30
 Release: %{?rcversion:0.}2%{?rcversion:.%rcversion}%{?dist}
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
@@ -12,11 +12,7 @@ Source: ftp://ftp.csx.cam.ac.uk/pub/software/programming/%{name}/%{?rcversion:Te
 # Upstream thinks RPATH is good idea.
 Patch0: pcre-8.21-multilib.patch
 # Refused by upstream, bug #675477
-Patch1: pcre-8.20-refused_spelling_terminated.patch
-# Bug #769597, fixed by upstream after 8.21.
-Patch2: pcre-8.21-Do-not-make-unmatched-subpattern-wildcard.patch
-# Upstream bug #1186, fixed by upstream after 8.21.
-Patch3: pcre-8.21-Do-not-dereference-NULL-argument-of-pcre_free_study.patch
+Patch1: pcre-8.30-refused_spelling_terminated.patch
 BuildRequires: readline-devel
 # New libtool to get rid of rpath
 BuildRequires: autoconf, automake, libtool
@@ -55,10 +51,9 @@ Utilities demonstrating PCRE capabilities like pcregrep or pcretest.
 %setup -q -n %{name}-%{myversion}
 # Get rid of rpath
 %patch0 -p1 -b .multilib
-libtoolize --copy --force && autoreconf
 %patch1 -p1 -b .terminated_typos
-%patch2 -p1 -b .unmatched_subpattern
-%patch3 -p1 -b .null_pcre_free_study
+# Because of rpath patch
+libtoolize --copy --force && autoreconf
 # One contributor's name is non-UTF-8
 for F in ChangeLog; do
     iconv -f latin1 -t utf8 "$F" >"${F}.utf8"
@@ -73,22 +68,14 @@ done
 %else
     --enable-jit \
 %endif
-    --enable-pcretest-libreadline --enable-utf8 --enable-unicode-properties
+    --enable-pcretest-libreadline --enable-utf --enable-unicode-properties \
+    --enable-pcre8 --enable-pcre16
 make %{?_smp_mflags}
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
-
-# libpcre.so.*() needed by grep during system start (bug #41104)
-mkdir -p $RPM_BUILD_ROOT/%{_lib}
-mv $RPM_BUILD_ROOT%{_libdir}/libpcre.so.* $RPM_BUILD_ROOT/%{_lib}/
-pushd $RPM_BUILD_ROOT%{_libdir}
-ln -fs ../../%{_lib}/libpcre.so.0 libpcre.so
-popd
-
 # Get rid of unneeded *.la files
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
 # These are handled by %%doc in %%files
 rm -rf $RPM_BUILD_ROOT%{_docdir}/pcre
 
@@ -104,7 +91,6 @@ make check
 %postun -p /sbin/ldconfig
 
 %files
-/%{_lib}/*.so.*
 %{_libdir}/*.so.*
 %doc AUTHORS COPYING LICENCE NEWS README ChangeLog
 
@@ -129,6 +115,26 @@ make check
 %{_mandir}/man1/pcretest.*
 
 %changelog
+* Tue Feb 28 2012 Petr Pisar <ppisar@redhat.com> - 8.30-2
+- Remove old libpcre.so.0 from distribution
+- Move library to /usr
+
+* Thu Feb 09 2012 Petr Pisar <ppisar@redhat.com> - 8.30-1
+- 8.30 bump
+- Add old libpcre.so.0 to preserve compatibility temporarily
+
+* Fri Jan 27 2012 Petr Pisar <ppisar@redhat.com> - 8.30-0.1.RC1
+- 8.30 Relase candidate 1 with UTF-16 support and *API change*
+- Enable UTF-16 variant of PCRE library
+- The pcre_info() function has been removed from pcre library.
+- Loading compiled pattern does not fix endianity anymore. Instead an errror
+  is returned and the application can use pcre_pattern_to_host_byte_order() to
+  convert the pattern.
+- Surrogates (0xD800---0xDFFF) are forbidden in UTF-8 mode now.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.21-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Jan 02 2012 Petr Pisar <ppisar@redhat.com> - 8.21-2
 - Fix unmatched subpattern to not become wildcard (bug #769597)
 - Fix NULL pointer derefernce in pcre_free_study() (upstream bug #1186)

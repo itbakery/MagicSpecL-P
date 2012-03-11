@@ -1,6 +1,6 @@
 Name:           perl-HTML-Tree
 Version:        4.2
-Release:        5%{?dist}
+Release:        4%{?dist}
 Epoch:          1
 Summary:        HTML tree handling modules for Perl
 Group:          Development/Libraries
@@ -56,9 +56,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/HTML::*3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:4.2-5
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

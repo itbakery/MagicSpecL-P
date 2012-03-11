@@ -1,6 +1,6 @@
 Name:		perl-Module-Find
 Version:	0.10
-Release:	5%{?dist}
+Release:	4%{?dist}
 Summary:	Find and use installed modules in a (sub)category
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -41,7 +41,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -53,9 +53,6 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Find.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-5
-- 为 Magic 3.0 重建
-
 * Wed Jan 25 2012 Paul Howarth <paul@city-fan.org> - 0.10-4
 - BR: perl(ExtUtils::MakeMaker), perl(File::Find), perl(File::Spec) and
   perl(Pod::Perldoc)

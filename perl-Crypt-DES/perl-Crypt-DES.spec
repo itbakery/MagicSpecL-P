@@ -1,6 +1,6 @@
 Name:           perl-Crypt-DES
 Version:        2.05
-Release:        17%{?dist}
+Release:        15%{?dist}
 Summary:        Perl DES encryption module
 License:        BSD
 Group:          Development/Libraries
@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -46,12 +46,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.05-17
-- 为 Magic 3.0 重建
-
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.05-16
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

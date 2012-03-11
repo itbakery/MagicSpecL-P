@@ -1,6 +1,6 @@
 Name: 		perl-File-Copy-Recursive
 Version: 	0.38
-Release: 	11%{?dist}
+Release: 	10%{?dist}
 Summary: 	Extension for recursively copying files and directories 
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -38,7 +38,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 rm -rf $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -47,9 +47,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.38-11
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.38-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

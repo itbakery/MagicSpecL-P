@@ -1,6 +1,6 @@
 Name:		perl-List-MoreUtils
 Version:	0.33
-Release:	2%{?dist}
+Release:	1%{?dist}
 Summary:	Provide the stuff missing in List::Util
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -44,8 +44,8 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
- TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
+make test
+make test TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -58,9 +58,6 @@ rm -rf %{buildroot}
 %{_mandir}/man3/List::MoreUtils.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-2
-- 为 Magic 3.0 重建
-
 * Tue Jan 24 2012 Paul Howarth <paul@city-fan.org> - 0.33-1
 - Update to 0.33
   - Updated can_xs to fix a bug in it

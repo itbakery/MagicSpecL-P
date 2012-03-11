@@ -1,6 +1,6 @@
 Name:           perl-IO-String
 Version:        1.08
-Release:        15%{?dist}
+Release:        14%{?dist}
 Summary:        Emulate file interface for in-core strings
 
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -61,9 +61,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.08-15
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

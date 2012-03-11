@@ -1,6 +1,6 @@
 Name:           perl-HTML-Tagset
 Version:        3.20
-Release:        11%{?dist}
+Release:        10%{?dist}
 Summary:        HTML::Tagset - data tables useful in parsing HTML
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -33,7 +33,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -41,9 +41,6 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/HTML::Tagset.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.20-11
-- 为 Magic 3.0 重建
-
 * Fri Jan 20 2012 Paul Howarth <paul@city-fan.org> - 3.20-10
 - Clean up spec file for modern rpmbuild:
   - Drop BuildRoot definition

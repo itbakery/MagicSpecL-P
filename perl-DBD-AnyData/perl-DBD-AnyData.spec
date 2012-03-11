@@ -1,7 +1,7 @@
 Name:           perl-DBD-AnyData
 Summary:        DBI access to XML, CSV and other formats 
 Version:        0.110
-Release:        5%{?dist}
+Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RE/REHSACK/DBD-AnyData-%{version}.tar.gz 
@@ -47,7 +47,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -60,9 +60,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.110-5
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.110-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

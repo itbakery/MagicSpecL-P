@@ -1,6 +1,6 @@
 Name:           perl-File-Listing
-Version:        6.03
-Release:        3%{?dist}
+Version:        6.04
+Release:        1%{?dist}
 Summary:        Parse directory listing
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -58,8 +58,8 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.03-3
-- 为 Magic 3.0 重建
+* Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.04-1
+- 6.04 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.03-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

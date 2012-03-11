@@ -1,6 +1,6 @@
 Name:           perl-File-HomeDir
-Version:        0.98
-Release:        4%{?dist}
+Version:        0.99
+Release:        1%{?dist}
 Summary:        Find your home and other directories on any platform
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 # These tests don't do anything really useful. Also, they are broken.
-# AUTOMATED_TESTING=1 
+# AUTOMATED_TESTING=1 make test
 
 
 
@@ -67,8 +67,8 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.98-4
-- 为 Magic 3.0 重建
+* Tue Jan 31 2012 Tom Callaway <spot@fedoraproject.org> - 0.99-1
+- Update to 0.99
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.98-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

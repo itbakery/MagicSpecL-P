@@ -1,6 +1,6 @@
 Name:           perl-Devel-Cycle
 Version:        1.11
-Release:        10%{?dist}
+Release:        9%{?dist}
 Summary:        Find memory cycles in objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -42,9 +42,6 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.11-10
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

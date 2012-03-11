@@ -1,39 +1,32 @@
 Name:           perl-Test-Warn
 Version:        0.23
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Perl extension to test methods for warnings
-Summary(zh_CN.UTF-8): 测试模块警告的 Perl 扩展
-
 Group:          Development/Libraries
-Group(zh_CN.UTF-8):	开发/库
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Warn/
-Source0:        http://www.cpan.org/authors/id/C/CH/CHORNY/Test-Warn-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Test-Warn-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Array::Compare)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Sub::Uplevel) >= 0.12
 BuildRequires:  perl(Test::Builder) >= 0.13
-BuildRequires:  perl(Test::Builder::Tester)
+BuildRequires:  perl(Test::Builder::Tester) >= 1.02
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Tree::DAG_Node)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(Test::Builder) >= 0.13
-Requires:       perl(Test::Builder::Tester)
+Requires:       perl(Test::Builder::Tester) >= 1.02
 Requires:       perl(Tree::DAG_Node)
 
+%{?perl_default_filter}
 
 %description
 This module provides a few convenience methods for testing warning
 based code.
 
-%description -l zh_CN.UTF-8
-测试模块警告的 Perl 扩展
 
 %prep
 %setup -q -n Test-Warn-%{version}
@@ -45,19 +38,14 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT/*
 
 
 %check
 make test
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 
 %files
@@ -68,6 +56,41 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Jun 23 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.23-2
+- Perl mass rebuild
+- remove unused BR Array::Compare
+
+* Wed Mar  2 2011 Tom Callaway <spot@fedoraproject.org> - 0.23-1
+- update to 0.23
+
+* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Tue Jan  4 2011 Tom Callaway <spot@fedoraproject.org> - 0.22-1
+- update to 0.22
+
+* Wed Dec 22 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.21-4
+- 661697 rebuild for fixing problems with vendorach/lib
+
+* Fri May 07 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.21-3
+- Mass rebuild with perl-5.12.0
+
+* Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 0.21-2
+- rebuild against perl 5.10.1
+
+* Fri Sep 11 2009 Chris Weyl <cweyl@alumni.drew.edu> 0.21-1
+- add perl default filter (pro forma)
+- use _fixperms incantation
+- auto-update to 0.21 (by cpan-spec-update 0.01)
+- altered br on perl(Test::Builder::Tester) (0 => 1.02)
+- altered req on perl(Test::Builder::Tester) (0 => 1.02)
+
+* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 

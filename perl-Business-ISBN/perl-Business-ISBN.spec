@@ -1,6 +1,6 @@
 Name:           perl-Business-ISBN
 Version:        2.05
-Release:        8%{?dist}
+Release:        7%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
 
 Group:          Development/Libraries
@@ -58,9 +58,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 2.05-8
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

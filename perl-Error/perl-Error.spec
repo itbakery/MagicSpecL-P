@@ -1,6 +1,6 @@
 Name:           perl-Error
 Version:        0.17016
-Release:        8%{?dist}
+Release:        7%{?dist}
 Epoch:          1
 Summary:        Error/exception handling in an OO-ish way
 License:        GPL+ or Artistic
@@ -48,9 +48,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:0.17016-8
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.17016-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

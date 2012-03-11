@@ -1,6 +1,6 @@
 Name:           perl-DBD-CSV
 Version:        0.33
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        DBI driver for CSV files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,7 +53,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc ChangeLog README
@@ -62,9 +62,6 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-3
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

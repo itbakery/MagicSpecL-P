@@ -1,6 +1,6 @@
 Name:		perl-Devel-EnforceEncapsulation
 Version:	0.50
-Release:	6%{?dist}
+Release:	5%{?dist}
 Summary:	Find access violations to blessed objects
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -57,7 +57,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
- AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
+make test AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
 
 %files
 %defattr(-,root,root,-)
@@ -66,9 +66,6 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/Devel::EnforceEncapsulation.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.50-6
-- 为 Magic 3.0 重建
-
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 0.50-5
 - BR: perl(Carp) and perl(English)
 

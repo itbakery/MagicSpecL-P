@@ -1,6 +1,6 @@
 Name:           perl-Curses
 Version:        1.28
-Release:        6%{?dist}
+Release:        5%{?dist}
 Summary:        Perl bindings for ncurses
 
 Group:          Development/Libraries
@@ -53,7 +53,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 chmod -x demo*
 
 %check
-
+make test
 
 
 %clean
@@ -69,9 +69,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.28-6
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

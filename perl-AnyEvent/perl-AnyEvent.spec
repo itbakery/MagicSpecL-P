@@ -2,7 +2,7 @@
 
 Name:           perl-AnyEvent
 Version:        5.27
-Release:        8%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for multiple event loops
 
 Group:          Development/Libraries
@@ -73,9 +73,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 5.27-8
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.27-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

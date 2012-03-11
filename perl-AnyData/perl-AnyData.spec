@@ -54,7 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.10-15
+* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 0.10-15
 - 为 Magic 3.0 重建
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-14

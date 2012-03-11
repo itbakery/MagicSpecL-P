@@ -1,57 +1,77 @@
+# We need to patch the test suite if we have an old version of Test::More
+%global old_test_more %(perl -MTest::More -e 'print (($Test::More::VERSION < 0.88) ? 1 : 0);' 2>/dev/null || echo 0)
+
 Name:           perl-Data-Section
-Version:        0.101620
-Release:        7%{?dist}
+Version:        0.101621
+Release:        2%{?dist}
 Summary:        Read multiple hunks of data out of your DATA section
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Section/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Data-Section-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Patch1:         Data-Section-0.101620-old-Test::More.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(MRO::Compat) >= 0.09
+BuildRequires:  perl(Pod::Coverage::TrustPod)
 BuildRequires:  perl(Sub::Exporter) >= 0.979
 BuildRequires:  perl(Test::More)
-BuildRequires:  perl(MRO::Compat)
-Requires:       perl(Sub::Exporter) >= 0.979
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.08
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
-Data::Section provides an easy way to access multiple named chunks of line-
-oriented data in your module's DATA section. It was written to allow
+Data::Section provides an easy way to access multiple named chunks of
+line-oriented data in your module's DATA section. It was written to allow
 modules to store their own templates, but probably has other uses.
 
 %prep
 %setup -q -n Data-Section-%{version}
 
+# Hack for old Test::More versions
+%if %{old_test_more}
+%patch1 -p1
+%endif
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-
+make test RELEASE_TESTING=1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%{perl_vendorlib}/Data/
+%{_mandir}/man3/Data::Section.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.101620-7
-- 为 Magic 3.0 重建
+* Wed Mar  7 2012 Paul Howarth <paul@city-fan.org> - 0.101621-2
+- Add test suite patch to support building with Test::More < 0.88 so that we
+  can build for EPEL-5, only applying the patch when necessary
+- BR: at least version 0.09 of perl(MRO::Compat)
+- BR: perl(Pod::Coverage::TrustPod), perl(Test::Pod) and
+  perl(Test::Pod::Coverage) for full test coverage
+- Run the release tests too
+- Drop redundant explicit versioned dependency on perl(Sub::Exporter)
+- Don't need to remove empty directories from buildroot
+- Don't use macros for commands
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Drop %%defattr, redundant since rpm 4.4
+- Make %%files list more explicit
+
+* Mon Jan 30 2012 Daniel P. Berrange <berrange@redhat.com> - 0.101621-1
+- Update to 0.101621 release (rhbz #785362)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101620-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

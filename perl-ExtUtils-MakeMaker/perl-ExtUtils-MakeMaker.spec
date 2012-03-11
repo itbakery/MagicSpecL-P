@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-MakeMaker
 Version:        6.62
-Release:        3%{?dist}
+Release:        2%{?dist}
 Summary:        Create a module Makefile
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,7 +74,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+#make test
 
 %files
 %doc Changes NOTES PATCHING README TODO
@@ -84,9 +84,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.62-3
-- 为 Magic 3.0 重建
-
 * Thu Jan 12 2012 Petr Pisar <ppisar@redhat.com> - 6.62-2
 - Do not set RPATH to perl shared-library modules by default (bug #773622)
 

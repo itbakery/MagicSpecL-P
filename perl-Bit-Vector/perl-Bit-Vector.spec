@@ -1,6 +1,6 @@
 Name:           perl-Bit-Vector
 Version:        7.1
-Release:        9%{?dist}
+Release:        8%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
 
 Group:          Development/Libraries
@@ -55,9 +55,6 @@ make test
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 7.1-9
-- 为 Magic 3.0 重建
-
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,14 +1,15 @@
 # From src/version.h:#define OCTAVE_API_VERSION
-%global octave_api api-v45+
+%global octave_api api-v48+
 
 Name:           octave
-Version:        3.4.3
+Version:        3.6.1
 Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+# RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
@@ -26,7 +27,7 @@ BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
 BuildRequires:  tex(dvips)
 
-Requires:        gnuplot gnuplot-common less info texinfo 
+Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
 Requires(post):  info
 Requires(preun): info
@@ -96,7 +97,8 @@ then
   exit 1
 fi
 
-# smp builds failing as of 3.4.2
+# SMP make still not working in Octave 3.6.0
+#make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
 make OCTAVE_RELEASE="Fedora %{version}-%{release}"
 
 %install
@@ -243,6 +245,21 @@ fi
 
 
 %changelog
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.1-2
+- Rebuilt for c++ ABI breakage
+
+* Wed Feb 22 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.1-1
+- Update to 3.6.1.
+
+* Thu Feb 9 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.0-2
+- Rebuild with pcre 8.30
+
+* Sun Jan 15 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.0-1
+- Update to 3.6.0.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.4.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Nov 18 2011 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.4.3-2
 - Rebuild for hdf5 1.8.8
 

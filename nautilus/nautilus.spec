@@ -12,14 +12,14 @@
 
 Name:           nautilus
 Summary:        File manager for GNOME
-Version:        3.3.3
+Version:        3.3.91
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
 Source:         http://download.gnome.org/sources/%{name}/3.3/%{name}-%{version}.tar.xz
 
 URL:            http://projects.gnome.org/nautilus/
-Requires:       redhat-menus >= %{redhat_menus_version}
+Requires:       magic-menus >= %{redhat_menus_version}
 Requires:       gvfs >= 1.4.0
 Requires:       gnome-icon-theme >= %{gnome_icon_theme_version}
 Requires:       libexif >= %{libexif_version}
@@ -64,8 +64,6 @@ Provides:       eel2 = 2.26.0-3
 Patch7:         rtl-fix.patch
 #Patch8:        nautilus-2.22.1-hide-white-screen.patch
 
-Patch10:        nautilus-gmodule.patch
-
 %description
 Nautilus is the file manager and graphical shell for the GNOME desktop
 that makes it easy to manage your files and the rest of your system.
@@ -99,7 +97,6 @@ for developing nautilus extensions.
 
 #%patch4 -p1 -b .selinux
 %patch7 -p1 -b .rtl-fix
-%patch10 -p1
 
 %build
 
@@ -123,10 +120,10 @@ LANG=en_US make %{?_smp_mflags} V=1
 export tagname=CC
 LANG=en_US make install DESTDIR=$RPM_BUILD_ROOT LIBTOOL=/usr/bin/libtool
 
-#desktop-file-install --delete-original       \
-#  --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
-#  --add-only-show-in GNOME                                  \
-#  $RPM_BUILD_ROOT%{_datadir}/applications/*
+desktop-file-install --delete-original       \
+  --dir $RPM_BUILD_ROOT%{_datadir}/applications             \
+  --add-only-show-in GNOME                                  \
+  $RPM_BUILD_ROOT%{_datadir}/applications/*
 
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
@@ -158,7 +155,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %files  -f %{name}.lang
 %doc AUTHORS COPYING COPYING-DOCS COPYING.LIB NEWS README
 %{_datadir}/nautilus
-%{_datadir}/pixmaps/*
 %{_datadir}/applications/*
 %{_datadir}/mime/packages/nautilus.xml
 %{_bindir}/*
@@ -188,6 +184,21 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/*
 
 %changelog
+* Tue Mar 06 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.3.91-1
+- Update to 3.3.91
+
+* Sun Feb 26 2012 Matthias Clasen <mclasen@redhat.com> - 3.3.90-1
+- Update to 3.3.90
+
+* Tue Feb  7 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.3.5-1
+- Update to 3.3.5
+
+* Tue Jan 17 2012 Matthias Clasen <mclasen@redhat.com> - 3.3.4-1
+- Update to 3.3.4
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Dec 20 2011 Matthias Clasen <mclasen@redhat.com> - 3.3.3-1
 - Update to 3.3.3
 

@@ -2,8 +2,8 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version:   0.6.20
-Release:   2%{?dist}
+Version:   0.7.3
+Release:   1%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.packagekit.org
 Source0:   http://www.packagekit.org/releases/%{name}-%{version}.tar.xz
@@ -14,12 +14,13 @@ Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
 # Fedora specific: the yum backend doesn't do time estimation correctly
 Patch1:    PackageKit-0.4.4-Fedora-turn-off-time.conf.patch
 
-Patch2:		PackageKit-0.6.20-xulrunner9.patch
-
 Requires: PackageKit-glib = %{version}-%{release}
 Requires: PackageKit-backend
 Requires: shared-mime-info
 Requires: comps-extras
+%if 0%{?rhel} == 0
+Requires: preupgrade
+%endif
 
 BuildRequires: glib2-devel >= 2.16.1
 BuildRequires: dbus-devel  >= 1.1.1
@@ -40,11 +41,7 @@ BuildRequires: perl(XML::Parser)
 BuildRequires: intltool
 BuildRequires: gettext
 BuildRequires: libgudev1-devel
-%if 0%{?fedora} < 17
 BuildRequires: xulrunner-devel
-%else
-%define _disable_browser_plugin --disable-browser-plugin
-%endif
 BuildRequires: libarchive-devel
 BuildRequires: gstreamer-devel
 BuildRequires: gstreamer-plugins-base-devel
@@ -59,6 +56,9 @@ BuildRequires: zif-devel >= 0.2.5
 # functionality moved to udev itself
 Obsoletes: PackageKit-udev-helper < %{version}-%{release}
 Obsoletes: udev-packagekit < %{version}-%{release}
+
+# No more GTK+-2 plugin
+Obsoletes: PackageKit-gtk-module < %{version}-%{release}
 
 %description
 PackageKit is a D-Bus abstraction layer that allows the session user
@@ -212,16 +212,6 @@ Provides: codeina = 0.10.1-10
 The PackageKit GStreamer plugin allows any Gstreamer application to install
 codecs from configured repositories using PackageKit.
 
-%package gtk-module
-Summary: Install fonts automatically using PackageKit
-Group: Development/Libraries
-Requires: pango
-Requires: PackageKit-glib = %{version}-%{release}
-
-%description gtk-module
-The PackageKit GTK2+ module allows any Pango application to install
-fonts from configured repositories using PackageKit.
-
 %package gtk3-module
 Summary: Install fonts automatically using PackageKit
 Group: Development/Libraries
@@ -256,7 +246,6 @@ user to restart the computer or remove and re-insert the device.
 %setup -q
 %patch0 -p1 -b .fedora
 %patch1 -p1 -b .no-time
-%patch2 -p1
 
 %build
 %configure \
@@ -267,11 +256,10 @@ user to restart the computer or remove and re-insert the device.
         --enable-smart \
         --enable-introspection \
 %endif
-        --with-default-backend=yum,zif \
+        --with-default-backend=auto \
         --disable-local \
         --disable-strict \
-        --disable-tests \
-	%{?_disable_browser_plugin}
+        --disable-tests
 
 make %{?_smp_mflags}
 
@@ -280,8 +268,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/libpackagekit*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-backend/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-plugins/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/packagekit-plugin.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-?.0/modules/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/modules/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/libpackagekit-action-lookup.la
 
 touch $RPM_BUILD_ROOT%{_localstatedir}/cache/PackageKit/groups.sqlite
@@ -355,6 +344,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %ghost %verify(not md5 size mtime) %{_localstatedir}/lib/PackageKit/transactions.db
 %{_datadir}/dbus-1/system-services/*.service
 %{_libdir}/pm-utils/sleep.d/95packagekit
+%{_libdir}/packagekit-plugins/*.so
+%{_libdir}/girepository-1.0/PackageKitPlugin-1.0.typelib
+%{_datadir}/dbus-1/interfaces/*.xml
 
 %files docs
 %defattr(-,root,root,-)
@@ -412,24 +404,21 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_bindir}/pk-debuginfo-install
 %{_datadir}/man/man1/pk-debuginfo-install.1.gz
 
-%if ! 0%{?_disable_browser_plugin:1}
 %files browser-plugin
 %defattr(-,root,root,-)
-%{_libdir}/mozilla/plugins/packagekit-plugin.so
-%endif
+#%{_libdir}/mozilla/plugins/packagekit-plugin.so
+# FIXME: F17 doesn't have a new enough npapi package
 
 %files gstreamer-plugin
 %defattr(-,root,root,-)
 %{_libexecdir}/pk-gstreamer-install
 %{_libexecdir}/gst-install-plugins-helper
 
-%files gtk-module
-%defattr(-,root,root,-)
-%{_libdir}/gtk-2.0/modules/*.so
-
 %files gtk3-module
 %defattr(-,root,root,-)
 %{_libdir}/gtk-3.0/modules/*.so
+%{_libdir}/gnome-settings-daemon-3.0/gtk-modules/*.desktop
+%{_datadir}/glib-2.0/schemas/*.gschema.xml
 
 %files command-not-found
 %defattr(-,root,root,-)
@@ -450,31 +439,55 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %dir %{_includedir}/PackageKit/packagekit-glib2
 %{_includedir}/PackageKit/packagekit-glib*/*.h
 %{_datadir}/gir-1.0/PackageKitGlib-1.0.gir
+%{_datadir}/gir-1.0/PackageKitPlugin-1.0.gir
 
 %files qt-devel
 %defattr(-,root,root,-)
 %{_libdir}/libpackagekit-qt*.so
-%{_libdir}/pkgconfig/packagekit-qt.pc
-%dir %{_includedir}/PackageKit
-%dir %{_includedir}/PackageKit/packagekit-qt
-%{_includedir}/PackageKit/packagekit-qt/QPackageKit
-%{_includedir}/PackageKit/packagekit-qt/*.h
-%{_datadir}/cmake/Modules/FindQPackageKit.cmake
-
-# qt2 new library
 %{_includedir}/PackageKit/packagekit-qt2/*
 %{_libdir}/pkgconfig/packagekit-qt2.pc
-%{_datadir}/cmake/Modules/FindPackageKitQt2.cmake
+%{_libdir}/cmake/packagekit-qt2/packagekit-qt2*.cmake
 
 %files backend-devel
 %defattr(-,root,root,-)
 %dir %{_includedir}/PackageKit
 %dir %{_includedir}/PackageKit/backend
 %{_includedir}/PackageKit/backend/*.h
+%{_includedir}/PackageKit/plugin
+%{_libdir}/pkgconfig/packagekit-plugin.pc
 
 %changelog
-* Tue Nov 15 2011 Rex Dieter <rdieter@fedoraproject.org> 0.6.20-2
-- (temporarily) build --disable-browser-plugin
+* Thu Mar 01 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.3-1
+- New upstream release
+- Remove upstreamed patches
+- Use autoremove in the zif backend
+- Fix several more crashers in the glib library from the move to GDBus
+
+* Fri Jan 27 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.2-5
+- Fix another gnome-settings-daemon crash
+
+* Thu Jan 26 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.2-4
+- Add back the preupgrade Require to fix a warning in g-s-d.
+
+* Thu Jan 26 2012 Tomas Bzatek <tbzatek@redhat.com> - 0.7.2-3
+- Rebuilt for new libarchive
+
+* Fri Jan 20 2012 Matthias Clasen <mclasen@redhat.com> - 0.7.2-2
+- Fix gnome-settings-daemon crashes
+
+* Tue Jan 17 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.2-1
+- New upstream release.
+- Remove upstreamed patches
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.21-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Jan 09 2012 Nils Philippsen <nils@redhat.com> - 0.6.21-2
+- yum: don't request authorization for trusted packages (#771746)
+
+* Mon Dec 05 2011 Richard Hughes  <rhughes@redhat.com> - 0.6.21-1
+- New upstream release.
+- Consistently use same logic to determine GPG checking.
 
 * Mon Nov 07 2011 Richard Hughes  <rhughes@redhat.com> - 0.6.20-1
 - New upstream release.

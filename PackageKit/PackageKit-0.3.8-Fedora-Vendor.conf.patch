@@ -1,6 +1,7 @@
-diff -up PackageKit-0.3.8/etc/Vendor.conf.BAD PackageKit-0.3.8/etc/Vendor.conf
---- PackageKit-0.3.8/etc/Vendor.conf.BAD	2008-10-24 16:02:00.000000000 -0400
-+++ PackageKit-0.3.8/etc/Vendor.conf	2008-10-24 17:49:27.000000000 -0400
+diff --git a/etc/Vendor.conf b/etc/Vendor.conf
+index 69f7337..6c6f772 100644
+--- a/etc/Vendor.conf
++++ b/etc/Vendor.conf
 @@ -12,7 +12,7 @@
  # If the value is set to 'none' then no link is shown.
  #
@@ -10,7 +11,7 @@ diff -up PackageKit-0.3.8/etc/Vendor.conf.BAD PackageKit-0.3.8/etc/Vendor.conf
  
  # The URL which is shown to the user when a codec could not be found.
  # It should explain why certain codecs cannot be used, and perhaps show
-@@ -21,7 +21,7 @@ DefaultUrl=http://www.packagekit.org/pk-
+@@ -21,7 +21,7 @@ DefaultUrl=http://www.packagekit.org/pk-package-not-found.html
  # If the value is set to 'none' then the value of DefaultUrl is used.
  #
  # default=none
@@ -37,7 +38,7 @@ diff -up PackageKit-0.3.8/etc/Vendor.conf.BAD PackageKit-0.3.8/etc/Vendor.conf
  
  # The URL which is shown to the user when programs handing a mime tpye could not
  # be found. It should probably explain how to use wine if the program is a
-@@ -47,17 +47,17 @@ FontUrl=none
+@@ -47,16 +47,16 @@ FontUrl=none
  # If the value is set to 'none' then the value of DefaultUrl is used.
  #
  # default=none
@@ -57,4 +58,3 @@ diff -up PackageKit-0.3.8/etc/Vendor.conf.BAD PackageKit-0.3.8/etc/Vendor.conf
  # default=emblem-favorite
 -VendorIcon=emblem-favorite
 +VendorIcon=fedora-logo-small
- 

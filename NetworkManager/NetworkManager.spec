@@ -4,32 +4,28 @@
 %define gtk3_version	3.0.1
 %define glib2_version	2.24.0
 %define wireless_tools_version 1:28-0pre9
-%define libnl_version 1.1
+%define libnl3_version 3.2.6
 %define ppp_version 2.4.5
 
-%define snapshot %{nil}
-%define applet_snapshot %{nil}
-%define realversion 0.9.2.0
+%define snapshot .git20120319
+%define realversion 0.9.3.997
+
+%define systemd_dir %{_prefix}/lib/systemd/system
 
 Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
-Version: 0.9.2
-Release: 1%{snapshot}%{?dist}
+Version: 0.9.3.997
+Release: 2%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
 
 Source: %{name}-%{realversion}%{snapshot}.tar.bz2
-Source1: network-manager-applet-%{realversion}%{applet_snapshot}.tar.bz2
-Source2: NetworkManager.conf
-Patch1: nm-applet-internal-buildfixes.patch
-Patch2: explain-dns1-dns2.patch
-Patch3: nm-applet-no-notifications.patch
-Patch4: nm-polkit-permissive.patch
-Patch5: nm-applet-wifi-dialog-ui-fixes.patch
-Patch6: nss-error.patch
-Patch7: applet-ignore-deprecated.patch
+Source1: NetworkManager.conf
+Patch1: explain-dns1-dns2.patch
+Patch2: nm-polkit-permissive.patch
+Patch3: nss-error.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): chkconfig
@@ -45,7 +41,7 @@ Requires: glib2 >= %{glib2_version}
 Requires: iproute
 Requires: dhclient >= 12:4.1.0
 Requires: wpa_supplicant >= 1:0.7.3-1
-Requires: libnl >= %{libnl_version}
+Requires: libnl3 >= %{libnl3_version}
 Requires: %{name}-glib = %{epoch}:%{version}-%{release}
 Requires: ppp = %{ppp_version}
 Requires: avahi-autoipd
@@ -67,13 +63,13 @@ BuildRequires: wireless-tools-devel >= %{wireless_tools_version}
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk3-devel >= %{gtk3_version}
 BuildRequires: GConf2-devel
-BuildRequires: gnome-keyring-devel
+BuildRequires: libgnome-keyring-devel
 BuildRequires: gobject-introspection-devel >= 0.10.3
 BuildRequires: gettext-devel
 BuildRequires: /usr/bin/autopoint
 BuildRequires: pkgconfig
 BuildRequires: wpa_supplicant
-BuildRequires: libnl-devel >= %{libnl_version}
+BuildRequires: libnl3-devel >= %{libnl3_version}
 BuildRequires: libnotify-devel >= 0.4
 BuildRequires: perl(XML::Parser)
 BuildRequires: automake autoconf intltool libtool
@@ -87,11 +83,12 @@ BuildRequires: libudev-devel
 BuildRequires: libuuid-devel
 BuildRequires: libgudev1-devel >= 143
 BuildRequires: desktop-file-utils
-# No bluetooth on s390
+# No wimax or bluetooth on s390
 %ifnarch s390 s390x
+BuildRequires: wimax-devel
 BuildRequires: gnome-bluetooth-libs-devel >= 2.27.7.1-1
 %endif
-BuildRequires: systemd
+BuildRequires: systemd systemd-devel
 BuildRequires: iso-codes-devel
 
 %description
@@ -99,6 +96,19 @@ NetworkManager is a system network service that manages your network devices
 and connections, attempting to keep active network connectivity when available.
 It manages ethernet, WiFi, mobile broadband (WWAN), and PPPoE devices, and
 provides VPN integration with a variety of different VPN services.
+
+
+%ifnarch s390 s390x
+%package wimax
+Summary: Intel WiMAX device support for NetworkManager
+Group: System Environment/Base
+Requires: wimax
+Requires: %{name} = %{epoch}:%{version}-%{release}
+
+%description wimax
+This package contains NetworkManager support for Intel WiMAX mobile broadband
+devices.
+%endif
 
 
 %package devel
@@ -112,25 +122,6 @@ Requires: pkgconfig
 %description devel
 This package contains various headers accessing some NetworkManager functionality
 from applications.
-
-
-%package gnome
-Summary: GNOME applications for use with NetworkManager
-Group: Applications/Internet
-Requires: %{name} = %{epoch}:%{version}-%{release}
-Requires: %{name}-glib = %{epoch}:%{version}-%{release}
-Requires: %{name}-gtk = %{epoch}:%{version}-%{release}
-Requires: dbus >= %{dbus_version}
-Requires: dbus-glib >= %{dbus_glib_version}
-Requires: libnotify >= 0.4.3
-Requires: gnome-keyring
-Requires: nss >= 3.11.7
-Requires: gnome-icon-theme
-Requires(post): /usr/bin/gtk-update-icon-cache
-
-%description gnome
-This package contains GNOME utilities and applications for use with
-NetworkManager, including a panel applet for wireless networks.
 
 
 %package glib
@@ -158,42 +149,12 @@ This package contains the header and pkg-config files for development applicatio
 NetworkManager functionality from applications that use glib.
 
 
-%package gtk
-Summary: Private libraries for NetworkManager GUI support
-Group: Development/Libraries
-Requires: gtk3 >= %{gtk3_version}
-
-%description gtk
-This package contains private libraries to be used only by nm-applet and
-the GNOME Control Center.
-
-
-%package gtk-devel
-Summary: Private header files for NetworkManager GUI support
-Group: Development/Libraries
-Requires: %{name}-devel = %{epoch}:%{version}-%{release}
-Requires: %{name}-glib = %{epoch}:%{version}-%{release}
-Requires: gtk3-devel
-Requires: pkgconfig
-
-%description gtk-devel
-This package contains private header and pkg-config files to be used only by
-nm-applet and the GNOME control center.
-
-
 %prep
 %setup -q -n NetworkManager-%{realversion}
 
-# unpack the applet and nmcli
-tar -xjf %{SOURCE1}
-
-%patch1 -p1 -b .buildfix
-%patch2 -p1 -b .explain-dns1-dns2
-%patch3 -p1 -b .no-notifications
-%patch4 -p1 -b .polkit-permissive
-%patch5 -p1 -b .applet-wifi-ui
-%patch6 -p1 -b .nss-error
-%patch7 -p1 -b .no-deprecated
+%patch1 -p1 -b .explain-dns1-dns2
+%patch2 -p1 -b .polkit-permissive
+%patch3 -p1 -b .nss-error
 
 %build
 
@@ -210,26 +171,18 @@ intltoolize --force
 	--with-dhcpcd=no \
 	--with-crypto=nss \
 	--enable-more-warnings=yes \
-	--enable-wimax=no \
+%ifnarch s390 s390x
+	--enable-wimax=yes \
+%endif
 	--enable-polkit=yes \
+	--with-session-tracking=systemd \
 	--with-docs=yes \
 	--with-system-ca-path=/etc/pki/tls/certs \
 	--with-tests=yes \
 	--with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
 	--with-dist-version=%{version}-%{release}
-make %{?_smp_mflags}
 
-# build the applet
-pushd network-manager-applet-%{realversion}
-	autoreconf -i
-	intltoolize --force
-	%configure \
-		--disable-static \
-		--with-bluetooth \
-		--enable-more-warnings=yes \
-		--with-gtkver=3
-	make %{?_smp_mflags}
-popd
+make %{?_smp_mflags}
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -237,12 +190,7 @@ popd
 # install NM
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%{__cp} %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/
-
-# install the applet
-pushd network-manager-applet-%{realversion}
-  make install DESTDIR=$RPM_BUILD_ROOT
-popd
+%{__cp} %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/
 
 # create a VPN directory
 %{__mkdir_p} $RPM_BUILD_ROOT%{_sysconfdir}/NetworkManager/VPN
@@ -255,25 +203,16 @@ popd
 %{__mkdir_p} $RPM_BUILD_ROOT%{_localstatedir}/lib/NetworkManager
 
 %find_lang %{name}
-%find_lang nm-applet
-cat nm-applet.lang >> %{name}.lang
 
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/pppd/%{ppp_version}/*.la
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/NetworkManager/*.la
-%{__rm} -f $RPM_BUILD_ROOT%{_libdir}/gnome-bluetooth/plugins/*.la
 
 install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 
 # install the pristine docs
 %{__cp} ORIG-docs/libnm-glib/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-glib/
 %{__cp} ORIG-docs/libnm-util/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-util/
-
-# don't autostart in KDE on F13+ (#541353)
-echo 'NotShowIn=KDE;' >>$RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/nm-applet.desktop
-
-# validate the autostart .desktop file
-desktop-file-validate $RPM_BUILD_ROOT%{_sysconfdir}/xdg/autostart/nm-applet.desktop
 
 
 %clean
@@ -319,42 +258,11 @@ exit 0
 %post	glib -p /sbin/ldconfig
 %postun	glib -p /sbin/ldconfig
 
-%pre gnome
-if [ "$1" -gt 1 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-  fi
-fi
-
-%preun gnome
-if [ "$1" -eq 0 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-  fi
-fi
-
-%post gnome
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-  gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-fi
-
-%postun gnome
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans gnome
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files -f %{name}.lang
 %defattr(-,root,root,0755)
 %doc COPYING NEWS AUTHORS README CONTRIBUTING TODO
-%{_sysconfdir}/dbus-1/system.d/NetworkManager.conf
+%{_sysconfdir}/dbus-1/system.d/org.freedesktop.NetworkManager.conf
 %{_sysconfdir}/dbus-1/system.d/nm-dhcp-client.conf
 %{_sysconfdir}/dbus-1/system.d/nm-avahi-autoipd.conf
 %{_sysconfdir}/dbus-1/system.d/nm-dispatcher.conf
@@ -371,7 +279,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libexecdir}/nm-avahi-autoipd.action
 %{_libexecdir}/nm-dispatcher.action
 %dir %{_libdir}/NetworkManager
-%{_libdir}/NetworkManager/*.so*
+%{_libdir}/NetworkManager/libnm-settings-plugin*.so
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
@@ -386,9 +294,15 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/polkit-1/actions/*.policy
 /lib/udev/rules.d/*.rules
 # systemd stuff
-/lib/systemd/system/NetworkManager.service
-/lib/systemd/system/NetworkManager-wait-online.service
+%{systemd_dir}/NetworkManager.service
+%{systemd_dir}/NetworkManager-wait-online.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
+
+%ifnarch s390 s390x
+%files wimax
+%defattr(-,root,root,0755)
+%{_libdir}/%{name}/libnm-device-plugin-wimax.so
+%endif
 
 %files devel
 %defattr(-,root,root,0755)
@@ -400,24 +314,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/pkgconfig/%{name}.pc
 %dir %{_datadir}/gtk-doc/html/NetworkManager
 %{_datadir}/gtk-doc/html/NetworkManager/*
-
-%files gnome
-%defattr(-,root,root,0755)
-%{_bindir}/nm-applet
-%{_bindir}/nm-connection-editor
-%{_datadir}/applications/*.desktop
-%{_datadir}/nm-applet/
-%{_datadir}/icons/hicolor/16x16/apps/*.png
-%{_datadir}/icons/hicolor/22x22/apps/*.png
-%{_datadir}/icons/hicolor/32x32/apps/*.png
-%{_datadir}/icons/hicolor/48x48/apps/*.png
-%{_datadir}/icons/hicolor/scalable/apps/*.svg
-%{_sysconfdir}/xdg/autostart/nm-applet.desktop
-%dir %{_datadir}/gnome-vpn-properties
-%{_sysconfdir}/gconf/schemas/nm-applet.schemas
-%ifnarch s390 s390x
-%{_libdir}/gnome-bluetooth/plugins/*
-%endif
 
 %files glib
 %defattr(-,root,root,0755)
@@ -433,6 +329,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libnm-glib/*.h
 %{_includedir}/%{name}/nm-setting*.h
 %{_includedir}/%{name}/nm-connection.h
+%{_includedir}/%{name}/nm-utils-enum-types.h
 %{_includedir}/%{name}/nm-utils.h
 %{_libdir}/pkgconfig/libnm-glib.pc
 %{_libdir}/pkgconfig/libnm-glib-vpn.pc
@@ -447,20 +344,66 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %dir %{_datadir}/gtk-doc/html/libnm-util
 %{_datadir}/gtk-doc/html/libnm-util/*
 
-%files gtk
-%defattr(-,root,root,0755)
-%{_libdir}/libnm-gtk.so.*
-%dir %{_datadir}/libnm-gtk
-%{_datadir}/libnm-gtk/*.ui
-
-%files gtk-devel
-%defattr(-,root,root,0755)
-%dir %{_includedir}/libnm-gtk
-%{_includedir}/libnm-gtk/*.h
-%{_libdir}/pkgconfig/libnm-gtk.pc
-%{_libdir}/libnm-gtk.so
-
 %changelog
+* Mon Mar 19 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.997-2
+- libnm-glib: updated for new symbols the applet wants
+
+* Mon Mar 19 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.997-1
+- applet: move to network-manager-applet RPM
+- editor: move to nm-connection-editor RPM
+- libnm-gtk: move to libnm-gtk RPM
+
+* Mon Mar 19 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.997-0.7
+- Update to 0.9.3.997 (0.9.4-rc1)
+- core: fix possible WiFi hang when connecting to Ad-Hoc networks
+- core: enhanced IPv6 compatibility
+- core: proxy DNSSEC data when using the 'dnsmasq' caching nameserver plugin
+- core: allow VPNs to specify multiple domain names given by the server
+- core: fix an issue creating new InfiniBand connections
+- core/applet/editor: disable WiFi Ad-Hoc WPA connections until kernel bugs are fixed
+
+* Wed Mar 14 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.995-0.6
+- core: fix issue with carrier changes not being recognized (rh #800690)
+- editor: warn user if CA certificate is left blank
+
+* Tue Mar 13 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.995-0.5
+- core: fix a crash with ipw2200 devices and adhoc networks
+- core: fix IPv6 addressing on newer kernels
+- core: fix issue with VPN plugin passwords (rh #802540)
+- cli: enhancements for Bonding, VLAN, and OLPC mesh devices
+- ifcfg-rh: fix quoting WPA passphrases that include quotes (rh #798102)
+- libnm-glib: fix some issues with duplicate devices shown in menus
+
+* Fri Mar  2 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.995-0.4
+- Update to 0.9.3.995 (0.9.4-beta1)
+- core: add support for bonding and VLAN interfaces
+- core: add support for Internet connectivity detection
+- core: add support for IPv6 Privacy Extensions
+- core: fix interaction with firewalld restarts
+
+* Thu Mar  1 2012 Dan Horák <dan[at]danny.cz> - 0.9.3-0.3
+- disable WiMAX plugin on s390(x)
+
+* Thu Feb 16 2012 Dan Williams <dcbw@redhat.com> - 0.9.3-0.2
+- Put WiMAX plugin files in the right subpackage
+
+* Wed Feb 15 2012 Dan Williams <dcbw@redhat.com> - 0.9.3-0.1
+- Update to 0.9.4 snapshot
+- wimax: enable optional support for Intel WiMAX devices
+- core: use nl80211 for WiFi device control
+- core: add basic support for Infiniband IP interfaces
+- core: add basic support for bonded interfaces
+- core: in-process IP configuration no longer blocks connected state
+
+* Thu Jan 19 2012 Matthias Clasen <mclasen@redhat.com> - 0.9.2-4
+- Rebuild
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Thu Nov 24 2011 Daniel Drake <dsd@laptop.org> - 0.9.2-2
+- Rebuild for libgnome-bluetooth.so.9
+
 * Thu Nov 09 2011 Dan Williams <dcbw@redhat.com> - 0.9.2-1
 - core: fix possible crash when talking to ModemManager
 - core: improve handling of rfkill on some machines (eeepc 1005HA and others)

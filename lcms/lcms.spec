@@ -4,7 +4,7 @@ Name: lcms
 Summary: Color Management System
 Summary(zh_CN.GB18030): ÑÕÉ«¹ÜÀíÏµÍ³
 Version: 1.19
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: Applications/Productivity
 Group(zh_CN.GB18030): Ó¦ÓÃ³ÌĞò/Éú²úÁ¦
 License: LGPL
@@ -100,6 +100,9 @@ rm %{buildroot}%{python_sitearch}/*.a -f
 %{python_sitearch}/_lcms.so
 
 %changelog
+* Wed Mar 28 2012 Liu Di <liudidi@gmail.com> - 1.19-3
+- ä¸º Magic 3.0 é‡å»º
+
 * Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 1.19-2
 - ä¸º Magic 3.0 é‡å»º
 

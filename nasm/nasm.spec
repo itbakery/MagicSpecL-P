@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 Summary: A portable x86 assembler which uses Intel-like syntax
 Name: nasm
-Version: 2.09.08
-Release: 2%{?dist}
+Version: 2.10
+Release: 1%{?dist}
 License: BSD
 Group: Development/Languages
 URL: http://www.nasm.us
-Source0: nasm-%{version}.tar.bz2
-Source1: nasm-%{version}-xdoc.tar.bz2
+Source0: http://www.nasm.us/pub/nasm/releasebuilds/2.10/%{name}-%{version}.tar.bz2
+Source1: http://www.nasm.us/pub/nasm/releasebuilds/2.10/%{name}-%{version}-xdoc.tar.bz2
 BuildRequires: perl
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): /sbin/install-info
@@ -91,8 +91,11 @@ fi
 %{_bindir}/rdf2srec
 
 %changelog
-* Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 2.09.08-2
-- 为 Magic 3.0 重建
+* Thu Mar 15 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 2.10-1
+- update to 2.10 (#797858)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09.08-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Apr 26 2011 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 2.09.08-1
 - update to 2.09.08

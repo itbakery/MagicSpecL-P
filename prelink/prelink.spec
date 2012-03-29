@@ -1,26 +1,24 @@
-%define WITH_SELINUX 0
 Summary: An ELF prelinking utility
 Name: prelink
-Version: 0.4.5
-Release: 5%{?dist}
+Version: 0.4.6
+Release: 4%{?dist}
+%global svnver 195
 License: GPLv2+
 Group: System Environment/Base
-%define date 20110622
+%define date 20111012
+# svn export svn://sourceware.org/svn/prelink/trunk@%{svnver} prelink
+# tar cf - prelink | bzip2 -9 > prelink-%{date}.tar.bz2
 Source: http://people.redhat.com/jakub/prelink/prelink-%{date}.tar.bz2
 Source2: prelink.conf
 Source3: prelink.cron
 Source4: prelink.sysconfig
-Buildroot: %{_tmppath}/prelink-root
-#BuildRequires: libelf-devel >= 0.7.0-5
+
 BuildRequires: elfutils-libelf-devel-static
-%if %{WITH_SELINUX}
-BuildRequires: libselinux-static, libselinux-utils
-%endif
 BuildRequires: glibc-static
 Requires: glibc >= 2.2.4-18, coreutils, findutils
 Requires: util-linux, gawk, grep
 # For now
-ExclusiveArch: %{ix86} alpha sparc sparcv9 sparc64 s390 s390x x86_64 ppc ppc64
+ExclusiveArch: %{ix86} alpha sparc sparcv9 sparc64 s390 s390x x86_64 ppc ppc64 %{arm}
 
 %description
 The prelink package contains a utility which modifies ELF shared libraries
@@ -34,15 +32,6 @@ and thus programs come up faster.
 sed -i -e '/^prelink_LDADD/s/$/ -lpthread/' src/Makefile.{am,in}
 %configure --disable-shared
 make %{_smp_mflags}
-%if 0%{?fedora} >= 13
-%define testcc CC='gcc -Wl,--add-needed' CXX='g++ -Wl,--add-needed'
-%else
-%define testcc %{nil}
-%endif
-echo ====================TESTING=========================
-make -C testsuite check-harder %{testcc}
-make -C testsuite check-cycle %{testcc}
-echo ====================TESTING END=====================
 
 %install
 %{makeinstall}
@@ -79,9 +68,6 @@ sed -i -e 's|PRELINKING=yes|PRELINKING=no|g' %{buildroot}%{_sysconfdir}/sysconfi
 %post
 touch /var/lib/prelink/force
 
-%clean
-rm -rf %{buildroot}
-
 %files
 %defattr(-,root,root)
 %doc doc/prelink.pdf
@@ -103,11 +89,25 @@ rm -rf %{buildroot}
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/log/prelink/prelink.log
 
 %changelog
-* Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 0.4.5-5
-- 为 Magic 3.0 重建
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 0.4.5-4
-- 为 Magic 3.0 重建
+* Wed Oct 12 2011 Jakub Jelinek <jakub@redhat.com> 0.4.6-3
+- add --layout-page-size=N option, default to --layout-page-size=32768
+  on AMD Bulldozer (#739460)
+- handle 0%%{?rhel} >= 7 like 0%%{?fedora} >= 13
+
+* Fri Aug 26 2011 Jakub Jelinek <jakub@redhat.com> 0.4.6-2
+- fix cxx3.sh for ppc
+
+* Fri Aug 26 2011 Jakub Jelinek <jakub@redhat.com> 0.4.6-1
+- enable for arm (#733089)
+  - adjust arm default dynamic linker
+  - fix up fast PIE detection to handle PT_LOPROC ... PT_HIPROC phdrs
+    before PT_PHDR
+  - disable cxx{1,2}.sh test checking for conflict removal on arm
+    due to EABI weirdnesses, add new cxx3.sh test that tests conflict
+    removal even on arm
 
 * Wed Jun 22 2011 Jakub Jelinek <jakub@redhat.com> 0.4.5-3
 - handle DW_OP_GNU_parameter_ref

@@ -1,7 +1,7 @@
 # $Id: lame.spec 4387 2006-05-20 08:44:31Z dag $
 # Authority: matthias
 # Upstream: <mp3encoder$minnie,tuhs,org>
-%define realver 3.99.3
+%define realver 3.99.5
 Summary: LAME Ain't an MP3 Encoder... but it's the best of all
 Summary(zh_CN.UTF-8): LAME 不是一个 MP3编码器...它是所有中最好的
 Name: lame

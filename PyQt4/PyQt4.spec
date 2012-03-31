@@ -3,8 +3,8 @@
 
 Summary: Python bindings for Qt4
 Name: 	 PyQt4
-Version: 4.9
-Release: 3%{?dist}
+Version: 4.9.1
+Release: 1%{?dist}
 
 # GPLv2 exceptions(see GPL_EXCEPTIONS*.txt)
 License: GPLv3 or GPLv2 with exceptions
@@ -100,7 +100,6 @@ from any of the Qt4 classes (e.g. KDE or your own).
 
 %patch4 -p1
 %patch50 -p1 -b .timestamp
-%patch100 -p1 -b .doItemsLayout
 
 ## permissions
 # mark examples non-executable

@@ -19,13 +19,11 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  akonadi-devel
 BuildRequires:  kdebase4-workspace-devel >= %{version}
 ## okular bindings
-BuildRequires:  kdegraphics4-devel
-#BuildRequires:  okular-devel >= %{version}
+BuildRequires:  kde4-okular-devel >= %{version}
 BuildRequires:  kdelibs4-devel >= %{version}
 BuildRequires:  kdepimlibs4-devel >= %{version}
 ## kate bindings
-BuildRequires:  kdesdk4-devel
-#BuildRequires:  kate-devel >= %{version}
+BuildRequires:  kde4-kate-devel >= %{version}
 BuildRequires:  python-devel
 BuildRequires:  PyQt4-devel >= %{pyqt4_version_min}, sip-devel >= %{sip_version_min}
 %if 0%{?python3}
@@ -35,9 +33,7 @@ BuildRequires:  python3-PyQt4-devel >= %{pyqt4_version_min}, python3-sip-devel >
 %global python3_ver %(%{__python3} -c "import sys ; print (\\"%s%s\\" % (sys.version[:3],getattr(sys,'abiflags','')))")
 %global python3_pyqt4_version %(%{__python3} -c 'import PyQt4.pyqtconfig; print(PyQt4.pyqtconfig._pkg_config["pyqt_version_str"])' 2> /dev/null || echo %{pyqt4_version_min})
 %endif
-%if 0%{?fedora}
 BuildRequires:  qscintilla-devel >= 2.4
-%endif
 BuildRequires:  qimageblitz-devel
 BuildRequires:  soprano-devel
 

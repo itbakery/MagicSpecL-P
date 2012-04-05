@@ -29,8 +29,8 @@
 
 Summary: Mesa graphics libraries
 Name: mesa
-Version: 8.0.1
-Release: 1%{?dist}
+Version: 8.0.2
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -40,10 +40,14 @@ URL: http://www.mesa3d.org
 Source0: ftp://ftp.freedesktop.org/pub/%{name}/%{version}/MesaLib-%{version}.tar.bz2
 #Source0: %{name}-%{gitdate}.tar.xz
 Source2: %{manpages}.tar.bz2
-Source3: make-git-snapshot.sh
+Source3: make_mesa_git_package.sh
 
 #Patch7: mesa-7.1-link-shared.patch
 Patch8: mesa-7.10-llvmcore.patch
+Patch9: mesa-8.0-llvmpipe-shmget.patch
+Patch10: 0001-intel-fix-null-dereference-processing-HiZ-buffer.patch
+Patch11: mesa-8.0-nouveau-tfp-blacklist.patch
+Patch12: mesa-8.0.1-fix-16bpp.patch
 
 BuildRequires: pkgconfig autoconf automake libtool
 %if %{with_hardware}
@@ -69,6 +73,8 @@ BuildRequires: libxml2-python
 BuildRequires: libudev-devel
 BuildRequires: libtalloc-devel
 BuildRequires: bison flex
+BuildRequires: pkgconfig(wayland-client)
+BuildRequires: pkgconfig(wayland-server)
 
 %description
 Mesa
@@ -79,7 +85,6 @@ Group: System Environment/Libraries
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 Provides: libGL
-Requires: mesa-dri-drivers%{?_isa} = %{version}-%{release}
 
 %description libGL
 Mesa libGL runtime library.
@@ -89,7 +94,6 @@ Summary: Mesa libEGL runtime libraries
 Group: System Environment/Libraries
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Requires: mesa-dri-drivers%{?_isa} = %{version}-%{release}
 
 %description libEGL
 Mesa libEGL runtime libraries
@@ -99,7 +103,6 @@ Summary: Mesa libGLES runtime libraries
 Group: System Environment/Libraries
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Requires: mesa-dri-drivers%{?_isa} = %{version}-%{release}
 
 %description libGLES
 Mesa GLES runtime libraries
@@ -196,11 +199,84 @@ Requires: mesa-libOSMesa = %{version}-%{release}
 Mesa offscreen rendering development package
 
 
+%package libgbm
+Summary: Mesa gbm library
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+Provides: libgbm
+
+%description libgbm
+Mesa gbm runtime library.
+
+
+%package libgbm-devel
+Summary: Mesa libgbm development package
+Group: Development/Libraries
+Requires: mesa-libgbm%{?_isa} = %{version}-%{release}
+Provides: libgbm-devel
+
+%description libgbm-devel
+Mesa libgbm development package
+
+
+%package libwayland-egl
+Summary: Mesa libwayland-egl library
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+Provides: libwayland-egl
+
+%description libwayland-egl
+Mesa libwayland-egl runtime library.
+
+
+%package libwayland-egl-devel
+Summary: Mesa libwayland-egl development package
+Group: Development/Libraries
+Requires: mesa-libwayland-egl%{?_isa} = %{version}-%{release}
+Provides: libwayland-egl-devel
+
+%description libwayland-egl-devel
+Mesa libwayland-egl development package
+
+%package libxatracker
+Summary: Mesa XA state tracker for vmware
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+Provides: libxatracker
+
+%description libxatracker
+Mesa XA state tracker for vmware
+
+%package libxatracker-devel
+Summary: Mesa XA state tracker development package
+Group: Development/Libraries
+Requires: mesa-libxatracker%{?_isa} = %{version}-%{release}
+Provides: libxatracker-devel
+
+%description libxatracker-devel
+Mesa XA state tracker development package
+
+%package libglapi
+Summary: Mesa shared glapi
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description libglapi
+Mesa shared glapi
+
 %prep
-%setup -q -n Mesa-%{version}%{?snapshot} -b0 -b2
+%setup -q -n Mesa-%{version}%{?snapshot} -b2
 #setup -q -n mesa-%{gitdate} -b2
 #patch7 -p1 -b .dricore
 %patch8 -p1 -b .llvmcore
+%patch9 -p1 -b .shmget
+%patch10 -p1 -b .intel-hiz-fix
+%patch11 -p1 -b .nouveau
+%patch12 -p1 -b .16bpp
 
 %build
 
@@ -227,9 +303,13 @@ export CXXFLAGS="$RPM_OPT_FLAGS"
     --enable-gles1 \
     --enable-gles2 \
     --disable-gallium-egl \
+    --with-egl-platforms=x11,wayland,drm \
+    --enable-shared-glapi \
+    --enable-gbm \
 %if %{with_hardware}
-    --with-gallium-drivers=r300,r600,nouveau,swrast \
+    --with-gallium-drivers=svga,r300,r600,nouveau,swrast \
     --enable-gallium-llvm \
+    --enable-xa \
 %else
     --disable-gallium-llvm \
     --with-gallium-drivers=swrast \
@@ -269,11 +349,7 @@ done | xargs install -m 0755 -t $RPM_BUILD_ROOT%{_libdir}/dri >& /dev/null || :
 
 # strip out undesirable headers
 pushd $RPM_BUILD_ROOT%{_includedir}/GL 
-rm -f [a-fh-np-wyz]*.h glf*.h glut*.h
-popd
-
-pushd $RPM_BUILD_ROOT%{_libdir}
-rm -f xorg/modules/drivers/modesetting_drv.so
+rm -f [vw]*.h
 popd
 
 # man pages
@@ -303,6 +379,10 @@ rm -rf $RPM_BUILD_ROOT
 %postun libEGL -p /sbin/ldconfig
 %post libGLES -p /sbin/ldconfig
 %postun libGLES -p /sbin/ldconfig
+%post libgbm -p /sbin/ldconfig
+%postun libgbm -p /sbin/ldconfig
+%post libwayland-egl -p /sbin/ldconfig
+%postun libwayland-egl -p /sbin/ldconfig
 
 %files libGL
 %defattr(-,root,root,-)
@@ -323,13 +403,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libGLESv1_CM.so.1.*
 %{_libdir}/libGLESv2.so.2
 %{_libdir}/libGLESv2.so.2.*
-%{_libdir}/libglapi.so.0
-%{_libdir}/libglapi.so.0.*
 
 %files dri-filesystem
 %defattr(-,root,root,-)
 %doc docs/COPYING
 %dir %{_libdir}/dri
+
+%files libglapi
+%{_libdir}/libglapi.so.0
+%{_libdir}/libglapi.so.0.*
 
 %files dri-drivers
 %defattr(-,root,root,-)
@@ -346,6 +428,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 %{_libdir}/dri/nouveau_dri.so
 %{_libdir}/dri/nouveau_vieux_dri.so
+%{_libdir}/dri/vmwgfx_dri.so
 %endif
 %{_libdir}/dri/swrast_dri.so
 
@@ -365,6 +448,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/GL/internal/dri_interface.h
 %{_libdir}/pkgconfig/dri.pc
 %{_libdir}/libGL.so
+%{_libdir}/libglapi.so
 %{_libdir}/pkgconfig/gl.pc
 %{_datadir}/man/man3/gl[^uX]*.3gl*
 %{_datadir}/man/man3/glX*.3gl*
@@ -396,7 +480,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/glesv2.pc
 %{_libdir}/libGLESv1_CM.so
 %{_libdir}/libGLESv2.so
-%{_libdir}/libglapi.so
 
 %files libGLU
 %defattr(-,root,root,-)
@@ -423,7 +506,86 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libOSMesa.so
 %{_libdir}/pkgconfig/osmesa.pc
 
+%files libgbm
+%defattr(-,root,root,-)
+%doc docs/COPYING
+%{_libdir}/libgbm.so.1
+%{_libdir}/libgbm.so.1.*
+
+%files libgbm-devel
+%defattr(-,root,root,-)
+%{_libdir}/libgbm.so
+%{_includedir}/gbm.h
+%{_libdir}/pkgconfig/gbm.pc
+
+%files libwayland-egl
+%defattr(-,root,root,-)
+%doc docs/COPYING
+%{_libdir}/libwayland-egl.so.1
+%{_libdir}/libwayland-egl.so.1.*
+
+%files libwayland-egl-devel
+%defattr(-,root,root,-)
+%{_libdir}/libwayland-egl.so
+%{_libdir}/pkgconfig/wayland-egl.pc
+
+%files libxatracker
+%defattr(-,root,root,-)
+%doc docs/COPYING
+%if %{with_hardware}
+%{_libdir}/libxatracker.so.1
+%{_libdir}/libxatracker.so.1.*
+%endif
+
+%files libxatracker-devel
+%defattr(-,root,root,-)
+%if %{with_hardware}
+%{_libdir}/libxatracker.so
+%{_includedir}/xa_tracker.h
+%{_includedir}/xa_composite.h
+%{_includedir}/xa_context.h
+%{_libdir}/pkgconfig/xatracker.pc
+%endif
+
 %changelog
+* Mon Apr 02 2012 Adam Jackson <ajax@redhat.com> 8.0.2-2
+- mesa-8.0.1-fix-16bpp.patch: Fix 16bpp in llvmpipe
+
+* Sat Mar 31 2012 Dave Airlie <airlied@redhat.com> 8.0.2-1
+- get latest 8.0.2 set of fixes
+
+* Wed Mar 28 2012 Adam Jackson <ajax@redhat.com> 8.0.1-9
+- Subpackage libglapi instead of abusing -dri-drivers for it to keep minimal
+  disk space minimal. (#807750)
+
+* Wed Mar 28 2012 Adam Jackson <ajax@redhat.com> 8.0.1-8
+- mesa-8.0.1-llvmpipe-shmget.patch: Fix image pitch bug.
+
+* Fri Mar 23 2012 Adam Jackson <ajax@redhat.com> 8.0.1-7
+- mesa-8.0-nouveau-tfp-blacklist.patch: gnome-shell blacklisting: nvfx and
+  below with <= 64M of vram, and all nv30.
+
+* Wed Mar 21 2012 Adam Jackson <ajax@redhat.com> 8.0.1-6
+- mesa-8.0.1-llvmpipe-shmget.patch: Use ShmGetImage if possible
+
+* Mon Mar 19 2012 Adam Jackson <ajax@redhat.com> 8.0.1-5
+- Move libglapi into -dri-drivers instead of -libGLES as being marginally
+  more appropriate (libGL wants to have DRI drivers, but doesn't need to
+  have a full libGLES too).
+
+* Thu Mar 15 2012 Dave Airlie <airlied@gmail.com> 8.0.1-4
+- enable vmwgfx + xa state tracker
+
+* Thu Mar 01 2012 Adam Jackson <ajax@redhat.com> 8.0.1-3
+- mesa-8.0.1-git.patch: Sync with 8.0 branch (commit a3080987)
+
+* Sat Feb 18 2012 Thorsten Leemhuis <fedora@leemhuis.info> 8.0.1-2
+- a few changes for weston, the wayland reference compositor (#790542):
+- enable gbm and shared-glapi in configure command (the latter is required by 
+  the former) and add subpackages libgbm and libgbm-devel
+- add --with-egl-platforms=x11,wayland,drm to configure command and add 
+  subpackages libwayland-egl and libwayland-egl-devel
+
 * Fri Feb 17 2012 Adam Jackson <ajax@redhat.com> 8.0.1-1
 - Mesa 8.0.1
 

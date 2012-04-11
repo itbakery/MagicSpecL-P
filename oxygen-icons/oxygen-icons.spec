@@ -11,7 +11,7 @@ Group(zh_CN.GB18030): ϵͳ/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
 Release: %{release_number}%{?dist}
-Source0: %{real_name}-%{rversion}.tar.bz2
+Source0: %{real_name}-%{rversion}.tar.xz
 
 Source10: 16-start-here-magic.png
 Source11: 22-start-here-magic.png

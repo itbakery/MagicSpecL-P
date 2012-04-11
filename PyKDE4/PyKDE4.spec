@@ -13,7 +13,7 @@ Summary: Python bindings for KDE4
 License: LGPLv2+
 Group: User Interface/Desktops
 URL: http://developer.kde.org/language-bindings/
-Source0: ftp://ftp.kde.org/pub/kde/unstable/%{version}/src/pykde4-%{version}.tar.bz2
+Source0: ftp://ftp.kde.org/pub/kde/unstable/%{version}/src/pykde4-%{version}.tar.xz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  akonadi-devel

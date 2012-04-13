@@ -3,7 +3,7 @@
 Summary:   Package management service
 Name:      PackageKit
 Version:   0.7.3
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.packagekit.org
 Source0:   http://www.packagekit.org/releases/%{name}-%{version}.tar.xz
@@ -287,8 +287,8 @@ popd > /dev/null
 pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
 ln -s ../pixmaps/comps icons
 popd > /dev/null
-
-%find_lang %name
+magic_rpm_clean.sh
+%find_lang %name || touch %{name}.lang
 
 %post
 update-mime-database %{_datadir}/mime &> /dev/null || :
@@ -457,6 +457,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_libdir}/pkgconfig/packagekit-plugin.pc
 
 %changelog
+* Fri Apr 13 2012 Liu Di <liudidi@gmail.com> - 0.7.3-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 01 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.3-1
 - New upstream release
 - Remove upstreamed patches

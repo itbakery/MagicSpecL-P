@@ -108,13 +108,13 @@ Summary: An interpreted, interactive, object-oriented programming language
 Name: %{python}
 # Remember to also rebase python-docs when changing this:
 Version: 2.7.2
-Release: 21%{?dist}
+Release: 22%{?dist}
 License: Python
 Group: Development/Languages
 Requires: %{python}-libs%{?_isa} = %{version}-%{release}
 Provides: python-abi = %{pybasever}
 Provides: python(abi) = %{pybasever}
-
+Provides: /bin/python
 
 # =======================
 # Build-time requirements
@@ -1339,12 +1339,13 @@ sed \
    > %{buildroot}%{tapsetdir}/%{libpython_stp_debug}
 %endif # with_debug_build
 %endif # with_systemtap
-
+magic_rpm_clean.sh
 
 # ======================================================
 # Running the upstream test suite
 # ======================================================
 
+%if 0%{?with_check}
 %check
 topdir=$(pwd)
 CheckPython() {
@@ -1395,6 +1396,7 @@ CheckPython \
 
 %endif # run_selftest_suite
 
+%endif
 
 # ======================================================
 # Cleaning up
@@ -1749,6 +1751,9 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
+* Sat Apr 14 2012 Liu Di <liudidi@gmail.com> - 2.7.2-22
+- 为 Magic 3.0 重建
+
 * Wed Mar 07 2012 Liu Di <liudidi@gmail.com> - 2.7.2-21
 - 为 Magic 3.0 重建
 

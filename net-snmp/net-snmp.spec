@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Epoch: 1
 
 License: BSD
@@ -356,6 +356,8 @@ install -m 644 %SOURCE9 $RPM_BUILD_ROOT/%{_sysconfdir}/tmpfiles.d/net-snmp.conf
 install -m 755 -d $RPM_BUILD_ROOT/%{_unitdir}
 install -m 644 %SOURCE10 %SOURCE11 $RPM_BUILD_ROOT/%{_unitdir}/
 
+magic_rpm_clean.sh
+
 %check
 %if %{netsnmp_check}
 # restore libtool, for unknown reason it does not work with the one without rpath
@@ -367,22 +369,22 @@ LD_LIBRARY_PATH=${RPM_BUILD_ROOT}/%{_libdir} make test
 %post
 if [ $1 -eq 1 ] ; then 
     # Initial installation 
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+    /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
 %preun
 if [ $1 = 0 ]; then
-    /bin/systemctl --no-reload disable snmpd.service > /dev/null 2>&1 || :
-    /bin/systemctl --no-reload disable snmptrapd.service > /dev/null 2>&1 || :
-    /bin/systemctl stop snmpd.service > /dev/null 2>&1 || :
-    /bin/systemctl stop snmptrapd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable snmpd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable snmptrapd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl stop snmpd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl stop snmptrapd.service > /dev/null 2>&1 || :
 fi
 
 
 %postun
 if [ "$1" -ge "1" ]; then
-    /bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
-    /bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
 fi
 
 
@@ -395,22 +397,22 @@ echo "hello world" >> /tmp/snmp
 echo date >>/tmp/snmp
 /usr/bin/systemd-sysv-convert --save snmpd >/dev/null 2>&1 ||:
 /usr/bin/systemd-sysv-convert --save snmptrapd >/dev/null 2>&1 ||:
-/sbin/chkconfig --del snmpd >/dev/null 2>&1 || :
-/sbin/chkconfig --del snmptrapd >/dev/null 2>&1 || :
-/bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
-/bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --del snmpd >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --del snmptrapd >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
 
 %triggerpostun -n net-snmp-sysvinit -- net-snmp < 1:5.7-5
-/sbin/chkconfig --add snmpd >/dev/null 2>&1 || :
-/sbin/chkconfig --add snmptrapd >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --add snmpd >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --add snmptrapd >/dev/null 2>&1 || :
 
-%post libs -p /sbin/ldconfig
+%post libs -p /usr/sbin/ldconfig
 
-%postun libs -p /sbin/ldconfig
+%postun libs -p /usr/sbin/ldconfig
 
-%post agent-libs -p /sbin/ldconfig
+%post agent-libs -p /usr/sbin/ldconfig
 
-%postun agent-libs -p /sbin/ldconfig
+%postun agent-libs -p /usr/sbin/ldconfig
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -509,6 +511,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_initrddir}/snmptrapd
 
 %changelog
+* Sun Apr 15 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-7
+- 为 Magic 3.0 重建
+
 * Sat Mar 10 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-6
 - 为 Magic 3.0 重建
 

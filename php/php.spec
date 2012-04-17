@@ -44,7 +44,7 @@
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
 Version: 5.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: PHP
 Group: Development/Languages
 URL: http://www.php.net/
@@ -802,7 +802,7 @@ without_shared="--without-gd \
 
 # Build Apache module, and the CLI SAPI, /usr/bin/php
 pushd build-apache
-build --with-apxs2=%{_sbindir}/apxs \
+build --with-apxs2=%{_bindir}/apxs \
       --libdir=%{_libdir}/php \
       --enable-pdo=shared \
       --with-mysql=shared,%{_prefix} \
@@ -897,7 +897,7 @@ popd
 
 # Build a special thread-safe Apache SAPI
 pushd build-zts
-build --with-apxs2=%{_sbindir}/apxs \
+build --with-apxs2=%{_bindir}/apxs \
       --includedir=%{_includedir}/php-zts \
       --libdir=%{_libdir}/php-zts \
       --enable-maintainer-zts \
@@ -913,6 +913,7 @@ popd
 ### NOTE!!! EXTENSION_DIR was changed for the -zts build, so it must remain
 ### the last SAPI to be built.
 
+%if 0%{?with_check}
 %check
 %if %runselftest
 cd build-apache
@@ -931,6 +932,7 @@ if ! make test; then
 fi
 unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 %endif
+%endif
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
@@ -938,6 +940,8 @@ unset NO_INTERACTION REPORT_EXIT_STATUS MALLOC_CHECK_
 # Install the extensions for the ZTS version
 make -C build-ztscli install \
      INSTALL_ROOT=$RPM_BUILD_ROOT
+
+magic_rpm_clean.sh
 
 # rename extensions build with mysqlnd
 mv $RPM_BUILD_ROOT%{_libdir}/php-zts/modules/mysql.so \
@@ -1117,21 +1121,21 @@ rm files.* macros.php
 %post fpm
 if [ $1 = 1 ]; then
     # Initial installation
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+    /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
 
 %preun fpm
 if [ $1 = 0 ]; then
     # Package removal, not upgrade
-    /bin/systemctl --no-reload disable php-fpm.service >/dev/null 2>&1 || :
-    /bin/systemctl stop php-fpm.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable php-fpm.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl stop php-fpm.service >/dev/null 2>&1 || :
 fi
 
 %postun fpm
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
     # Package upgrade, not uninstall
-    /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
 fi
 
 # Handle upgrading from SysV initscript to native systemd unit.
@@ -1146,7 +1150,7 @@ if [ -f /etc/rc.d/init.d/php-fpm ]; then
 
     # Run these because the SysV package being removed won't do them
     /sbin/chkconfig --del php-fpm >/dev/null 2>&1 || :
-    /bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart php-fpm.service >/dev/null 2>&1 || :
 fi
 %endif
 
@@ -1255,6 +1259,9 @@ fi
 
 
 %changelog
+* Tue Apr 17 2012 Liu Di <liudidi@gmail.com> - 5.4.0-2
+- 为 Magic 3.0 重建
+
 * Fri Mar 02 2012 Remi Collet <remi@fedoraproject.org> 5.4.0-1
 - update to PHP 5.4.0 finale
 

@@ -2,7 +2,7 @@
 
 Name:		linux-firmware
 Version:	20120206
-Release:	0.1.git%{checkout}%{?dist}
+Release:	0.3.git%{checkout}%{?dist}
 Summary:	Firmware files used by the Linux kernel
 
 Group:		System Environment/Kernel
@@ -44,9 +44,11 @@ rm -f usbdux/*dux */*.asm
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/lib/firmware
-cp -r * $RPM_BUILD_ROOT/lib/firmware
-rm $RPM_BUILD_ROOT/lib/firmware/{WHENCE,LICENCE.*,LICENSE.*}
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/firmware
+cp -r * $RPM_BUILD_ROOT%{_prefix}/lib/firmware
+rm $RPM_BUILD_ROOT%{_prefix}/lib/firmware/{WHENCE,LICENCE.*,LICENSE.*}
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,9 +57,15 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc WHENCE LICENCE.* LICENSE.*
-/lib/firmware/*
+%{_prefix}/lib/firmware/*
 
 %changelog
+* Thu Apr 19 2012 Liu Di <liudidi@gmail.com> - 20120206-0.3.git06c8f81
+- 为 Magic 3.0 重建
+
+* Thu Apr 19 2012 Liu Di <liudidi@gmail.com>
+- 为 Magic 3.0 重建
+
 * Tue Feb 07 2012 Josh Boyer <jwboyer@redhat.com>
 - Update to latest upstream git snapshot.  Fixes rhbz 786937
 

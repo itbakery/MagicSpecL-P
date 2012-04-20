@@ -2,7 +2,7 @@ Summary: A compact getty program for virtual consoles only
 Name: mingetty
 Version: 1.08
 License: GPLv2+
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group: System Environment/Base
 BuildRoot: %{_tmppath}/%{name}-root
 URL: http://sourceforge.net/projects/mingetty/
@@ -34,10 +34,12 @@ make "RPM_OPTS=$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/{sbin,%{_mandir}/man8}
+mkdir -p $RPM_BUILD_ROOT/{%{_sbindir},%{_mandir}/man8}
 
-install -m 0755 mingetty $RPM_BUILD_ROOT/sbin/
+install -m 0755 mingetty $RPM_BUILD_ROOT%{_sbindir}/
 install -m 0644 mingetty.8 $RPM_BUILD_ROOT/%{_mandir}/man8/
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,10 +47,13 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc COPYING
-/sbin/mingetty
+%{_sbindir}/mingetty
 %{_mandir}/man8/mingetty.*
 
 %changelog
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.08-8
+- 为 Magic 3.0 重建
+
 * Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 1.08-7
 - 为 Magic 3.0 重建
 

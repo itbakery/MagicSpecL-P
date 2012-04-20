@@ -82,7 +82,7 @@
 Summary: An open source implementation of SSH protocol versions 1 and 2
 Name: openssh
 Version: %{openssh_ver}
-Release: %{openssh_rel}%{?dist}%{?rescue_rel}
+Release: %{openssh_rel}%{?dist}%{?rescue_rel}.2
 URL: http://www.openssh.com/portable.html
 #URL1: http://pamsshagentauth.sourceforge.net
 #Source0: ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
@@ -573,7 +573,7 @@ popd
 %if %{pam_ssh_agent}
 pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
 LDFLAGS="$SAVE_LDFLAGS"
-%configure --without-selinux --libexecdir=/%{_lib}/security --with-mantype=man
+%configure --without-selinux --libexecdir=%{_prefix}/%{_lib}/security --with-mantype=man
 make
 popd
 %endif
@@ -638,6 +638,9 @@ pushd pam_ssh_agent_auth-%{pam_ssh_agent_ver}
 make install DESTDIR=$RPM_BUILD_ROOT
 popd
 %endif
+
+magic_rpm_clean.sh
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -658,38 +661,38 @@ getent passwd sshd >/dev/null || \
 
 %post server
 if [ $1 -eq 1 ] ; then
-    /bin/systemctl enable sshd.service >/dev/null 2>&1 || :
-    /bin/systemctl enable sshd-keygen.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl enable sshd.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl enable sshd-keygen.service >/dev/null 2>&1 || :
 fi
 
 %postun server
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
     # Package upgrade, not uninstall
-    /bin/systemctl try-restart sshd.service >/dev/null 2>&1 || :
-    /bin/systemctl try-restart sshd-keygen.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart sshd.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart sshd-keygen.service >/dev/null 2>&1 || :
 fi
 
 %preun server
 if [ $1 -eq 0 ] ; then
     # Package removal, not upgrade
-    /bin/systemctl --no-reload disable sshd.service > /dev/null 2>&1 || :
-    /bin/systemctl --no-reload disable sshd-keygen.service > /dev/null 2>&1 || :
-    /bin/systemctl stop sshd.service > /dev/null 2>&1 || :
-    /bin/systemctl stop sshd-keygen.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable sshd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable sshd-keygen.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl stop sshd.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl stop sshd-keygen.service > /dev/null 2>&1 || :
 fi
 
 %triggerun -n openssh-server -- openssh-server < 5.8p2-12
 /usr/bin/systemd-sysv-convert --save sshd >/dev/null 2>&1 || :
-/bin/systemctl enable sshd.service >/dev/null 2>&1
-/bin/systemctl enable sshd-keygen.service >/dev/null 2>&1
-/sbin/chkconfig --del sshd >/dev/null 2>&1 || :
-/bin/systemctl try-restart sshd.service >/dev/null 2>&1 || :
+/usr/bin/systemctl enable sshd.service >/dev/null 2>&1
+/usr/bin/systemctl enable sshd-keygen.service >/dev/null 2>&1
+/usr/sbin/chkconfig --del sshd >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart sshd.service >/dev/null 2>&1 || :
 # This one was never a service, so we don't simply restart it
-/bin/systemctl is-active -q sshd.service && /bin/systemctl start sshd-keygen.service >/dev/null 2>&1 || :
+/usr/bin/systemctl is-active -q sshd.service && /usr/bin/systemctl start sshd-keygen.service >/dev/null 2>&1 || :
 
 %triggerpostun -n openssh-server-sysvinit -- openssh-server < 5.8p2-12
-/sbin/chkconfig --add sshd >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --add sshd >/dev/null 2>&1 || :
 
 %files
 %defattr(-,root,root)
@@ -791,11 +794,17 @@ fi
 %files -n pam_ssh_agent_auth
 %defattr(-,root,root)
 %doc pam_ssh_agent_auth-%{pam_ssh_agent_ver}/OPENSSH_LICENSE
-%attr(0755,root,root) /%{_lib}/security/pam_ssh_agent_auth.so
+%attr(0755,root,root) %{_prefix}/%{_lib}/security/pam_ssh_agent_auth.so
 %attr(0644,root,root) %{_mandir}/man8/pam_ssh_agent_auth.8*
 %endif
 
 %changelog
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 5.9p1-16.2
+- 为 Magic 3.0 重建
+
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 5.9p1-16.1
+- 为 Magic 3.0 重建
+
 * Fri Dec 13 2011 Tomas Mraz <tmraz@redhat.com> 5.9p1-16 + 0.9.2-32
 - add CAVS test driver for the aes-ctr ciphers
 

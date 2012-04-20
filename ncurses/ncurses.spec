@@ -1,13 +1,14 @@
 Summary: Ncurses support utilities
 Name: ncurses
 Version: 5.9
-Release: 3.20110716%{?dist}
+Release: 4.20120204%{?dist}
 License: MIT
 Group: System Environment/Base
 URL: http://invisible-island.net/ncurses/ncurses.html
 Source0: ftp://invisible-island.net/ncurses/ncurses-%{version}.tar.gz
 
-Patch1: ncurses-5.9-20110409-20110716.patch.bz2
+Patch1: ncurses-5.9-20111224-patch.sh.bz2
+Patch2: ncurses-5.9-20111231-20120204.patch.bz2
 Patch8: ncurses-config.patch
 Patch9: ncurses-libs.patch
 Patch11: ncurses-urxvt.patch
@@ -50,6 +51,8 @@ Group: System Environment/Base
 Obsoletes: termcap < 1:5.5-2
 # base introduced in 5.6-13 
 Conflicts: ncurses < 5.6-13
+# /lib -> /usr/lib move
+Conflicts: filesystem < 3
 
 %description base
 This package contains descriptions of common terminals. Other terminal
@@ -91,6 +94,7 @@ The ncurses-static package includes static libraries of the ncurses library.
 %setup -q
 
 %patch1 -p1
+%patch2 -p1
 
 %patch8 -p1 -b .config
 %patch9 -p1 -b .libs
@@ -107,17 +111,15 @@ for f in ANNOUNCE; do
 done
 
 %build
-%define rootdatadir /lib
 %define ncurses_options \\\
     --with-shared --without-ada --with-ospeed=unsigned \\\
     --enable-hard-tabs --enable-xmc-glitch --enable-colorfgbg \\\
-    --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo:%{rootdatadir}/terminfo \\\
+    --with-terminfo-dirs=%{_sysconfdir}/terminfo:%{_datadir}/terminfo \\\
     --enable-overwrite \\\
     --enable-pc-files \\\
+    --with-pkg-config-libdir=%{_libdir}/pkgconfig \\\
     --with-termlib=tinfo \\\
     --with-chtype=long
-
-export PKG_CONFIG_LIBDIR=%{_libdir}/pkgconfig
 
 mkdir narrowc widec
 cd narrowc
@@ -142,38 +144,15 @@ make -C widec DESTDIR=$RPM_BUILD_ROOT install.{libs,includes,man}
 chmod 755 ${RPM_BUILD_ROOT}%{_libdir}/lib*.so.*.*
 chmod 644 ${RPM_BUILD_ROOT}%{_libdir}/lib*.a
 
-# move lib{ncurses{,w},tinfo}.so.* to /lib*
-mkdir $RPM_BUILD_ROOT/%{_lib}
-mv $RPM_BUILD_ROOT%{_libdir}/lib{ncurses{,w},tinfo}.so.* $RPM_BUILD_ROOT/%{_lib}
-for l in $RPM_BUILD_ROOT%{_libdir}/lib{ncurses{,w},tinfo}.so; do
-    ln -sf $(echo %{_libdir} | \
-        sed 's,\(^/\|\)[^/][^/]*,..,g')/%{_lib}/$(readlink $l) $l
-done
+magic_rpm_clean.sh
 
-mkdir -p $RPM_BUILD_ROOT{%{rootdatadir},%{_sysconfdir}}/terminfo
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/terminfo
 
-# move few basic terminfo entries to /lib
 baseterms=
-for termname in \
-        ansi dumb linux vt100 vt100-nav vt102 vt220 vt52
-do
-    for t in $(find $RPM_BUILD_ROOT%{_datadir}/terminfo \
-        -samefile $RPM_BUILD_ROOT%{_datadir}/terminfo/${termname::1}/$termname)
-    do
-        baseterms="$baseterms $(basename $t)"
-    done
-done
-for termname in $baseterms; do
-    termpath=terminfo/${termname::1}/$termname
-    mkdir $RPM_BUILD_ROOT%{rootdatadir}/terminfo/${termname::1} &> /dev/null || :
-    mv $RPM_BUILD_ROOT%{_datadir}/$termpath $RPM_BUILD_ROOT%{rootdatadir}/$termpath
-    ln -s $(dirname %{_datadir}/$termpath | \
-        sed 's,\(^/\|\)[^/][^/]*,..,g')%{rootdatadir}/$termpath \
-        $RPM_BUILD_ROOT%{_datadir}/$termpath
-done
 
 # prepare -base and -term file lists
 for termname in \
+    ansi dumb linux vt100 vt100-nav vt102 vt220 vt52 \
     Eterm\* aterm bterm cons25 cygwin eterm\* gnome gnome-256color hurd jfbterm \
     konsole konsole-256color mach\* mlterm mrxvt nsterm putty\* pcansi \
     rxvt rxvt-\* screen screen-\*color screen.\* sun teraterm teraterm2.3 \
@@ -235,14 +214,12 @@ bzip2 NEWS
 
 %files libs
 %defattr(-,root,root)
-/%{_lib}/lib*.so.*
 %{_libdir}/lib*.so.*
 
 %files base -f terms.base
 %defattr(-,root,root)
 %doc README
 %dir %{_sysconfdir}/terminfo
-%{rootdatadir}/terminfo
 %{_datadir}/tabset
 %dir %{_datadir}/terminfo
 
@@ -275,6 +252,10 @@ bzip2 NEWS
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Wed Feb 08 2012 Miroslav Lichvar <mlichvar@redhat.com> 5.9-4.20120204
+- move libs and terms to /usr
+- update to patch 20120204
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.9-3.20110716
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

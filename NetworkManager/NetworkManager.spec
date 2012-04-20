@@ -7,15 +7,15 @@
 %define libnl3_version 3.2.6
 %define ppp_version 2.4.5
 
-%define snapshot .git20120319
-%define realversion 0.9.3.997
+%define snapshot .git20120328_2
+%define realversion 0.9.4.0
 
 %define systemd_dir %{_prefix}/lib/systemd/system
 
 Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
-Version: 0.9.3.997
+Version: 0.9.4
 Release: 2%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
@@ -31,9 +31,9 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires(post): chkconfig
 Requires(preun): chkconfig
 Requires(post): systemd-sysv
-Requires(post): /bin/systemctl
-Requires(preun): /bin/systemctl
-Requires(postun): /bin/systemctl
+Requires(post): /usr/bin/systemctl
+Requires(preun): /usr/bin/systemctl
+Requires(postun): /usr/bin/systemctl
 
 Requires: dbus >= %{dbus_version}
 Requires: dbus-glib >= %{dbus_glib_version}
@@ -42,7 +42,7 @@ Requires: iproute
 Requires: dhclient >= 12:4.1.0
 Requires: wpa_supplicant >= 1:0.7.3-1
 Requires: libnl3 >= %{libnl3_version}
-Requires: %{name}-glib = %{epoch}:%{version}-%{release}
+Requires: %{name}-glib%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: ppp = %{ppp_version}
 Requires: avahi-autoipd
 Requires: dnsmasq
@@ -89,6 +89,10 @@ BuildRequires: wimax-devel
 BuildRequires: gnome-bluetooth-libs-devel >= 2.27.7.1-1
 %endif
 BuildRequires: systemd systemd-devel
+%if 0%{?fedora} < 17
+# systemd.pc is in systemd-units for F16 and below
+BuildRequires: systemd-units
+%endif
 BuildRequires: iso-codes-devel
 
 %description
@@ -103,7 +107,7 @@ provides VPN integration with a variety of different VPN services.
 Summary: Intel WiMAX device support for NetworkManager
 Group: System Environment/Base
 Requires: wimax
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 
 %description wimax
 This package contains NetworkManager support for Intel WiMAX mobile broadband
@@ -114,7 +118,7 @@ devices.
 %package devel
 Summary: Libraries and headers for adding NetworkManager support to applications
 Group: Development/Libraries
-Requires: %{name} = %{epoch}:%{version}-%{release}
+Requires: %{name}%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: dbus-devel >= %{dbus_version}
 Requires: dbus-glib >= %{dbus_glib_version}
 Requires: pkgconfig
@@ -138,8 +142,8 @@ functionality from applications that use glib.
 %package glib-devel
 Summary: Header files for adding NetworkManager support to applications that use glib.
 Group: Development/Libraries
-Requires: %{name}-devel = %{epoch}:%{version}-%{release}
-Requires: %{name}-glib = %{epoch}:%{version}-%{release}
+Requires: %{name}-devel%{?_isa} = %{epoch}:%{version}-%{release}
+Requires: %{name}-glib%{?_isa} = %{epoch}:%{version}-%{release}
 Requires: glib2-devel
 Requires: pkgconfig
 Requires: dbus-glib-devel >= %{dbus_glib_version}
@@ -179,6 +183,7 @@ intltoolize --force
 	--with-docs=yes \
 	--with-system-ca-path=/etc/pki/tls/certs \
 	--with-tests=yes \
+	--with-udev-dir=%{_prefix}/lib/udev \
 	--with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
 	--with-dist-version=%{version}-%{release}
 
@@ -202,6 +207,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %{__mkdir_p} $RPM_BUILD_ROOT%{_localstatedir}/lib/NetworkManager
 
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*.la
@@ -222,21 +228,21 @@ install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 %post
 if [ $1 -eq 1 ] ; then 
     # Initial installation
-    /bin/systemctl enable NetworkManager.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl enable NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %preun
 if [ $1 -eq 0 ]; then
     # Package removal, not upgrade
-    /bin/systemctl --no-reload disable NetworkManager.service >/dev/null 2>&1 || :
-    /bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable NetworkManager.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
         # Package upgrade, not uninstall
-        /bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+        /usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %triggerun -- NetworkManager < 1:0.8.990
@@ -244,15 +250,15 @@ fi
 # User must manually run systemd-sysv-convert --apply NetworkManager
 # to migrate them to systemd targets
 /usr/bin/systemd-sysv-convert --save NetworkManager >/dev/null 2>&1 ||:
-/bin/systemctl --no-reload enable NetworkManager.service >/dev/null 2>&1 ||:
+/usr/bin/systemctl --no-reload enable NetworkManager.service >/dev/null 2>&1 ||:
 # Run these because the SysV package being removed won't do them
-/sbin/chkconfig --del NetworkManager >/dev/null 2>&1 || :
-/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --del NetworkManager >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
 
 
 %triggerun -- NetworkManager < 1:0.7.0-0.9.2.svn3614
-/sbin/service NetworkManagerDispatcher stop >/dev/null 2>&1
-/sbin/chkconfig --del NetworkManagerDispatcher
+/usr/sbin/service NetworkManagerDispatcher stop >/dev/null 2>&1
+/usr/sbin/chkconfig --del NetworkManagerDispatcher
 exit 0
 
 %post	glib -p /sbin/ldconfig
@@ -292,7 +298,7 @@ exit 0
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
 %{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
 %{_datadir}/polkit-1/actions/*.policy
-/lib/udev/rules.d/*.rules
+%{_prefix}/lib/udev/rules.d/*.rules
 # systemd stuff
 %{systemd_dir}/NetworkManager.service
 %{systemd_dir}/NetworkManager-wait-online.service
@@ -345,6 +351,13 @@ exit 0
 %{_datadir}/gtk-doc/html/libnm-util/*
 
 %changelog
+* Wed Mar 28 2012 Colin Walters <walters@verbum.org> - 1:0.9.4-2.git20120328_2%{?dist}
+- Add _isa for internal requires; otherwise depsolving may pull in an
+  arbitrary architecture.
+
+* Wed Mar 28 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.4-1.git20120328_2
+- Update to 0.9.4
+
 * Mon Mar 19 2012 Dan Williams <dcbw@redhat.com> - 0.9.3.997-2
 - libnm-glib: updated for new symbols the applet wants
 

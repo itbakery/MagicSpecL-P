@@ -1,13 +1,13 @@
 Name:           nss-myhostname
 Summary:        glibc plugin for local system host name resolution
 Version:        0.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv2+
 URL:            http://0pointer.de/lennart/projects/nss-myhostname/
 Group:          System Environment/Libraries
 Source:         http://0pointer.de/lennart/projects/nss-myhostname/nss-myhostname-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires:       /sbin/ldconfig
+Requires:       /usr/sbin/ldconfig
 Requires:       /bin/sh
 Requires:       /bin/sed
 
@@ -30,19 +30,20 @@ locally. Patching /etc/hosts is thus no longer necessary.
 %setup -q
 
 %build
-%configure --prefix=/usr --libdir=/%{_lib}
+%configure --prefix=/usr --libdir=%{_libdir}
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 rm -rf %{buildroot}/usr/share/doc/nss-myhostname
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 # sed-fu to add myhostname to the hosts line of /etc/nsswitch.conf
 if [ -f /etc/nsswitch.conf ] ; then
         sed -i.bak -e '
@@ -61,15 +62,18 @@ if [ "$1" -eq 0 -a -f /etc/nsswitch.conf ] ; then
                 ' /etc/nsswitch.conf
 fi
 
-%postun -p /sbin/ldconfig
+%postun -p /usr/sbin/ldconfig
 
 %files
 %defattr(-, root, root)
 %doc README
 %doc LICENSE
-/%{_lib}/*
+%{_libdir}/libnss*.so*
 
 %changelog
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 0.3-2
+- 为 Magic 3.0 重建
+
 * Wed May 11 2011 Lennart Poettering <lpoetter@redhat.com> - 0.3-1
 - New upstream version
 

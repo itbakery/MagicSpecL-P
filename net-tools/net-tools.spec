@@ -1,9 +1,9 @@
-%global checkout 20120111git
+%global checkout 20120127git
 
 Summary: Basic networking tools
 Name: net-tools
 Version: 1.60
-Release: 132.%{checkout}%{?dist}
+Release: 134.%{checkout}%{?dist}
 License: GPL+
 Group: System Environment/Base
 URL: http://net-tools.sourceforge.net
@@ -41,28 +41,35 @@ Patch6: net-tools-1.60-duplicate-tcp.patch
 # don't report statistics for virtual devices (#143981)
 Patch7: net-tools-1.60-statalias.patch
 
-# don't trim interface names to 5 characters in 'netstat -i' or 'ifconfig -s' (#152457)
-Patch8: net-tools-1.60-trim_iface.patch
-
 # clear static buffers in interface.c by Ulrich Drepper (#176714)
-Patch9: net-tools-1.60-interface_stack.patch
-
-# new option for nestat, -Z shows selinux context
-Patch10: net-tools-1.60-selinux.patch
+Patch8: net-tools-1.60-interface_stack.patch
 
 # statistics for SCTP
-Patch11: net-tools-1.60-sctp-statistics.patch
+Patch9: net-tools-1.60-sctp-statistics.patch
 
 # ifconfig crash when interface name is too long (#190703)
-Patch12: net-tools-1.60-ifconfig-long-iface-crasher.patch
+Patch10: net-tools-1.60-ifconfig-long-iface-crasher.patch
 
 # fixed tcp timers info in netstat (#466845)
-Patch13: net-tools-1.60-netstat-probe.patch
+Patch11: net-tools-1.60-netstat-probe.patch
 
 BuildRequires: gettext
 BuildRequires: systemd-units
 Requires: hostname
 Requires(post): systemd-units
+
+Provides: /bin/netstat
+Provides: /sbin/ifconfig
+Provides: /sbin/route
+Provides: /sbin/arp
+Provides: /sbin/ether-wake
+Provides: /sbin/ipmaddr
+Provides: /sbin/iptunnel
+Provides: /sbin/mii-diag
+Provides: /sbin/mii-tool
+Provides: /sbin/nameif
+Provides: /sbin/plipconfig
+Provides: /sbin/slattach
 
 %description
 The net-tools package contains basic networking tools,
@@ -78,12 +85,10 @@ Most of them are obsolete. For replacement check iproute package.
 %patch5 -p1 -b .interface
 %patch6 -p1 -b .dup-tcp
 %patch7 -p1 -b .statalias
-%patch8 -p1 -b .trim-iface
-%patch9 -p1 -b .stack
-#%patch10 -p1 -b .selinux
-%patch11 -p1 -b .sctp
-%patch12 -p1 -b .long_iface
-%patch13 -p1 -b .probe
+%patch8 -p1 -b .stack
+%patch9 -p1 -b .sctp
+%patch10 -p1 -b .long_iface
+%patch11 -p1 -b .probe
 
 cp %SOURCE1 ./config.h
 cp %SOURCE2 ./config.make
@@ -97,18 +102,6 @@ cp %SOURCE8 ./man/en_US
 %ifarch alpha
 perl -pi -e "s|-O2||" Makefile
 %endif
-
-#man pages conversion to utf-8
-#french 
-for file in arp.8 ethers.5 ifconfig.8 netstat.8 plipconfig.8 route.8 slattach.8; do
-    iconv -f ISO-8859-1 -t UTF-8 -o ${file}.new man/fr_FR/${file} && \
-    mv ${file}.new man/fr_FR/${file}
-done
-#portugal
-for file in arp.8 ifconfig.8 netstat.8 route.8; do
-    iconv -f ISO-8859-1 -t UTF-8 -o ${file}.new man/pt_BR/${file} && \
-    mv ${file}.new man/pt_BR/${file}
-done
 
 %build
 export CFLAGS="$RPM_OPT_FLAGS $CFLAGS"
@@ -124,26 +117,32 @@ mv man/pt_BR man/pt
 
 make BASEDIR=%{buildroot} mandir=%{_mandir} install
 
+mkdir -p %{buildroot}%{_bindir}
+mkdir -p %{buildroot}%{_sbindir}
+
+mv %{buildroot}/sbin/* %{buildroot}%{_sbindir}
+mv %{buildroot}/bin/* %{buildroot}%{_bindir}
+
 # ifconfig and route are installed into /bin by default
 # mv them back to /sbin for now as I (jpopelka) don't think customers would be happy
-mv %{buildroot}/bin/ifconfig %{buildroot}/sbin
-mv %{buildroot}/bin/route %{buildroot}/sbin
+mv %{buildroot}%{_bindir}/ifconfig %{buildroot}%{_sbindir}
+mv %{buildroot}%{_bindir}/route %{buildroot}%{_sbindir}
 
-install -m 755 ether-wake %{buildroot}/sbin
-install -m 755 mii-diag %{buildroot}/sbin
+install -m 755 ether-wake %{buildroot}%{_sbindir}
+install -m 755 mii-diag %{buildroot}%{_sbindir}
 
-rm %{buildroot}/sbin/rarp
+rm %{buildroot}%{_sbindir}/rarp
 rm %{buildroot}%{_mandir}/man8/rarp.8*
 rm %{buildroot}%{_mandir}/de/man8/rarp.8*
 rm %{buildroot}%{_mandir}/fr/man8/rarp.8*
 rm %{buildroot}%{_mandir}/pt/man8/rarp.8*
 
 # remove hostname (has its own package)
-rm %{buildroot}/bin/dnsdomainname
-rm %{buildroot}/bin/domainname
-rm %{buildroot}/bin/hostname
-rm %{buildroot}/bin/nisdomainname
-rm %{buildroot}/bin/ypdomainname
+rm %{buildroot}%{_bindir}/dnsdomainname
+rm %{buildroot}%{_bindir}/domainname
+rm %{buildroot}%{_bindir}/hostname
+rm %{buildroot}%{_bindir}/nisdomainname
+rm %{buildroot}%{_bindir}/ypdomainname
 rm -rf %{buildroot}%{_mandir}/de/man1
 rm -rf %{buildroot}%{_mandir}/fr/man1
 rm -rf %{buildroot}%{_mandir}/man1
@@ -153,7 +152,8 @@ rm -rf %{buildroot}%{_mandir}/pt/man1
 mkdir -p %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE9} %{buildroot}%{_unitdir}
 
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} --all-name --with-man || touch %{name}.lang
 
 %post
 # Initial installation
@@ -164,25 +164,22 @@ fi
 
 %files -f %{name}.lang
 %doc COPYING
-/bin/netstat
-/sbin/ifconfig
-/sbin/route
-/sbin/arp
-/sbin/ether-wake
-/sbin/ipmaddr
-/sbin/iptunnel
-/sbin/mii-diag
-/sbin/mii-tool
-/sbin/nameif
-/sbin/plipconfig
-/sbin/slattach
+%{_bindir}/netstat
+%{_sbindir}/*
 %{_mandir}/man[58]/*
-%lang(de)  %{_mandir}/de/man[58]/*
-%lang(fr)  %{_mandir}/fr/man[58]/*
-%lang(pt)  %{_mandir}/pt/man[58]/*
 %attr(0644,root,root)   %{_unitdir}/arp-ethers.service
 
 %changelog
+* Fri Jan 27 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-134.20120127git
+- Do not show interface metric in 'ifconfig', 'ifconfig -s' and 'netstat -i'.
+  Spare place is used for interface name so trim_iface.patch is no longer needed.
+- No need to convert man pages to utf-8 as upstream ship them in utf-8 now.
+
+* Thu Jan 19 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-133.20120119git
+- SELinux patch merged upstream
+- several page fixes merged upstream
+- mark localized man pages with %%lang
+
 * Wed Jan 11 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-132.20120111git
 - 3 patches merged upstream
 - removed 2digit.patch (#718610)

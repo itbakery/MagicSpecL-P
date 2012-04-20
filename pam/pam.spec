@@ -3,7 +3,7 @@
 Summary: An extensible library which provides authentication for applications
 Name: pam
 Version: 1.1.5
-Release: 3%{?dist}
+Release: 6%{?dist}
 # The library is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 # pam_timestamp, pam_loginuid, and pam_console modules are GPLv2+.
@@ -40,7 +40,7 @@ Patch12: pam-1.1.3-faillock-screensaver.patch
 Patch13: pam-1.1.5-limits-user.patch
 
 %define _sbindir /sbin
-%define _moduledir /%{_lib}/security
+%define _moduledir %{_libdir}/security
 %define _secconfdir %{_sysconfdir}/security
 %define _pamconfdir %{_sysconfdir}/pam.d
 
@@ -54,7 +54,7 @@ Patch13: pam-1.1.5-limits-user.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: cracklib-dicts >= 2.8
 Requires: libpwquality >= 0.9.9
-Requires(post): coreutils, /sbin/ldconfig
+Requires(post): coreutils, /usr/sbin/ldconfig
 BuildRequires: autoconf >= 2.60
 BuildRequires: automake, libtool
 BuildRequires: bison, flex, sed
@@ -69,7 +69,7 @@ BuildRequires: libselinux-devel >= 1.33.2
 Requires: libselinux >= 1.33.2
 %endif
 Requires: glibc >= 2.3.90-37
-BuildRequires: db4-devel
+BuildRequires: libdb-devel
 # Following deps are necessary only to build the pam library documentation.
 BuildRequires: linuxdoc-tools, w3m, libxslt
 BuildRequires: docbook-style-xsl, docbook-dtds
@@ -116,7 +116,7 @@ autoreconf
 
 %build
 %configure \
-	--libdir=/%{_lib} \
+	--libdir=%{_libdir} \
 	--includedir=%{_includedir}/security \
 	--disable-prelude \
 %if ! %{WITH_SELINUX}
@@ -180,11 +180,7 @@ done
 # of _libdir not changing, and *not* being /usr/lib.
 install -d -m 755 $RPM_BUILD_ROOT%{_libdir}
 for lib in libpam libpamc libpam_misc ; do
-pushd $RPM_BUILD_ROOT%{_libdir}
-ln -sf ../../%{_lib}/${lib}.so.*.* ${lib}.so
-popd
-rm -f $RPM_BUILD_ROOT/%{_lib}/${lib}.so
-rm -f $RPM_BUILD_ROOT/%{_lib}/${lib}.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/${lib}.la
 done
 rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 
@@ -197,6 +193,9 @@ install -m755 -d $RPM_BUILD_ROOT/lib/security
 # Install the file for autocreation of /var/run subdirectories on boot
 install -m644 -D %{SOURCE15} $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/pamtmp.conf
 
+mkdir -p %{buildroot}%{_secconfdir}/namespace.d
+
+magic_rpm_clean.sh
 %find_lang Linux-PAM
 
 %check
@@ -220,7 +219,7 @@ done
 
 # Check for module problems.  Specifically, check that every module we just
 # installed can actually be loaded by a minimal PAM-aware application.
-/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}
+/usr/sbin/ldconfig -n $RPM_BUILD_ROOT/%{_lib}
 for module in $RPM_BUILD_ROOT%{_moduledir}/pam*.so ; do
 	if ! env LD_LIBRARY_PATH=$RPM_BUILD_ROOT/%{_lib} \
 		 %{SOURCE11} -ldl -lpam -L$RPM_BUILD_ROOT/%{_libdir} ${module} ; then
@@ -233,12 +232,12 @@ done
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 if [ ! -e /var/log/tallylog ] ; then
 	install -m 600 /dev/null /var/log/tallylog
 fi
 
-%postun -p /sbin/ldconfig
+%postun -p /usr/sbin/ldconfig
 
 %files -f Linux-PAM.lang
 %defattr(-,root,root)
@@ -254,9 +253,9 @@ fi
 %doc doc/txts
 %doc doc/sag/*.txt doc/sag/html
 %doc doc/specs/rfc86.0.txt
-/%{_lib}/libpam.so.*
-/%{_lib}/libpamc.so.*
-/%{_lib}/libpam_misc.so.*
+%{_libdir}/libpam.so.*
+%{_libdir}/libpamc.so.*
+%{_libdir}/libpam_misc.so.*
 %{_sbindir}/pam_console_apply
 %{_sbindir}/pam_tally2
 %{_sbindir}/faillock
@@ -265,7 +264,7 @@ fi
 %attr(0700,root,root) %{_sbindir}/unix_update
 %attr(0755,root,root) %{_sbindir}/mkhomedir_helper
 %if %{_lib} != lib
-%dir /lib/security
+%dir %{_prefix}/lib/security
 %endif
 %dir %{_moduledir}
 %{_moduledir}/pam_access.so
@@ -364,6 +363,15 @@ fi
 %doc doc/adg/*.txt doc/adg/html
 
 %changelog
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-6
+- 为 Magic 3.0 重建
+
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-5
+- 为 Magic 3.0 重建
+
+* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-4
+- 为 Magic 3.0 重建
+
 * Wed Dec 21 2011 Tomas Mraz <tmraz@redhat.com> 1.1.5-3
 - add a note to limits.conf (#754285)
 

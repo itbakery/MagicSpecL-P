@@ -1,60 +1,62 @@
-%define device_mapper_version 1.02.67
-%define enable_cluster 1
+%define device_mapper_version 1.02.74
 
-%if "%{fedora}" == "12"
-%define enable_systemd 0
-%define enable_udev 0
-%define configure_default_data_alignment --with-default-data-alignment=0
-%else
-%if "%{fedora}" == "13"
-%define enable_systemd 0
+%define enable_cluster 0
+%define enable_cmirror 1
 %define enable_udev 1
-%define udev_version 153-1
-%define configure_default_data_alignment --with-default-data-alignment=0
-%else
-%if "%{fedora}" == "14"
-%define enable_systemd 0
-%define enable_udev 1
-%define udev_version 158-1
-%else
 %define enable_systemd 1
-%define enable_udev 1
-%define udev_version 158-1
-%endif
-%endif
-%endif
+%define enable_lvmetad 0
+
+%define udev_version 176-1
+%define enable_thin 1
+%define enable_openais 1
+%define corosync_version 1.99.9-1
 
 %if %{enable_cluster}
+%if %{enable_cmirror}
+%define configure_cmirror --enable-cmirrord
+%else
+%define configure_cmirror --disable-cmirrord
+%endif
+%if %{enable_openais}
 %define corosync_version 1.2.0-1
 %define openais_version 1.1.1-1
 %define clusterlib_version 3.0.6-1
-%define configure_cluster --with-cluster=internal --with-clvmd=cman,openais,corosync --enable-cmirrord
+%define configure_cluster --with-cluster=internal --with-clvmd=cman,openais,corosync
 %else
-%define configure_cluster --with-cluster=internal --with-clvmd=none --disable-cmirrord
+%define dlm_version 3.99.1-1
+%define configure_cluster --with-cluster=internal --with-clvmd=corosync
 %endif
+%else
+%define configure_cluster --with-cluster=internal --with-clvmd=none
+%define configure_cmirror --disable-cmirrord
+%endif
+
 
 # Do not reset Release to 1 unless both lvm2 and device-mapper 
 # versions are increased together.
 
 Summary: Userland logical volume management tools 
 Name: lvm2
-Version: 2.02.88
-Release: 2%{?dist}
+Version: 2.02.95
+Release: 6%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/lvm2
 Source0: ftp://sources.redhat.com/pub/lvm2/LVM2.%{version}.tgz
-%if %{enable_systemd}
-Source1: %{name}-tmpfiles.conf
-%endif
 Patch0: lvm2-set-default-preferred_names.patch
+Patch1: lvm2-2_02_96-detect-lvm-binary-path-in-lvmetad-udev-rules.patch
+Patch2: lvm2-2_02_96-use-pvscan-cache-instead-of-vgscan-in-init-scripts.patch
 
 BuildRequires: ncurses-devel
 BuildRequires: readline-devel
 %if %{enable_cluster}
 BuildRequires: corosynclib-devel >= %{corosync_version}
+%if %{enable_openais}
 BuildRequires: openaislib-devel >= %{openais_version}
 BuildRequires: clusterlib-devel >= %{clusterlib_version}
+%else
+BuildRequires: dlm-devel >= %{dlm_version}
+%endif
 %endif
 BuildRequires: module-init-tools
 BuildRequires: pkgconfig
@@ -86,20 +88,26 @@ or more physical volumes and creating one or more logical volumes
 %prep
 %setup -q -n LVM2.%{version}
 %patch0 -p1 -b preferred_names
+%patch1 -p1 -b .lvm_path
+%patch2 -p1 -b .pvscan_cache
 
 %build
-%define _exec_prefix ""
-%define _bindir /bin
-%define _sbindir /sbin
-%define _libdir /%{_lib}
+
 %if %{enable_udev}
-%define _udevbasedir /lib/udev
+%define _udevbasedir %{_prefix}/lib/udev
 %define _udevdir %{_udevbasedir}/rules.d
 %define configure_udev --with-udevdir=%{_udevdir} --enable-udev_sync
 %endif
 
+%if %{enable_thin}
+%define configure_thin --with-thin=internal
+%endif
 
-%configure --enable-lvm1_fallback --enable-fsadm --with-pool=internal --with-user= --with-group= --with-usrlibdir=/usr/%{_lib} --with-usrsbindir=/usr/sbin --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-dmeventd %{configure_cluster} %{?configure_udev} %{?configure_default_data_alignment}
+%if %{enable_lvmetad}
+%define configure_lvmetad --enable-lvmetad
+%endif
+
+%configure --enable-lvm1_fallback --enable-fsadm --with-pool=internal --with-user= --with-group= --with-usrlibdir=/usr/%{_lib} --with-usrsbindir=/usr/sbin --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-dmeventd %{configure_cluster} %{configure_cmirror} %{?configure_udev} %{?configure_default_data_alignment} %{?configure_thin} %{?configure_lvmetad}
 
 make %{?_smp_mflags}
 
@@ -109,47 +117,64 @@ make install_system_dirs DESTDIR=$RPM_BUILD_ROOT
 make install_initscripts DESTDIR=$RPM_BUILD_ROOT
 %if %{enable_systemd}
 make install_systemd_units DESTDIR=$RPM_BUILD_ROOT
-mkdir -p %{buildroot}%{_sysconfdir}/tmpfiles.d
-install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/tmpfiles.d/%{name}.conf
+make install_tmpfiles_configuration DESTDIR=$RPM_BUILD_ROOT
 %endif
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 %if %{enable_systemd}
-/bin/systemctl daemon-reload > /dev/null 2>&1 || :
-/bin/systemctl enable lvm2-monitor.service > /dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload > /dev/null 2>&1 || :
+/usr/bin/systemctl enable lvm2-monitor.service > /dev/null 2>&1 || :
+%if %{enable_lvmetad}
+/usr/bin/systemctl enable lvm2-lvmetad.socket > /dev/null 2>&1 || :
+%endif
 %else
-/sbin/chkconfig --add lvm2-monitor
+/usr/sbin/chkconfig --add lvm2-monitor
+%if %{enable_lvmetad}
+/usr/sbin/chkconfig --add lvm2-lvmetad
+%endif
 %endif
 
 %preun
 %if %{enable_systemd}
 if [ "$1" = 0 ]; then
-	/bin/systemctl --no-reload disable lvm2-monitor.service > /dev/null 2>&1 || :
-	/bin/systemctl stop lvm2-monitor.service > /dev/null 2>&1 || :
+	/usr/bin/systemctl --no-reload disable lvm2-monitor.service > /dev/null 2>&1 || :
+	/usr/bin/systemctl stop lvm2-monitor.service > /dev/null 2>&1 || :
+	%if %{enable_lvmetad}
+	/usr/bin/systemctl --no-reload disable lvm2-lvmetad.socket > /dev/null 2>&1 || :
+	/usr/bin/systemctl stop lvm2-lvmetad.service lvm2-lvmetad.socket > /dev/null 2>&1 || :
+	%endif
 fi
 %else
 if [ "$1" = 0 ]; then
-	/sbin/chkconfig --del lvm2-monitor
+	/usr/sbin/chkconfig --del lvm2-monitor
+	%if %{enable_lvmetad}
+	/usr/sbin/chkconfig --del lvm2-lvmetad
+	%endif
 fi
 %endif
 
 %postun
 %if %{enable_systemd}
-/bin/systemctl daemon-reload > /dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload > /dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
-	/bin/systemctl try-restart lvm2-monitor.service > /dev/null 2>&1 || :
+	/usr/bin/systemctl try-restart lvm2-monitor.service > /dev/null 2>&1 || :
+	%if %{enable_lvmetad}
+	/usr/bin/systemctl try-restart lvm2-lvmetad.service > /dev/null 2>&1 || :
+	%endif
 fi
 %endif
 
 %triggerun -- %{name} < 2.02.86-2
 %{_bindir}/systemd-sysv-convert --save lvm2-monitor >/dev/null 2>&1 || :
-/bin/systemctl --no-reload enable lvm2-monitor.service > /dev/null 2>&1 || :
-/sbin/chkconfig --del lvm2-monitor > /dev/null 2>&1 || :
-/bin/systemctl try-restart lvm2-monitor.service > /dev/null 2>&1 || :
+/usr/bin/systemctl --no-reload enable lvm2-monitor.service > /dev/null 2>&1 || :
+/usr/sbin/chkconfig --del lvm2-monitor > /dev/null 2>&1 || :
+/usr/bin/systemctl try-restart lvm2-monitor.service > /dev/null 2>&1 || :
 
 %files
 %defattr(-,root,root,-)
@@ -202,6 +227,9 @@ fi
 %{_sbindir}/vgscan
 %{_sbindir}/vgsplit
 %{_sbindir}/lvmconf
+%if %{enable_lvmetad}
+%{_sbindir}/lvmetad
+%endif
 %{_mandir}/man5/lvm.conf.5.gz
 %{_mandir}/man8/fsadm.8.gz
 %{_mandir}/man8/lvchange.8.gz
@@ -252,6 +280,9 @@ fi
 %{_mandir}/man8/vgsplit.8.gz
 %if %{enable_udev}
 %{_udevdir}/11-dm-lvm.rules
+%if %{enable_lvmetad}
+%{_udevdir}/69-dm-lvm-metad.rules
+%endif
 %endif
 %dir %{_sysconfdir}/lvm
 %ghost %{_sysconfdir}/lvm/cache/.cache
@@ -264,8 +295,15 @@ fi
 %if %{enable_systemd}
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 %{_unitdir}/lvm2-monitor.service
+%if %{enable_lvmetad}
+%{_unitdir}/lvm2-lvmetad.socket
+%{_unitdir}/lvm2-lvmetad.service
+%endif
 %else
 %{_sysconfdir}/rc.d/init.d/lvm2-monitor
+%if %{enable_lvmetad}
+%{_sysconfdir}/rc.d/init.d/lvm2-lvmetad
+%endif
 %endif
 
 ##############################################################################
@@ -286,12 +324,12 @@ the lvm2 libraries.
 
 %files devel
 %defattr(-,root,root,-)
-/usr%{_libdir}/liblvm2app.so
-/usr%{_libdir}/liblvm2cmd.so
+%{_libdir}/liblvm2app.so
+%{_libdir}/liblvm2cmd.so
 %{_includedir}/lvm2app.h
 %{_includedir}/lvm2cmd.h
-/usr%{_libdir}/pkgconfig/lvm2app.pc
-/usr%{_libdir}/libdevmapper-event-lvm2.so
+%{_libdir}/pkgconfig/lvm2app.pc
+%{_libdir}/libdevmapper-event-lvm2.so
 
 %package libs
 Summary: Shared libraries for lvm2
@@ -302,9 +340,9 @@ Requires: device-mapper-event >= %{device_mapper_version}-%{release}
 %description libs
 This package contains shared lvm2 libraries for applications.
 
-%post libs -p /sbin/ldconfig
+%post libs -p /usr/sbin/ldconfig
 
-%postun libs -p /sbin/ldconfig
+%postun libs -p /usr/sbin/ldconfig
 
 %files libs
 %defattr(-,root,root,-)
@@ -318,6 +356,11 @@ This package contains shared lvm2 libraries for applications.
 %{_libdir}/libdevmapper-event-lvm2mirror.so
 %{_libdir}/libdevmapper-event-lvm2snapshot.so
 %{_libdir}/libdevmapper-event-lvm2raid.so
+
+%if %{enable_thin}
+%{_libdir}/libdevmapper-event-lvm2thin.so
+%{_libdir}/device-mapper/libdevmapper-event-lvm2thin.so
+%endif
 
 ##############################################################################
 # Cluster subpackage
@@ -334,19 +377,27 @@ Requires(preun): chkconfig
 Requires(preun): device-mapper >= %{device_mapper_version}
 Requires(preun): lvm2 >= 2.02
 Requires: corosync >= %{corosync_version}
+%if %{enable_openais}
 Requires: openais >= %{openais_version}
 Requires: cman >= %{clusterlib_version}
+%else
+Requires: dlm >= %{dlm_version}
+%endif
 
 %description cluster
 
 Extensions to LVM2 to support clusters.
 
 %post cluster
-/sbin/chkconfig --add clvmd
+/usr/sbin/chkconfig --add clvmd
+
+if [ "$1" -gt "1" ] ; then
+	/usr/sbin/clvmd -S >/dev/null 2>&1 || :
+fi
 
 %preun cluster
 if [ "$1" = 0 ]; then
-	/sbin/chkconfig --del clvmd
+	/usr/sbin/chkconfig --del clvmd
 	/sbin/lvmconf --disable-cluster
 fi
 
@@ -364,6 +415,7 @@ fi
 # Cluster mirror subpackage
 ##############################################################################
 %if %{enable_cluster}
+%if %{enable_cmirror}
 
 %package -n cmirror
 Summary: Daemon for device-mapper-based clustered mirrors
@@ -371,18 +423,20 @@ Group: System Environment/Base
 Requires(post): chkconfig
 Requires(preun): chkconfig
 Requires: corosync >= %{corosync_version}
+%if %{enable_openais}
 Requires: openais >= %{openais_version}
+%endif
 Requires: device-mapper >= %{device_mapper_version}-%{release}
 
 %description -n cmirror
 Daemon providing device-mapper-based mirrors in a shared-storage cluster.
 
 %post -n cmirror
-/sbin/chkconfig --add cmirrord
+/usr/sbin/chkconfig --add cmirrord
 
 %preun -n cmirror
 if [ "$1" = 0 ]; then
-	/sbin/chkconfig --del cmirrord
+	/usr/sbin/chkconfig --del cmirrord
 fi
 
 %files -n cmirror
@@ -392,6 +446,7 @@ fi
 %{_sysconfdir}/rc.d/init.d/cmirrord
 #%ghost %{_localstatedir}/run/cmirrord.pid
 
+%endif
 %endif
 
 ##############################################################################
@@ -411,6 +466,9 @@ is not used as the system init process.
 
 %files sysvinit
 %{_sysconfdir}/rc.d/init.d/lvm2-monitor
+%if %{enable_lvmetad}
+%{_sysconfdir}/rc.d/init.d/lvm2-lvmetad
+%endif
 
 %endif
 
@@ -441,7 +499,7 @@ for the kernel device-mapper.
 %files -n device-mapper
 %defattr(-,root,root,-)
 %doc COPYING COPYING.LIB WHATS_NEW_DM VERSION_DM README INSTALL
-%attr(755,root,root) /sbin/dmsetup
+%attr(755,root,root) %{_sbindir}/dmsetup
 %{_mandir}/man8/dmsetup.8.gz
 %if %{enable_udev}
 %doc udev/12-dm-permissions.rules
@@ -467,9 +525,9 @@ the device-mapper libraries.
 
 %files -n device-mapper-devel
 %defattr(-,root,root,-)
-/usr%{_libdir}/libdevmapper.so
+%{_libdir}/libdevmapper.so
 %{_includedir}/libdevmapper.h
-/usr%{_libdir}/pkgconfig/devmapper.pc
+%{_libdir}/pkgconfig/devmapper.pc
 
 %package -n device-mapper-libs
 Summary: Device-mapper shared library
@@ -482,9 +540,9 @@ Requires: device-mapper = %{device_mapper_version}-%{release}
 %description -n device-mapper-libs
 This package contains the device-mapper shared library, libdevmapper.
 
-%post -n device-mapper-libs -p /sbin/ldconfig
+%post -n device-mapper-libs -p /usr/sbin/ldconfig
 
-%postun -n device-mapper-libs -p /sbin/ldconfig
+%postun -n device-mapper-libs -p /usr/sbin/ldconfig
 
 %files -n device-mapper-libs
 %attr(755,root,root) %{_libdir}/libdevmapper.so.*
@@ -508,30 +566,24 @@ of device-mapper devices.
 
 %post -n device-mapper-event
 %if %{enable_systemd}
-/bin/systemctl daemon-reload > /dev/null 2>&1 || :
-/bin/systemctl enable dm-event.socket > /dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload > /dev/null 2>&1 || :
+/usr/bin/systemctl enable dm-event.socket > /dev/null 2>&1 || :
 %endif
 
 %preun -n device-mapper-event
 %if %{enable_systemd}
 if [ "$1" = 0 ]; then
-	/bin/systemctl --no-reload disable dm-event.service dm-event.socket > /dev/null 2>&1 || :
-	/bin/systemctl stop dm-event.service dm-event.socket> /dev/null 2>&1 || :
+	/usr/bin/systemctl --no-reload disable dm-event.service dm-event.socket > /dev/null 2>&1 || :
+	/usr/bin/systemctl stop dm-event.service dm-event.socket> /dev/null 2>&1 || :
 fi
 %endif
 
 %postun -n device-mapper-event
 %if %{enable_systemd}
-/bin/systemctl daemon-reload > /dev/null 2>&1 || :
-#
-# We'd need systemd to call specific restart command (dmeventd -R) instead
-# of simple 'stop and start' - we need to keep any existing dmeventd
-# registrations. Also, we can't kill dmeventd with existing registrations
-# with SIGTERM, we would need to use SIGKILL instead (but losing registrations).
-#
-# if [ $1 -ge 1 ]; then
-# 	/bin/systemctl try-restart dm-event.service > /dev/null 2>&1 || :
-# fi
+/usr/bin/systemctl daemon-reload > /dev/null 2>&1 || :
+if [ $1 -ge 1 ]; then
+	/usr/bin/systemctl reload dm-event.service > /dev/null 2>&1 || :
+fi
 %endif
 
 %files -n device-mapper-event
@@ -555,9 +607,9 @@ Group: System Environment/Libraries
 This package contains the device-mapper event daemon shared library,
 libdevmapper-event.
 
-%post -n device-mapper-event-libs -p /sbin/ldconfig
+%post -n device-mapper-event-libs -p /usr/sbin/ldconfig
 
-%postun -n device-mapper-event-libs -p /sbin/ldconfig
+%postun -n device-mapper-event-libs -p /usr/sbin/ldconfig
 
 %files -n device-mapper-event-libs
 %attr(755,root,root) %{_libdir}/libdevmapper-event.so.*
@@ -579,11 +631,96 @@ the device-mapper event library.
 
 %files -n device-mapper-event-devel
 %defattr(-,root,root,-)
-/usr%{_libdir}/libdevmapper-event.so
+%{_libdir}/libdevmapper-event.so
 %{_includedir}/libdevmapper-event.h
-/usr%{_libdir}/pkgconfig/devmapper-event.pc
+%{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Thu Mar 29 2012 Fabio M. Di Nitto <fdinitto@redhat.com> - 2.02.95-6
+- BuildRequires and Requires on newer version of corosync and dlm.
+- Restart clvmd on upgrades.
+
+* Mon Mar 19 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.95-5
+- Do not strictly require openais for cmirror subpackage.
+
+* Mon Mar 19 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.95-4
+- Reinstate cmirror support.
+- Detect lvm binary path in lvmetad udev rules.
+- Use pvscan --cache instead of vgscan in systemd units/init scripts.
+
+* Fri Mar 16 2012 Fabio M. Di Nitto <fdinitto@redhat.com> - 2.02.95-3
+- Rebuild against new corosync (soname change).
+- BuildRequires and Requires on newer version of corosync.
+
+* Thu Mar 08 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.95-2
+- Reload dm-event systemd service on upgrade.
+
+* Tue Mar 06 2012 Alasdair Kergon <agk@redhat.com> - 2.02.95-1
+- If unspecified, adjust thin pool metadata and chunk size to fit into 128MB.
+- Deactivation of failed thin check on thin pool returns success.
+- Check for multiply-mangled names in auto mangling mode.
+- Fix dm_task_get_name_unmangled to not unmangle already unmangled name.
+- Check whether device names are properly mangled on ioctl return.
+
+* Sat Mar 03 2012 Alasdair Kergon <agk@redhat.com> - 2.02.94-1
+- Add support to execute thin_check with each de/active of thin pool.
+- Fix automatic estimation of metadata device size for thin pool.
+- Wipe initial 4KiB of non zeroed thin volumes.
+- Update code-base to incorporate new metadata daemon. (Not used in Fedora yet.)
+- Numerous minor cleanups across the code-base.
+- Fix dmsetup / dm_task_set_name to properly resolve path to dm name. (2.02.93)
+
+* Thu Feb 23 2012 Alasdair Kergon <agk@redhat.com> - 2.02.93-1
+- Moved systemd tmpfiles installation upstream for lvm2 lock and run dirs.
+- Require number of stripes to be greater than parity devices in higher RAID.
+- Fix allocation code to allow replacement of single RAID 4/5/6 device.
+- Check all tags and LV names are in a valid form before writing any metadata.
+- Allow 'lvconvert --repair' to operate on RAID 4/5/6.
+- Fix build_parallel_areas_from_lv to account correctly for raid parity devices.
+- Print message when faulty raid devices have been replaced.
+
+* Mon Feb 20 2012 Alasdair Kergon <agk@redhat.com> - 2.02.92-1
+- Read dmeventd monitoring config settings for every lvm command.
+- For thin devices, initialize monitoring only for thin pools not thin volumes.
+- Make conversion from a synced 'mirror' to 'raid1' not cause a full resync.
+- Add clvmd init dependency on dlm service when running with new corosync.
+- Switch to using built-in blkid in 13-dm-disk.rules.
+- Add "watch" rule to 13-dm-disk.rules.
+- Detect failing fifo and skip 20s retry communication period.
+- Replace any '\' char with '\\' in dm table specification on input.
+- New 'mangle' options in dmsetup/libdevmapper for transparent reversible 
+  encoding of characters that udev forbids in device names.
+- Add --manglename option to dmsetup to select the name mangling mode.
+- Add mangle command to dmsetup to provide renaming to correct mangled form.
+- Add 'mangled_name' and 'unmangled_name' fields to dmsetup info -c -o.
+- Mangle device name on dm_task_set_name/newname call if necessary.
+- Add dm_task_get_name_mangled/unmangled to libdevmapper.
+- Add dm_set/get_name_mangling_mode to set/get name mangling in libdevmapper.
+
+* Mon Feb 13 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.91-2
+- Add configure --with-systemdsystemunitdir.
+
+* Sun Feb 12 2012 Alasdair Kergon <agk@redhat.com> - 2.02.91-1
+- New upstream with trivial fixes and refactoring of some lvmcache and orphan code.
+
+* Wed Feb 1 2012 Alasdair Kergon <agk@redhat.com> - 2.02.90-1
+- Drop support for cman, openais and cmirror for f17. Require dlm not cluster.
+- Automatically detect whether corosync clvmd needs to use confdb or cmap.
+- Disable partial activation for thin LVs and LVs with all missing segments.
+- sync_local_dev_names before (re)activating mirror log for initialisation.
+- Do not print warning for pv_min_size between 512KB and 2MB.
+- Clean up systemd unit ordering and requirements.
+- Allow ALLOC_NORMAL to track reserved extents for log and data on same PV.
+- Fix data% report for thin volume used as origin for non-thin snapshot.
+
+* Thu Jan 26 2012 Alasdair Kergon <agk@redhat.com> - 2.02.89-2
+- New upstream release with experimental support for thinly-provisioned devices.
+- The changelog for this release is quite long and contained in 
+  WHATS_NEW and WHATS_NEW_DM in the documentation directory.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02.88-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Dec 30 2011 Peter Robinson <pbrobinson@fedoraproject.org> - 2.02.88-2
 - update util-linux-ng -> util-linux dependency as it changed long ago.
 

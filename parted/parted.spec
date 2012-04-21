@@ -1,10 +1,7 @@
-%define _sbindir /sbin
-%define _libdir /%{_lib}
-
 Summary: The GNU disk partition manipulation program
 Name:    parted
-Version: 3.0
-Release: 4%{?dist}
+Version: 3.1
+Release: 2%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -12,27 +9,10 @@ URL:     http://www.gnu.org/software/parted
 Source0: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz
 Source1: ftp://ftp.gnu.org/gnu/%{name}/%{name}-%{version}.tar.xz.sig
 Source2: pubkey.jim.meyering
-# All patches are in upstream git
 
-# Report partitions changes when using blkext major numbers
-Patch0: parted-2.3-lpn.patch
-# Document the align-check command
-Patch1: parted-2.3-Document-align-check-642476.patch
-Patch2: parted-3.0-libparted-fix-snap-radius-so-that-it-is-using-half.patch
-Patch3: parted-3.0-libparted-don-t-allow-values-less-than-1.patch
-Patch4: parted-3.0-tests-add-test-for-radius-divide-by-2-fix.patch
-Patch5: parted-3.0-tests-add-test-for-value-less-than-1.patch
-# Fix for kernel 3.0 new version numbering.
-Patch6: parted-3.0-libparted-accommodate-two-component-linux-version-nu.patch
-Patch7: parted-3.0-gpt-don-t-abort-for-a-truncated-GPT-formatted-device.patch
-Patch8: parted-3.0-libparted-fix-a-bug-in-the-nilfs2-probe-function.patch
-Patch9: parted-3.0-tests-test-for-the-nilfs2-bug.patch
-Patch10: parted-3.0-libparted-Fix-a-bug-in-the-hfs-probe-functions-71475.patch
-Patch11: parted-3.0-libparted-make-pc98-detection-depend-on-signatures.patch
-Patch12: parted-3.0-tests-add-tests-for-new-pc98-signatures-646053.patch
-Patch13: parted-3.0-libparted-copy-flags-when-duplicating-GPT-partitions.patch
-Patch14: parted-3.0-tests-add-new-test-to-check-ped_disk_duplicate.patch
-
+Patch0: parted-3.0-libparted-copy-pmbr_boot-when-duplicating-GPT-disk.patch
+Patch1: parted-3.1-libparted-check-PMBR-before-GPT-partition-table-8052.patch
+Patch2: parted-3.1-tests-add-t0301-overwrite-gpt-pmbr.sh.patch
 
 Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: e2fsprogs-devel
@@ -49,10 +29,10 @@ BuildRequires: autoconf automake
 BuildRequires: e2fsprogs
 BuildRequires: dosfstools
 
-Requires(post): /sbin/ldconfig
+Requires(post): /usr/sbin/ldconfig
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
-Requires(postun): /sbin/ldconfig
+Requires(postun): /usr/sbin/ldconfig
 
 %description
 The GNU Parted program allows you to create, destroy, resize, move,
@@ -103,14 +83,14 @@ V=1 %{__make} %{?_smp_mflags}
 %{__make} install DESTDIR=%{buildroot}
 
 # Move devel package components in to the correct location
-%{__mkdir} -p %{buildroot}%{_exec_prefix}/%{_lib}
-%{__mv} %{buildroot}%{_libdir}/libparted.so %{buildroot}%{_exec_prefix}/%{_lib}
-%{__mv} %{buildroot}%{_libdir}/pkgconfig %{buildroot}%{_exec_prefix}/%{_lib}
-pushd %{buildroot}%{_exec_prefix}/%{_lib}
-reallibrary="$(readlink libparted.so)"
-%{__rm} -f libparted.so
-ln -sf ../../%{_lib}/${reallibrary} libparted.so
-popd
+#%{__mkdir} -p %{buildroot}%{_exec_prefix}/%{_lib}
+#%{__mv} %{buildroot}%{_libdir}/libparted.so %{buildroot}%{_exec_prefix}/%{_lib}
+#%{__mv} %{buildroot}%{_libdir}/pkgconfig %{buildroot}%{_exec_prefix}/%{_lib}
+#pushd %{buildroot}%{_exec_prefix}/%{_lib}
+#reallibrary="$(readlink libparted.so)"
+#%{__rm} -f libparted.so
+#ln -sf ../../%{_lib}/${reallibrary} libparted.so
+#popd
 
 # Remove components we do not ship
 %{__rm} -rf %{buildroot}%{_libdir}/*.la
@@ -118,17 +98,21 @@ popd
 %{__rm} -rf %{buildroot}%{_bindir}/label
 %{__rm} -rf %{buildroot}%{_bindir}/disk
 
-%find_lang %{name}
+magic_rpm_clean.sh
+%find_lang %{name} || touch %{name}.lang
 
 
 %check
+export LD_LIBRARY_PATH=$(pwd)/libparted/.libs
+make check
+
 
 %clean
 %{__rm} -rf %{buildroot}
 
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 if [ -f %{_infodir}/parted.info.gz ]; then
     /sbin/install-info %{_infodir}/parted.info.gz %{_infodir}/dir || :
 fi
@@ -138,7 +122,7 @@ if [ $1 = 0 ]; then
     /sbin/install-info --delete %{_infodir}/parted.info.gz %{_infodir}/dir >/dev/null 2>&1 || :
 fi
 
-%postun -p /sbin/ldconfig
+%postun -p /usr/sbin/ldconfig
 
 
 %files -f %{name}.lang
@@ -149,6 +133,7 @@ fi
 %{_mandir}/man8/parted.8.gz
 %{_mandir}/man8/partprobe.8.gz
 %{_libdir}/libparted.so.*
+%{_libdir}/libparted-fs-resize.so*
 %{_infodir}/parted.info.gz
 
 %files devel
@@ -159,6 +144,29 @@ fi
 
 
 %changelog
+* Wed Mar 21 2012 Brian C. Lane <bcl@redhat.com> 3.1-2
+- libparted: check PMBR before GPT partition table (#805272)
+- tests: add a test for the new behavior
+
+* Tue Mar 13 2012 Brian C. Lane <bcl@redhat.com> 3.1-1
+- Rebase to upstream parted v3.1
+- removed merged patches
+- add new libparted-fs-resize library
+
+* Fri Feb 03 2012 Brian C. Lane <bcl@redhat.com> - 3.0-7
+- Update patch for copying flags so that it is generic
+- Copy pmbr_boot flag in gpt_duplicate
+
+* Thu Feb 02 2012 Brian C. Lane <bcl@redhat.com> - 3.0-6
+- gpt: add commands to manipulate pMBR boot flag (#754850)
+- parted: when printing, also print the new disk flags
+- tests: update tests for new disk flags output
+- tests: add test for GPT PMBR pmbr_boot flag
+- doc: update parted documentation
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Oct 31 2011 Brian C. Lane <bcl@redht.com> - 3.0-4
 - Fix ped_disk_duplicate on GPT so that it copies the partition flags (#747947)
 - Add new test to check ped_disk_duplicate on msdos, gpt, bsd disk labels

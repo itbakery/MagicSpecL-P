@@ -1,6 +1,6 @@
 Name:		pciutils
 Version:	3.1.9
-Release:	1%{?dist}
+Release:	2%{?dist}
 Source:		ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/%{name}-%{version}.tar.gz
 Source1:        multilibconfigh
 
@@ -64,32 +64,34 @@ mv lib/libpci.a lib/libpci.a.toinstall
 
 make clean
 
-make SHARED="yes" ZLIB="no" STRIP="" OPT="$RPM_OPT_FLAGS" PREFIX="/usr" LIBDIR="/%{_lib}" IDSDIR="/usr/share/hwdata" PCI_IDS="pci.ids" %{?_smp_mflags}
+make SHARED="yes" ZLIB="no" STRIP="" OPT="$RPM_OPT_FLAGS" PREFIX="/usr" LIBDIR="%{_libdir}" IDSDIR="/usr/share/hwdata" PCI_IDS="pci.ids" %{?_smp_mflags}
 
 #fix lib vs. lib64 in libpci.pc (static Makefile is used)
-sed -i "s|^libdir=.*$|libdir=/%{_lib}|" lib/libpci.pc
+sed -i "s|^libdir=.*$|libdir=%{_libdir}|" lib/libpci.pc
 
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/{sbin,%{_sbindir},%{_lib},%{_mandir}/man8,%{_libdir},%{_libdir}/pkgconfig,%{_includedir}/pci}
+install -d $RPM_BUILD_ROOT/{sbin,%{_sbindir},%{_mandir}/man8,%{_libdir},%{_libdir}/pkgconfig,%{_includedir}/pci}
 
-install -p lspci setpci $RPM_BUILD_ROOT/sbin
-install -p update-pciids $RPM_BUILD_ROOT/%{_sbindir}
+install -p lspci setpci $RPM_BUILD_ROOT%{_sbindir}
+install -p update-pciids $RPM_BUILD_ROOT%{_sbindir}
 install -p -m 644 lspci.8 setpci.8 update-pciids.8 $RPM_BUILD_ROOT%{_mandir}/man8
-install -p lib/libpci.so.* $RPM_BUILD_ROOT/%{_lib}/
-ln -s ../../%{_lib}/$(basename $RPM_BUILD_ROOT/%{_lib}/*.so.*.*.*) $RPM_BUILD_ROOT%{_libdir}/libpci.so
+install -p lib/libpci.so.* $RPM_BUILD_ROOT%{_libdir}/
+ln -s libpci.so.* $RPM_BUILD_ROOT%{_libdir}/libpci.so
 
 mv lib/libpci.a.toinstall lib/libpci.a
 install -p -m 644 lib/libpci.a $RPM_BUILD_ROOT%{_libdir}
-/sbin/ldconfig -N $RPM_BUILD_ROOT/%{_lib}
+/usr/sbin/ldconfig -N $RPM_BUILD_ROOT/%{_libdir}
 install -p lib/pci.h $RPM_BUILD_ROOT%{_includedir}/pci
 install -p lib/header.h $RPM_BUILD_ROOT%{_includedir}/pci
 install -p %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/pci/config.h
 install -p lib/config.h $RPM_BUILD_ROOT%{_includedir}/pci/config.%{_lib}.h
 install -p lib/types.h $RPM_BUILD_ROOT%{_includedir}/pci
 install -p lib/libpci.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig
+
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 
@@ -98,15 +100,15 @@ install -p lib/libpci.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 %files
 %defattr(-,root,root,-)
 %doc README ChangeLog pciutils.lsm COPYING
-/sbin/lspci
-/sbin/setpci
+%{_sbindir}/lspci
+%{_sbindir}/setpci
 %{_sbindir}/update-pciids
 %{_mandir}/man8/*
 
 %files libs
 %doc COPYING
 %defattr(-,root,root,-)
-/%{_lib}/libpci.so.*
+%{_libdir}/libpci.so.*
 
 %files devel-static
 %defattr(-,root,root,-)
@@ -122,6 +124,9 @@ install -p lib/libpci.pc $RPM_BUILD_ROOT%{_libdir}/pkgconfig
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 3.1.9-2
+- 为 Magic 3.0 重建
+
 * Mon Jan 16 2012 Michal Hlavinka <mhlavink@redhat.com> - 3.1.9-1
 - updated to 3.1.9
 

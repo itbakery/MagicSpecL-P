@@ -1,7 +1,7 @@
 Summary: Utilities for managing processes on your system
 Name: psmisc
-Version: 22.14
-Release: 3%{?dist}
+Version: 22.16
+Release: 1%{?dist}
 License: GPLv2+
 Group: Applications/System
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -10,6 +10,8 @@ URL: http://sourceforge.net/projects/psmisc
 BuildRequires: gettext
 BuildRequires: ncurses-devel
 BuildRequires: autoconf automake
+
+Provides: /sbin/fuser
 
 #The following has been reworked by upstream in a different way ... we'll see
 #Patch1: psmisc-22.13-fuser-silent.patch
@@ -31,14 +33,14 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR="$RPM_BUILD_ROOT"
+mkdir -p %{buildroot}%{_sbindir}
+mv %{buildroot}%{_bindir}/fuser %{buildroot}%{_sbindir}
 
-mkdir -p $RPM_BUILD_ROOT/sbin
-mv $RPM_BUILD_ROOT%{_bindir}/fuser $RPM_BUILD_ROOT/sbin
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %files -f %{name}.lang
-/sbin/fuser
+%{_sbindir}/fuser
 %{_bindir}/killall
 %{_bindir}/pstree
 %{_bindir}/pstree.x11
@@ -54,8 +56,11 @@ mv $RPM_BUILD_ROOT%{_bindir}/fuser $RPM_BUILD_ROOT/sbin
 %doc AUTHORS ChangeLog COPYING README
 
 %changelog
-* Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 22.14-3
-- 为 Magic 3.0 重建
+* Mon Mar 12 2012 Jaromir Capik <jcapik@redhat.com> 22.16-1
+- Update to 22.16
+
+* Fri Jan 27 2012 Jaromir Capik <jcapik@redhat.com> 22.15-1
+- Update to 22.15
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 22.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

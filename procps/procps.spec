@@ -3,7 +3,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 23.%{gitver}%{?dist}
+Release: 24.%{gitver}%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://gitorious.org/procps
@@ -13,6 +13,8 @@ Buildroot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
+
+Provides: /bin/ps
 
 Patch1: procps-3.2.8-selinux.patch
 Patch2: procps-3.2.7-misc.patch
@@ -164,6 +166,16 @@ pushd %{buildroot}/%{_lib}
 ln -s libproc-%{version}.so libproc.so
 popd
 
+mkdir -p %{buildroot}%{_sbindir}
+mv %{buildroot}/sbin/* %{buildroot}%{_sbindir}
+mv %{buildroot}/bin/* %{buildroot}%{_bindir}
+
+mkdir -p %{buildroot}%{_libdir}
+mv %{buildroot}/%{_lib}/* %{buildroot}%{_libdir}
+
+magic_rpm_clean.sh
+
+
 %clean
 rm -rf %{buildroot}
 
@@ -174,10 +186,9 @@ rm -rf %{buildroot}
 %files
 %defattr(0644,root,root,755)
 %doc NEWS BUGS TODO FAQ
-%attr(755,root,root) /%{_lib}/libproc-%{version}.so
-%attr(755,root,root) /bin/ps
-%attr(755,root,root) /sbin/sysctl
-%attr(755,root,root) /usr/bin/*
+%attr(755,root,root) %{_libdir}/libproc-%{version}.so
+%attr(755,root,root) %{_sbindir}/sysctl
+%attr(755,root,root) %{_bindir}*
 %attr(755,root,root) /etc/sysctl.d
 
 %attr(0644,root,root) %{_mandir}/man1/*
@@ -187,9 +198,12 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root,-)
 %{_includedir}/proc
-/%{_lib}/libproc.so
+%{_libdir}/libproc.so
 
 %changelog
+* Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 3.2.8-24.20110302git
+- 为 Magic 3.0 重建
+
 * Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 3.2.8-23.20110302git
 - 为 Magic 3.0 重建
 

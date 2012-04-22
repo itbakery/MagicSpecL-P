@@ -2,7 +2,7 @@ Summary:	C library for parsing command line parameters
 Summary(zh_CN.UTF-8):	用来解析命令行参数的 C 库。
 Name:		popt
 Version:	1.16
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	MIT
 Group:		System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -66,7 +66,7 @@ Install it if you need to link statically with libpopt.
 #%patch1 -p1 -b .popt_fprintf
 
 %build
-%configure --libdir=/%{_lib}
+%configure 
 make %{?_smp_mflags}
 doxygen
 
@@ -81,12 +81,7 @@ rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 
 # Move libpopt.{so,a} to %{_libdir}
-rm -f $RPM_BUILD_ROOT/%{_lib}/libpopt.{la,so}
-pushd $RPM_BUILD_ROOT/%{_lib}
-mkdir -p $RPM_BUILD_ROOT%{_libdir}
-ln -sf ../../%{_lib}/$(ls libpopt.so.?.?.?) $RPM_BUILD_ROOT%{_libdir}/libpopt.so
-popd
-mv -f $RPM_BUILD_ROOT/%{_lib}/libpopt.a $RPM_BUILD_ROOT%{_libdir}/libpopt.a
+rm -f $RPM_BUILD_ROOT%{_libdir}/libpopt.la
 
 # Multiple popt configurations are possible
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/popt.d
@@ -105,7 +100,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %doc CHANGES COPYING
 %{_sysconfdir}/popt.d
-/%{_lib}/libpopt.so.*
+%{_libdir}/libpopt.so.*
 
 %files devel
 %defattr(-,root,root)

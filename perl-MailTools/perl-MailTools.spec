@@ -1,7 +1,7 @@
 Summary:	Various mail-related perl modules
 Name:		perl-MailTools
-Version:	2.08
-Release:	4%{?dist}
+Version:	2.09
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/MailTools/
@@ -17,6 +17,8 @@ BuildRequires:	perl(Date::Parse)
 BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(IO::Handle)
+BuildRequires:	perl(Net::Domain) >= 1.05
+BuildRequires:	perl(Net::SMTP) >= 1.03
 BuildRequires:	perl(POSIX)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::Pod)
@@ -53,8 +55,11 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
-%check
+magic_rpm_clean.sh
 
+%check
+make test
+make test TEST_FILES="xt/*.t"
 
 %clean
 rm -rf %{buildroot}
@@ -109,8 +114,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Util.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.08-4
-- 为 Magic 3.0 重建
+* Sat Feb 25 2012 Paul Howarth <paul@city-fan.org> - 2.09-1
+- Update to 2.09
+  - Remove dependency to Test::Pod by moving 99pod.t from t/ to xt/
+    (CPAN RT#69918)
+- BR: perl(Net::Domain) ≥ 1.05 and perl(Net::SMTP) ≥ 1.03
+- Explicitly run xt/ tests
 
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> - 2.08-3
 - Use DESTDIR rather than PERL_INSTALL_ROOT

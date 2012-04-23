@@ -1,6 +1,6 @@
 Name:           perl-libwww-perl
 Version:        6.04
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A Perl interface to the World-Wide Web
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -93,6 +93,7 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 # Some optional tests require resolvable hostname
@@ -108,12 +109,6 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 6.04-3
-- 为 Magic 3.0 重建
-
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 6.04-2
-- 为 Magic 3.0 重建
-
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.04-1
 - 6.04 bump
 

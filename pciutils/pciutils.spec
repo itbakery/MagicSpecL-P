@@ -1,6 +1,6 @@
 Name:		pciutils
 Version:	3.1.9
-Release:	2%{?dist}
+Release:	3%{?dist}
 Source:		ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/%{name}-%{version}.tar.gz
 Source1:        multilibconfigh
 
@@ -79,7 +79,7 @@ install -p lspci setpci $RPM_BUILD_ROOT%{_sbindir}
 install -p update-pciids $RPM_BUILD_ROOT%{_sbindir}
 install -p -m 644 lspci.8 setpci.8 update-pciids.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install -p lib/libpci.so.* $RPM_BUILD_ROOT%{_libdir}/
-ln -s libpci.so.* $RPM_BUILD_ROOT%{_libdir}/libpci.so
+ln -s libpci.so.3 $RPM_BUILD_ROOT%{_libdir}/libpci.so
 
 mv lib/libpci.a.toinstall lib/libpci.a
 install -p -m 644 lib/libpci.a $RPM_BUILD_ROOT%{_libdir}
@@ -124,6 +124,9 @@ magic_rpm_clean.sh
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Mon Apr 23 2012 Liu Di <liudidi@gmail.com> - 3.1.9-3
+- 为 Magic 3.0 重建
+
 * Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 3.1.9-2
 - 为 Magic 3.0 重建
 

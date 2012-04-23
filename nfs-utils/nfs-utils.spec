@@ -2,7 +2,7 @@ Summary: NFS utilities and supporting clients and daemons for the kernel NFS ser
 Name: nfs-utils
 URL: http://sourceforge.net/projects/nfs
 Version: 1.2.5
-Release: 9%{?dist}
+Release: 14%{?dist}
 Epoch: 1
 
 # group all 32bit related archs
@@ -28,8 +28,12 @@ Source51: nfs-server.preconfig
 Source52: nfs-server.postconfig
 %define nfs_configs %{SOURCE50} %{SOURCE51} %{SOURCE52} 
 
-Patch001: nfs-utils-1.2.6-rc5.patch
+Patch001: nfs-utils-1.2.6-rc6.patch
 Patch002: nfs-utils-1.2.4-mountshortcut.patch
+Patch003: nfs-utils-1.2.5-libidmap-hide-syms.patch
+Patch004: nfs-utils-1.2.5-nfsd-new-default.patch
+Patch005: nfs-utils-1.2.5-gssd-usercreds.patch
+Patch006: nfs-utils-1.2.5-gssd-nolibgssapi-krb5.patch
 
 Patch100: nfs-utils-1.2.1-statdpath-man.patch
 Patch101: nfs-utils-1.2.1-exp-subtree-warn-off.patch
@@ -57,14 +61,14 @@ Provides: start-statd = %{epoch}:%{version}-%{release}
 License: MIT and GPLv2 and GPLv2+ and BSD
 Buildroot: %{_tmppath}/%{name}-%{version}-root
 Requires: rpcbind, sed, gawk, sh-utils, fileutils, textutils, grep
-Requires: modutils >= 2.4.26-9
+Requires: kmod, keyutils
 BuildRequires: libgssglue-devel libevent-devel libcap-devel
 BuildRequires: libnfsidmap-devel libtirpc-devel libblkid-devel
 BuildRequires: krb5-libs >= 1.4 autoconf >= 2.57 openldap-devel >= 2.2
 BuildRequires: automake, libtool, glibc-headers, device-mapper-devel
 BuildRequires: krb5-devel, tcp_wrappers-devel, libmount-devel
 Requires(pre): shadow-utils >= 4.0.3-25
-Requires(pre): /sbin/chkconfig /sbin/nologin
+Requires(pre): /usr/sbin/chkconfig /sbin/nologin
 Requires: libnfsidmap libgssglue libevent
 Requires: libtirpc libblkid libcap libmount
 Requires(post): systemd-units
@@ -88,6 +92,10 @@ This package also contains the mount.nfs and umount.nfs program.
 
 %patch001 -p1
 %patch002 -p1
+%patch003 -p1
+%patch004 -p1
+%patch005 -p1
+%patch006 -p1
 
 %patch100 -p1
 %patch101 -p1
@@ -122,7 +130,7 @@ make %{?_smp_mflags} all
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT{/sbin,/usr/sbin,/lib/systemd/system}
+mkdir -p $RPM_BUILD_ROOT{sbin,/usr/sbin,%{_prefix}/lib/systemd/system}
 mkdir -p $RPM_BUILD_ROOT/usr/lib/%{name}/scripts
 mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/man8
 mkdir -p $RPM_BUILD_ROOT/etc/sysconfig
@@ -134,10 +142,10 @@ install -m 644 %{SOURCE9} $RPM_BUILD_ROOT/etc/request-key.d
 install -m 644 %{SOURCE10} $RPM_BUILD_ROOT/etc/sysconfig/nfs
 
 for service in %{nfs_services} ; do
-	install -m 644 $service $RPM_BUILD_ROOT/lib/systemd/system
+	install -m 644 $service $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system
 done
 for service in %{nfs_automounts} ; do
-	install -m 644 $service $RPM_BUILD_ROOT/lib/systemd/system
+	install -m 644 $service $RPM_BUILD_ROOT%{_prefix}/lib/systemd/system
 done
 for config in %{nfs_configs} ; do
 	install -m 755 $config $RPM_BUILD_ROOT/usr/lib/%{name}/scripts
@@ -152,6 +160,11 @@ mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/statd/sm
 mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/statd/sm.bak
 mkdir -p $RPM_BUILD_ROOT/var/lib/nfs/v4recovery
 mkdir -p $RPM_BUILD_ROOT/etc/exports.d
+
+mv $RPM_BUILD_ROOT/sbin/* $RPM_BUILD_ROOT%{_sbindir}
+rm -rf $RPM_BUILD_ROOT/sbin
+
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -191,7 +204,7 @@ else
 fi
 
 %post
-/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
+/usr/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
 # Make sure statd used the correct uid/gid.
 chown -R rpcuser:rpcuser /var/lib/nfs/statd
 
@@ -199,8 +212,8 @@ chown -R rpcuser:rpcuser /var/lib/nfs/statd
 if [ $1 -eq 0 ]; then
 	# Package removal, not upgrade
 	for service in %(sed 's!\S*/!!g' <<< '%{nfs_services}') ; do
-    	/bin/systemctl disable $service >/dev/null 2>&1 || :
-    	/bin/systemctl stop $service >/dev/null 2>&1 || :
+    	/usr/bin/systemctl disable $service >/dev/null 2>&1 || :
+    	/usr/bin/systemctl stop $service >/dev/null 2>&1 || :
 	done
     /usr/sbin/userdel rpcuser 2>/dev/null || :
     /usr/sbin/groupdel rpcuser 2>/dev/null || :
@@ -214,21 +227,21 @@ fi
 if [ $1 -ge 1 ]; then
 	# Package upgrade, not uninstall
 	for service in %(sed 's!\S*/!!g' <<< '%{nfs_services}') ; do
-    	/bin/systemctl try-restart $service >/dev/null 2>&1 || :
+    	/usr/bin/systemctl try-restart $service >/dev/null 2>&1 || :
 	done
 fi
-/bin/systemctl --system daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl --system daemon-reload >/dev/null 2>&1 || :
 
 %triggerun -- nfs-utils < 1:1.2.4-2
-/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
-if /sbin/chkconfig --level 3 nfs ; then
-	/bin/systemctl enable nfs-server.service >/dev/null 2>&1 || :
+/usr/bin/systemctl enable nfs-lock.service >/dev/null 2>&1 || :
+if /usr/sbin/chkconfig --level 3 nfs ; then
+	/usr/bin/systemctl enable nfs-server.service >/dev/null 2>&1 || :
 fi
-if /sbin/chkconfig --level 3 rpcgssd ; then
-	/bin/systemctl enable nfs-secure.service >/dev/null 2>&1 || :
+if /usr/sbin/chkconfig --level 3 rpcgssd ; then
+	/usr/bin/systemctl enable nfs-secure.service >/dev/null 2>&1 || :
 fi
-if /sbin/chkconfig --level 3 rpcsvcgssd ; then
-	/bin/systemctl enable nfs-secure-server.service >/dev/null 2>&1 || :
+if /usr/sbin/chkconfig --level 3 rpcsvcgssd ; then
+	/usr/bin/systemctl enable nfs-secure-server.service >/dev/null 2>&1 || :
 fi
 
 %files
@@ -249,7 +262,7 @@ fi
 %config(noreplace) %{_sysconfdir}/request-key.d/id_resolver.conf
 %doc linux-nfs/ChangeLog linux-nfs/KNOWNBUGS linux-nfs/NEW linux-nfs/README
 %doc linux-nfs/THANKS linux-nfs/TODO
-/sbin/rpc.statd
+/usr/sbin/rpc.statd
 /usr/sbin/exportfs
 /usr/sbin/nfsstat
 /usr/sbin/rpcdebug
@@ -268,15 +281,35 @@ fi
 /usr/sbin/nfsidmap
 /usr/sbin/blkmapd
 %{_mandir}/*/*
-/lib/systemd/system/*
+%{_prefix}/lib/systemd/system/*
 /usr/lib/%{name}/scripts/*
 
-%attr(0755,root,root)   /sbin/mount.nfs
-%attr(0755,root,root)   /sbin/mount.nfs4
-%attr(0755,root,root)   /sbin/umount.nfs
-%attr(0755,root,root)   /sbin/umount.nfs4
+%attr(4755,root,root)   /usr/sbin/mount.nfs
+%attr(4755,root,root)   /usr/sbin/mount.nfs4
+%attr(4755,root,root)   /usr/sbin/umount.nfs
+%attr(4755,root,root)   /usr/sbin/umount.nfs4
 
 %changelog
+* Thu Mar 22 2012 Steve Dickson <steved@redhat.com> 1.2.5-14
+- gssd: Look for user creds in user defined directory (bz 786993)
+- gssd: Don't link with libgssapi_krb5 (bz 784908)
+
+* Fri Mar 16 2012 Steve Dickson <steved@redhat.com> 1.2.5-13
+- Make sure statd is start before NFS mounts (bz 786050)
+- rpc.idmap: Hide global symbols from libidmap plugins (bz 797332)
+- nfsd: Bump up the default to 8 nprocs (bz 757452)
+
+* Wed Feb 08 2012 Harald Hoyer <harald@redhat.com> 1.2.5-12
+- require kmod instead of modutils (bz 788571)
+
+* Mon Jan 16 2012 Steve Dickson <steved@redhat.com> 1.2.5-11
+- Update to upstream RC release: nfs-utils-1.2.6-rc6
+- Reworked how the nfsd service requires the rpcbind service (bz 768550)
+
+* Mon Jan  9 2012 Steve Dickson <steved@redhat.com> 1.2.5-10
+- Added back the SUID bits on mount commands (bz 772396)
+- Added a decency on keyutils (bz 769724)
+
 * Thu Jan  5 2012 Steve Dickson <steved@redhat.com> 1.2.5-9
 - Update to upstream RC release: nfs-utils-1.2.6-rc5
 

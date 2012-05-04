@@ -3,7 +3,7 @@
 Summary: Configuration and data files for the desktop menus
 Name: magic-menus
 Version: 12.0.2
-Release: 5%{?dist}
+Release: 6%{?dist}
 URL: http://www.magiclinux.org
 Source0: %{name}-%{version}.tar.xz
 License: GPL+
@@ -27,7 +27,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
-rm -f %{buildroot}%{_sysconfdir}/xdg/menus/applications.menu
 magic_rpm_clean.sh
 
 %find_lang %{gettext_package}
@@ -57,6 +56,9 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/desktop-directories/*.directory
 
 %changelog
+* Fri May 04 2012 Liu Di <liudidi@gmail.com> - 12.0.2-6
+- 为 Magic 3.0 重建
+
 * Sun Mar 25 2012 Liu Di <liudidi@gmail.com> - 12.0.2-5
 - 为 Magic 3.0 重建
 

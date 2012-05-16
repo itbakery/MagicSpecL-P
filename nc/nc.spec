@@ -1,25 +1,23 @@
 Summary:    Reads and writes data across network connections using TCP or UDP
 Name:       nc
-Version:    1.103
-Release:    3%{?dist}
-URL:        http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/nc/
-License:    BSD ISC
+Version:    1.107
+Release:    1%{?dist}
+URL:        http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/%{name}/
+License:    BSD and ISC
 Group:      Applications/Internet
 # source is CVS checkout, e.g.:
 # CVSROOT=anoncvs@anoncvs.openbsd.org.ar:/cvs/src/usr.bin cvs checkout nc
-Source0:    nc-%{version}.tar.bz2
+Source0:    %{name}-%{version}.tar.bz2
 Source1:    b64_ntop.c
-Patch0:     nc-1.101-linux-ify.patch
-Patch1:     nc-1.100-pollhup.patch
-Patch2:     nc-1.100-udp-stop.patch
-Patch3:     nc-1.100-udp-portscan.patch
-Patch4:     nc-1.103-crlf.patch
-Patch5:     nc-1.100-comma.patch
+Patch0:     nc-1.107-linux-ify.patch
+Patch1:     nc-1.107-pollhup.patch
+Patch2:     nc-1.107-udp-stop.patch
+Patch3:     nc-1.107-udp-portscan.patch
+Patch4:     nc-1.107-crlf.patch
+Patch5:     nc-1.107-comma.patch
 Patch6:     nc-1.100-libbsd.patch
-Patch7:     nc-1.100-format-size_t.patch
-Patch8:     nc-1.100-initialize-range.patch
-Patch9:     nc-1.100-check-accept.patch
-Patch10:    nc-1.103-iptos-class.patch
+Patch7:     nc-1.107-initialize-range.patch
+Patch8:     nc-1.107-iptos-class.patch
 
 BuildRequires: libbsd-devel
 
@@ -45,10 +43,8 @@ capabilities.
 %patch4 -p1 -b .crlf
 %patch5 -p1 -b .comma
 %patch6 -p1 -b .libbsd
-%patch7 -p1 -b .format-size_t
-%patch8 -p1 -b .initialize-range
-%patch9 -p1 -b .check-accept
-%patch10 -p1 -b .iptos-class
+%patch7 -p1 -b .initialize-range
+%patch8 -p1 -b .iptos-class
 cp -p %{SOURCE1} .
 
 %build
@@ -56,15 +52,29 @@ gcc %{optflags} `pkg-config --cflags --libs libbsd` -o nc netcat.c atomicio.c so
 
 %install
 install -d %{buildroot}%{_bindir}
-install -m 755 nc %{buildroot}%{_bindir}
+install -m755 -p nc %{buildroot}%{_bindir}
 install -d %{buildroot}%{_mandir}/man1
-install -m 644 nc.1 %{buildroot}%{_mandir}/man1
+install -m644 -p nc.1 %{buildroot}%{_mandir}/man1
+
+magic_rpm_clean.sh
 
 %files
 %{_bindir}/nc
 %{_mandir}/man1/nc.1*
 
 %changelog
+* Tue Apr 03 2012 Petr Šabata <contyk@redhat.com> - 1.107-1
+- 1.107 bump
+- Warn if accept fails implemented upstream, removing the patch
+
+* Fri Mar 23 2012 Petr Šabata <contyk@redhat.com> - 1.106-1
+- 1.106 bump
+- BSD jumbo support removed upstream
+- size_t format patch included upstream
+
+* Thu Feb 09 2012 Petr Šabata <contyk@redhat.com> - 1.105-1
+- 1.105 bump
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.103-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           ortp
-Version:        0.18.0
-Release:        1%{?dist}
+Version:        0.20.0
+Release:        2%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Epoch:          1
 
@@ -19,6 +19,7 @@ BuildRequires:  automake
 BuildRequires:  libtool
 BuildRequires:  libsrtp-devel
 BuildRequires:  openssl-devel
+BuildRequires:  libzrtpcpp-devel >= 2.1.0
 
 %description
 oRTP is a C library that implements RTP (RFC3550).
@@ -29,6 +30,7 @@ Group:          Development/Libraries
 Requires:       %{name} = %{epoch}:%{version}-%{release}
 Requires:       pkgconfig
 Requires:       libsrtp-devel
+Requires:       libzrtpcpp-devel
 
 %description    devel
 Libraries and headers required to develop software with ortp.
@@ -39,7 +41,14 @@ Libraries and headers required to develop software with ortp.
 %{__perl} -pi.dot  -e 's/^(HAVE_DOT\s+=)\s+NO$/\1 YES/;s/^(CALL_GRAPH\s+=)\s+NO$/\1 YES/;s/^(CALLER_GRAPH\s+=)\s+NO$/\1 YES/' ortp.doxygen.in
 
 %build
-%configure --disable-static --enable-ipv6 --enable-ssl-hmac
+%configure --disable-static \
+%if 0%{?fedora} > 16
+           --enable-zrtp=yes \
+%endif
+           --enable-ipv6 \
+           --enable-ssl-hmac
+
+
 make %{?_smp_mflags}
 
 %install
@@ -48,6 +57,7 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name \*.la -exec rm {} \;
 rm doc/html/html.tar
 rm -r %{buildroot}%{_datadir}/doc/ortp
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,6 +78,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/ortp.pc
 
 %changelog
+* Thu Feb 23 2012 Alexey Kurov <nucleo@fedoraproject.org> - 1:0.20.0-2
+- ortp-0.20.0
+- BR: libzrtpcpp-devel for F17+
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.18.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Dec 26 2011 Alexey Kurov <nucleo@fedoraproject.org> - 0.18.0-1
 - ortp-0.18.0
 - drop patches for issues fixed in upstream (retval and unused vars)

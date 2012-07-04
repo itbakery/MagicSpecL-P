@@ -2,12 +2,12 @@
 %{!?python_sitearch: %define python_sitearch %(%{python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           %{python}-twisted-core
-Version:        11.1.0
-Release:        2%{?dist}
+Version:        12.1.0
+Release:        1%{?dist}
 Summary:        Asynchronous networking framework written in Python
 License:        MIT
 URL:            http://twistedmatrix.com/trac/wiki/TwistedCore
-Source0:        http://twistedmatrix.com/Releases/Core/11.1/TwistedCore-%{version}.tar.bz2
+Source0:        http://twistedmatrix.com/Releases/Core/12.1/TwistedCore-%{version}.tar.bz2
 # Available here:
 # https://apestaart.org/thomas/trac/browser/pkg/fedora.extras/python-twisted-core/twisted-dropin-cache?format=raw
 Source1:        twisted-dropin-cache
@@ -91,11 +91,9 @@ touch $RPM_BUILD_ROOT%{python_sitearch}/twisted/plugins/dropin.cache
 
 # C files don't need to be packaged
 rm -f $RPM_BUILD_ROOT%{python_sitearch}/twisted/protocols/_c_urlarg.c
-rm -f $RPM_BUILD_ROOT%{python_sitearch}/twisted/python/_epoll.c
 rm -f $RPM_BUILD_ROOT%{python_sitearch}/twisted/test/raiser.c
 
 # Fix permissions of shared objects
-chmod 755 $RPM_BUILD_ROOT%{python_sitearch}/twisted/python/_epoll.so
 chmod 755 $RPM_BUILD_ROOT%{python_sitearch}/twisted/test/raiser.so
 
 # See if there's any egg-info
@@ -103,6 +101,8 @@ if [ -f $RPM_BUILD_ROOT%{python_sitearch}/Twisted*.egg-info ]; then
     echo $RPM_BUILD_ROOT%{python_sitearch}/Twisted*.egg-info |
         sed -e "s|^$RPM_BUILD_ROOT||"
 fi > egg-info
+
+magic_rpm_clean.sh
 
 %check
 # trial twisted
@@ -164,6 +164,13 @@ fi
 %doc doc/*
 
 %changelog
+* Sun Jun 17 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.1.0-1
+- Updated to 12.1.0
+- Standard epoll bindings are now used (upstream ticket #3114)
+
+* Sun Feb 12 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.0.0-1
+- Updated to 12.0.0
+
 * Sat Jan 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 11.1.0-2
 - Rebuilt for gcc-4.7
 

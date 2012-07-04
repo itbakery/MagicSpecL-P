@@ -1,6 +1,6 @@
 %define rversion %{kde4_kdelibs_version}
 %define pykde4_akonadi 1
-%define pyqt4_version_min 4.8.2
+%define pyqt4_version_min 4.8.4
 %define sip_version_min 4.12
 %global python_ver %(%{__python} -c "import sys ; print sys.version[:3]")
 
@@ -180,6 +180,7 @@ mkdir -p %{buildroot}%{_docdir}
 rm -fv %{buildroot}%{_kde4_appsdir}/pykde4/examples/*.py?
 mv %{buildroot}%{_kde4_appsdir}/pykde4 %{buildroot}%{_docdir}/
 
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}

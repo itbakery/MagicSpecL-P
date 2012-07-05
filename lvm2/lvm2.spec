@@ -1,14 +1,15 @@
-%define device_mapper_version 1.02.74
+%define device_mapper_version 1.02.75
 
-%define enable_cluster 0
+%define enable_thin 1
+%define enable_cluster 1
 %define enable_cmirror 1
 %define enable_udev 1
 %define enable_systemd 1
-%define enable_lvmetad 0
+%define udev_systemd_merge 1
+%define enable_lvmetad 1
 
-%define udev_version 176-1
-%define enable_thin 1
-%define enable_openais 1
+%define udev_version 183-1
+%define persistent_data_version 0.1.4
 %define corosync_version 1.99.9-1
 
 %if %{enable_cluster}
@@ -17,15 +18,8 @@
 %else
 %define configure_cmirror --disable-cmirrord
 %endif
-%if %{enable_openais}
-%define corosync_version 1.2.0-1
-%define openais_version 1.1.1-1
-%define clusterlib_version 3.0.6-1
-%define configure_cluster --with-cluster=internal --with-clvmd=cman,openais,corosync
-%else
 %define dlm_version 3.99.1-1
 %define configure_cluster --with-cluster=internal --with-clvmd=corosync
-%endif
 %else
 %define configure_cluster --with-cluster=internal --with-clvmd=none
 %define configure_cmirror --disable-cmirrord
@@ -37,31 +31,29 @@
 
 Summary: Userland logical volume management tools 
 Name: lvm2
-Version: 2.02.95
-Release: 6%{?dist}
+Version: 2.02.96
+Release: 2%{?dist}
 License: GPLv2
 Group: System Environment/Base
 URL: http://sources.redhat.com/lvm2
 Source0: ftp://sources.redhat.com/pub/lvm2/LVM2.%{version}.tgz
 Patch0: lvm2-set-default-preferred_names.patch
-Patch1: lvm2-2_02_96-detect-lvm-binary-path-in-lvmetad-udev-rules.patch
-Patch2: lvm2-2_02_96-use-pvscan-cache-instead-of-vgscan-in-init-scripts.patch
+Patch1: lvm2-2_02_97-composite-patch-for-udev-systemd-lvmetad-upstream-changes.patch
 
 BuildRequires: ncurses-devel
 BuildRequires: readline-devel
 %if %{enable_cluster}
 BuildRequires: corosynclib-devel >= %{corosync_version}
-%if %{enable_openais}
-BuildRequires: openaislib-devel >= %{openais_version}
-BuildRequires: clusterlib-devel >= %{clusterlib_version}
-%else
 BuildRequires: dlm-devel >= %{dlm_version}
-%endif
 %endif
 BuildRequires: module-init-tools
 BuildRequires: pkgconfig
 %if %{enable_udev}
+%if %{udev_systemd_merge}
+BuildRequires: systemd-devel
+%else
 BuildRequires: libudev-devel
+%endif
 %endif
 %if %{enable_systemd}
 BuildRequires: systemd-units
@@ -76,6 +68,9 @@ Requires(post): chkconfig
 Requires(preun): chkconfig
 %endif
 Requires: module-init-tools
+%if %{enable_thin}
+Requires: device-mapper-persistent-data >= %{persistent_data_version}
+%endif
 
 %description
 LVM2 includes all of the support for handling read/write operations on
@@ -87,27 +82,29 @@ or more physical volumes and creating one or more logical volumes
 
 %prep
 %setup -q -n LVM2.%{version}
-%patch0 -p1 -b preferred_names
-%patch1 -p1 -b .lvm_path
-%patch2 -p1 -b .pvscan_cache
+%patch0 -p1 -b .preferred_names
+%patch1 -p1 -b .upstream
 
 %build
+%define _default_dm_run_dir /run
+%define _default_run_dir /run/lvm
+%define _default_locking_dir /run/lock/lvm
 
 %if %{enable_udev}
-%define _udevbasedir %{_prefix}/lib/udev
+%define _udevbasedir /lib/udev
 %define _udevdir %{_udevbasedir}/rules.d
 %define configure_udev --with-udevdir=%{_udevdir} --enable-udev_sync
 %endif
 
 %if %{enable_thin}
-%define configure_thin --with-thin=internal
+%define configure_thin --with-thin=internal --with-thin-check=%{_sbindir}/thin_check
 %endif
 
 %if %{enable_lvmetad}
 %define configure_lvmetad --enable-lvmetad
 %endif
 
-%configure --enable-lvm1_fallback --enable-fsadm --with-pool=internal --with-user= --with-group= --with-usrlibdir=/usr/%{_lib} --with-usrsbindir=/usr/sbin --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-dmeventd %{configure_cluster} %{configure_cmirror} %{?configure_udev} %{?configure_default_data_alignment} %{?configure_thin} %{?configure_lvmetad}
+%configure --with-default-dm-run-dir=%{_default_dm_run_dir} --with-default-run-dir=%{_default_run_dir} --with-default-locking-dir=%{_default_locking_dir} --with-usrlibdir=%{_libdir} --enable-lvm1_fallback --enable-fsadm --with-pool=internal --with-user= --with-group= --with-device-uid=0 --with-device-gid=6 --with-device-mode=0660 --enable-pkgconfig --enable-applib --enable-cmdlib --enable-dmeventd %{configure_cluster} %{configure_cmirror} %{?configure_udev} %{?configure_default_data_alignment} %{?configure_thin} %{?configure_lvmetad}
 
 make %{?_smp_mflags}
 
@@ -119,7 +116,6 @@ make install_initscripts DESTDIR=$RPM_BUILD_ROOT
 make install_systemd_units DESTDIR=$RPM_BUILD_ROOT
 make install_tmpfiles_configuration DESTDIR=$RPM_BUILD_ROOT
 %endif
-
 magic_rpm_clean.sh
 
 %clean
@@ -281,6 +277,7 @@ fi
 %if %{enable_udev}
 %{_udevdir}/11-dm-lvm.rules
 %if %{enable_lvmetad}
+%{_mandir}/man8/lvmetad.8.gz
 %{_udevdir}/69-dm-lvm-metad.rules
 %endif
 %endif
@@ -290,8 +287,8 @@ fi
 %dir %{_sysconfdir}/lvm/backup
 %dir %{_sysconfdir}/lvm/cache
 %dir %{_sysconfdir}/lvm/archive
-%dir %{_localstatedir}/lock/lvm
-%dir %{_localstatedir}/run/lvm
+%dir %{_default_locking_dir}
+%dir %{_default_run_dir}
 %if %{enable_systemd}
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/%{name}.conf
 %{_unitdir}/lvm2-monitor.service
@@ -377,12 +374,7 @@ Requires(preun): chkconfig
 Requires(preun): device-mapper >= %{device_mapper_version}
 Requires(preun): lvm2 >= 2.02
 Requires: corosync >= %{corosync_version}
-%if %{enable_openais}
-Requires: openais >= %{openais_version}
-Requires: cman >= %{clusterlib_version}
-%else
 Requires: dlm >= %{dlm_version}
-%endif
 
 %description cluster
 
@@ -423,9 +415,6 @@ Group: System Environment/Base
 Requires(post): chkconfig
 Requires(preun): chkconfig
 Requires: corosync >= %{corosync_version}
-%if %{enable_openais}
-Requires: openais >= %{openais_version}
-%endif
 Requires: device-mapper >= %{device_mapper_version}-%{release}
 
 %description -n cmirror
@@ -486,7 +475,6 @@ Requires: device-mapper-libs = %{device_mapper_version}-%{release}
 Requires: util-linux >= 2.15
 %if %{enable_udev}
 Requires: udev >= %{udev_version}
-Requires: libudev
 # We need dracut to install required udev rules if udev_sync
 # feature is turned on so we don't lose required notifications.
 Conflicts: dracut < 002-18
@@ -636,6 +624,103 @@ the device-mapper event library.
 %{_libdir}/pkgconfig/devmapper-event.pc
 
 %changelog
+* Mon Jul 02 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.96-2
+- Compile with lvmetad support enabled.
+- Add support for volume autoactivation using lvmetad.
+- Update man pages with --activate ay option and auto_activation_volume_list.
+- Use vgchange -aay instead of vgchange -ay in clmvd init script.
+- Add activation/auto_activation_volume_list to lvm.conf.
+- Add --activate ay to lvcreate, lvchange, pvscan and vgchange.
+- Add --activate synonym for --available arg and prefer --activate.
+- Open device read-only to obtain readahead value.
+- Add configure --enable-udev-rule-exec-detection to detect exec path in rules.
+- Use sbindir in udev rules by default and remove executable path detection.
+- Remove hard-coded paths for dmeventd fifos and use default-dm-run-dir.
+- Add configure --with-lvmetad-pidfile to remove hard-coded value.
+- Add configure --with-default-pid-dir for common directory with pid files.
+- Add configure --with-default-dm-run-dir to set run directory for dm tools.
+- Add documentation references in systemd units.
+- Clean up spec file and keep support only for Fedora 17 upwards.
+
+* Mon Jun 18 2012 Alasdair Kergon <agk@redhat.com> - 2.02.96-1
+- Require device-mapper-persistent-data package for thin provisioning.
+- Set delay_resume_if_new on deptree snapshot origin.
+- Log value chosen in _find_config_bool like other variable types do.
+- Wait for dmeventd to exit after sending it DM_EVENT_CMD_DIE when restarting.
+- Append 'Used' to {Blk}DevNames/DevNos dmsetup report headers for clarity.
+- Remove dmeventd fifos on exit if they are not managed by systemd.
+- Use SD_ACTIVATION environment variable in systemd units to detect systemd.
+- Only start a new dmeventd instance on restart if one was already running.
+- Extend the time waited for input from dmeventd fifo to 5 secs. (1.02.73)
+- Fix error paths for regex filter initialization.
+- Re-enable partial activation of non-thin LVs until it can be fixed. (2.02.90)
+- Fix alloc cling to cling to PVs already found with contiguous policy.
+- Fix cling policy not to behave like normal policy if no previous LV seg.
+- Fix allocation loop not to use later policies when --alloc cling without tags.
+- Fix division by zero if PV with zero PE count is used during vgcfgrestore.
+- Add initial support for thin pool lvconvert.
+- Fix lvrename for thin volumes (regression in for_each_sub_lv). (2.02.89)
+- Fix up-convert when mirror activation is controlled by volume_list and tags.
+- Warn of deadlock risk when using snapshots of mirror segment type.
+- Fix bug in cmirror that caused incorrect status info to print on some nodes.
+- Remove statement that snapshots cannot be tagged from lvm man page.
+- Disallow changing cluster attribute of VG while RAID LVs are active.
+- Fix lvconvert error message for non-mergeable volumes.
+- Allow subset of failed devices to be replaced in RAID LVs.
+- Prevent resume from creating error devices that already exist from suspend.
+- Update and correct lvs man page with supported column names.
+- Handle replacement of an active device that goes missing with an error device.
+- Change change raid1 segtype always to request a flush when suspending.
+- Add udev info and context to lvmdump.
+- Add lvmetad man page.
+- Fix RAID device replacement code so that it works under snapshot.
+- Fix inability to split RAID1 image while specifying a particular PV.
+- Update man pages to give them all the same look&feel.
+- Fix lvresize of thin pool for striped devices.
+- For lvresize round upward when specifying number of extents.
+- For lvcreate with %FREE support rounding downward stripe alignment.
+- Change message severity to log_very_verbose for missing dev info in udev db.
+- Fix lvconvert when specifying removal of a RAID device other than last one.
+- Fix ability to handle failures in mirrored log in dmeventd plugin. (2.02.89)
+- Fix unlocking volume group in vgreduce in error path.
+- Cope when VG name is part of the supplied name in lvconvert --splitmirrors -n.
+- Fix exclusive lvchange running from other node. (2.02.89)
+- Add 'vgscan --cache' functionality for consistency with 'pvscan --cache'.
+- Keep exclusive activation in pvmove if LV is already active.
+- Disallow exclusive pvmove if some affected LVs are not exclusively activated.
+- Remove unused and wrongly set cluster VG flag from clvmd lock query command.
+- Fix pvmove for exclusively activated LV pvmove in clustered VG. (2.02.86)
+- Update and fix monitoring of thin pool devices.
+- Check hash insert success in lock_vg in clvmd.
+- Check for buffer overwrite in get_cluster_type() in clvmd.
+- Fix global/detect_internal_vg_cache_corruption config check.
+- Fix initializiation of thin monitoring. (2.02.92)
+- Cope with improperly formatted device numbers in /proc/devices. (2.02.91)
+- Exit if LISTEN_PID environment variable incorrect in lvmetad systemd handover.
+- Fix fsadm propagation of -e option.
+- Fix fsadm parsing of /proc/mounts files (don't check for substrings).
+- Fix fsadm usage of arguments with space.
+- Fix arg_int_value alongside ARG_GROUPABLE --major/--minor for lvcreate/change.
+- Fix name conflicts that prevent down-converting RAID1 when specifying a device
+- Improve thin_check option passing and use configured path.
+- Add --with-thin-check configure option for path to thin_check.
+- Fix error message when pvmove LV activation fails with name already in use.
+- Better structure layout for device_info in dev_subsystem_name().
+- Change message severity for creation of VG over uninitialised devices.
+- Fix error path for failed toolcontext creation.
+- Don't unlink socket on lvmetad shutdown if instantiated from systemd.
+- Restart lvmetad automatically from systemd if it exits from uncaught signal.
+- Fix warn msg for thin pool chunk size and update man for chunksize. (2.02.89)
+
+* Thu Jun 07 2012 Kay Sievers - 2.02.95-8
+- Remove explicit Requires: libudev, rpm takes care of that:
+    $ rpm -q --requires device-mapper | grep udev
+    libudev.so...
+
+* Tue Jun 05 2012 Peter Rajnoha <prajnoha@redhat.com> - 2.02.95-7
+- Use BuildRequires: systemd-devel instead of BuildRequires: libudev-devel.
+- Remove unsupported udev_get_dev_path libudev call used for checking udev dir.
+
 * Thu Mar 29 2012 Fabio M. Di Nitto <fdinitto@redhat.com> - 2.02.95-6
 - BuildRequires and Requires on newer version of corosync and dlm.
 - Restart clvmd on upgrades.

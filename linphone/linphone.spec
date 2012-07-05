@@ -1,21 +1,32 @@
+%global novideo 1
+
 Name:           linphone
-Version:        3.5.0
-Release:        2%{?dist}
+Version:        3.5.2
+Release:        3%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 Group:          Applications/Communications
 License:        GPLv2+
 URL:            http://www.linphone.org/
 
-Source0:        http://download.savannah.gnu.org/releases/linphone/3.4.x/sources/%{name}-%{version}.tar.gz
-Patch0:         linphone-3.5.0-unusedvar.patch
-Patch1:		linphone-3.5.0-newglib.patch
+Source0:        http://download.savannah.gnu.org/releases/linphone/3.5.x/sources/%{name}-%{version}.tar.gz
+Patch0:         linphone-3.5.1-unusedvar.patch
+
+# commit d1d6ab83af4152f9fb719d885a2de20bddcfa96a
+# Allow building against glib 2.31 and later
+Patch1:         linphone-3.5.2-glib-2.31.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+%if ! 0%{?novideo}
+BuildRequires:  libtheora-devel
+BuildRequires:  libv4l-devel
+BuildRequires:  libvpx-devel
+%endif
+
 BuildRequires:  libosip2-devel >= 3.6.0
 BuildRequires:  libeXosip2-devel >= 3.6.0
-BuildRequires:  ortp-devel >= 1:0.18.0
+BuildRequires:  libsoup-devel
 BuildRequires:  openssl-devel
 BuildRequires:  pulseaudio-libs-devel
 
@@ -37,6 +48,10 @@ BuildRequires:  perl(XML::Parser)
 BuildRequires:  libglade2-devel
 
 BuildRequires:  intltool
+BuildRequires:  doxygen
+
+BuildRequires:  ortp-devel >= 1:0.20.0
+Requires:       ortp%{?_isa} >= 1:0.20.0
 
 %description
 Linphone is mostly sip compliant. It works successfully with these
@@ -62,25 +77,10 @@ Requires:       %{name} = %{version}-%{release} glib2-devel
 %description    devel
 Libraries and headers required to develop software with linphone.
 
-%package doc
-Summary:        Documents for linphone
-Group:          Documentation
-Requires:       %{name}-devel = %{version}-%{release}
-
-%description    doc
-Documents for linphone.
-
 %prep
 %setup0 -q
 %patch0 -p1 -b .unusedvar
-%patch1 -p1 
-
-# g_thread_init has been deprecated since version 2.32 and should not be used in newly-written code.
-# This function is no longer necessary. The GLib threading system is automatically initialized at
-# the start of your program.
-%if 0%{?fedora} >= 17
-sed -i '/g_thread_init/d' gtk/main.c
-%endif
+%patch1 -p1 -b .glib-2.31
 
 # remove bundled oRTP
 rm -rf oRTP
@@ -99,12 +99,15 @@ done
 
 %build
 %configure --disable-static \
+%if 0%{?novideo}
+           --disable-video \
+%endif
+           --disable-ffmpeg \
            --disable-rpath \
            --enable-console_ui=yes \
            --enable-gtk_ui=yes \
            --enable-ipv6 \
            --enable-truespeech \
-           --disable-video \
            --enable-alsa \
            --enable-strict \
            --enable-nonstandard-gsm \
@@ -118,8 +121,9 @@ make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%find_lang %{name}
-%find_lang mediastreamer
+magic_rpm_clean.sh
+%find_lang %{name} || touch %{name}.lang
+%find_lang mediastreamer || touch mediastreamer.lang
 cat mediastreamer.lang >> %{name}.lang
 
 desktop-file-install --vendor=fedora \
@@ -129,7 +133,13 @@ desktop-file-install --vendor=fedora \
   --add-category Telephony \
   --add-category GTK \
   $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
-rm -f %{buildroot}%{_libdir}/*.la
+
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+
+# move docs to %%doc
+mkdir -p doc/linphone doc/mediastreamer
+mv $RPM_BUILD_ROOT%{_datadir}/doc/linphone/linphone*/html doc/linphone
+mv $RPM_BUILD_ROOT%{_datadir}/doc/mediastreamer/mediastreamer*/html doc/mediastreamer
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -141,11 +151,13 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc AUTHORS ChangeLog COPYING NEWS README TODO
-%{_bindir}/*
+%{_bindir}/linphone
+%{_bindir}/linphonec
+%{_bindir}/linphonecsh
+%{_bindir}/mediastream
 %{_libdir}/liblinphone.so.4*
 %{_libdir}/libmediastreamer.so.1*
 %{_mandir}/man1/*
-%lang(cs) %{_mandir}/cs/man1/*
 %{_datadir}/applications/*%{name}.desktop
 %{_datadir}/gnome/help/linphone
 %{_datadir}/pixmaps/linphone
@@ -155,7 +167,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(-,root,root)
-%exclude %{_datadir}/tutorials
+%doc doc/linphone doc/mediastreamer
 %{_includedir}/linphone
 %{_includedir}/mediastreamer2
 %{_libdir}/liblinphone.so
@@ -163,11 +175,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/linphone.pc
 %{_libdir}/pkgconfig/mediastreamer.pc
 
-%files doc
-%defattr(-,root,root)
-%{_docdir}/*
-
 %changelog
+* Mon Mar  5 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-3
+- drop regression patch
+
+* Mon Feb 27 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-2
+- install docs in -devel
+- update glib-2.31 patch
+- revert commit causing regression in 3.5.2
+
+* Wed Feb 22 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-1
+- linphone-3.5.2
+
+* Sun Feb 19 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.1-1
+- linphone-3.5.1
+- BR: libsoup-devel
+- Requires: ortp >= 1:0.18.0
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Dec 27 2011 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.0-2
 - enable spandsp
 

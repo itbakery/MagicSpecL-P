@@ -20,7 +20,8 @@
 
 Summary: Utilities from the general purpose cryptography library with TLS implementation
 Name: openssl
-Version: 1.0.1
+Version: 1.0.1c
+# Do not forget to bump SHLIB_VERSION on version upgrades
 Release: 1%{?dist}
 Epoch: 1
 # We have to remove certain patented algorithms from the openssl source
@@ -43,7 +44,6 @@ Patch6: openssl-0.9.8b-test-use-localhost.patch
 Patch7: openssl-1.0.0-timezone.patch
 # Bug fixes
 Patch23: openssl-1.0.0-beta4-default-paths.patch
-Patch24: openssl-1.0.1-beta3-s390xbuild.patch
 # Functionality changes
 Patch33: openssl-1.0.0-beta4-ca-dir.patch
 Patch34: openssl-0.9.6-x509.patch
@@ -51,10 +51,10 @@ Patch35: openssl-0.9.8j-version-add-engines.patch
 Patch36: openssl-1.0.0e-doc-noeof.patch
 Patch38: openssl-1.0.1-beta2-ssl-op-all.patch
 Patch39: openssl-1.0.1-beta2-ipv6-apps.patch
-Patch40: openssl-1.0.1-beta3-fips.patch
+Patch40: openssl-1.0.1b-fips.patch
 Patch45: openssl-0.9.8j-env-nozlib.patch
 Patch47: openssl-1.0.0-beta5-readme-warning.patch
-Patch49: openssl-1.0.0-beta4-algo-doc.patch
+Patch49: openssl-1.0.1a-algo-doc.patch
 Patch50: openssl-1.0.1-beta2-dtls1-abi.patch
 Patch51: openssl-1.0.1-version.patch
 Patch56: openssl-1.0.0c-rsa-x931.patch
@@ -63,9 +63,10 @@ Patch60: openssl-1.0.0d-apps-dgst.patch
 Patch63: openssl-1.0.0d-xmpp-starttls.patch
 Patch65: openssl-1.0.0e-chil-fixes.patch
 Patch66: openssl-1.0.1-pkgconfig-krb5.patch
+Patch67: openssl-1.0.0-fips-pkcs8.patch
 # Backported fixes including security fixes
 Patch81: openssl-1.0.1-beta2-padlock64.patch
-Patch82: openssl-1.0.1-backport.patch
+Patch82: openssl-1.0.1c-backports.patch
 
 License: OpenSSL
 Group: System Environment/Libraries
@@ -142,7 +143,6 @@ from other formats to the formats used by the OpenSSL toolkit.
 %patch7 -p1 -b .timezone
 
 %patch23 -p1 -b .default-paths
-%patch24 -p1 -b .s390xbuild
 
 %patch33 -p1 -b .ca-dir
 %patch34 -p1 -b .x509
@@ -162,9 +162,11 @@ from other formats to the formats used by the OpenSSL toolkit.
 %patch63 -p1 -b .starttls
 %patch65 -p1 -b .chil
 %patch66 -p1 -b .krb5
+%patch67 -p1 -b .pkcs8
 
 %patch81 -p1 -b .padlock64
-#%patch82 -p1 -b .backport
+%patch82 -p1 -b .backports
+
 # Modify the various perl scripts to reference perl in the right location.
 perl util/perlpath.pl `dirname %{__perl}`
 
@@ -252,8 +254,8 @@ make -C test apps tests
     %{?__debug_package:%{__debug_install_post}} \
     %{__arch_install_post} \
     %{__os_install_post} \
-    crypto/fips/fips_standalone_hmac $RPM_BUILD_ROOT%{_libdir}/libcrypto.so.%{version} >$RPM_BUILD_ROOT%{_libdir}/.libcrypto.so.%{version}.hmac \
-    ln -sf .libcrypto.so.%{version}.hmac $RPM_BUILD_ROOT%{_libdir}/.libcrypto.so.%{soversion}.hmac \
+    crypto/fips/fips_standalone_hmac $RPM_BUILD_ROOT/%{_lib}/libcrypto.so.%{version} >$RPM_BUILD_ROOT/%{_lib}/.libcrypto.so.%{version}.hmac \
+    ln -sf .libcrypto.so.%{version}.hmac $RPM_BUILD_ROOT/%{_lib}/.libcrypto.so.%{soversion}.hmac \
     crypto/fips/fips_standalone_hmac $RPM_BUILD_ROOT%{_libdir}/libssl.so.%{version} >$RPM_BUILD_ROOT%{_libdir}/.libssl.so.%{version}.hmac \
     ln -sf .libssl.so.%{version}.hmac $RPM_BUILD_ROOT%{_libdir}/.libssl.so.%{soversion}.hmac \
 %{nil}
@@ -270,18 +272,18 @@ mv $RPM_BUILD_ROOT%{_libdir}/engines $RPM_BUILD_ROOT%{_libdir}/openssl
 mv $RPM_BUILD_ROOT%{_sysconfdir}/pki/tls/man/* $RPM_BUILD_ROOT%{_mandir}/
 rmdir $RPM_BUILD_ROOT%{_sysconfdir}/pki/tls/man
 rename so.%{soversion} so.%{version} $RPM_BUILD_ROOT%{_libdir}/*.so.%{soversion}
-#mkdir $RPM_BUILD_ROOT/%{_lib}
-#mv $RPM_BUILD_ROOT%{_libdir}/libcrypto.so.%{version} $RPM_BUILD_ROOT/%{_lib}
+mkdir $RPM_BUILD_ROOT/%{_lib}
+mv $RPM_BUILD_ROOT%{_libdir}/libcrypto.so.%{version} $RPM_BUILD_ROOT/%{_lib}
 for lib in $RPM_BUILD_ROOT%{_libdir}/*.so.%{version} ; do
 	chmod 755 ${lib}
 	ln -s -f `basename ${lib}` $RPM_BUILD_ROOT%{_libdir}/`basename ${lib} .%{version}`
 	ln -s -f `basename ${lib}` $RPM_BUILD_ROOT%{_libdir}/`basename ${lib} .%{version}`.%{soversion}
 done
-#for lib in $RPM_BUILD_ROOT/%{_lib}/*.so.%{version} ; do
-#	chmod 755 ${lib}
-#	ln -s -f ../../%{_lib}/`basename ${lib}` $RPM_BUILD_ROOT%{_libdir}/`basename ${lib} .%{version}`
-#	ln -s -f `basename ${lib}` $RPM_BUILD_ROOT/%{_lib}/`basename ${lib} .%{version}`.%{soversion}
-#done
+for lib in $RPM_BUILD_ROOT/%{_lib}/*.so.%{version} ; do
+	chmod 755 ${lib}
+	ln -s -f ../../%{_lib}/`basename ${lib}` $RPM_BUILD_ROOT%{_libdir}/`basename ${lib} .%{version}`
+	ln -s -f `basename ${lib}` $RPM_BUILD_ROOT/%{_lib}/`basename ${lib} .%{version}`.%{soversion}
+done
 
 # Install a makefile for generating keys and self-signed certs, and a script
 # for generating them on the fly.
@@ -390,11 +392,11 @@ magic_rpm_clean.sh
 %dir %{_sysconfdir}/pki/tls/misc
 %dir %{_sysconfdir}/pki/tls/private
 %config(noreplace) %{_sysconfdir}/pki/tls/openssl.cnf
-%attr(0755,root,root) %{_libdir}/libcrypto.so.%{version}
-%attr(0755,root,root) %{_libdir}/libcrypto.so.%{soversion}
+%attr(0755,root,root) /%{_lib}/libcrypto.so.%{version}
+%attr(0755,root,root) /%{_lib}/libcrypto.so.%{soversion}
 %attr(0755,root,root) %{_libdir}/libssl.so.%{version}
 %attr(0755,root,root) %{_libdir}/libssl.so.%{soversion}
-%attr(0644,root,root) %{_libdir}/.libcrypto.so.*.hmac
+%attr(0644,root,root) /%{_lib}/.libcrypto.so.*.hmac
 %attr(0644,root,root) %{_libdir}/.libssl.so.*.hmac
 %attr(0755,root,root) %{_libdir}/openssl
 
@@ -421,6 +423,15 @@ magic_rpm_clean.sh
 %postun libs -p /sbin/ldconfig
 
 %changelog
+* Tue May 15 2012 Tomas Mraz <tmraz@redhat.com> 1.0.1c-1
+- new upstream version
+
+* Thu Apr 26 2012 Tomas Mraz <tmraz@redhat.com> 1.0.1b-1
+- new upstream version
+
+* Fri Apr 20 2012 Tomas Mraz <tmraz@redhat.com> 1.0.1a-1
+- new upstream version fixing CVE-2012-2110
+
 * Wed Apr 11 2012 Tomas Mraz <tmraz@redhat.com> 1.0.1-3
 - add Kerberos 5 libraries to pkgconfig for static linking (#807050)
 

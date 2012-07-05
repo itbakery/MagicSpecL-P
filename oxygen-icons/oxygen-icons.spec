@@ -4,10 +4,10 @@
 
 Name: %{real_name}
 Summary: The KDE 4 Oxygen Icon Set
-Summary(zh_CN.GB18030): KDE 4 µÄ Oxygen Í¼±ê¼¯
+Summary(zh_CN.UTF-8): KDE 4 çš„ Oxygen å›¾æ ‡é›†
 License: GPL v2 or later
 Group: System/GUI/KDE
-Group(zh_CN.GB18030): ÏµÍ³/GUI/KDE
+Group(zh_CN.UTF-8): ç³»ç»Ÿ/GUI/KDE
 URL: http://www.kde.org/
 Version: %{rversion}
 Release: %{release_number}%{?dist}
@@ -33,8 +33,8 @@ Provides: oxygen-icon-theme = %{version}-%{release}
 %description
 The KDE 4 Oxygen icon set.
 
-%description -l zh_CN.GB18030
-KDE 4 Oxygen Í¼±ê¡£
+%description -l zh_CN.UTF-8
+KDE 4 Oxygen å›¾æ ‡ã€‚
 
 %prep
 %setup -q -n %{real_name}-%{rversion}
@@ -59,7 +59,7 @@ install -D -m 0755 %{SOURCE13} %{buildroot}%{kde4_iconsdir}/oxygen/48x48/places/
 install -D -m 0755 %{SOURCE14} %{buildroot}%{kde4_iconsdir}/oxygen/64x64/places/start-here-magic.png
 install -D -m 0755 %{SOURCE15} %{buildroot}%{kde4_iconsdir}/oxygen/128x128/places/start-here-magic.png
 install -D -m 0755 %{SOURCE16} %{buildroot}%{kde4_iconsdir}/oxygen/256x256/places/start-here-magic.png
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
@@ -71,19 +71,19 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %changelog
 * Sat Dec 5 2009 Ni Hui <shuizhuyuanluo@126.com> 4.3.4-1mgc
-- ¸üĞÂÖÁ 4.3.4
-- °²×° start-here-magic Í¼±ê
-- ÒÒ³ó  Ê®ÔÂÊ®¾Å
+- æ›´æ–°è‡³ 4.3.4
+- å®‰è£… start-here-magic å›¾æ ‡
+- ä¹™ä¸‘  åæœˆåä¹
 
 * Wed Aug 5 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-1mgc
-- ¸üĞÂÖÁ 4.3.0
-- ¼º³ó  ÁùÔÂÊ®Îå
+- æ›´æ–°è‡³ 4.3.0
+- å·±ä¸‘  å…­æœˆåäº”
 
 * Mon Jun 29 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.2.95-1mgc
-- ¸üĞÂÖÁ 4.2.95(KDE 4.3 RC1)
-- ¼º³ó  ÈòÎåÔÂ³õÆß
+- æ›´æ–°è‡³ 4.2.95(KDE 4.3 RC1)
+- å·±ä¸‘  é—°äº”æœˆåˆä¸ƒ
 
 * Sat May 16 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.2.85-1mgc
-- ¸üĞÂÖÁ 4.2.85(KDE 4.3 Beta1)
-- Ê×´ÎÉú³É rpm °ü
-- ¼º³ó  ËÄÔÂØ¥¶ş
+- æ›´æ–°è‡³ 4.2.85(KDE 4.3 Beta1)
+- é¦–æ¬¡ç”Ÿæˆ rpm åŒ…
+- å·±ä¸‘  å››æœˆå»¿äºŒ

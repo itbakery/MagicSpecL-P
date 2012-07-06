@@ -1,18 +1,19 @@
-Summary: PolicyKit Authorization Framework
+Summary: polkit Authorization Framework
 Name: polkit
-Version: 0.104
-Release: 3%{?dist}
+Version: 0.106
+Release: 1%{?dist}
 License: LGPLv2+
-URL: http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+URL: http://www.freedesktop.org/wiki/Software/polkit
+Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Group: System Environment/Libraries
-BuildRequires: glib2-devel >= 2.28.0
+BuildRequires: glib2-devel >= 2.30.0
 BuildRequires: expat-devel
 BuildRequires: pam-devel
 BuildRequires: gtk-doc
 BuildRequires: intltool
 BuildRequires: gobject-introspection-devel
 BuildRequires: systemd-devel
+BuildRequires: js-devel
 
 Requires: dbus
 
@@ -27,12 +28,12 @@ Obsoletes: polkit-desktop-policy < 0.103
 Provides: polkit-desktop-policy = 0.103
 
 %description
-PolicyKit is a toolkit for defining and handling authorizations.
-It is used for allowing unprivileged processes to speak to privileged
+polkit is a toolkit for defining and handling authorizations.  It is
+used for allowing unprivileged processes to speak to privileged
 processes.
 
 %package devel
-Summary: Development files for PolicyKit
+Summary: Development files for polkit
 Group: Development/Libraries
 Requires: %name = %{version}-%{release}
 Requires: %name-docs = %{version}-%{release}
@@ -41,17 +42,18 @@ Obsoletes: PolicyKit-devel <= 0.10
 Provides: PolicyKit-devel = 0.11
 
 %description devel
-Development files for PolicyKit.
+Development files for polkit.
 
 %package docs
-Summary: Development documentation for PolicyKit
+Summary: Development documentation for polkit
 Group: Development/Libraries
 Requires: %name-devel = %{version}-%{release}
 Obsoletes: PolicyKit-docs <= 0.10
 Provides: PolicyKit-docs = 0.11
+BuildArch: noarch
 
 %description docs
-Development documentation for PolicyKit.
+Development documentation for polkit.
 
 %prep
 %setup -q
@@ -59,7 +61,6 @@ Development documentation for PolicyKit.
 %build
 %configure --enable-gtk-doc \
         --disable-static \
-        --libexecdir=%{_libexecdir}/polkit-1 \
         --enable-introspection \
         --enable-examples \
         --enable-systemd=yes
@@ -70,8 +71,13 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
+magic_rpm_clean.sh
+%find_lang polkit-1 || touch polkit-1.lang
 
-%find_lang polkit-1
+%pre
+getent group polkitd >/dev/null || groupadd -r polkitd
+getent passwd polkitd >/dev/null || useradd -r -g polkitd -d / -s /sbin/nologin -c "User for polkitd" polkitd
+exit 0
 
 %post -p /sbin/ldconfig
 
@@ -79,37 +85,31 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
 
 %files -f polkit-1.lang
 %defattr(-,root,root,-)
-%doc COPYING
+%doc COPYING NEWS README
 %{_libdir}/lib*.so.*
-%dir %{_libdir}/polkit-1
-%dir %{_libdir}/polkit-1/extensions
-%{_libdir}/polkit-1/extensions/*.so
 %{_datadir}/man/man1/*
 %{_datadir}/man/man8/*
 %{_datadir}/dbus-1/system-services/*
+%{_prefix}/lib/systemd/system/polkit.service
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
+%attr(0700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
+%dir %{_sysconfdir}/polkit-1
+%{_sysconfdir}/polkit-1/rules.d/50-default.rules
+%attr(0700,polkitd,root) %dir %{_sysconfdir}/polkit-1/rules.d
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
-%{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
-%dir %{_libexecdir}/polkit-1
-%{_libexecdir}/polkit-1/polkitd
+%{_bindir}/pkttyagent
+%dir %{_prefix}/lib/polkit-1
+%{_prefix}/lib/polkit-1/polkitd
 %{_libdir}/girepository-1.0/*.typelib
 
 # see upstream docs for why these permissions are necessary
 %attr(4755,root,root) %{_bindir}/pkexec
-%attr(4755,root,root) %{_libexecdir}/polkit-1/polkit-agent-helper-1
-
-%attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/
-%dir %{_localstatedir}/lib/polkit-1/localauthority
-%dir %{_localstatedir}/lib/polkit-1/localauthority/10-vendor.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/20-org.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/30-site.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/50-local.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/90-mandatory.d
+%attr(4755,root,root) %{_prefix}/lib/polkit-1/polkit-agent-helper-1
 
 %files devel
 %defattr(-,root,root,-)
@@ -125,6 +125,25 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
 %{_datadir}/gtk-doc
 
 %changelog
+* Thu Jun 07 2012 David Zeuthen <davidz@redhat.com> 0.106-1%{?dist}
+- Update to upstream release 0.106
+- Authorizations are no longer controlled by .pkla files - from now
+  on, use the new .rules files described in the polkit(8) man page
+
+* Tue Apr 24 2012 David Zeuthen <davidz@redhat.com> 0.105-1%{?dist}
+- Update to upstream release 0.105
+- Nuke patches that are now upstream
+- Change 'PolicyKit' to 'polkit' in summary and descriptions
+
+* Thu Mar 08 2012 David Zeuthen <davidz@redhat.com> 0.104-6%{?dist}
+- Don't leak file descriptors (bgo #671486)
+
+* Mon Feb 13 2012 Matthias Clasen <mclasen@redhat.com> - 0.104-5%{?dist}
+- Make the -docs subpackage noarch
+
+* Mon Feb 06 2012 David Zeuthen <davidz@redhat.com> 0.104-4%{?dist}
+- Set error if we cannot obtain a PolkitUnixSession for a given PID (#787222)
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.104-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

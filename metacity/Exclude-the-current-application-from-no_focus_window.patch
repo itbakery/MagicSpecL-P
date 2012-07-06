@@ -1,32 +1,33 @@
-From 10c92eeae2fb4130cade27e1c2d631ef00019a2c Mon Sep 17 00:00:00 2001
-From: Owen W. Taylor <otaylor@fishsoup.net>
+From 3a8164d5ddf688db9cb00657861351febf013e72 Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
 Date: Wed, 23 Jun 2010 16:49:37 -0400
-Subject: [PATCH 1/2] Exclude the current application from no_focus_windows setting
+Subject: [PATCH] Exclude the current application from no-focus-windows
+ setting
 
-The idea of the no_focus_windows setting is to allow identifying
+The idea of the no-focus-windows setting is to allow identifying
 legacy application windows that are stealing focus from other
 applications and suppress that behavior. Sometimes its not possible to
 identify specific problem windows of an application and its
 necessary to blanket add all windows of the application. In this
-case no_focus_windows can disrupt the internal flow of focus
+case no-focus-windows can disrupt the internal flow of focus
 within the application.
 
 On the assumption that apps internally handle focus correctly
 and have been tested not to steal focus from themselves at
 annoying times, we exclude windows of the the current application
-from no_focus_windows.
+from no-focus-windows.
 
 https://bugzilla.gnome.org/show_bug.cgi?id=599248
 ---
- src/core/window.c          |   11 ++++++++++-
- src/metacity.schemas.in.in |    3 +++
+ src/core/window.c                     |   11 ++++++++++-
+ src/org.gnome.metacity.gschema.xml.in |    3 +++
  2 files changed, 13 insertions(+), 1 deletions(-)
 
 diff --git a/src/core/window.c b/src/core/window.c
-index cacc3eb..399bb42 100644
+index 5440160..6f5c280 100644
 --- a/src/core/window.c
 +++ b/src/core/window.c
-@@ -1977,12 +1977,21 @@ window_state_on_map (MetaWindow *window,
+@@ -1980,12 +1980,21 @@ window_state_on_map (MetaWindow *window,
                       gboolean *places_on_top)
  {
    gboolean intervening_events;
@@ -49,20 +50,20 @@ index cacc3eb..399bb42 100644
      intervening_events = TRUE;
    else
      intervening_events = intervening_user_event_occurred (window);
-diff --git a/src/metacity.schemas.in.in b/src/metacity.schemas.in.in
-index c42fa96..e0dec3d 100644
---- a/src/metacity.schemas.in.in
-+++ b/src/metacity.schemas.in.in
-@@ -123,6 +123,9 @@
- 	    WM_CLASS matches the shell-style glob pattern &lt;glob&gt;.
- 	    (and &lt;expr&gt; &lt;expr&gt;) (or &lt;expr&gt; &lt;expr&gt;) (not &lt;expr): Boolean combinations
- 	    of expressions.
+diff --git a/src/org.gnome.metacity.gschema.xml.in b/src/org.gnome.metacity.gschema.xml.in
+index 6900fa6..e4f86bd 100644
+--- a/src/org.gnome.metacity.gschema.xml.in
++++ b/src/org.gnome.metacity.gschema.xml.in
+@@ -41,6 +41,9 @@
+ 	WM_CLASS matches the shell-style glob pattern &lt;glob&gt;.
+ 	(and &lt;expr&gt; &lt;expr&gt;) (or &lt;expr&gt; &lt;expr&gt;) (not &lt;expr): Boolean combinations
+ 	of expressions.
 +
-+	    New windows from the current active application are unaffected by
-+	    this setting.
-          </long>
-       </locale>
-     </schema>
++        New windows from the current active application are unaffected by
++        this setting.
+       </_description>
+     </key>
+   </schema>
 -- 
-1.7.0.1
+1.7.9
 

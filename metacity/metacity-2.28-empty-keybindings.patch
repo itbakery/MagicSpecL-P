@@ -1,7 +1,8 @@
-From 599f25e51d967febddb4de3aa21db4258356a9f9 Mon Sep 17 00:00:00 2001
-From: Owen W. Taylor <otaylor@fishsoup.net>
+From 857ac4b0682dec32ba55e4080fa7ec560a2481a0 Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
 Date: Fri, 20 Nov 2009 10:19:03 -0500
-Subject: [PATCH] Accept an empty string as well as "disabled" for keybindings
+Subject: [PATCH] Accept an empty string as well as "disabled" for
+ keybindings
 
 Treat the empty string the same as "disabled" for GConf keybinding
 keys. gnome-keybinding-properties was changed to write disabled
@@ -13,10 +14,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=559816
  1 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/ui/ui.c b/src/ui/ui.c
-index 6df289f..1e68df0 100644
+index 78aa353..ef9fcfc 100644
 --- a/src/ui/ui.c
 +++ b/src/ui/ui.c
-@@ -765,7 +765,7 @@ meta_ui_parse_accelerator (const char          *accel,
+@@ -954,7 +954,7 @@ meta_ui_parse_accelerator (const char          *accel,
    *keycode = 0;
    *mask = 0;
  
@@ -25,7 +26,7 @@ index 6df289f..1e68df0 100644
      return TRUE;
    
    meta_ui_accelerator_parse (accel, &gdk_sym, &gdk_code, &gdk_mask);
-@@ -852,7 +852,7 @@ meta_ui_parse_modifier (const char          *accel,
+@@ -1041,7 +1041,7 @@ meta_ui_parse_modifier (const char          *accel,
    
    *mask = 0;
  
@@ -35,5 +36,5 @@ index 6df289f..1e68df0 100644
    
    meta_ui_accelerator_parse (accel, &gdk_sym, &gdk_code, &gdk_mask);
 -- 
-1.6.5.2
+1.7.9
 

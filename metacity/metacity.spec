@@ -2,7 +2,7 @@
 
 Summary: Unobtrusive window manager
 Name: metacity
-Version: 2.34.1
+Version: 2.34.3
 Release: 2%{?dist}
 URL: http://download.gnome.org/sources/metacity/
 Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar.xz
@@ -10,11 +10,8 @@ Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar
 Patch4: stop-spamming-xsession-errors.patch
 # http://bugzilla.gnome.org/show_bug.cgi?id=135056
 Patch5: dnd-keynav.patch
-# http://bugzilla.gnome.org/show_bug.cgi?id=336750
-Patch10: screenshot-forkbomb.patch
 
 # fedora specific patches
-Patch11: workspaces.patch
 Patch12: fresh-tooltips.patch
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=598995
@@ -35,9 +32,8 @@ Patch25: metacity-2.28-xioerror-unknown-display.patch
 Patch28: Stop-confusing-GDK-s-grab-tracking.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=622517
 Patch29: Allow-breaking-out-from-maximization-during-mouse.patch
-
-# default window icon: https://bugzilla.gnome.org/show_bug.cgi?id=616246
-Patch30: default-window-icon.patch
+# https://bugzilla.gnome.org/show_bug.cgi?id=677115
+Patch30: disable-mouse-button-modifiers.patch
 
 Source1: window.png
 Source2: mini-window.png
@@ -47,7 +43,7 @@ Group: User Interface/Desktops
 BuildRequires: gtk2-devel 
 BuildRequires: pango-devel 
 BuildRequires: fontconfig-devel
-BuildRequires: GConf2-devel 
+BuildRequires: gsettings-desktop-schemas-devel
 BuildRequires: desktop-file-utils
 BuildRequires: libglade2-devel 
 BuildRequires: autoconf, automake, libtool, gnome-common
@@ -67,15 +63,10 @@ BuildRequires: dbus-devel
 BuildRequires: libcanberra-devel
 
 Requires: startup-notification 
+Requires: gsettings-desktop-schemas
 # for /usr/share/control-center/keybindings, /usr/share/gnome/wm-properties
 Requires: control-center-filesystem
-# for /etc/gconf/schemas
-Requires: GConf2
 Requires: zenity
-
-Requires(post): GConf2
-Requires(pre): GConf2 
-Requires(preun): GConf2
 
 # http://bugzilla.redhat.com/605675
 Provides: firstboot(windowmanager) = metacity
@@ -100,8 +91,6 @@ API. This package exists purely for technical reasons.
 %setup -q
 %patch4 -p1 -b .stop-spamming-xsession-errors
 %patch5 -p1 -b .dnd-keynav
-%patch10 -p1 -b .screenshot-forkbomb
-%patch11 -p1 -b .workspaces
 %patch12 -p1 -b .fresh-tooltips
 
 %patch16 -p1 -b .focus-different-workspace
@@ -114,13 +103,12 @@ API. This package exists purely for technical reasons.
 %patch25 -p1 -b .xioerror-unknown-display
 %patch28 -p1 -b .grab-tracking
 %patch29 -p1 -b .mouse-unmaximize
-
-%patch30 -p1 -b .window-icon
+%patch30 -p1 -b .button-modifiers
 
 cp -p %{SOURCE1} %{SOURCE2} src/
 
 # force regeneration
-rm -f src/metacity.schemas
+rm -f src/org.gnome.metacity.gschema.valid
 
 %build
 CPPFLAGS="$CPPFLAGS -I$RPM_BUILD_ROOT%{_includedir}"
@@ -129,7 +117,7 @@ export CPPFLAGS
 # Always rerun configure for now
 rm -f configure
 (if ! test -x configure; then autoreconf -i -f; fi;
- %configure --disable-static)
+ %configure --disable-static --disable-schemas-compile)
 
 SHOULD_HAVE_DEFINED="HAVE_SM HAVE_XINERAMA HAVE_XFREE_XINERAMA HAVE_SHAPE HAVE_RANDR HAVE_STARTUP_NOTIFICATION"
 
@@ -147,9 +135,7 @@ done
 make CPPFLAGS="$CPPFLAGS" LIBS="$LIBS" %{?_smp_mflags}
 
 %install
-export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
-unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
@@ -157,27 +143,28 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 #desktop-file-install --vendor "" --delete-original \
 #	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 #	$RPM_BUILD_ROOT%{_datadir}/applications/metacity.desktop
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %post
-/sbin/ldconfig
-%gconf_schema_upgrade metacity
+/usr/sbin/ldconfig
 
-%pre
-%gconf_schema_prepare metacity
+%posttrans
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
-%preun
-%gconf_schema_remove metacity
-
-%postun -p /sbin/ldconfig
+%postun
+/usr/sbin/ldconfig
+if [ $1 -eq 0 ]; then
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+fi
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
 %doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt doc/metacity-theme.dtd rationales.txt
 %{_bindir}/metacity
 %{_bindir}/metacity-message
-%{_sysconfdir}/gconf/schemas/*.schemas
+%{_datadir}/glib-2.0/schemas/*
+%{_datadir}/GConf/gsettings/metacity-schemas.convert
 %{_datadir}/metacity
 %{_datadir}/themes/*
 %{_datadir}/gnome-control-center/keybindings/*
@@ -199,6 +186,32 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
+* Thu Jun 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 2.34.3-2
+- Add options to disable mouse button modifers
+
+* Tue Mar 20 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.3-1
+- Update to new upstream version
+
+* Sat Feb 18 2012 Michael Schwendt <mschwendt@fedoraproject.org> - 2.34.2-3
+- Execute %%postun via /bin/sh not /usr/sbin/ldconfig.
+
+* Wed Feb 15 2012 Florian Müllner <fmuellner@redhat.com> 2.34.2-2
+- Explicitly require gsettings-desktop-schemas
+
+* Thu Feb 09 2012 Florian Müllner <fmuellner@redhat.com> 2.34.2-1
+- Update to 2.34.2
+- Remove patches:
+  - screenshot-forkbomb.patch: screenshot keybindings have been moved
+    to gnome-settings-daemon
+  - workspace.patch: default preference values now defined in
+    gsettings-desktop-schemas
+  - default-window-icon.patch: included upstream
+- Rebase remaining patches
+- Adjust spec file to dropped GConf dependency
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Nov 10 2011 Adam Jackson <ajax@redhat.com> 2.34.1-2
 - Rebuild to break bogus libpng dep
 

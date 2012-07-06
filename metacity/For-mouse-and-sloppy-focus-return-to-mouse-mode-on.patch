@@ -1,7 +1,8 @@
-From e8a6af29a1f57024067a12567e2bd906e6bad5a4 Mon Sep 17 00:00:00 2001
-From: Owen W. Taylor <otaylor@fishsoup.net>
+From a24b336303c50e74f7d5e8582049dfae0d70329d Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
 Date: Tue, 20 Oct 2009 15:13:45 -0400
-Subject: [PATCH] For mouse and sloppy focus, return to "mouse mode" on motion
+Subject: [PATCH] For mouse and sloppy focus, return to "mouse mode" on
+ motion
 
 For mouse and sloppy focus, there are various cases where the focus
 window can be moved away from the focus window. Mostly these relate
@@ -28,7 +29,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=599097
  3 files changed, 210 insertions(+), 50 deletions(-)
 
 diff --git a/src/core/display-private.h b/src/core/display-private.h
-index 19287f3..b14d7d7 100644
+index feee851..fee321c 100644
 --- a/src/core/display-private.h
 +++ b/src/core/display-private.h
 @@ -150,6 +150,14 @@ struct _MetaDisplay
@@ -46,16 +47,16 @@ index 19287f3..b14d7d7 100644
    /* Alt+click button grabs */
    unsigned int window_grab_modifiers;
    
-@@ -497,4 +505,7 @@ void meta_display_queue_autoraise_callback  (MetaDisplay *display,
-                                              MetaWindow  *window);
- void meta_display_remove_autoraise_callback (MetaDisplay *display);
+@@ -501,4 +509,7 @@ void meta_display_remove_autoraise_callback (MetaDisplay *display);
+ /* In above-tab-keycode.c */
+ guint meta_display_get_above_tab_keycode (MetaDisplay *display);
  
 +void meta_display_disable_mouse_mode        (MetaDisplay *display);
 +void meta_display_enable_mouse_mode         (MetaDisplay *display);
 +
  #endif
 diff --git a/src/core/display.c b/src/core/display.c
-index 55c374a..78139bd 100644
+index 2e959b6..5bcf025 100644
 --- a/src/core/display.c
 +++ b/src/core/display.c
 @@ -165,6 +165,9 @@ static void    sanity_check_timestamps   (MetaDisplay *display,
@@ -76,7 +77,7 @@ index 55c374a..78139bd 100644
  
    if (display->grab_old_window_stacking)
      g_list_free (display->grab_old_window_stacking);
-@@ -1816,67 +1820,86 @@ event_callback (XEvent   *event,
+@@ -1778,67 +1782,86 @@ event_callback (XEvent   *event,
        if (window && !serial_is_ignored (display, event->xany.serial) &&
                 event->xcrossing.mode != NotifyGrab && 
                 event->xcrossing.mode != NotifyUngrab &&
@@ -86,8 +87,8 @@ index 55c374a..78139bd 100644
          {
            switch (meta_prefs_get_focus_mode ())
              {
-             case META_FOCUS_MODE_SLOPPY:
-             case META_FOCUS_MODE_MOUSE:
+             case G_DESKTOP_FOCUS_MODE_SLOPPY:
+             case G_DESKTOP_FOCUS_MODE_MOUSE:
 -              display->mouse_mode = TRUE;
 -              if (window->type != META_WINDOW_DOCK &&
 -                  window->type != META_WINDOW_DESKTOP)
@@ -162,7 +163,7 @@ index 55c374a..78139bd 100644
 +                   * alternative mechanism works great.
 +                   */
 +                  if (window->type == META_WINDOW_DESKTOP &&
-+                      meta_prefs_get_focus_mode() == META_FOCUS_MODE_MOUSE &&
++                      meta_prefs_get_focus_mode() == G_DESKTOP_FOCUS_MODE_MOUSE &&
 +                      display->expected_focus_window != NULL)
                      {
                        meta_topic (META_DEBUG_FOCUS,
@@ -185,7 +186,7 @@ index 55c374a..78139bd 100644
 -               * alternative mechanism works great.
 -               */
 -              if (window->type == META_WINDOW_DESKTOP &&
--                  meta_prefs_get_focus_mode() == META_FOCUS_MODE_MOUSE &&
+-                  meta_prefs_get_focus_mode() == G_DESKTOP_FOCUS_MODE_MOUSE &&
 -                  display->expected_focus_window != NULL)
 -                {
 -                  meta_topic (META_DEBUG_FOCUS,
@@ -197,7 +198,7 @@ index 55c374a..78139bd 100644
 -                                                          event->xcrossing.time);
 -                }
                break;
-             case META_FOCUS_MODE_CLICK:
+             case G_DESKTOP_FOCUS_MODE_CLICK:
                break;
              }
 -          
@@ -208,7 +209,7 @@ index 55c374a..78139bd 100644
              meta_window_raise (window);
          }
        break;
-@@ -5140,6 +5163,132 @@ meta_display_remove_autoraise_callback (MetaDisplay *display)
+@@ -5095,6 +5118,132 @@ meta_display_remove_autoraise_callback (MetaDisplay *display)
      }
  }
  
@@ -263,14 +264,14 @@ index 55c374a..78139bd 100644
 +                  meta_display_queue_autoraise_callback (display, window);
 +                }
 +            }
-+          else if (meta_prefs_get_focus_mode () == META_FOCUS_MODE_MOUSE)
++          else if (meta_prefs_get_focus_mode () == G_DESKTOP_FOCUS_MODE_MOUSE)
 +            {
 +              meta_topic (META_DEBUG_FOCUS,
 +                          "Setting focus to no_focus_windowm, since no mouse window.\n");
 +              meta_display_focus_the_no_focus_window (display, screen, timestamp);
 +            }
 +
-+          /* for META_FOCUS_MODE_SLOPPY, if the pointer isn't over a window, we just
++          /* for G_DESKTOP_FOCUS_MODE_SLOPPY, if the pointer isn't over a window, we just
 +           * leave the last window focused */
 +        }
 +    }
@@ -326,7 +327,7 @@ index 55c374a..78139bd 100644
 +   * start checking for motion events to see if we should
 +   * focus the mouse window and return to mouse mode.
 +   */
-+  if (meta_prefs_get_focus_mode () != META_FOCUS_MODE_CLICK)
++  if (meta_prefs_get_focus_mode () != G_DESKTOP_FOCUS_MODE_CLICK)
 +    start_focus_on_motion (display);
 +}
 +
@@ -342,10 +343,10 @@ index 55c374a..78139bd 100644
  void
  meta_display_get_compositor_version (MetaDisplay *display,
 diff --git a/src/core/keybindings.c b/src/core/keybindings.c
-index 63596bb..7d9130f 100644
+index 08d861e..3c0ef95 100644
 --- a/src/core/keybindings.c
 +++ b/src/core/keybindings.c
-@@ -2027,7 +2027,7 @@ process_tab_grab (MetaDisplay *display,
+@@ -2082,7 +2082,7 @@ process_tab_grab (MetaDisplay *display,
            meta_topic (META_DEBUG_FOCUS, "Activating %s due to tab popup "
                        "selection and turning mouse_mode off\n",
                        target_window->desc);
@@ -354,7 +355,7 @@ index 63596bb..7d9130f 100644
            meta_window_activate (target_window, event->xkey.time);
  
            meta_topic (META_DEBUG_KEYBINDINGS,
-@@ -2763,7 +2763,7 @@ handle_panel (MetaDisplay    *display,
+@@ -2686,7 +2686,7 @@ handle_panel (MetaDisplay    *display,
    meta_topic (META_DEBUG_KEYBINDINGS,
                "Sending panel message with timestamp %lu, and turning mouse_mode "
                "off due to keybinding press\n", event->xkey.time);
@@ -363,7 +364,7 @@ index 63596bb..7d9130f 100644
  
    meta_error_trap_push (display);
  
-@@ -2886,7 +2886,7 @@ do_choose_window (MetaDisplay    *display,
+@@ -2809,7 +2809,7 @@ do_choose_window (MetaDisplay    *display,
                        "Activating %s and turning off mouse_mode due to "
                        "switch/cycle windows with no modifiers\n",
                        initial_selection->desc);
@@ -372,7 +373,7 @@ index 63596bb..7d9130f 100644
            meta_window_activate (initial_selection, event->xkey.time);
          }
        else if (meta_display_begin_grab_op (display,
-@@ -2915,7 +2915,7 @@ do_choose_window (MetaDisplay    *display,
+@@ -2838,7 +2838,7 @@ do_choose_window (MetaDisplay    *display,
                            "modifier was released prior to grab\n",
                            initial_selection->desc);
                meta_display_end_grab_op (display, event->xkey.time);
@@ -381,7 +382,7 @@ index 63596bb..7d9130f 100644
                meta_window_activate (initial_selection, event->xkey.time);
              }
            else
-@@ -3156,7 +3156,7 @@ handle_move_to_workspace  (MetaDisplay    *display,
+@@ -3079,7 +3079,7 @@ handle_move_to_workspace  (MetaDisplay    *display,
            meta_topic (META_DEBUG_FOCUS,
                        "Resetting mouse_mode to FALSE due to "
                        "handle_move_to_workspace() call with flip set.\n");
@@ -391,4 +392,5 @@ index 63596bb..7d9130f 100644
                                                window,
                                                event->xkey.time);
 -- 
-1.6.5.rc2
+1.7.9
+

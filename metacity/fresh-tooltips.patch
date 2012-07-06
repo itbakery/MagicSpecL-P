@@ -145,7 +145,7 @@ diff -up metacity-2.30.2/src/ui/fixedtip.c.fresh-tooltips metacity-2.30.2/src/ui
 +}
 +
  static gint
--expose_handler (GtkTooltips *tooltips)
+-expose_handler (GtkTooltip *tooltips)
 +expose_handler (GtkWidget *window)
  {
 -  gtk_paint_flat_box (gtk_widget_get_style (tip), gtk_widget_get_window (tip),

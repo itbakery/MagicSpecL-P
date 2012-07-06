@@ -1,5 +1,5 @@
-From a17fb47e08257d09e1e795e8114b21b134b1f3c2 Mon Sep 17 00:00:00 2001
-From: Owen W. Taylor <otaylor@fishsoup.net>
+From 0734ddbfaacff73b80747272ad7044ff904290f6 Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
 Date: Mon, 19 Oct 2009 18:43:00 -0400
 Subject: [PATCH] Don't focus ancestor window on a different workspace
 
@@ -20,10 +20,10 @@ https://bugzilla.gnome.org/show_bug.cgi?id=598995
  1 files changed, 4 insertions(+), 1 deletions(-)
 
 diff --git a/src/core/workspace.c b/src/core/workspace.c
-index a0170a6..92993a7 100644
+index e877b19..6ffea30 100644
 --- a/src/core/workspace.c
 +++ b/src/core/workspace.c
-@@ -969,7 +969,10 @@ focus_ancestor_or_mru_window (MetaWorkspace *workspace,
+@@ -975,7 +975,10 @@ focus_ancestor_or_mru_window (MetaWorkspace *workspace,
        MetaWindow *ancestor;
        ancestor = NULL;
        meta_window_foreach_ancestor (not_this_one, record_ancestor, &ancestor);
@@ -36,4 +36,5 @@ index a0170a6..92993a7 100644
            meta_topic (META_DEBUG_FOCUS,
                        "Focusing %s, ancestor of %s\n", 
 -- 
-1.6.5.rc2
+1.7.9
+

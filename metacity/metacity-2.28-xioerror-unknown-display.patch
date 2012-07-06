@@ -1,5 +1,5 @@
-From 7c30ba2d034050e8e7d1776ea7541495bdf898b3 Mon Sep 17 00:00:00 2001
-From: Owen W. Taylor <otaylor@fishsoup.net>
+From 04f775d77d53bca92faee883258d787b89255ef8 Mon Sep 17 00:00:00 2001
+From: "Owen W. Taylor" <otaylor@fishsoup.net>
 Date: Fri, 20 Nov 2009 10:42:07 -0500
 Subject: [PATCH] Handle XError and XIOError for unknown displays
 
@@ -54,5 +54,5 @@ index 8de4608..59f9c71 100644
  
    /* Xlib would force an exit anyhow */
 -- 
-1.6.5.2
+1.7.9
 

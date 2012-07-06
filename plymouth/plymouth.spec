@@ -1,12 +1,12 @@
-%define plymouthdaemon_execdir /sbin
-%define plymouthclient_execdir /bin
-%define plymouth_libdir /%{_lib}
+%define plymouthdaemon_execdir %{_sbindir}
+%define plymouthclient_execdir %{_bindir}
+%define plymouth_libdir %{_libdir}
 %define plymouth_initrd_file /boot/initrd-plymouth.img
 
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
-Version: 0.8.4
-Release: 0.20110810.3%{?dist}
+Version: 0.8.5.1
+Release: 3%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -21,11 +21,10 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: system-logos
 Requires(post): plymouth-scripts
 Requires: initscripts >= 8.83-1
+Conflicts: filesystem < 3
+Conflicts: systemd < 185-3
 
 BuildRequires: pkgconfig(libdrm)
-BuildRequires: pkgconfig(libdrm_intel)
-BuildRequires: pkgconfig(libdrm_radeon)
-BuildRequires: pkgconfig(libdrm_nouveau)
 BuildRequires: kernel-headers
 
 Obsoletes: plymouth-text-and-details-only < %{version}-%{release}
@@ -87,7 +86,7 @@ and headers needed to develop 3rd party splash plugins for Plymouth.
 %package scripts
 Summary: Plymouth related scripts
 Group: Applications/System
-Requires: findutils, coreutils, gzip, cpio, dracut
+Requires: findutils, coreutils, gzip, cpio, dracut, plymouth
 
 %description scripts
 This package contains scripts that help integrate Plymouth with
@@ -247,9 +246,10 @@ sed -i -e 's/fade-in/charge/g' src/plymouthd.defaults
            --with-background-color=0x3391cd                      \
            --disable-gdm-transition                              \
            --enable-systemd-integration                          \
-           --with-system-root-install                            \
+           --without-system-root-install                         \
            --with-rhgb-compat-link                               \
-           --without-log-viewer
+           --without-log-viewer					 \
+           --disable-libkms
 
 make
 
@@ -264,9 +264,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/plymouth/glow.so
 
 find $RPM_BUILD_ROOT -name '*.a' -exec rm -f {} \;
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} \;
-
-# Temporary symlink until rc.sysinit is fixed
-(cd $RPM_BUILD_ROOT%{_bindir}; ln -s ../../bin/plymouth)
 
 mkdir -p $RPM_BUILD_ROOT%{_localstatedir}/lib/plymouth
 cp $RPM_SOURCE_DIR/boot-duration $RPM_BUILD_ROOT%{_datadir}/plymouth/default-boot-duration
@@ -286,6 +283,10 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow
 # Add compat script for upgrades
 cp $RPM_SOURCE_DIR/plymouth-set-default-plugin $RPM_BUILD_ROOT%{_sbindir}
 chmod +x $RPM_BUILD_ROOT%{_sbindir}/plymouth-set-default-plugin
+
+cp -rf %{buildroot}/lib/systemd %{buildroot}%{_prefix}/lib/
+rm -rf %{buildroot}/lib
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -392,6 +393,7 @@ fi
 %{_localstatedir}/spool/plymouth
 %{_mandir}/man?/*
 %ghost %{_localstatedir}/lib/plymouth/boot-duration
+%{_prefix}/lib/systemd/system/plymouth-*.service
 
 %files devel
 %defattr(-, root, root)
@@ -496,6 +498,36 @@ fi
 %defattr(-, root, root)
 
 %changelog
+* Mon Jun 25 2012 Adam Jackson <ajax@redhat.com> 0.8.5.1-3
+- Rebuild without libkms
+
+* Wed Jun 06 2012 Ray Strode <rstrode@redhat.com> 0.8.5.1-2
+- Add %{_prefix} to systemd service path
+
+* Wed Jun 06 2012 Ray Strode <rstrode@redhat.com> 0.8.5.1-1
+- Update to latest release
+- Ship systemd service files
+- Conflict with old systemd
+
+* Tue Apr 24 2012 Richard Hughes <rhughes@redhat.com> 0.8.4-0.20120319.3
+- Disable the nouveau driver as I've broken it with the new libdrm ABI
+
+* Tue Mar 20 2012 Daniel Drake <dsd@laptop.org> 0.8.4-0.20120319.1
+- Don't try to build against libdrm_intel on non-intel architectures
+
+* Mon Mar 19 2012 Ray Strode <rstrode@redhat.com> 0.8.4-0.20120319.1
+- Update to latest snapshot
+
+* Mon Mar 12 2012 Ray Strode <rstrode@redhat.com> 0.8.4-0.20110810.6
+- Don't require libdrm_intel on non intel arches
+
+* Mon Feb 20 2012 Adam Williamson <awilliam@redhat.com> 0.8.4-0.20110810.5
+- make plymouth-scripts require plymouth (RH #794894)
+
+* Wed Jan 25 2012 Harald Hoyer <harald@redhat.com> 0.8.4-0.20110810.4
+- install everything in /usr
+  https://fedoraproject.org/wiki/Features/UsrMove
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.4-0.20110810.3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

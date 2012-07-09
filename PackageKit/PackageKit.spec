@@ -2,8 +2,8 @@
 
 Summary:   Package management service
 Name:      PackageKit
-Version:   0.7.3
-Release:   2%{?dist}
+Version:   0.8.1
+Release:   5%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.packagekit.org
 Source0:   http://www.packagekit.org/releases/%{name}-%{version}.tar.xz
@@ -14,14 +14,21 @@ Patch0:    PackageKit-0.3.8-Fedora-Vendor.conf.patch
 # Fedora specific: the yum backend doesn't do time estimation correctly
 Patch1:    PackageKit-0.4.4-Fedora-turn-off-time.conf.patch
 
+# Upstreamable?  allow use of xulrunner2 for browser-plugin support
+Patch4: PackageKit-0.7.4-xulrunner2.patch
+
+# Upstream already
+Patch5: PackageKit-0.8.1-master.patch
+
 Requires: PackageKit-glib = %{version}-%{release}
 Requires: PackageKit-backend
 Requires: shared-mime-info
 Requires: comps-extras
-%if 0%{?rhel} == 0
+Requires: systemd
 Requires: preupgrade
-%endif
 
+# required by patch4
+BuildRequires: automake gtk-doc libtool
 BuildRequires: glib2-devel >= 2.16.1
 BuildRequires: dbus-devel  >= 1.1.1
 BuildRequires: dbus-glib-devel >= 0.74
@@ -50,6 +57,7 @@ BuildRequires: cppunit-devel
 BuildRequires: pango-devel
 BuildRequires: pm-utils-devel
 BuildRequires: fontconfig-devel
+BuildRequires: systemd-devel
 BuildRequires: gobject-introspection-devel
 BuildRequires: zif-devel >= 0.2.5
 
@@ -87,7 +95,6 @@ Provides: PackageKit-backend
 %description zif
 A backend for PackageKit to enable Zif functionality.
 
-%if 0%{?rhel} == 0
 %package smart
 Summary: PackageKit SMART backend
 Group: System Environment/Libraries
@@ -96,7 +103,6 @@ Requires: %{name} = %{version}-%{release}
 
 %description smart
 A backend for PackageKit to enable SMART functionality.
-%endif
 
 %package docs
 Summary: Documentation for PackageKit
@@ -246,22 +252,23 @@ user to restart the computer or remove and re-insert the device.
 %setup -q
 %patch0 -p1 -b .fedora
 %patch1 -p1 -b .no-time
+%patch4 -p1 -b .xulrunner2
+%patch5 -p1 -b .master
+NOCONFIGURE=1 ./autogen.sh
 
 %build
 %configure \
         --disable-static \
         --enable-yum \
         --enable-zif \
-%if 0%{?rhel} == 0
         --enable-smart \
         --enable-introspection \
-%endif
         --with-default-backend=auto \
         --disable-local \
         --disable-strict \
         --disable-tests
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -270,6 +277,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libpackagekit*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-backend/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/packagekit-plugins/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/mozilla/plugins/packagekit-plugin.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-2.0/modules/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/gtk-3.0/modules/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/libpackagekit-action-lookup.la
 
@@ -288,10 +296,11 @@ pushd ${RPM_BUILD_ROOT}%{_datadir}/PackageKit > /dev/null
 ln -s ../pixmaps/comps icons
 popd > /dev/null
 magic_rpm_clean.sh
-%find_lang %name || touch %{name}.lang
+%find_lang %name || touch %name.lang
 
 %post
 update-mime-database %{_datadir}/mime &> /dev/null || :
+systemctl enable packagekit-offline-update.service &> /dev/null || :
 
 %postun
 update-mime-database %{_datadir}/mime &> /dev/null || :
@@ -334,6 +343,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_datadir}/mime/packages/packagekit-*.xml
 %{_datadir}/PackageKit/pk-upgrade-distro.sh
 %{_libexecdir}/packagekitd
+%{_libexecdir}/pk-trigger-offline-update
 %{_bindir}/pkmon
 %{_bindir}/pkcon
 %{_bindir}/pkgenpack
@@ -347,17 +357,13 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_libdir}/packagekit-plugins/*.so
 %{_libdir}/girepository-1.0/PackageKitPlugin-1.0.typelib
 %{_datadir}/dbus-1/interfaces/*.xml
+/usr/lib/systemd/system/packagekit-offline-update.service
+%{_libexecdir}/pk-*offline-update
+%{_libdir}/gtk-2.0/modules/libpk-gtk-module.so
 
 %files docs
 %defattr(-,root,root,-)
 %{_datadir}/gtk-doc/html/PackageKit
-%dir %{_datadir}/PackageKit/website
-%{_datadir}/PackageKit/website/*.html
-%{_datadir}/PackageKit/website/*.css
-%dir %{_datadir}/PackageKit/website/img
-%{_datadir}/PackageKit/website/img/*.png
-%dir %{_datadir}/PackageKit/website/img/thumbnails
-%{_datadir}/PackageKit/website/img/thumbnails/*.png
 
 %if 0%{?rhel} == 0
 %files smart
@@ -374,11 +380,13 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %dir %{_datadir}/PackageKit/helpers/yum
 %{_datadir}/PackageKit/helpers/yum/*
 
+%if 0%{?rhel} == 0
 %files zif
 %defattr(-,root,root,-)
 %{_libdir}/packagekit-backend/libpk_backend_zif.so
 %dir %{_datadir}/PackageKit/helpers/zif
 %{_datadir}/PackageKit/helpers/zif/*
+%endif
 
 %files yum-plugin
 %defattr(-, root, root)
@@ -406,8 +414,7 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %files browser-plugin
 %defattr(-,root,root,-)
-#%{_libdir}/mozilla/plugins/packagekit-plugin.so
-# FIXME: F17 doesn't have a new enough npapi package
+%{_libdir}/mozilla/plugins/packagekit-plugin.so
 
 %files gstreamer-plugin
 %defattr(-,root,root,-)
@@ -457,8 +464,58 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_libdir}/pkgconfig/packagekit-plugin.pc
 
 %changelog
-* Fri Apr 13 2012 Liu Di <liudidi@gmail.com> - 0.7.3-2
-- 为 Magic 3.0 重建
+* Thu Jul 05 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-5
+- Correctly write the /var/lib/PackageKit/prepared-update file.
+
+* Mon Jul 02 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-4
+- Fix several reported problems with the offline-update funtionality.
+
+* Fri Jun 29 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-3
+- Fix several reported problems with the offline-update funtionality.
+
+* Thu Jun 28 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-2
+- Apply a combined patch from master to fix several reported issues
+  with the OS update feature.
+
+* Mon Jun 25 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-1
+- New upstream release
+
+* Thu Jun 07 2012 Matthias Clasen <mclasen@redhat.com> - 0.7.4-8
+- Rebuild
+
+* Thu Jun 07 2012 Adam Jackson <ajax@redhat.com> 0.7.4-7
+- Rebuild for new libzif
+
+* Tue May 29 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.4-6
+- Do not build the PackageKit-zif package on RHEL.
+
+* Fri May 25 2012 Rex Dieter <rdieter@fedoraproject.org> 0.7.4-5
+- re-enable -browser-plugin content
+- make V=1
+
+* Thu May 17 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.4-4
+- Fix an obvious off-by-one when parsing the signature
+- Resolves: #794927
+
+* Fri May 11 2012 Nils Philippsen <nils@redhat.com> - 0.7.4-3
+- yum: don't perceive all updates as untrusted (#821015)
+
+* Wed Apr 25 2012 Rex Dieter <rdieter@fedoraproject.org> 0.7.4-2
+- track sonames so abi bumps aren't a surprise
+- -qt-devel: fix dir ownership
+
+* Tue Apr 24 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.4-1
+- New upstream release
+- Add GType's for packagekit-glib2 enumerations
+- Always set GPG checking members if present for yum.
+- Do not allow an empty resolve call to be passed down to the backends
+- Do not include the website in the tarball
+- Drop --print-reply from dbus-send command used on suspend/resume
+- Install pk-task-sync.h as part of the public API
+- Speed up get_package_list
+
+* Fri Apr 13 2012 Jindrich Novy <jnovy@redhat.com> - 0.7.3-2
+- rebuild against new librpm
 
 * Thu Mar 01 2012 Richard Hughes  <rhughes@redhat.com> - 0.7.3-1
 - New upstream release

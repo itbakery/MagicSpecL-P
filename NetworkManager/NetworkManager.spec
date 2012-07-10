@@ -1,13 +1,12 @@
 %define dbus_version 1.1
 %define dbus_glib_version 0.86-4
 
-%define gtk3_version	3.0.1
 %define glib2_version	2.24.0
 %define wireless_tools_version 1:28-0pre9
 %define libnl3_version 3.2.6
 %define ppp_version 2.4.5
 
-%define snapshot .git20120328_2
+%define snapshot .git20120521
 %define realversion 0.9.4.0
 
 %define systemd_dir %{_prefix}/lib/systemd/system
@@ -16,7 +15,7 @@ Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
 Version: 0.9.4
-Release: 2%{snapshot}%{?dist}
+Release: 5%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -47,7 +46,6 @@ Requires: ppp = %{ppp_version}
 Requires: avahi-autoipd
 Requires: dnsmasq
 Requires: udev
-Requires: mobile-broadband-provider-info >= 0.20090602
 Requires: ModemManager >= 0.4
 Obsoletes: dhcdbd
 
@@ -61,16 +59,12 @@ BuildRequires: dbus-devel >= %{dbus_version}
 BuildRequires: dbus-glib-devel >= %{dbus_glib_version}
 BuildRequires: wireless-tools-devel >= %{wireless_tools_version}
 BuildRequires: glib2-devel >= %{glib2_version}
-BuildRequires: gtk3-devel >= %{gtk3_version}
-BuildRequires: GConf2-devel
-BuildRequires: libgnome-keyring-devel
 BuildRequires: gobject-introspection-devel >= 0.10.3
 BuildRequires: gettext-devel
 BuildRequires: /usr/bin/autopoint
 BuildRequires: pkgconfig
 BuildRequires: wpa_supplicant
 BuildRequires: libnl3-devel >= %{libnl3_version}
-BuildRequires: libnotify-devel >= 0.4
 BuildRequires: perl(XML::Parser)
 BuildRequires: automake autoconf intltool libtool
 BuildRequires: ppp = %{ppp_version}
@@ -82,18 +76,11 @@ BuildRequires: gtk-doc
 BuildRequires: libudev-devel
 BuildRequires: libuuid-devel
 BuildRequires: libgudev1-devel >= 143
-BuildRequires: desktop-file-utils
 # No wimax or bluetooth on s390
 %ifnarch s390 s390x
 BuildRequires: wimax-devel
-BuildRequires: gnome-bluetooth-libs-devel >= 2.27.7.1-1
 %endif
 BuildRequires: systemd systemd-devel
-%if 0%{?fedora} < 17
-# systemd.pc is in systemd-units for F16 and below
-BuildRequires: systemd-units
-%endif
-BuildRequires: iso-codes-devel
 
 %description
 NetworkManager is a system network service that manages your network devices
@@ -183,7 +170,6 @@ intltoolize --force
 	--with-docs=yes \
 	--with-system-ca-path=/etc/pki/tls/certs \
 	--with-tests=yes \
-	--with-udev-dir=%{_prefix}/lib/udev \
 	--with-pppd-plugin-dir=%{_libdir}/pppd/%{ppp_version} \
 	--with-dist-version=%{version}-%{release}
 
@@ -220,6 +206,8 @@ install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 %{__cp} ORIG-docs/libnm-glib/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-glib/
 %{__cp} ORIG-docs/libnm-util/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-util/
 
+%{__cp} -rf %{buildroot}/lib/udev %{buildroot}/usr/lib
+%{__rm} -rf %{buildroot}/lib
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -289,7 +277,6 @@ exit 0
 %{_mandir}/man1/*
 %{_mandir}/man5/*
 %{_mandir}/man8/*
-%dir %{_localstatedir}/run/NetworkManager
 %dir %{_localstatedir}/lib/NetworkManager
 %{_prefix}/libexec/nm-crash-logger
 %dir %{_datadir}/NetworkManager
@@ -298,7 +285,7 @@ exit 0
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
 %{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
 %{_datadir}/polkit-1/actions/*.policy
-%{_prefix}/lib/udev/rules.d/*.rules
+/usr/lib/udev/rules.d/*.rules
 # systemd stuff
 %{systemd_dir}/NetworkManager.service
 %{systemd_dir}/NetworkManager-wait-online.service
@@ -351,6 +338,16 @@ exit 0
 %{_datadir}/gtk-doc/html/libnm-util/*
 
 %changelog
+* Mon May 21 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.4-5.git20120521
+- Update to git snapshot
+
+* Tue May  8 2012 Dan Winship <danw@redhat.com> - 0.9.4-4.git20120502
+- NM no longer uses /var/run/NetworkManager, so don't claim to own it.
+  (rh #656638)
+
+* Wed May  2 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.4-3.git20120502%{?dist}
+- Update to git snapshot
+
 * Wed Mar 28 2012 Colin Walters <walters@verbum.org> - 1:0.9.4-2.git20120328_2%{?dist}
 - Add _isa for internal requires; otherwise depsolving may pull in an
   arbitrary architecture.

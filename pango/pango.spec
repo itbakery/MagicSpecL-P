@@ -8,8 +8,8 @@
 
 Summary: System for layout and rendering of internationalized text
 Name: pango
-Version: 1.29.5
-Release: 2%{?dist}
+Version: 1.30.1
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
@@ -21,6 +21,8 @@ Requires: freetype >= %{freetype_version}
 Requires: freetype >= %{freetype_version}
 Requires: cairo >= %{cairo_version}
 Requires: libthai >= %{libthai_version}
+Requires(post): sed
+Requires(postun): sed
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: pkgconfig >= %{pkgconfig_version}
 BuildRequires: freetype-devel >= %{freetype_version}
@@ -146,9 +148,10 @@ touch $RPM_BUILD_ROOT%{_sysconfdir}/pango/$host/pango.modules
 #
 echo %dir %{_sysconfdir}/pango/$host > modules.files
 echo %ghost %{_sysconfdir}/pango/$host/pango.modules >> modules.files
+magic_rpm_clean.sh
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 umask 0022
 # Deriving /etc/pango/$host location
@@ -166,17 +169,10 @@ host=`echo $host | sed "s/^ppc/powerpc/"`
 # autoconf uses ibm-linux not redhat-linux on s390x
 host=`echo $host | sed "s/^s390\(x\)*-redhat/s390\1-ibm/"`
 
-case "$host" in
-  alpha*|ia64*|powerpc64*|s390x*|sparc64*|x86_64*)
-   %{_bindir}/pango-querymodules-64 > %{_sysconfdir}/pango/$host/pango.modules
-   ;;
-  *)
-   %{_bindir}/pango-querymodules-32 > %{_sysconfdir}/pango/$host/pango.modules
-   ;;
-esac
+%{_bindir}/pango-querymodules-%{__isa_bits} > %{_sysconfdir}/pango/$host/pango.modules || :
 
 %postun
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 if test $1 -gt 0; then
 
@@ -196,14 +192,7 @@ host=`echo $host | sed "s/^ppc/powerpc/"`
 # autoconf uses ibm-linux not redhat-linux (s390x)
 host=`echo $host | sed "s/^s390\(x\)*-redhat/s390\1-ibm/"`
 
-case "$host" in
-  alpha*|ia64*|powerpc64*|s390x*|sparc64*|x86_64*)
-   %{_bindir}/pango-querymodules-64 > %{_sysconfdir}/pango/$host/pango.modules || :
-   ;;
-  *)
-   %{_bindir}/pango-querymodules-32 > %{_sysconfdir}/pango/$host/pango.modules || :
-   ;;
-esac
+%{_bindir}/pango-querymodules-%{__isa_bits} > %{_sysconfdir}/pango/$host/pango.modules || :
 
 fi
 
@@ -238,6 +227,15 @@ fi
 
 
 %changelog
+* Thu Jun 07 2012 Richard Hughes <hughsient@gmail.com> - 1.30.1-1
+- Update to 1.30.1
+
+* Sat May 19 2012 Matthias Clasen <mclasen@redhat.com> - 1.30.0-2
+- Fix up scriptlet dependencies (#684729)
+
+* Wed Mar 28 2012 Richard Hughes <hughsient@gmail.com> - 1.30.0-1
+- Update to 1.30.0
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.29.5-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

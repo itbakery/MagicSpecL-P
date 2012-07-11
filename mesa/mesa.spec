@@ -30,7 +30,7 @@
 Summary: Mesa graphics libraries
 Name: mesa
 Version: 8.0.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.mesa3d.org
@@ -220,6 +220,41 @@ Provides: libgbm-devel
 %description libgbm-devel
 Mesa libgbm development package
 
+%package libvdpau
+Summary: Mesa vdpua library
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description libvdpau
+Mesa vdpau runtime library.
+
+
+%package libvdpau-devel
+Summary: Mesa libvdpau development package
+Group: Development/Libraries
+Requires: mesa-libvdpau%{?_isa} = %{version}-%{release}
+
+%description libvdpau-devel
+Mesa libvdpau development package
+
+%package libxvmc
+Summary: Mesa XvMC library
+Group: System Environment/Libraries
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
+
+%description libxvmc
+Mesa XvMC runtime library.
+
+
+%package libxvmc-devel
+Summary: Mesa libXvMC development package
+Group: Development/Libraries
+Requires: mesa-libxvmc%{?_isa} = %{version}-%{release}
+
+%description libxvmc-devel
+Mesa XvMC development package
 
 %package libwayland-egl
 Summary: Mesa libwayland-egl library
@@ -308,6 +343,8 @@ export CXXFLAGS="$RPM_OPT_FLAGS"
     --with-egl-platforms=x11,wayland,drm \
     --enable-shared-glapi \
     --enable-gbm \
+    --enable-vdpau \
+    --enable-xvmc \
 %if %{with_hardware}
     --with-gallium-drivers=svga,r300,r600,nouveau,swrast \
     --enable-gallium-llvm \
@@ -384,6 +421,10 @@ rm -rf $RPM_BUILD_ROOT
 %postun libGLES -p /sbin/ldconfig
 %post libgbm -p /sbin/ldconfig
 %postun libgbm -p /sbin/ldconfig
+%post libvdpau -p /sbin/ldconfig
+%postun libvdpau -p /sbin/ldconfig
+%post libxvmc -p /sbin/ldconfig
+%postun libxvmc -p /sbin/ldconfig
 %post libwayland-egl -p /sbin/ldconfig
 %postun libwayland-egl -p /sbin/ldconfig
 
@@ -550,7 +591,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/xatracker.pc
 %endif
 
+%files libvdpau
+%defattr(-,root,root,-)
+%{_libdir}/vdpau/libvdpau_*.so.*
+
+%files libvdpau-devel
+%defattr(-,root,root,-)
+%{_libdir}/vdpau/libvdpau_*.so
+
+%files libxvmc
+%defattr(-,root,root,-)
+%{_libdir}/libXvMC*.so.*
+
+%files libxvmc-devel
+%defattr(-,root,root,-)
+%{_libdir}/libXvMC*.so
+
 %changelog
+* Wed Jul 11 2012 Liu Di <liudidi@gmail.com> - 8.0.3-2
+- 为 Magic 3.0 重建
+
 * Mon Apr 02 2012 Adam Jackson <ajax@redhat.com> 8.0.2-2
 - mesa-8.0.1-fix-16bpp.patch: Fix 16bpp in llvmpipe
 

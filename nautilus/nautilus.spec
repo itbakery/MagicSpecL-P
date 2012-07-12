@@ -1,27 +1,24 @@
-%define glib2_version 2.28.0
-%define pango_version 1.28
-%define gtk3_version 3.0.2
-%define gnome_icon_theme_version 1.1.5
-%define libxml2_version 2.4.20
-%define desktop_file_utils_version 0.7
-%define gnome_desktop3_version 2.91.4
-%define redhat_menus_version 0.25
-%define libexif_version 0.5.12
-%define exempi_version 1.99.5
+%define glib2_version 2.31.9
+%define gnome_desktop3_version 3.0.0
+%define pango_version 1.28.3
+%define gtk3_version 3.3.17
+%define libxml2_version 2.7.8
+%define libexif_version 0.6.20
+%define exempi_version 2.1.0
 %define gobject_introspection_version 0.9.5
 
 Name:           nautilus
 Summary:        File manager for GNOME
-Version:        3.3.91
+Version:        3.5.3
 Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
-Source:         http://download.gnome.org/sources/%{name}/3.3/%{name}-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/%{name}/3.5/%{name}-%{version}.tar.xz
 
 URL:            http://projects.gnome.org/nautilus/
-Requires:       magic-menus >= %{redhat_menus_version}
-Requires:       gvfs >= 1.4.0
-Requires:       gnome-icon-theme >= %{gnome_icon_theme_version}
+Requires:       magic-menus
+Requires:       gvfs
+Requires:       gnome-icon-theme
 Requires:       libexif >= %{libexif_version}
 Requires:       gsettings-desktop-schemas
 
@@ -32,14 +29,12 @@ BuildRequires:  libxml2-devel >= %{libxml2_version}
 BuildRequires:  gnome-desktop3-devel >= %{gnome_desktop3_version}
 BuildRequires:  intltool >= 0.40.6-2
 BuildRequires:  libX11-devel
-BuildRequires:  desktop-file-utils >= %{desktop_file_utils_version}
+BuildRequires:  desktop-file-utils
 BuildRequires:  libSM-devel
-BuildRequires:  libtool >= 1.4.2-10
+BuildRequires:  libtool
 BuildRequires:  libexif-devel >= %{libexif_version}
 BuildRequires:  exempi-devel >= %{exempi_version}
 BuildRequires:  gettext
-BuildRequires:  gtk-doc
-BuildRequires:  scrollkeeper
 BuildRequires:  gobject-introspection-devel >= %{gobject_introspection_version}
 BuildRequires:  gsettings-desktop-schemas-devel
 BuildRequires:  libnotify-devel
@@ -58,11 +53,9 @@ Provides:       gnome-volume-manager = 2.24.0-2
 Obsoletes:      eel2 < 2.26.0-3
 Provides:       eel2 = 2.26.0-3
 
-# Why is this still not upstream ?!
+# The selinux patch is here to not lose it, should go upstream and needs
+# cleaning up to work with current nautilus git.
 #Patch4:         nautilus-2.91.8-selinux.patch
-
-Patch7:         rtl-fix.patch
-#Patch8:        nautilus-2.22.1-hide-white-screen.patch
 
 %description
 Nautilus is the file manager and graphical shell for the GNOME desktop
@@ -96,17 +89,8 @@ for developing nautilus extensions.
 %setup -q -n %{name}-%{version}
 
 #%patch4 -p1 -b .selinux
-%patch7 -p1 -b .rtl-fix
 
 %build
-
-gtkdocize
-libtoolize
-aclocal -I m4
-autoconf
-autoheader
-automake
-
 CFLAGS="$RPM_OPT_FLAGS -g -DNAUTILUS_OMIT_SELF_CHECK" %configure --disable-more-warnings --disable-update-mimedb
 
 # drop unneeded direct library deps with --as-needed
@@ -125,32 +109,27 @@ desktop-file-install --delete-original       \
   --add-only-show-in GNOME                                  \
   $RPM_BUILD_ROOT%{_datadir}/applications/*
 
-
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.la
-
-rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
-rm -f $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/icon-theme.cache
-rm -f $RPM_BUILD_ROOT%{_datadir}/icons/hicolor/.icon-theme.cache
-
+magic_rpm_clean.sh
 %find_lang %name
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 %{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null
 
 %postun
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 if [ $1 -eq 0 ]; then
   touch --no-create %{_datadir}/icons/hicolor >&/dev/null || :
   gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 fi
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 
 %files  -f %{name}.lang
 %doc AUTHORS COPYING COPYING-DOCS COPYING.LIB NEWS README
@@ -184,6 +163,27 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/*
 
 %changelog
+* Tue Jun 26 2012 Richard Hughes <hughsient@gmail.com> - 3.5.3-1
+- Update to 3.5.3
+
+* Thu Jun 07 2012 Richard Hughes <hughsient@gmail.com> - 3.5.2-1
+- Update to 3.5.2
+
+* Sat May 05 2012 Kalev Lember <kalevlember@gmail.com> - 3.5.1-1
+- Update to 3.5.1
+
+* Tue Apr 24 2012 Kalev Lember <kalevlember@gmail.com> - 3.4.1-2
+- Silence rpm scriptlet output
+
+* Mon Apr 16 2012 Richard Hughes <hughsient@gmail.com> - 3.4.1-1
+- Update to 3.4.1
+
+* Mon Mar 26 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.4.0-1
+- Update to 3.4.0
+
+* Tue Mar 20 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.3.92-1
+- Update to 3.3.92
+
 * Tue Mar 06 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.3.91-1
 - Update to 3.3.91
 

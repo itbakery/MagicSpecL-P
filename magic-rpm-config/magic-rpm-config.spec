@@ -2,7 +2,7 @@ Summary: Magic specific rpm configuration files.
 Summary(zh_CN.UTF-8): Magic 特定的 rpm 配置文件
 Name: magic-rpm-config
 Version: 3.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL+
 Group: Development/System
 Group(zh_CN.UTF-8): 开发/系统
@@ -40,7 +40,7 @@ install -m 755 %{SOURCE2} ${RPM_BUILD_ROOT}%{_bindir}
 mkdir -p ${RPM_BUILD_ROOT}%{_sysconfdir}/rpm
 install -m 644 %{SOURCE3} ${RPM_BUILD_ROOT}%{_sysconfdir}/rpm
 
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
@@ -53,6 +53,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/*
 
 %changelog
+* Thu Jul 26 2012 Liu Di <liudidi@gmail.com> - 3.0-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 28 2009 Ni Hui <shuizhuyuanluo@126.com> - 2.5-4mgc
 - magic_rpm_clean.sh 增加 /opt/kde4/ 路径目录，添加一些语言
 

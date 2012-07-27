@@ -1,33 +1,58 @@
 Name:		numactl
 Summary:	Library for tuning for Non Uniform Memory Access machines
 Version:	2.0.7
-Release:	2%{dist} 
+Release:	7%{dist} 
 License:	LGPLv2/GPLv2
-Group: 		System Environment/Base
+Group:		System Environment/Base
 URL:		ftp://oss.sgi.com/www/projects/libnuma/download
 Source0:	ftp://oss.sgi.com/www/projects/libnuma/download/numactl-%{version}.tar.gz
 Buildroot:	%{_tmppath}/%{name}-buildroot
 
 Patch1: numactl-2.0.3-rc3-no-nodes-warning.patch
+Patch2: numactl-2.0.7-manpages.patch
+Patch3: numactl-2.0.7-numademo-alloc.patch
+Patch4: numactl-2.0.7-numademo-msize-check.patch
 
-ExcludeArch: s390 s390x
+ExcludeArch: s390 s390x %{arm}
 
 %description
 Simple NUMA policy support. It consists of a numactl program to run
-other programs with a specific NUMA policy and a libnuma to do
-allocations with NUMA policy in applications.
+other programs with a specific NUMA policy.
+
+%package libs
+Summary: libnuma libraries
+Group: System Environment/Libraries
+
+%description libs
+numactl-libs provides libnuma, a library to do allocations with
+NUMA policy in applications.
 
 %package devel
 Summary: Development package for building Applications that use numa
 Group: System Environment/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs = %{version}-%{release}
 
 %description devel
 Provides development headers for numa library calls
 
+%package compat
+Summary: Library for tuning for Non Uniform Memory Access machines
+Obsoletes: numactl < 2.0.7-5
+
+Requires:  numactl = 2.0.7-5
+Requires:  numactl-libs = 2.0.7-5
+
+%description compat
+This package only exists to help transition numactl users to the new
+package split. It will be removed after one distribution release cycle, please
+do not reference it or depend on it in any way.
+
 %prep
 %setup -q -n %{name}-%{version}
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 make CFLAGS="$RPM_OPT_FLAGS -I."
@@ -40,17 +65,19 @@ mkdir -p $RPM_BUILD_ROOT%{_includedir}
 mkdir -p $RPM_BUILD_ROOT%{_mandir}/man8
 
 make prefix=$RPM_BUILD_ROOT/usr libdir=$RPM_BUILD_ROOT/%{_libdir} install
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(-,root,root,-)
-%{_libdir}/libnuma.so.1
 %{_bindir}/numactl
 %{_bindir}/numademo
 %{_bindir}/numastat
@@ -58,6 +85,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/migspeed
 %{_bindir}/migratepages
 %{_mandir}/man8/*.8*
+
+%files libs
+%defattr(-,root,root,-)
+%{_libdir}/libnuma.so.1
 
 %files devel
 %defattr(-,root,root,-)
@@ -69,8 +100,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 2.0.7-2
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat May 19 2012 Petr Holasek <pholasek@redhat.com> - 2.0.7-6
+- numademo segfault fix (bz823125, bz823127)
+
+* Sun Apr 15 2012 Petr Holasek <pholasek@redhat.com> - 2.0.7-5
+- Library splitted out of numactl package to numactl-libs
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Jan 01 2012 Anton Arapov <anton@redhat.com> - 2.0.7-3
+- Include missing manpages
+
+* Sat Jun 18 2011 Peter Robinson <pbrobinson@gmail.com> - 2.0.7-2
+- Exclude ARM platforms
 
 * Fri Apr 15 2011 Anton Arapov <anton@redhat.com> - 2.0.7-1
 - Update to latest upstream stable version (bz 696703)

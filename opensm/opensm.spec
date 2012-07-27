@@ -1,6 +1,6 @@
 Name: opensm
-Version: 3.3.12
-Release: 1%{?dist}
+Version: 3.3.13
+Release: 3%{?dist}
 Summary: OpenIB InfiniBand Subnet Manager and management utilities
 Group: System Environment/Daemons
 License: GPLv2 or BSD
@@ -10,6 +10,7 @@ Source1: opensm.conf
 Source2: opensm.logrotate
 Source3: opensm.initd
 Source4: opensm.sysconfig
+Patch0: opensm-3.3.13-prefix.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: libibmad-devel = 1.3.8, libtool, bison, flex, byacc
 Requires: %{name}-libs = %{version}-%{release}, logrotate, rdma
@@ -47,6 +48,7 @@ Static version of opensm libraries
 
 %prep
 %setup -q
+%patch0 -p1 -b .prefix
 
 %build
 %configure --with-opensm-conf-sub-dir=rdma
@@ -65,6 +67,7 @@ install -D -m644 %{SOURCE2} %{buildroot}%{_sysconfdir}/logrotate.d/opensm
 install -D -m755 %{SOURCE3} %{buildroot}%{_initddir}/opensm
 install -D -m644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/opensm
 mkdir -p ${RPM_BUILD_ROOT}/var/cache/opensm
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -112,6 +115,19 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.13-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Mar 13 2012 Doug Ledford <dledford@redhat.com> - 3.3.13-2
+- Fix the config file comment in the opensm init script
+- Resolves: bz802727
+
+* Tue Feb 28 2012 Doug Ledford <dledford@redhat.com> - 3.3.13-1
+- Update to latest upstream version
+- Fix a minor issue in init scripts that would cause systemd to try and
+  start/stop things in the wrong order
+- Add a patch to allow us to specify the subnet prefix on the command line
+
 * Tue Jan 03 2012 Doug Ledford <dledford@redhat.com> - 3.3.12-1
 - Update to latest upstream version
 

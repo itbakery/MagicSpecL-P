@@ -4,12 +4,13 @@
 #
 # chkconfig: - 15 85
 # description: Activates/Deactivates InfiniBand Subnet Manager
-# config: /etc/ofed/opensm.conf
+# config: /etc/rdma/opensm.conf
 #
 ### BEGIN INIT INFO
 # Provides:       opensm
 # Default-Stop: 0 1 2 3 4 5 6
-# Required-Start: $openib
+# Required-Start: rdma
+# Required-Stop: rdma
 # Short-Description: Starts/Stops the InfiniBand Subnet Manager
 # Description: Starts/Stops the InfiniBand Subnet Manager
 ### END INIT INFO
@@ -47,8 +48,11 @@ start()
     [ -n "$GUIDS" ] && echo -n "$GUID_CNT guids "
     [ -n "$CONFIGS" ] && echo -n "$CONFIG_CNT instances "
     if [ -n "$GUIDS" ]; then
+	SUBNET_COUNT=0
         for guid in $GUIDS; do
-            $prog -B $prio -g $guid >/dev/null 2>&1
+	    SUBNET_PREFIX=`printf "0xfe800000000000%02d" $SUBNET_COUNT`
+            $prog -B $prio -g $guid --subnet_prefix $SUBNET_PREFIX >/dev/null 2>&1
+	    let SUBNET_COUNT++
         done
     elif [ -n "$CONFIGS" ]; then
         for config in $CONFIGS; do

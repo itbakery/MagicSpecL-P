@@ -92,7 +92,7 @@ install -m 644 %SOURCE3 .
 
 rm ${RPM_BUILD_ROOT}/%{_mandir}/man1/openipmigui.1
 
-magic_rpm_clean.sh
+#magic_rpm_clean.sh
 
 %post
 /usr/sbin/chkconfig --add ipmi

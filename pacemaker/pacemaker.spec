@@ -22,7 +22,7 @@
 
 %global cs_major %(pkg-config corosync --modversion  | awk -F . '{print $1}')
 %global cs_minor %(pkg-config corosync --modversion  | awk -F . '{print $2}')
-%global rawhide  1
+%global rawhide  %(test ! -e /etc/yum.repos.d/fedora-rawhide.repo; echo $?)
 
 # Conditionals
 # Invoke "rpmbuild --without <feature>" or "rpmbuild --with <feature>"
@@ -43,7 +43,7 @@
 %bcond_with gcov
 
 # We generate docs using Publican, Asciidoc and Inkscape, but they're not available everywhere
-%bcond_without doc
+%bcond_with doc
 
 # Use a different versioning scheme
 %bcond_with pre_release
@@ -91,25 +91,12 @@ Provides:      heartbeat >= 3.0.4
 Requires:      perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %endif
 
-%if 0%{?suse_version}
-# net-snmp-devel on SLES10 does not suck in tcpd-devel automatically
-BuildRequires: tcpd-devel
-# Suse splits this off into a separate package
-Requires:      python-curses python-xml
-BuildRequires: python-curses python-xml
-%endif
-
 # Required for core functionality
 BuildRequires: automake autoconf libtool pkgconfig python libtool-ltdl-devel
 BuildRequires: glib2-devel cluster-glue-libs-devel libxml2-devel libxslt-devel 
 BuildRequires: pkgconfig python-devel gcc-c++ bzip2-devel pam-devel
 
-%if 0%{?suse_version} >= 1100
-# Renamed since opensuse-11.0
-BuildRequires:  libgnutls-devel
-%else
 BuildRequires:  gnutls-devel
-%endif
 
 
 # Enables optional functionality
@@ -333,13 +320,13 @@ if [ $1 -eq 0 ]; then
         /usr/sbin/chkconfig --del pacemaker || :
 fi
 
-%post -n %{name}-libs -p /usr/sbin/ldconfig
+%post -n %{name}-libs -p /sbin/ldconfig
 
-%postun -n %{name}-libs -p /usr/sbin/ldconfig
+%postun -n %{name}-libs -p /sbin/ldconfig
 
-%post -n %{name}-cluster-libs -p /usr/sbin/ldconfig
+%post -n %{name}-cluster-libs -p /sbin/ldconfig
 
-%postun -n %{name}-cluster-libs -p /usr/sbin/ldconfig
+%postun -n %{name}-cluster-libs -p /sbin/ldconfig
 
 %files
 ###########################################################

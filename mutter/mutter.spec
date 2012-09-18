@@ -1,12 +1,12 @@
 Name:          mutter
-Version:       3.3.90
-Release:       2%{?dist}
+Version:       3.5.5
+Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 Group:         User Interface/Desktops
 License:       GPLv2+
 #VCS:	       git:git://git.gnome.org/mutter
-Source0:       http://download.gnome.org/sources/%{name}/3.3/%{name}-%{version}.tar.xz
+Source0:       http://download.gnome.org/sources/%{name}/3.5/%{name}-%{version}.tar.xz
 
 BuildRequires: clutter-devel >= 1.7.5
 BuildRequires: pango-devel
@@ -29,6 +29,10 @@ BuildRequires: desktop-file-utils
 BuildRequires: gtk-doc gnome-common intltool
 BuildRequires: libcanberra-devel
 BuildRequires: gsettings-desktop-schemas-devel
+
+# Make sure this can't be installed with an old gnome-shell build because of
+# an ABI change in mutter 3.4.1 / gnome-shell 3.4.1
+Conflicts: gnome-shell < 3.4.1
 
 Requires: control-center-filesystem
 Requires: startup-notification
@@ -62,9 +66,9 @@ utilities for testing Metacity/Mutter themes.
 
 %build
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; fi;
- %configure --disable-static --with-gtk=3.0 --enable-compile-warnings=maximum)
+ %configure --disable-static --enable-compile-warnings=maximum)
 
-SHOULD_HAVE_DEFINED="HAVE_SM HAVE_XINERAMA HAVE_XFREE_XINERAMA HAVE_SHAPE HAVE_RANDR HAVE_STARTUP_NOTIFICATION"
+SHOULD_HAVE_DEFINED="HAVE_SM HAVE_SHAPE HAVE_RANDR HAVE_STARTUP_NOTIFICATION"
 
 for I in $SHOULD_HAVE_DEFINED; do
   if ! grep -q "define $I" config.h; then
@@ -84,22 +88,22 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 #Remove libtool archives.
 rm -rf %{buildroot}/%{_libdir}/*.la
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 # Mutter contains a .desktop file so we just need to validate it
 desktop-file-validate %{buildroot}/%{_datadir}/applications/%{name}.desktop
 
-%post -p /sbin/ldconfig
+%post -p /usr/sbin/ldconfig
 
 %postun
-/sbin/ldconfig
+/usr/sbin/ldconfig
 if [ $1 -eq 0 ]; then
-  glib-compile-schemas %{_datadir}/glib-2.0/schemas
+  glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
 %posttrans
-glib-compile-schemas %{_datadir}/glib-2.0/schemas
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
 %doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt
@@ -127,6 +131,46 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas
 %doc %{_mandir}/man1/mutter-window-demo.1.gz
 
 %changelog
+* Tue Aug 07 2012 Richard Hughes <hughsient@gmail.com> - 3.5.5-1
+- Update to 3.5.5
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Richard Hughes <hughsient@gmail.com> - 3.5.4-1
+- Update to 3.5.4
+
+* Tue Jun 26 2012 Matthias Clasen <mclasen@redhat.com> - 3.5.3-1
+- Update to 3.5.3
+
+* Fri Jun  8 2012 Matthias Clasen <mclasen@redhat.com> - 3.5.2-3
+- Make resize grip area larger
+
+* Thu Jun 07 2012 Matthias Clasen <mclasen@redhat.com> - 3.5.2-2
+- Don't check for Xinerama anymore - it is now mandatory
+
+* Thu Jun 07 2012 Richard Hughes <hughsient@gmail.com> - 3.5.2-1
+- Update to 3.5.2
+- Remove upstreamed patches
+
+* Wed May 09 2012 Adam Jackson <ajax@redhat.com> 3.4.1-3
+- mutter-never-slice-shape-mask.patch, mutter-use-cogl-texrect-api.patch:
+  Fix window texturing on hardware without ARB_texture_non_power_of_two
+  (#813648)
+
+* Wed Apr 18 2012 Kalev Lember <kalevlember@gmail.com> - 3.4.1-2
+- Silence glib-compile-schemas scriplets
+
+* Wed Apr 18 2012 Kalev Lember <kalevlember@gmail.com> - 3.4.1-1
+- Update to 3.4.1
+- Conflict with gnome-shell versions older than 3.4.1
+
+* Tue Mar 27 2012 Richard Hughes <hughsient@gmail.com> - 3.4.0-1
+- Update to 3.4.0
+
+* Wed Mar 21 2012 Kalev Lember <kalevlember@gmail.com> - 3.3.92-1
+- Update to 3.3.92
+
 * Sat Mar 10 2012 Matthias Clasen <mclasen@redhat.com> - 3.3.90-2
 - Rebuild against new cogl
 

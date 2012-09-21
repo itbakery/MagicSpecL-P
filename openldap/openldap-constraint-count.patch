@@ -28,13 +28,18 @@ This patch fixes the behavior in case multiple modifications are used.
 
 Author: Jan Synacek <jsynacek@redhat.com>
 Upstream ITS: #7168
+Upstream commit: bb8112c382c24db25b175459e340ce248fe25563
 Resolves: #742163
 
+---
+ servers/slapd/overlays/constraint.c |  117 ++++++++++++++++++++++++-----------
+ 1 file changed, 80 insertions(+), 37 deletions(-)
+
 diff --git a/servers/slapd/overlays/constraint.c b/servers/slapd/overlays/constraint.c
-index e6a9267..2988af6 100644
+index e6a9267..538d383 100644
 --- a/servers/slapd/overlays/constraint.c
 +++ b/servers/slapd/overlays/constraint.c
-@@ -838,6 +838,60 @@ add_violation:
+@@ -838,6 +838,68 @@ add_violation:
  
  
  static int
@@ -56,7 +61,15 @@ index e6a9267..2988af6 100644
 +			if ( cp->ap[j] == m->sml_desc ) {
 +				switch ( m->sml_op ) {
 +				case LDAP_MOD_DELETE:
-+					ce = 0;
++					if (( b = m->sml_values ) == NULL  || b[0].bv_val == NULL ) {
++						ce = 0;
++					}
++					else {
++						/* No need to check for values' validity. Invalid values
++						 * cause the whole transaction to die anyway. */
++						for ( ca = 0; b[ca].bv_val; ++ca );
++						ce -= ca;
++					}
 +					break;
 +
 +				case LDAP_MOD_ADD:
@@ -95,7 +108,7 @@ index e6a9267..2988af6 100644
  constraint_update( Operation *op, SlapReply *rs )
  {
  	slap_overinst *on = (slap_overinst *) op->o_bd->bd_info;
-@@ -850,6 +904,8 @@ constraint_update( Operation *op, SlapReply *rs )
+@@ -850,6 +912,8 @@ constraint_update( Operation *op, SlapReply *rs )
  	struct berval rsv = BER_BVC("modify breaks constraint");
  	int rc;
  	char *msg = NULL;
@@ -104,7 +117,7 @@ index e6a9267..2988af6 100644
  
  	if (get_relax(op)) {
  		return SLAP_CB_CONTINUE;
-@@ -880,10 +936,12 @@ constraint_update( Operation *op, SlapReply *rs )
+@@ -880,10 +944,12 @@ constraint_update( Operation *op, SlapReply *rs )
  	/* Do we need to count attributes? */
  	for(cp = c; cp; cp = cp->ap_next) {
  		if (cp->count != 0 || cp->set || cp->restrict_lud != 0) {
@@ -121,7 +134,7 @@ index e6a9267..2988af6 100644
  			if (rc != 0 || target_entry == NULL) {
  				Debug(LDAP_DEBUG_TRACE, 
  					"==> constraint_update rc = %d DN=\"%s\"%s\n",
-@@ -893,7 +951,16 @@ constraint_update( Operation *op, SlapReply *rs )
+@@ -893,7 +959,16 @@ constraint_update( Operation *op, SlapReply *rs )
  					rc = LDAP_CONSTRAINT_VIOLATION;
  				goto mod_violation;
  			}
@@ -139,7 +152,7 @@ index e6a9267..2988af6 100644
  		}
  	}
  
-@@ -912,10 +979,6 @@ constraint_update( Operation *op, SlapReply *rs )
+@@ -912,10 +987,6 @@ constraint_update( Operation *op, SlapReply *rs )
  		if ((( b = m->sml_values ) == NULL ) || (b[0].bv_val == NULL))
  			continue;
  
@@ -150,7 +163,7 @@ index e6a9267..2988af6 100644
  		for(cp = c; cp; cp = cp->ap_next) {
  			int j;
  			for (j = 0; cp->ap[j]; j++) {
-@@ -929,34 +992,6 @@ constraint_update( Operation *op, SlapReply *rs )
+@@ -929,34 +1000,6 @@ constraint_update( Operation *op, SlapReply *rs )
  				continue;
  			}
  
@@ -186,5 +199,5 @@ index e6a9267..2988af6 100644
  			if (( m->sml_op & LDAP_MOD_OP ) == LDAP_MOD_DELETE)
  				continue;
 -- 
-1.7.7.6
+1.7.10.4
 

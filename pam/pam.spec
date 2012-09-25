@@ -2,14 +2,14 @@
 
 Summary: An extensible library which provides authentication for applications
 Name: pam
-Version: 1.1.5
-Release: 6%{?dist}
+Version: 1.1.6
+Release: 2%{?dist}
 # The library is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 # pam_timestamp, pam_loginuid, and pam_console modules are GPLv2+.
 License: BSD and GPLv2+
 Group: System Environment/Base
-Source0: https://fedorahosted.org/releases/l/i/linux-pam/Linux-PAM-%{version}.tar.bz2
+Source0: http://www.linux-pam.org/library/Linux-PAM-%{version}.tar.bz2
 # This is the old location that might be revived in future:
 #Source0: http://ftp.us.kernel.org/pub/linux/libs/pam/library/Linux-PAM-%{version}.tar.bz2
 #Source1: http://ftp.us.kernel.org/pub/linux/libs/pam/library/Linux-PAM-%{version}.tar.bz2.sign
@@ -28,19 +28,28 @@ Source15: pamtmp.conf
 Source16: postlogin.pamd
 Source17: postlogin.5
 Patch1:  pam-1.0.90-redhat-modules.patch
-Patch2:  pam-1.0.91-std-noclose.patch
+Patch2:  pam-1.1.6-std-noclose.patch
 Patch4:  pam-1.1.0-console-nochmod.patch
 Patch5:  pam-1.1.0-notally.patch
 Patch7:  pam-1.1.0-console-fixes.patch
 Patch8:  pam-1.1.1-faillock.patch
-Patch9:  pam-1.1.2-noflex.patch
+Patch9:  pam-1.1.6-noflex.patch
 Patch10: pam-1.1.3-nouserenv.patch
 Patch11: pam-1.1.3-console-abstract.patch
 Patch12: pam-1.1.3-faillock-screensaver.patch
 Patch13: pam-1.1.5-limits-user.patch
+Patch14: pam-1.1.6-audit-data.patch
+Patch15: pam-1.1.6-full-relro.patch
+# FIPS related - non upstreamable
+Patch20: pam-1.1.5-unix-no-fallback.patch
+# Upstreamed
+Patch21: pam-1.1.6-install-empty.patch
+#
+Patch22: pam-1.1.5-unix-build.patch
+Patch23: pam-1.1.6-autoupdate.patch
 
 %define _sbindir /sbin
-%define _moduledir %{_libdir}/security
+%define _moduledir /%{_lib}/security
 %define _secconfdir %{_sysconfdir}/security
 %define _pamconfdir %{_sysconfdir}/pam.d
 
@@ -59,7 +68,7 @@ BuildRequires: autoconf >= 2.60
 BuildRequires: automake, libtool
 BuildRequires: bison, flex, sed
 BuildRequires: cracklib-devel, cracklib-dicts >= 2.8
-BuildRequires: perl, pkgconfig, gettext
+BuildRequires: perl, pkgconfig, gettext-devel
 %if %{WITH_AUDIT}
 BuildRequires: audit-libs-devel >= 1.0.8
 Requires: audit-libs >= 1.0.8
@@ -110,14 +119,19 @@ mv pam-redhat-%{pam_redhat_version}/* modules
 %patch11 -p1 -b .abstract
 %patch12 -p1 -b .screensaver
 %patch13 -p1 -b .limits
-
-libtoolize -f
-autoreconf
+%patch14 -p1 -b .audata
+%patch15 -p1 -b .relro
+%patch20 -p1 -b .no-fallback
+%patch21 -p1 -b .empty
+%patch22 -p1 -b .build
+%patch23 -p1 -b .autoupdate
 
 %build
+autoreconf
 %configure \
-	--libdir=%{_libdir} \
+	--libdir=/%{_lib} \
 	--includedir=%{_includedir}/security \
+	--disable-static \
 	--disable-prelude \
 %if ! %{WITH_SELINUX}
 	--disable-selinux \
@@ -180,7 +194,11 @@ done
 # of _libdir not changing, and *not* being /usr/lib.
 install -d -m 755 $RPM_BUILD_ROOT%{_libdir}
 for lib in libpam libpamc libpam_misc ; do
-rm -f $RPM_BUILD_ROOT%{_libdir}/${lib}.la
+pushd $RPM_BUILD_ROOT%{_libdir}
+ln -sf ../../%{_lib}/${lib}.so.*.* ${lib}.so
+popd
+rm -f $RPM_BUILD_ROOT/%{_lib}/${lib}.so
+rm -f $RPM_BUILD_ROOT/%{_lib}/${lib}.la
 done
 rm -f $RPM_BUILD_ROOT%{_moduledir}/*.la
 
@@ -191,10 +209,7 @@ rm -fr $RPM_BUILD_ROOT/usr/share/doc/pam
 install -m755 -d $RPM_BUILD_ROOT/lib/security
 
 # Install the file for autocreation of /var/run subdirectories on boot
-install -m644 -D %{SOURCE15} $RPM_BUILD_ROOT%{_sysconfdir}/tmpfiles.d/pamtmp.conf
-
-mkdir -p %{buildroot}%{_secconfdir}/namespace.d
-
+install -m644 -D %{SOURCE15} $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/pam.conf
 magic_rpm_clean.sh
 %find_lang Linux-PAM
 
@@ -253,9 +268,9 @@ fi
 %doc doc/txts
 %doc doc/sag/*.txt doc/sag/html
 %doc doc/specs/rfc86.0.txt
-%{_libdir}/libpam.so.*
-%{_libdir}/libpamc.so.*
-%{_libdir}/libpam_misc.so.*
+/%{_lib}/libpam.so.*
+/%{_lib}/libpamc.so.*
+/%{_lib}/libpam_misc.so.*
 %{_sbindir}/pam_console_apply
 %{_sbindir}/pam_tally2
 %{_sbindir}/faillock
@@ -264,7 +279,7 @@ fi
 %attr(0700,root,root) %{_sbindir}/unix_update
 %attr(0755,root,root) %{_sbindir}/mkhomedir_helper
 %if %{_lib} != lib
-%dir %{_prefix}/lib/security
+%dir /lib/security
 %endif
 %dir %{_moduledir}
 %{_moduledir}/pam_access.so
@@ -348,7 +363,7 @@ fi
 %endif
 %ghost %verify(not md5 size mtime) /var/log/tallylog
 %dir /var/run/faillock
-%config(noreplace) %{_sysconfdir}/tmpfiles.d/pamtmp.conf
+%{_prefix}/lib/tmpfiles.d/pam.conf
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 
@@ -363,14 +378,39 @@ fi
 %doc doc/adg/*.txt doc/adg/html
 
 %changelog
-* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-6
-- 为 Magic 3.0 重建
+* Mon Sep  3 2012 Tomas Mraz <tmraz@redhat.com> 1.1.6-2
+- link setuid binaries with full relro (#853158)
+- add rhost and tty to auditing data in modules (#677664)
 
-* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-5
-- 为 Magic 3.0 重建
+* Fri Aug 17 2012 Tomas Mraz <tmraz@redhat.com> - 1.1.6-1
+- new upstream release
 
-* Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.1.5-4
-- 为 Magic 3.0 重建
+* Thu Aug  9 2012 Tomas Mraz <tmraz@redhat.com> - 1.1.5-9
+- make the pam_lastlog module in postlogin 'optional' (#846843)
+
+* Mon Aug  6 2012 Tomas Mraz <tmraz@redhat.com> - 1.1.5-8
+- fix build failure in pam_unix
+- add display of previous bad login attempts to postlogin.pamd
+- put the tmpfiles.d config to /usr/lib and rename it to pam.conf
+- build against libdb-5
+
+* Mon May  9 2012 Tomas Mraz <tmraz@redhat.com> 1.1.5-7
+- add inactive account lock out functionality to pam_lastlog
+- fix pam_unix remember user name matching
+- add gecoscheck and maxclassrepeat functionality to pam_cracklib
+- correctly check for crypt() returning NULL in pam_unix
+- pam_unix - do not fallback to MD5 on password change
+  if requested algorithm not supported by crypt() (#818741)
+- install empty directories
+
+* Mon May  9 2012 Tomas Mraz <tmraz@redhat.com> 1.1.5-6
+- add pam_systemd to session modules
+
+* Tue Jan 31 2012 Tomas Mraz <tmraz@redhat.com> 1.1.5-5
+- fix pam_namespace leaking the protect mounts to parent namespace (#755216)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Dec 21 2011 Tomas Mraz <tmraz@redhat.com> 1.1.5-3
 - add a note to limits.conf (#754285)

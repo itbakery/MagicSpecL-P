@@ -165,21 +165,6 @@ mv %{buildroot}%{_kde4_appsdir}/pykde4 %{buildroot}%{_docdir}/python3-pykde4
 
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
-# HACK: fix multilib conflict, similar to PyQt4's http://bugzilla.redhat.com/509415
-rm -fv %{buildroot}%{kde4_bindir}/pykdeuic4
-mkdir -p %{buildroot}%{python_sitearch}
-mv %{buildroot}%{kde4_libdir}/python%{python_ver}/site-packages/* %{buildroot}%{python_sitearch}
-rm -r %{buildroot}%{kde4_libdir}/python%{python_ver}/site-packages/
-mv %{buildroot}%{python_sitearch}/PyQt4/uic/pykdeuic4.py \
-   %{buildroot}%{kde4_bindir}/pykdeuic4
-ln -s %{kde4_bindir}/pykdeuic4 \
-      %{buildroot}%{python_sitearch}/PyQt4/uic/pykdeuic4.py
-
-# install pykde4 examples under correct dir
-mkdir -p %{buildroot}%{_docdir}
-rm -fv %{buildroot}%{_kde4_appsdir}/pykde4/examples/*.py?
-mv %{buildroot}%{_kde4_appsdir}/pykde4 %{buildroot}%{_docdir}/
-
 magic_rpm_clean.sh
 
 %clean
@@ -190,7 +175,6 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{python_sitearch}/PyKDE4/
 %{python_sitearch}/PyQt4/uic/widget-plugins/kde4.py*
-%dir %{_docdir}/pykde4
 %{_kde4_libdir}/kde4/kpythonpluginfactory.so
 
 %if 0%{?pykde4_akonadi}
@@ -204,8 +188,8 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %{_kde4_bindir}/pykdeuic4
 %{python_sitearch}/PyQt4/uic/pykdeuic4.py*
-%{_docdir}/pykde4/examples/
 %{_datadir}/sip/PyKDE4/
+%{kde4_appsdir}/pykde4/examples/
 
 %if 0%{?python3}
 %files -n python3-PyKDE4

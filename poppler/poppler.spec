@@ -1,8 +1,8 @@
 Summary: PDF rendering library
 Summary(zh_CN.UTF-8): PDF 渲染库
 Name: poppler
-Version: 0.18.4
-Release: 2%{?dist}
+Version: 0.20.4
+Release: 1%{?dist}
 License: GPLv2 and Redistributable, no modification permitted
 # the code is GPLv2
 # the charmap data in /usr/share/poppler is redistributable
@@ -10,9 +10,6 @@ Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 URL:     http://poppler.freedesktop.org/
 Source0: http://poppler.freedesktop.org/poppler-%{version}.tar.gz
-
-# poppler-glib-demo, drop extraneous g_thread_init
-Patch2: poppler-0.18.1-glib.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
 
@@ -197,7 +194,6 @@ Poppler 是一个 PDF 渲染库。它是 xpdf PDF 查看器的派生。
 
 %prep
 %setup -q
-%patch2 -p1
 
 %build
 chmod -x goo/GooTimer.h
@@ -228,6 +224,8 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 
 rm %{buildroot}%{_libdir}/lib*.la
+
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig

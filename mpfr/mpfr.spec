@@ -1,13 +1,12 @@
 Summary: A C library for multiple-precision floating-point computations
 Name: mpfr
-Version: 3.1.0
+Version: 3.1.1
 Release: 1%{?dist}
 URL: http://www.mpfr.org/
 Source0: http://www.mpfr.org/mpfr-current/%{name}-%{version}.tar.xz
 # GFDL  (mpfr.texi, mpfr.info and fdl.texi)
 License: LGPLv3+ and GPLv3+ and GFDL
 Group: System Environment/Libraries
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: autoconf libtool gmp-devel
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
@@ -40,12 +39,10 @@ install the mpfr package.
 %setup -q
 
 %build
-
 %configure --disable-assert
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 iconv  -f iso-8859-1 -t utf-8 doc/mpfr.info > doc/mpfr.info.aux
 mv doc/mpfr.info.aux doc/mpfr.info
 make install DESTDIR=$RPM_BUILD_ROOT
@@ -55,6 +52,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/libmpfr.a
 cd ..
 mkdir $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}
 mv $RPM_BUILD_ROOT/%{_docdir}/%{name}/ $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}/
+magic_rpm_clean.sh
 
 %check
 make %{?_smp_mflags} check
@@ -75,9 +73,6 @@ if [ "$1" = 0 ]; then
     fi
 fi
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(-,root,root,-)
 %doc COPYING COPYING.LESSER NEWS README
@@ -90,6 +85,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_infodir}/mpfr.info*
 
 %changelog
+* Thu Jul 26 2012 Peter Schiffer <pschiffe@redhat.com> - 3.1.1-1
+- resolves: #837563
+  update to 3.1.1
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Thu Nov 10 2011 Peter Schiffer <pschiffe@redhat.com> - 3.1.0-1
 - resolves: #743237
   update to 3.1.0

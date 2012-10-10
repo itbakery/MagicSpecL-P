@@ -2,7 +2,7 @@
 
 Name:           pyxdg
 Version:        0.19
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Python library to access freedesktop.org standards
 Group:          Development/Libraries
 License:        LGPLv2
@@ -25,6 +25,7 @@ PyXDG is a python library to access freedesktop.org standards
 %install
 rm -rf $RPM_BUILD_ROOT 
 %{__python} setup.py install --skip-build --root=$RPM_BUILD_ROOT 
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT 
@@ -36,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/pyxdg-*.egg-info
 
 %changelog
+* Wed Oct 10 2012 Liu Di <liudidi@gmail.com> - 0.19-4
+- 为 Magic 3.0 重建
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

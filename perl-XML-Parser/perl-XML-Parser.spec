@@ -1,6 +1,6 @@
 Name:           perl-XML-Parser
 Version:        2.41
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl module for parsing XML files
 
 Group:          Development/Libraries
@@ -53,6 +53,8 @@ for file in samples/REC-xml-19980210.xml; do
   mv -f "${file}_" "$file"
 done
 
+magic_rpm_clean.sh
+
 %check
 make test
 
@@ -64,6 +66,9 @@ make test
 
 
 %changelog
+* Wed Oct 10 2012 Liu Di <liudidi@gmail.com> - 2.41-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.41-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

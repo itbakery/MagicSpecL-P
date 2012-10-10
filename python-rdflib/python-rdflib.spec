@@ -1,27 +1,24 @@
-# The upstream test suite does not pass on recent versions of Fedora
-# See package review (bug 378841)
-# For now, we disable running the test suite:
 %define run_tests 0
 
 Name:           python-rdflib
-Version:        3.1.0
-Release:        2%{?dist}
+Version:        3.2.0
+Release:        5%{?dist}
 Summary:        Python library for working with RDF
 
 Group:          Development/Languages
 License:        BSD
-URL:            http://rdflib.net
+URL:            http://code.google.com/p/rdflib/
 Source0:        http://rdflib.googlecode.com/files/rdflib-%{version}.tar.gz
+# Upstreamed: http://code.google.com/p/rdflib/issues/detail?id=206
+Patch0:         0001-Skip-test-if-it-can-not-join-the-network.patch
 BuildArch:      noarch
 
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Requires:       python-isodate
 
+BuildRequires:  python-isodate
 BuildRequires:  python-devel
-%if 0%{?fedora} >= 8
 BuildRequires: python-setuptools-devel
-%else
-BuildRequires: python-setuptools
-%endif
 
 %if %{run_tests}
 BuildRequires:  python-nose >= 0.9.2
@@ -38,6 +35,8 @@ memory, MySQL, Redland, SQLite, Sleepycat, ZODB and SQLObject.
 
 %prep
 %setup -q -n rdflib-%{version}
+
+%patch0 -p0 -b .test
 
 %build
 %{__python} setup.py build
@@ -58,9 +57,11 @@ chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/ntriples.py
 # __main__ parses the file given on the command line:
 chmod +x $RPM_BUILD_ROOT/%{python_sitelib}/rdflib/plugins/parsers/notation3.py
 
+magic_rpm_clean.sh
 
 %check
 %if %{run_tests}
+sed -i -e "s|'--with-doctest'|#'--with-doctest'|" run_tests.py
 %{__python} run_tests.py
 %endif
 
@@ -73,8 +74,24 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
-* Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 3.1.0-2
-- 为 Magic 3.0 重建
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jan 24 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.0-4
+- Re-add the unittests, for that, patch one and disable the run of
+the tests in the documentation of the code.
+
+* Mon Jan 23 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.0-3
+- Add python-isodate as R (RHBZ#784027)
+
+* Fri Jan 20 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.0-2
+- Found the official sources of the 3.2.0 release
+
+* Fri Jan 20 2012 Pierre-Yves Chibon <pingou@pingoured.fr> - 3.2.0-1
+- Update to 3.2.0-RC which seem to be same as 3.2.0
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Sep 28 2011 David Malcolm <dmalcolm@redhat.com> - 3.1.0-1
 - 3.1.0; converting from arch-specific to noarch (sitearch -> sitelib);

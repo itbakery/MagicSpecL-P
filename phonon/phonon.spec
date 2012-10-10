@@ -1,15 +1,15 @@
 %define build_type release
 
 # path define for backends
-%define PLUGIN_INSTALL_DIR /opt/kde4/lib/kde4
-%define SERVICES_INSTALL_DIR /opt/kde4/share/kde4/services
-%define ICON_INSTALL_DIR /opt/kde4/share/icons
+%define PLUGIN_INSTALL_DIR /usr/lib/kde4
+%define SERVICES_INSTALL_DIR /usr/share/kde4/services
+%define ICON_INSTALL_DIR /usr/share/icons
 
 Name: phonon
 Summary: KDE4 Multimedia Framework
 Summary(zh_CN.UTF-8): KDE4 多媒体框架
 Version: 4.6.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://websvn.kde.org/branches/phonon/4.2/
 License: LGPL v2+
 Group: System/Libraries
@@ -155,7 +155,7 @@ browsing.
 mkdir build
 cd build
 export CFLAGS=$RPM_OPT_FLAGS
-cmake -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+%cmake_kde4 -DCMAKE_INSTALL_PREFIX=%{_prefix} \
 	-DCMAKE_BUILD_TYPE=%{build_type} \
 	-DCMAKE_CXX_FLAGS_DEBUG:STRING="$RPM_OPT_FLAGS" \
 	-DLIB_INSTALL_DIR=%{_libdir} \
@@ -219,6 +219,8 @@ for i in 16 22 32 48; do
     cp -r ../mplayer/icons/${i}x${i}/phonon-mplayer.png %{buildroot}%ICON_INSTALL_DIR/hicolor/${i}x${i}/apps/phonon-mplayer.png
 done
 %endif
+
+magic_rpm_clean.sh
 
 %clean
 %{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}

@@ -1,10 +1,3 @@
-Only in pilot-link-0.12.5-old/bindings/Perl: blib
-Only in pilot-link-0.12.5-old/bindings/Perl: const-c.inc
-Only in pilot-link-0.12.5-old/bindings/Perl: const-xs.inc
-Only in pilot-link-0.12.5-old/bindings/Perl: Makefile.PL
-Only in pilot-link-0.12.5-old/bindings/Perl: Pilot.bs
-Only in pilot-link-0.12.5-old/bindings/Perl: Pilot.c
-Only in pilot-link-0.12.5-old/bindings/Perl: Pilot.o
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/bindings/Perl/Pilot.xs pilot-link-0.12.5/bindings/Perl/Pilot.xs
 --- pilot-link-0.12.5-old/bindings/Perl/Pilot.xs	2011-12-19 18:30:45.000000000 +0100
 +++ pilot-link-0.12.5/bindings/Perl/Pilot.xs	2011-12-19 17:51:55.364828217 +0100
@@ -320,8 +313,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/bindi
  	    void * buf;
  	    PackRaw;
  	    buf = SvPV(data, len);
-Only in pilot-link-0.12.5-old/bindings/Perl: pm_to_blib
-Only in pilot-link-0.12.5/: .cproject
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/include/pi-debug.h pilot-link-0.12.5/include/pi-debug.h
 --- pilot-link-0.12.5-old/include/pi-debug.h	2008-11-06 11:45:33.000000000 +0100
 +++ pilot-link-0.12.5/include/pi-debug.h	2011-12-12 16:04:53.892605487 +0100
@@ -701,86 +692,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpi
  	prot = (pi_protocol_t *)malloc (sizeof (pi_protocol_t));
  
  	if (prot != NULL) {
-Only in pilot-link-0.12.5-old/libpisock: libpisock.la
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-address.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-address.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-appinfo.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-appinfo.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-blob.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-blob.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-bluetooth.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-bluetooth.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-calendar.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-calendar.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-cmp.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-cmp.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-connect.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-connect.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-contact.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-contact.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-datebook.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-datebook.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-debug.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-debug.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-dlp.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-dlp.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-expense.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-expense.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-hinote.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-hinote.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-inet.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-inet.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-libusb.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-libusb.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-location.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-location.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-mail.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-mail.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-md5.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-md5.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-memo.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-memo.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-money.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-money.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-net.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-net.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-notepad.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-notepad.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-padp.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-padp.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-palmpix.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-palmpix.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-buffer.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-buffer.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-file.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-file.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-header.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-pi-header.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-serial.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-serial.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-slp.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-slp.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-socket.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-socket.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-sys.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-sys.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-syspkt.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-syspkt.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-threadsafe.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-threadsafe.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-todo.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-todo.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-unixserial.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-unixserial.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-usb.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-usb.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-utils.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-utils.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-veo.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-veo.o
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-versamail.lo
-Only in pilot-link-0.12.5-old/libpisock: libpisock_la-versamail.o
-Only in pilot-link-0.12.5-old/libpisock: .libs
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpisock/libusb.c pilot-link-0.12.5/libpisock/libusb.c
 --- pilot-link-0.12.5-old/libpisock/libusb.c	2007-02-09 17:06:22.000000000 +0100
 +++ pilot-link-0.12.5/libpisock/libusb.c	2012-01-04 19:57:15.495647341 +0100
@@ -1090,8 +1001,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpi
  
  	appinfo->type = todo_v1;
  
-Only in pilot-link-0.12.5-old/libpisync: libpisync.la
-Only in pilot-link-0.12.5-old/libpisync: .libs
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpisync/Makefile.am pilot-link-0.12.5/libpisync/Makefile.am
 --- pilot-link-0.12.5-old/libpisync/Makefile.am	2005-02-17 20:01:35.000000000 +0100
 +++ pilot-link-0.12.5/libpisync/Makefile.am	2011-12-19 13:22:30.210258195 +0100
@@ -1124,8 +1033,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpi
  	else
  		return dlp_OpenDB(sh->sd, 0, dlpOpenReadWrite, sh->name,
  				  dbhandle);
-Only in pilot-link-0.12.5-old/libpisync: sync.lo
-Only in pilot-link-0.12.5-old/libpisync: sync.o
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpisync/util.c pilot-link-0.12.5/libpisync/util.c
 --- pilot-link-0.12.5-old/libpisync/util.c	2006-08-25 14:33:25.000000000 +0200
 +++ pilot-link-0.12.5/libpisync/util.c	2011-12-07 21:25:04.906262096 +0100
@@ -1165,9 +1072,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/libpi
  		      int bytes, char **text, const char * pi_charset)
  {
  #ifdef HAVE_ICONV
-Only in pilot-link-0.12.5-old/libpisync: util.lo
-Only in pilot-link-0.12.5-old/libpisync: util.o
-Only in pilot-link-0.12.5/popt: libpopt.la
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/popt/popt.c pilot-link-0.12.5/popt/popt.c
 --- pilot-link-0.12.5-old/popt/popt.c	2004-08-27 18:27:48.000000000 +0200
 +++ pilot-link-0.12.5/popt/popt.c	2012-01-04 19:47:06.517804911 +0100
@@ -1213,9 +1117,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/popt/
  
      return POPT_ERROR_ERRNO;
  }
-Only in pilot-link-0.12.5/: .project
-Only in pilot-link-0.12.5-old/src: libpiuserland.la
-Only in pilot-link-0.12.5-old/src: .libs
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/Makefile.am pilot-link-0.12.5/src/Makefile.am
 --- pilot-link-0.12.5-old/src/Makefile.am	2007-11-12 15:52:14.000000000 +0100
 +++ pilot-link-0.12.5/src/Makefile.am	2011-12-16 17:42:55.878155194 +0100
@@ -1260,8 +1161,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/M
  
  #getrom_SOURCES = 		\
  #	getrom.c
-Only in pilot-link-0.12.5-old/src: parsedate.o
-Only in pilot-link-0.12.5-old/src: pilot-addresses
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-addresses.c pilot-link-0.12.5/src/pilot-addresses.c
 --- pilot-link-0.12.5-old/src/pilot-addresses.c	2009-06-04 15:32:30.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-addresses.c	2011-12-21 16:08:30.778052438 +0100
@@ -1292,8 +1191,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	case mode_none:
  		/* impossible */
  		fprintf(stderr,"%s",mode_error);
-Only in pilot-link-0.12.5-old/src: pilot-addresses.o
-Only in pilot-link-0.12.5-old/src: pilot-clip
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-clip.c pilot-link-0.12.5/src/pilot-clip.c
 --- pilot-link-0.12.5-old/src/pilot-clip.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-clip.c	2011-12-20 17:46:26.422661747 +0100
@@ -1308,8 +1205,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	}
  
  	if (pi_close(sd) < 0)
-Only in pilot-link-0.12.5-old/src: pilot-clip.o
-Only in pilot-link-0.12.5-old/src: pilot-csd
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-csd.c pilot-link-0.12.5/src/pilot-csd.c
 --- pilot-link-0.12.5-old/src/pilot-csd.c	2009-06-04 15:32:31.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-csd.c	2011-12-19 14:45:25.245377872 +0100
@@ -1322,7 +1217,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  			memcpy(&ip, mesg + 4, 4);
  			memcpy(&mask, mesg + 8, 4);
-Only in pilot-link-0.12.5-old/src: pilot-csd.o
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-debug.c pilot-link-0.12.5/src/pilot-debug.c
 --- pilot-link-0.12.5-old/src/pilot-debug.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-debug.c	2011-12-13 18:20:08.241744455 +0100
@@ -1335,11 +1229,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
     if (buf[2] == 0) {		/* SysPkt command 	*/
        if (buf[0] == 2) {	/* UI 			*/
-Only in pilot-link-0.12.5-old/src: pilot-debugsh
-Only in pilot-link-0.12.5-old/src: pilot-debugsh.o
-Only in pilot-link-0.12.5-old/src: pilot-dedupe
-Only in pilot-link-0.12.5-old/src: pilot-dedupe.o
-Only in pilot-link-0.12.5-old/src: pilot-dlpsh
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-dlpsh.c pilot-link-0.12.5/src/pilot-dlpsh.c
 --- pilot-link-0.12.5-old/src/pilot-dlpsh.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-dlpsh.c	2012-01-04 20:04:15.478831743 +0100
@@ -1365,8 +1254,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  	return 0;
  }
-Only in pilot-link-0.12.5-old/src: pilot-dlpsh.o
-Only in pilot-link-0.12.5-old/src: pilot-file
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-file.c pilot-link-0.12.5/src/pilot-file.c
 --- pilot-link-0.12.5-old/src/pilot-file.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-file.c	2011-12-20 18:05:28.584045279 +0100
@@ -1400,8 +1287,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  		}
  	} else {
  		printf("entries\n");
-Only in pilot-link-0.12.5-old/src: pilot-file.o
-Only in pilot-link-0.12.5-old/src: pilot-foto
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-foto.c pilot-link-0.12.5/src/pilot-foto.c
 --- pilot-link-0.12.5-old/src/pilot-foto.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-foto.c	2011-12-20 18:49:18.859925180 +0100
@@ -1573,8 +1458,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
      return 0;
  }
  
-Only in pilot-link-0.12.5-old/src: pilot-foto.o
-Only in pilot-link-0.12.5-old/src: pilot-foto-treo600
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-foto-treo600.c pilot-link-0.12.5/src/pilot-foto-treo600.c
 --- pilot-link-0.12.5-old/src/pilot-foto-treo600.c	2009-06-04 15:32:30.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-foto-treo600.c	2011-12-20 20:26:16.865031433 +0100
@@ -1595,8 +1478,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  		}
  	}
  
-Only in pilot-link-0.12.5-old/src: pilot-foto-treo600.o
-Only in pilot-link-0.12.5-old/src: pilot-foto-treo650
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-foto-treo650.c pilot-link-0.12.5/src/pilot-foto-treo650.c
 --- pilot-link-0.12.5-old/src/pilot-foto-treo650.c	2009-06-04 15:32:30.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-foto-treo650.c	2012-01-04 22:12:18.456346583 +0100
@@ -1645,10 +1526,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  		    {
  //		       printf( "index: %s %d strlen %d\n", infos[i].name, index, strlen( infos[i].name ) );
  		       if(( index + 4 ) == (infos[i].name + strlen( infos[i].name )))
-Only in pilot-link-0.12.5-old/src: pilot-foto-treo650.o
-Only in pilot-link-0.12.5-old/src: pilot-getram
-Only in pilot-link-0.12.5-old/src: pilot-getram.o
-Only in pilot-link-0.12.5-old/src: pilot-getrom
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-getrom.c pilot-link-0.12.5/src/pilot-getrom.c
 --- pilot-link-0.12.5-old/src/pilot-getrom.c	2009-06-04 15:32:31.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-getrom.c	2011-12-20 18:56:35.349427789 +0100
@@ -1738,10 +1615,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	}
  
  	if (!progname) {
-Only in pilot-link-0.12.5-old/src: pilot-getrom.o
-Only in pilot-link-0.12.5-old/src: pilot-getromtoken
-Only in pilot-link-0.12.5-old/src: pilot-getromtoken.o
-Only in pilot-link-0.12.5-old/src: pilot-hinotes
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-hinotes.c pilot-link-0.12.5/src/pilot-hinotes.c
 --- pilot-link-0.12.5-old/src/pilot-hinotes.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-hinotes.c	2012-01-04 20:08:29.926499751 +0100
@@ -1770,9 +1643,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	printf("\n");
  }
  
-Only in pilot-link-0.12.5-old/src: pilot-hinotes.o
-Only in pilot-link-0.12.5-old/src: pilot-ietf2datebook
-Only in pilot-link-0.12.5-old/src: pilot-install-datebook
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-datebook.c pilot-link-0.12.5/src/pilot-install-datebook.c
 --- pilot-link-0.12.5-old/src/pilot-install-datebook.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-datebook.c	2011-12-20 19:00:42.654177819 +0100
@@ -1806,8 +1676,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  		goto error;
  
  error_close:
-Only in pilot-link-0.12.5-old/src: pilot-install-datebook.o
-Only in pilot-link-0.12.5-old/src: pilot-install-expenses
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-expenses.c pilot-link-0.12.5/src/pilot-install-expenses.c
 --- pilot-link-0.12.5-old/src/pilot-install-expenses.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-expenses.c	2011-12-19 16:05:49.391042875 +0100
@@ -1832,8 +1700,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  	/* Close the database */
  	dlp_CloseDB(sd, db);
-Only in pilot-link-0.12.5-old/src: pilot-install-expenses.o
-Only in pilot-link-0.12.5-old/src: pilot-install-hinote
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-hinote.c pilot-link-0.12.5/src/pilot-install-hinote.c
 --- pilot-link-0.12.5-old/src/pilot-install-hinote.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-hinote.c	2011-12-20 19:05:05.836653456 +0100
@@ -1850,8 +1716,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  		file_text[filenamelen + 1 + filelen] = '\0';
  
  
-Only in pilot-link-0.12.5-old/src: pilot-install-hinote.o
-Only in pilot-link-0.12.5-old/src: pilot-install-memo
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-memo.c pilot-link-0.12.5/src/pilot-install-memo.c
 --- pilot-link-0.12.5-old/src/pilot-install-memo.c	2009-06-04 15:32:32.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-memo.c	2011-12-20 19:26:49.803270983 +0100
@@ -1876,10 +1740,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	fclose(f);
  
  	dlp_WriteRecord(sd, db, 0, 0, category, memo_buf, -1, 0);
-Only in pilot-link-0.12.5-old/src: pilot-install-memo.o
-Only in pilot-link-0.12.5-old/src: pilot-install-netsync
-Only in pilot-link-0.12.5-old/src: pilot-install-netsync.o
-Only in pilot-link-0.12.5-old/src: pilot-install-todo
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-todo.c pilot-link-0.12.5/src/pilot-install-todo.c
 --- pilot-link-0.12.5-old/src/pilot-install-todo.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-todo.c	2011-12-20 19:36:06.838721596 +0100
@@ -1898,8 +1758,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  	return 0;
  }
-Only in pilot-link-0.12.5-old/src: pilot-install-todo.o
-Only in pilot-link-0.12.5-old/src: pilot-install-todos
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-install-todos.c pilot-link-0.12.5/src/pilot-install-todos.c
 --- pilot-link-0.12.5-old/src/pilot-install-todos.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-install-todos.c	2011-12-20 19:38:49.488931153 +0100
@@ -1918,10 +1776,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
          cPtr = file_text;
          begPtr = cPtr;
-Only in pilot-link-0.12.5-old/src: pilot-install-todos.o
-Only in pilot-link-0.12.5-old/src: pilot-install-user
-Only in pilot-link-0.12.5-old/src: pilot-install-user.o
-Only in pilot-link-0.12.5-old/src: pilot-memos
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-memos.c pilot-link-0.12.5/src/pilot-memos.c
 --- pilot-link-0.12.5-old/src/pilot-memos.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-memos.c	2011-12-21 16:46:00.842502232 +0100
@@ -1959,9 +1813,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  			continue;
  		}
  #ifdef OS2
-Only in pilot-link-0.12.5-old/src: pilot-memos.o
-Only in pilot-link-0.12.5-old/src: pilot-nredir
-Only in pilot-link-0.12.5-old/src: pilot-nredir.o
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-port.c pilot-link-0.12.5/src/pilot-port.c
 --- pilot-link-0.12.5-old/src/pilot-port.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-port.c	2011-12-12 16:11:16.697469186 +0100
@@ -1994,7 +1845,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  	poptContext pc;
  
-Only in pilot-link-0.12.5-old/src: pilot-read-expenses
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-expenses.c pilot-link-0.12.5/src/pilot-read-expenses.c
 --- pilot-link-0.12.5-old/src/pilot-read-expenses.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-expenses.c	2011-12-13 18:24:19.844407496 +0100
@@ -2009,10 +1859,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	pi_buffer_t	*recbuf,
  		*appblock;
  
-Only in pilot-link-0.12.5-old/src: pilot-read-expenses.o
-Only in pilot-link-0.12.5-old/src: pilot-read-ical
-Only in pilot-link-0.12.5-old/src: pilot-read-ical.o
-Only in pilot-link-0.12.5-old/src: pilot-read-notepad
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-notepad.c pilot-link-0.12.5/src/pilot-read-notepad.c
 --- pilot-link-0.12.5-old/src/pilot-read-notepad.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-notepad.c	2012-01-04 21:20:20.727758321 +0100
@@ -2092,8 +1938,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
     fflush( f );
  }
  
-Only in pilot-link-0.12.5-old/src: pilot-read-notepad.o
-Only in pilot-link-0.12.5-old/src: pilot-read-palmpix
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-palmpix.c pilot-link-0.12.5/src/pilot-read-palmpix.c
 --- pilot-link-0.12.5-old/src/pilot-read-palmpix.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-palmpix.c	2012-01-04 21:20:45.604415083 +0100
@@ -2126,8 +1970,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  }
  
  
-Only in pilot-link-0.12.5-old/src: pilot-read-palmpix.o
-Only in pilot-link-0.12.5-old/src: pilot-read-screenshot
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-screenshot.c pilot-link-0.12.5/src/pilot-read-screenshot.c
 --- pilot-link-0.12.5-old/src/pilot-read-screenshot.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-screenshot.c	2012-01-04 21:55:29.073067865 +0100
@@ -2177,8 +2019,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  	struct ss_state state;
  
  	if( type == OUT_PPM )
-Only in pilot-link-0.12.5-old/src: pilot-read-screenshot.o
-Only in pilot-link-0.12.5-old/src: pilot-read-todos
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-todos.c pilot-link-0.12.5/src/pilot-read-todos.c
 --- pilot-link-0.12.5-old/src/pilot-read-todos.c	2009-06-04 15:32:32.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-todos.c	2011-12-19 16:14:28.191121790 +0100
@@ -2193,8 +2033,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  
  		struct 	ToDo todo;
  
-Only in pilot-link-0.12.5-old/src: pilot-read-todos.o
-Only in pilot-link-0.12.5-old/src: pilot-read-veo
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-read-veo.c pilot-link-0.12.5/src/pilot-read-veo.c
 --- pilot-link-0.12.5-old/src/pilot-read-veo.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-read-veo.c	2012-01-04 22:08:08.269082847 +0100
@@ -2251,14 +2089,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  			 unpack_Veo (&v, inBuf->data, inBuf->used);
               pi_buffer_free (inBuf);
  			 v.sd = sd;
-Only in pilot-link-0.12.5-old/src: pilot-read-veo.o
-Only in pilot-link-0.12.5-old/src: pilot-reminders
-Only in pilot-link-0.12.5-old/src: pilot-reminders.o
-Only in pilot-link-0.12.5-old/src: pilot-schlep
-Only in pilot-link-0.12.5-old/src: pilot-schlep.o
-Only in pilot-link-0.12.5-old/src: pilot-sync-plan
-Only in pilot-link-0.12.5-old/src: pilot-undelete
-Only in pilot-link-0.12.5-old/src: pilot-wav
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-wav.c pilot-link-0.12.5/src/pilot-wav.c
 --- pilot-link-0.12.5-old/src/pilot-wav.c	2009-06-04 15:26:19.000000000 +0200
 +++ pilot-link-0.12.5/src/pilot-wav.c	2012-01-04 22:23:44.024691316 +0100
@@ -2405,8 +2235,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
          fclose(out);
          pi_file_close(pi_fp);
  	if (!plu_quiet) {
-Only in pilot-link-0.12.5-old/src: pilot-wav.o
-Only in pilot-link-0.12.5-old/src: pilot-xfer
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/pilot-xfer.c pilot-link-0.12.5/src/pilot-xfer.c
 --- pilot-link-0.12.5-old/src/pilot-xfer.c	2010-02-07 03:21:18.000000000 +0100
 +++ pilot-link-0.12.5/src/pilot-xfer.c	2012-01-04 22:28:32.040166439 +0100
@@ -2451,12 +2279,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/src/p
  			return 1;
  			break;
  		case palm_op_merge:
-Only in pilot-link-0.12.5-old/src: pilot-xfer.o
-Only in pilot-link-0.12.5-old/src: plu_args.lo
-Only in pilot-link-0.12.5-old/src: plu_args.o
-Only in pilot-link-0.12.5-old/src: userland.lo
-Only in pilot-link-0.12.5-old/src: userland.o
-Only in pilot-link-0.12.5-old/tests: calendardb-test
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/calendardb-test.c pilot-link-0.12.5/tests/calendardb-test.c
 --- pilot-link-0.12.5-old/tests/calendardb-test.c	2010-02-07 03:21:18.000000000 +0100
 +++ pilot-link-0.12.5/tests/calendardb-test.c	2012-01-13 16:04:45.000000000 +0100
@@ -2469,8 +2291,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
          for(i=0; i<pi_buf->used; ++i) {
            if(pi_buf->data[i] != test->data[i]) {
              printf("Error: Byte %d is different unpack: 0x%02X pack: 0x%02X\n", i, pi_buf->data[i], test->data[i]);
-Only in pilot-link-0.12.5-old/tests: calendardb-test.o
-Only in pilot-link-0.12.5-old/tests: contactsdb-test
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/contactsdb-test.c pilot-link-0.12.5/tests/contactsdb-test.c
 --- pilot-link-0.12.5-old/tests/contactsdb-test.c	2009-05-25 05:22:56.000000000 +0200
 +++ pilot-link-0.12.5/tests/contactsdb-test.c	2011-12-14 17:30:21.000000000 +0100
@@ -2501,12 +2321,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
  
  	if (sd < 0)
  		goto error;
-Only in pilot-link-0.12.5-old/tests: contactsdb-test.o
-Only in pilot-link-0.12.5-old/tests: dlp-test
-Only in pilot-link-0.12.5-old/tests: dlp-test.o
-Only in pilot-link-0.12.5/tests: libpiuserland.la
-Only in pilot-link-0.12.5-old/tests: .libs
-Only in pilot-link-0.12.5-old/tests: locationdb-test
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/locationdb-test.c pilot-link-0.12.5/tests/locationdb-test.c
 --- pilot-link-0.12.5-old/tests/locationdb-test.c	2009-02-22 09:09:02.000000000 +0100
 +++ pilot-link-0.12.5/tests/locationdb-test.c	2012-01-13 16:05:12.000000000 +0100
@@ -2519,7 +2333,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
          for(i=0; i<pi_buf->used; ++i) {
            if(pi_buf->data[i] != test->data[i]) {
              printf("Error: Byte %d is different unpack: 0x%02X pack: 0x%02X\n", i, pi_buf->data[i], test->data[i]);
-Only in pilot-link-0.12.5-old/tests: locationdb-test.o
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/Makefile.am pilot-link-0.12.5/tests/Makefile.am
 --- pilot-link-0.12.5-old/tests/Makefile.am	2009-05-25 06:32:06.000000000 +0200
 +++ pilot-link-0.12.5/tests/Makefile.am	2011-12-19 13:21:52.692923303 +0100
@@ -3210,7 +3023,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
  	   l, sizeof(MailSigPreference));
     }
  
-Only in pilot-link-0.12.5-old/tests: versamail-test
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/versamail-test.c pilot-link-0.12.5/tests/versamail-test.c
 --- pilot-link-0.12.5-old/tests/versamail-test.c	2005-04-21 17:21:30.000000000 +0200
 +++ pilot-link-0.12.5/tests/versamail-test.c	2011-12-14 16:39:27.926393327 +0100
@@ -3223,8 +3035,6 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
  	int idx;
  	size_t size;
  	int attr;
-Only in pilot-link-0.12.5-old/tests: versamail-test.o
-Only in pilot-link-0.12.5-old/tests: vfs-test
 diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests/vfs-test.c pilot-link-0.12.5/tests/vfs-test.c
 --- pilot-link-0.12.5-old/tests/vfs-test.c	2007-02-05 10:48:10.000000000 +0100
 +++ pilot-link-0.12.5/tests/vfs-test.c	2011-12-14 20:07:53.702893697 +0100
@@ -3255,5 +3065,3 @@ diff -upr -x '*.deps*' -x '*Makefile' -x '*config.*' pilot-link-0.12.5-old/tests
  						pi_dumpdata (fileBuf->data, fileBuf->used);
  					} else {
  						LOG((PI_DBG_USER, PI_DBG_LVL_INFO, "* File read: successfully read the data back\n"));
-Only in pilot-link-0.12.5-old/tests: vfs-test.o
-Only in pilot-link-0.12.5/tests: xxx.txt

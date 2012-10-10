@@ -2,7 +2,7 @@
 
 Name: pilot-link
 Version: 0.12.5
-Release: 10%{?dist}
+Release: 13%{?dist}
 Epoch: 2
 # libpisock/md5.c       Public Domain
 # libpisock/blob.c      LGPLv2+
@@ -26,6 +26,8 @@ Patch10: pilot-link-0.12.3-clio.patch
 Patch11: pilot-link-0.12.5-mp.patch
 Patch12: pilot-link-0.12.5-redefinePerlsymbols.patch
 Patch13: pilot-link-0.12.5-compiler_warnings.patch
+
+Requires: pilot-link-libs = %{epoch}:%{version}-%{release}
 
 BuildRequires: perl(ExtUtils::MakeMaker)
 BuildRequires: libpng-devel
@@ -76,7 +78,6 @@ Summary: PalmPilot libraries
 Group: System Environment/Libraries
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
-Obsoletes: %{name} < 2:0.12.5-3
 
 %description libs
 Libraries for applications communicating with PalmPilot
@@ -161,8 +162,9 @@ cp %{SOURCE4} README.fedora
 install -p -m644 %{SOURCE5} %{buildroot}%{_datadir}/pilot-link/udev
 
 # now that rules are moved out HAL, install to /lib/udev/
-install -d %{buildroot}/lib/udev/rules.d/
-install -p -m644 %{SOURCE6} %{buildroot}/lib/udev/rules.d/
+install -d %{buildroot}/usr/lib/udev/rules.d/
+install -p -m644 %{SOURCE6} %{buildroot}/usr/lib/udev/rules.d/
+magic_rpm_clean.sh
 
 %post libs -p /sbin/ldconfig
 
@@ -174,9 +176,7 @@ rm -rf %{buildroot}
 %files
 %defattr(-,root,root,-)
 %doc COPYING ChangeLog README NEWS doc/README.usb doc/README.debugging doc/README.libusb README.fedora
-%config(noreplace) %{_sysconfdir}/modprobe.d/blacklist-visor.conf
 %{_bindir}/*
-/lib/udev/rules.d/69-pilot-link.rules
 %exclude %{_bindir}/pilot-ietf2datebook
 %exclude %{_bindir}/pilot-sync-plan
 %exclude %{_bindir}/pilot-undelete
@@ -204,8 +204,26 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 %doc COPYING
 %{_libdir}/*.so.*
+%config(noreplace) %{_sysconfdir}/modprobe.d/blacklist-visor.conf
+/usr/lib/udev/rules.d/69-pilot-link.rules
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:0.12.5-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 2:0.12.5-12
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Peter Schiffer <pschiffe@redhat.com> - 2:0.12.5-11
+- related: #757011
+  cleaned patch
+- resolves: #733987
+  added requires for pilot-link-libs to pilot-link, removed obsoletes
+  pilot-link from pilot-link-libs
+- resolves: #733989
+  moved udev rules to the libs subpackage, so it could be used without
+  main package
+
 * Fri Jan 13 2012 Peter Schiffer <pschiffe@redhat.com> - 2:0.12.5-10
 - related: #757011
   fix FTBS on 32bit system

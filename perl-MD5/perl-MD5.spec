@@ -1,13 +1,14 @@
 Name:           perl-MD5
 Version:        2.03
-Release:        11%{?dist}
+Release:        14%{?dist}
 Summary:        Perl interface to the MD5 Message-Digest Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MD5/
-Source0:        http://www.cpan.org/modules/by-module/MD5/MD5-%{version}.tar.gz
+Source0:        http://www.cpan.org/modules/by-module/MD5/GAAS/MD5-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl(Digest::MD5) >= 2.00
 BuildRequires:  perl(ExtUtils::MakeMaker)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -30,11 +31,11 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
+magic_rpm_clean.sh
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -46,8 +47,18 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.03-11
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 2.03-13
+- Perl 5.16 rebuild
+
+* Sat Apr 21 2012 Paul Howarth <paul@city-fan.org> - 2.03-12
+- BR: perl(Digest::MD5) ≥ 2.00
+- Fix upstream source URL
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jun 20 2011 Marcela Mašláňová <mmaslano@redhat.com> - 2.03-10
 - Perl mass rebuild
@@ -59,7 +70,7 @@ rm -rf %{buildroot}
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Mon Dec 20 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.03-7
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Mon May 03 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.03-6
 - Mass rebuild with perl-5.12.0
@@ -74,7 +85,7 @@ rm -rf %{buildroot}
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
 * Thu Mar 06 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 2.03-2.1
-Rebuild for new perl
+- Rebuild for new perl
 
 * Tue Oct 16 2007 Tom "spot" Callaway <tcallawa@redhat.com> 2.03-1.1
 - correct license tag

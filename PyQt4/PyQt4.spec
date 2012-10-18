@@ -1,51 +1,64 @@
 
+%if 0%{?fedora}
 %global with_python3 1
+%endif
 
 Summary: Python bindings for Qt4
 Name: 	 PyQt4
-Version: 4.9.1
+Version: 4.9.5
 Release: 1%{?dist}
 
 # GPLv2 exceptions(see GPL_EXCEPTIONS*.txt)
 License: GPLv3 or GPLv2 with exceptions
 Group: 	 Development/Languages
 Url:     http://www.riverbankcomputing.com/software/pyqt/
-Source0: http://www.riverbankcomputing.com/static/Downloads/PyQt4/PyQt-x11-gpl%{?snap:-snapshot}-%{version}%{?snap:-%{snap}}.tar.gz
+Source0:  http://downloads.sourceforge.net/pyqt/PyQt-x11-gpl%{?snap:-snapshot}-%{version}%{?snap:-%{snap}}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Patch4:  PyQt-x11-gpl-4.8.3-pyuic_shbang.patch
 
 ## upstreamable patches
 # fix multilib conflict because of timestamp
-Patch50:  PyQt-x11-gpl-4.6.2-timestamp-multilib.patch
+Patch50:  PyQt-x11-gpl-4.9.5-timestamp_multilib.patch 
+# multilib-safe(r)  opengl_types.sip (hopefully)
+# simpler approach may be to not try to change these at buildime (only verify),
+# if /usr/include/GL/gl.h ever changes these types, we have bigger problems
+Patch51:  PyQt-x11-gpl-4.9.1-opengl_types.patch
+Patch52:  PyQt-x11-gpl-4.9.2-pyuic_shbang.patch
+
 ## upstream patches
-Patch100: PyQt-x11-gpl-4.9-doItemsLayout.patch
+# fix FTBFS on ARM
+Patch60:  qreal_float_support.diff
+
+# rhel patches
+Patch300: PyQt-x11-gpl-4.9-webkit.patch
 
 BuildRequires: findutils
 BuildRequires: pkgconfig(dbus-1) pkgconfig(dbus-python)
 BuildRequires: pkgconfig(phonon)
 BuildRequires: pkgconfig(python)
 BuildRequires: pkgconfig(QtGui) pkgconfig(QtNetwork)
-BuildRequires: pkgconfig(QtWebKit) 
-# beware of PyQt4/qscintilla bootstap issues
 %if 0%{?fedora}
+# beware of PyQt4/qscintilla bootstap issues
 BuildRequires: qscintilla
+BuildRequires: pkgconfig(QtWebKit)
 %endif
-BuildRequires: sip-devel >= 4.13.1
+BuildRequires: sip-devel >= 4.14
 
 %if 0%{?with_python3}
 BuildRequires: python3-devel 
-BuildRequires: python3-sip-devel >= 4.13.1
+BuildRequires: python3-sip-devel >= 4.14
 %endif # with_python3
 
 Requires: dbus-python
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
 %{?_sip_api:Requires: sip-api(%{_sip_api_major}) >= %{_sip_api}}
 
+%if 0%{?fedora}
 # could theoretically enumerate all the modules built/packaged here, but this
 # should be good start (to ease introduction of -webkit for epel-6+ for example)
 Provides: %{name}-webkit = %{version}-%{release}
 Provides: %{name}-webkit%{?_isa} = %{version}-%{release}
+%endif
 
 Provides: python-qt4 = %{version}-%{release}
 Provides: pyqt4 = %{version}-%{release}
@@ -56,8 +69,10 @@ These are Python bindings for Qt4.
 %package devel
 Summary: Files needed to build other bindings based on Qt4
 Group:	 Development/Languages
+%if 0%{?fedora}
 Provides: %{name}-webkit-devel = %{version}-%{release}
 Provides: %{name}-webkit-devel%{?_isa} = %{version}-%{release}
+%endif
 Provides: pyqt4-devel = %{version}-%{release}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 Requires: qt4-devel
@@ -76,8 +91,10 @@ Group:   Development/Languages
 # Requires: dbus-python
 %{?_qt4_version:Requires: qt4%{?_isa} >= %{_qt4_version}}
 %{?_sip_api:Requires: python3-sip-api(%{_sip_api_major}) >= %{_sip_api}}
+%if 0%{?fedora}
 Provides: python3-%{name}-webkit = %{version}-%{release}
 Provides: python3-%{name}-webkit%{?_isa} = %{version}-%{release}
+%endif
 Provides: python3-qt4 = %{version}-%{release}
 
 %description -n python3-%{name}
@@ -86,8 +103,10 @@ These are Python 3 bindings for Qt4.
 %package -n python3-%{name}-devel
 Summary: Python 3 bindings for Qt4
 Group:   Development/Languages
+%if 0%{?fedora}
 Provides: python3-%{name}-webkit-devel = %{version}-%{release}
 Provides: python3-%{name}-webkit-devel%{?_isa} = %{version}-%{release}
+%endif
 Requires: python3-%{name}%{?_isa} = %{version}-%{release}
 Requires: python3-sip-devel
 %description -n python3-%{name}-devel
@@ -98,11 +117,17 @@ from any of the Qt4 classes (e.g. KDE or your own).
 %prep
 %setup -q -n PyQt-x11-gpl%{?snap:-snapshot}-%{version}%{?snap:-%{snap}} 
 
-%patch4 -p1
 %patch50 -p1 -b .timestamp
+%patch51 -p1 -b .opengl_types
+%patch52 -p1 -b .pyuic_shbang
+# save orig for comparison later
+cp -a ./sip/QtOpenGL/opengl_types.sip ./sip/QtOpenGL/opengl_types.sip.orig
+%patch60 -p1 -b .arm
+%if 0%{?rhel}
+%patch300 -p1 -b .webkit
+%endif
 
-## permissions
-# mark examples non-executable
+# permissions, mark examples non-executable
 find examples/ -name "*.py" | xargs chmod a-x
 chmod a+rx pyuic/uic/pyuic.py
 
@@ -205,6 +230,11 @@ test -f %{buildroot}%{python3_sitearch}/PyQt4/phonon.so
 test -d %{buildroot}%{_datadir}/python3-sip/PyQt4/phonon
 %endif # with_python3
 
+# verify opengl_types.sip sanity
+diff -u ./sip/QtOpenGL/opengl_types.sip.orig \
+        ./sip/QtOpenGL/opengl_types.sip ||:
+magic_rpm_clean.sh
+
 %clean
 rm -rf %{buildroot}
 
@@ -257,6 +287,42 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Oct 01 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.5-1
+- PyQt-4.9.5
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 4.9.4-5
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 4.9.4-4
+- make with_python3 be conditional on fedora
+
+* Mon Jul 30 2012 Than Ngo <than@redhat.com> - 4.9.4-3
+- update webkit patch
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.4-1
+- 4.9.4
+
+* Sun Jun 24 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.3-1
+- 4.9.3
+
+* Fri Jun 22 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.2-1
+- 4.9.2
+
+* Thu Jun 21 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.1-4
+- PyQt4 opengl-types.sip multilib conflict (#509415)
+
+* Fri May 04 2012 Than Ngo <than@redhat.com> - 4.9.1-3
+- add rhel/fedora condition
+
+* Sun Mar  4 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 4.9.1-2
+- Add upstream patch (via Debian) to fix FTBFS on ARM
+
+* Sat Feb 11 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.1-1
+- 4.9.1
+
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

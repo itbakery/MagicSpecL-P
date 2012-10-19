@@ -1,6 +1,6 @@
 Name:           perl-File-Which
 Version:        1.09
-Release:        7%{?dist}
+Release:        10%{?dist}
 Summary:        Portable implementation of the 'which' utility
 
 Group:          Development/Libraries
@@ -60,6 +60,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.09-9
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.09-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

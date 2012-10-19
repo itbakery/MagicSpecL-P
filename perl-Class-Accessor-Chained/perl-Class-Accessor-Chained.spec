@@ -1,6 +1,6 @@
 Name:           perl-Class-Accessor-Chained
 Version:        0.01
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Make chained accessors
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,8 +40,11 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-17
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.01-17
+- Perl 5.16 rebuild
 
 * Sun Jan 22 2012 Tom Callaway <spot@fedoraproject.org> - 0.01-16
 - fix build

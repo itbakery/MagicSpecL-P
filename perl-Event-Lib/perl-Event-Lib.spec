@@ -1,6 +1,6 @@
 Name:           perl-Event-Lib
 Version:        1.03
-Release:        16%{?dist}
+Release:        18%{?dist}
 Summary:        Perl wrapper around libevent
 
 Group:          Development/Libraries
@@ -64,6 +64,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.03-17
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

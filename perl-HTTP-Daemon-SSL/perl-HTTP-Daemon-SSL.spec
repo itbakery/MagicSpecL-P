@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,8 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/HTTP::Daemon::SSL.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-9
-- 为 Magic 3.0 重建
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.04-9
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,14 +1,15 @@
 Name:           perl-HTTP-Date
-Version:        6.01
-Release:        1%{?dist}
+Version:        6.02
+Release:        3%{?dist}
 Summary:        Date conversion routines
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-Date/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/HTTP-Date-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Time::Local)
 BuildRequires:  perl(Time::Zone)
 # Tests only:
@@ -40,12 +41,20 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.02-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 6.02-2
+- Perl 5.16 rebuild
+
+* Mon Apr 02 2012 Petr Pisar <ppisar@redhat.com> - 6.02-1
+- 6.02 bump
+
 * Thu Feb 16 2012 Petr Pisar <ppisar@redhat.com> - 6.01-1
 - 6.01 bump
 

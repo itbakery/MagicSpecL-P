@@ -1,17 +1,18 @@
 Name:           perl-Hook-LexWrap
-Version:        0.22
-Release:        9%{?dist}
+Version:        0.24
+Release:        1%{?dist}
 Summary:        Lexically scoped subroutine wrappers
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Hook-LexWrap/
-Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Hook-LexWrap-%{version}.zip
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Hook-LexWrap-%{version}.tar.gz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker), perl(Test::More), perl(Test::Pod)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Pod)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Hook::LexWrap allows you to install a pre- or post-wrapper (or both)
@@ -20,39 +21,57 @@ capacity (e.g. Hook::PreAndPost and Hook::WrapSub), Hook::LexWrap
 implements wrappers in such a way that the standard `caller' function
 works correctly within the wrapped subroutine.
 
-
 %prep
 %setup -q -n Hook-LexWrap-%{version}
 
+# Fix line endings
+sed -i -e 's/\r$//' Changes README demo/*
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+rm -rf %{buildroot}
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+%{_fixperms} %{buildroot}
 
 %check
 make test
 
-
 %clean
-rm -rf $RPM_BUILD_ROOT
-
+rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%doc Changes README demo/
 %{perl_vendorlib}/Hook/
-%{_mandir}/man3/*.3pm*
-
+%{_mandir}/man3/Hook::LexWrap.3pm*
 
 %changelog
+* Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.24-1
+- Update to 0.24
+  - Add Build.PL
+  - Better support for debugger
+  - Makefile.PL fixed
+  - New test added
+- BR: perl(Carp)
+- Include demo files as %%doc
+- Fix line endings on documentation
+- Upstream release is now a tarball rather than a zipfile
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Use %%{_fixperms} macro rather than our own chmod incantation
+- Don't use macros for commands
+- Make %%files list more explicit
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.22-10
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

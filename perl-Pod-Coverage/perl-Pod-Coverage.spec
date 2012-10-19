@@ -1,6 +1,6 @@
 Name:           perl-Pod-Coverage
 Version:        0.22
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Checks if the documentation of a module is comprehensive
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,12 @@ make test
 %{_mandir}/man3/Pod::Coverage::Overloader.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.22-2
+- Perl 5.16 rebuild
+
 * Wed Feb 08 2012 Petr Šabata <contyk@redhat.com> - 0.22-1
 - 0.22 bump
 - Switch to EE::MM

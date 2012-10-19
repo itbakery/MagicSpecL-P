@@ -1,6 +1,6 @@
 Name:           perl-Spiffy
 Version:        0.30
-Release:        18%{?dist}
+Release:        20%{?dist}
 Summary:        Framework for doing object oriented (OO) programming in Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -9,7 +9,16 @@ Source0:        http://www.cpan.org/authors/id/I/IN/INGY/Spiffy-%{version}.tar.g
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Filter::Util::Call)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(YAML)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 # Filter bogus provide of perl(DB) (rpm < 4.9)
@@ -56,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Spiffy.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.30-19
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

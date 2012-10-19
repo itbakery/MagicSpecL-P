@@ -1,7 +1,7 @@
 Name:           perl-TimeDate
 Version:        1.20
 Epoch:          1
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        A Perl module for time and date manipulation
 
 Group:          Development/Libraries
@@ -11,7 +11,11 @@ Source0:        http://www.cpan.org/authors/id/G/GB/GBARR/TimeDate-%{version}.ta
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Time::Local)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This module includes a number of smaller modules suited for
@@ -32,7 +36,7 @@ mv ChangeLog.utf8 ChangeLog
 chmod -x lib/Date/Language/{Russian_cp1251,Russian_koi8r,Turkish}.pm
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -51,6 +55,15 @@ make test
 
 
 %changelog
+* Thu Aug 16 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.20-9
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.20-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1:1.20-7
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.20-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

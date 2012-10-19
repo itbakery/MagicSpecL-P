@@ -1,13 +1,12 @@
-# sitelib for noarch packages, sitearch for others (remove the unneeded one)
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
+%if 0%{?fedora}
 %global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %endif
 
 Name:           python-decorator
-Version:        3.3.2
-Release:        1%{?dist}
+Version:        3.3.3
+Release:        4%{?dist}
 Summary:        Module to simplify usage of decorators
 
 Group:          Development/Languages
@@ -76,6 +75,7 @@ pushd %{py3dir}
 %{__python3} setup.py install --skip-build --root $RPM_BUILD_ROOT
 popd
 %endif # with_python3
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -107,6 +107,21 @@ popd
 
 
 %changelog
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.3-4
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.3-3
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Apr 24 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 3.3.3-1
+- New upstream release
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Sep 2 2011 Toshio Kuratomi <toshio@fedoraproject.org> - 3.3.2-1
 - New upstream release
 

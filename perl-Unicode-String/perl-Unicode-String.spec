@@ -1,6 +1,6 @@
 Name:           perl-Unicode-String
 Version:        2.09
-Release:        21%{?dist}
+Release:        26%{?dist}
 
 Summary:        Perl modules to handle various Unicode issues
 
@@ -12,7 +12,7 @@ License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Unicode-String/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/Unicode-String-2.09.tar.gz
 Patch0:         perl-Unicode-String-2.09-utf8doc.patch
-BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+Patch1:         perl-Unicode-String-2.09-undefined.patch
 
 BuildRequires:  perl(ExtUtils::MakeMaker), perl(MIME::Base64)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -33,13 +33,16 @@ Requires:       perl(MIME::Base64)
 # character code conversion that would be wrong if simply recoded
 %patch0 -p1
 
+# Suppress warnings in newer versions of Perl
+# Patch is upstreamed as RT #74354
+%patch1 -p1
+
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install \
   DESTDIR=$RPM_BUILD_ROOT \
   INSTALLARCHLIB=$RPM_BUILD_ROOT%{perl_archlib}
@@ -53,12 +56,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorarch}/auto/Unicode
 %{perl_vendorarch}/Unicode
@@ -66,6 +64,22 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-26
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 2.09-25
+- Perl 5.16 rebuild
+
+* Sun Jun 24 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 2.09-24
+- Really add the patch
+
+* Sun Jun 24 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 2.09-23
+- Add patch to suppress warnings (#834867)
+- Clean up spec file
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.09-22
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-21
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

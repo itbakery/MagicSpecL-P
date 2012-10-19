@@ -74,11 +74,11 @@ make test
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.46-6
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.46-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.46-5
-- 为 Magic 3.0 重建
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.46-5
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.46-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

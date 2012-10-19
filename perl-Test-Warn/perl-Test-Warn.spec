@@ -1,5 +1,5 @@
 Name:           perl-Test-Warn
-Version:        0.23
+Version:        0.24
 Release:        3%{?dist}
 Summary:        Perl extension to test methods for warnings
 Group:          Development/Libraries
@@ -7,55 +7,66 @@ License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-Warn/
 Source0:        http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Test-Warn-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp) >= 1.22
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Sub::Uplevel) >= 0.12
 BuildRequires:  perl(Test::Builder) >= 0.13
 BuildRequires:  perl(Test::Builder::Tester) >= 1.02
-BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Tree::DAG_Node)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(Test::Builder) >= 0.13
+BuildRequires:  perl(Tree::DAG_Node) >= 1.02
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(Test::Builder::Tester) >= 1.02
-Requires:       perl(Tree::DAG_Node)
-
-%{?perl_default_filter}
+Requires:       perl(Tree::DAG_Node) >= 1.02
 
 %description
 This module provides a few convenience methods for testing warning
 based code.
 
-
 %prep
 %setup -q -n Test-Warn-%{version}
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-%{_fixperms} $RPM_BUILD_ROOT/*
-
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
 make test
 
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/Test/
-%{_mandir}/man3/*.3pm*
-
+%{_mandir}/man3/Test::Warn.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.24-2
+- Perl 5.16 rebuild
+
+* Sun Apr  1 2012 Paul Howarth <paul@city-fan.org> - 0.24-1
+- Update to 0.24 (compatibility with Carp 1.25) (#808856)
+- BR: Perl core modules that might be dual-lived
+- BR/R: at least version 1.02 of perl(Tree::DAG_Node)
+- Drop redundant buildreq perl(Test::Exception)
+- Don't need to remove empty directories from buildroot
+- Drop explicit versioned runtime dependency on Test::Builder, satisfied in
+  all distributions since the dawn of time (nearly)
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Drop %%defattr, redundant since rpm 4.4
+- Drop redundant %%{?perl_default_filter}
+- Make %%files list more explicit
+- Don't use macros for commands
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
@@ -73,7 +84,7 @@ make test
 - update to 0.22
 
 * Wed Dec 22 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.21-4
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri May 07 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.21-3
 - Mass rebuild with perl-5.12.0

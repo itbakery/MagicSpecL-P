@@ -1,27 +1,35 @@
+%global cpan_version 1.9
+
 Name:           perl-BDB
-Version:        1.9
-Release:        1%{?dist}
+# Extend to 2 digits to get higher RPM package version than 1.88
+Version:        %{cpan_version}0
+Release:        3%{?dist}
 Summary:        Asynchronous Berkeley DB access
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/BDB/
-Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/BDB-%{version}.tar.gz
-Patch0:		perl-BDB-db5.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/BDB-%{cpan_version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(base)
 BuildRequires:  perl(common::sense)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(XSLoader)
 BuildRequires:  libdb-devel
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(XSLoader)
+
+%{?perl_default_filter}
 
 %description
 Asynchronous Berkeley DB access.
 
 
 %prep
-%setup -q -n BDB-%{version}
-#%patch0 -p1
+%setup -q -n BDB-%{cpan_version}
+
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -54,6 +62,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.90-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.90-2
+- Perl 5.16 rebuild
+
+* Thu Apr 19 2012 Petr Pisar <ppisar@redhat.com> - 1.90-1
+- 1.9 bump
+- Use Berkeley database version 5
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.88-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

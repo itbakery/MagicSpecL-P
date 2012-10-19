@@ -1,28 +1,41 @@
 Name:		perl-List-MoreUtils
 Version:	0.33
-Release:	1%{?dist}
+Release:	7%{?dist}
 Summary:	Provide the stuff missing in List::Util
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/List-MoreUtils/
 Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/List-MoreUtils-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(constant)
+BuildRequires:	perl(Exporter)
+BuildRequires:	perl(ExtUtils::CBuilder)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Pod::Simple)
 BuildRequires:	perl(Test::CPAN::Meta)
-%if "%{rhel}" != "4" && "%{rhel}" != "5"
+# For EL-7 onwards, this package is imported to RHEL, where Test::LeakTrace in EPEL isn't available
+%if 0%{?rhel} < 7
 BuildRequires:	perl(Test::LeakTrace)
+%endif
 # Test::MinimumVersion -> Perl::MinimumVersion -> PPI -> List::MoreUtils
 %if 0%{!?perl_bootstrap:1}
 BuildRequires:	perl(Test::MinimumVersion)
 %endif
-%endif
 BuildRequires:	perl(Test::More) >= 0.42
 BuildRequires:	perl(Test::Pod)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 
 # Don't "provide" private Perl libs
+%if 0%{?rhel}%{?fedora} < 6
+%global _use_internal_dependency_generator 0
+%global __deploop() while read FILE; do /usr/lib/rpm/rpmdeps -%{1} ${FILE}; done | sort -u
+%global __find_provides /bin/sh -c "grep -v '%{perl_vendorarch}/.*\\.so$' | %{__deploop P}"
+%global __find_requires /bin/sh -c "%{__deploop R}"
+%else
 %{?perl_default_filter}
+%endif
 
 %description
 List::MoreUtils provides some trivial but commonly needed functionality
@@ -40,7 +53,6 @@ rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -51,13 +63,37 @@ make test TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README LICENSE
 %{perl_vendorarch}/List/
 %{perl_vendorarch}/auto/List/
 %{_mandir}/man3/List::MoreUtils.3pm*
 
 %changelog
+* Wed Oct 17 2012 Paul Howarth <paul@city-fan.org> - 0.33-7
+- BR:/R: perl(Carp)
+- BR: perl(constant), perl(Exporter) and perl(ExtUtils::CBuilder)
+- Add commentary regarding non-use of Test::LeakTrace for EL-7 builds
+- Use Test::LeakTrace for EL-5 builds
+- Drop support for EL-4 builds since it was EOL-ed ages ago
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- Remove more command macros
+
+* Mon Oct 15 2012 Petr Pisar <ppisar@redhat.com> - 0.33-6
+- Do not build-require Test::LeakTrace on RHEL 7
+
+* Fri Jul 27 2012 Tom Callaway <spot@fedoraproject.org> - 0.33-5
+- Add epel filtering mechanism
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.33-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 0.33-2
+- Perl 5.16 rebuild
+
 * Tue Jan 24 2012 Paul Howarth <paul@city-fan.org> - 0.33-1
 - Update to 0.33
   - Updated can_xs to fix a bug in it

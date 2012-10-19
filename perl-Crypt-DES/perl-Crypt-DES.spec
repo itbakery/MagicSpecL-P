@@ -1,15 +1,24 @@
 Name:           perl-Crypt-DES
 Version:        2.05
-Release:        15%{?dist}
+Release:        18%{?dist}
 Summary:        Perl DES encryption module
 License:        BSD
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-DES/
 Source0:        http://www.cpan.org/authors/id/D/DP/DPARIS/Crypt-DES-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  perl(Crypt::CBC)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+# Tests:
+BuildRequires:  perl(Crypt::CBC) > 1.22
+BuildRequires:  perl(Benchmark)
+BuildRequires:  perl(Data::Dumper)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 DES encryption module.
@@ -46,6 +55,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 2.05-17
+- Perl 5.16 rebuild
+
+* Fri May 25 2012 Petr Pisar <ppisar@redhat.com> - 2.05-16
+- Update build-time dependencies
+- Do not export private libraries
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

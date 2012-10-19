@@ -1,6 +1,6 @@
 Name:           perl-XML-NamespaceSupport
 Version:        1.11
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        A simple generic namespace support class
 
 Group:          Development/Libraries
@@ -10,13 +10,17 @@ Source0:        http://www.cpan.org/authors/id/P/PE/PERIGRIN/XML-NamespaceSuppor
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires:  perl(File::Path)
 BuildRequires:  perl(Test::More) >= 0.47
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
-%{summary}.
-
+This module offers a simple to process namespaced XML names (unames) from
+within any application that may need them. It also helps maintain a prefix
+to namespace URI map, and provides a number of basic checks.
 
 %prep
 %setup -q -n XML-NamespaceSupport-%{version}
@@ -48,6 +52,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.11-9
+- Specify all dependencies.
+- Update %%description.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.11-7
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

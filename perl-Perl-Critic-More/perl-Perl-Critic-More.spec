@@ -1,17 +1,22 @@
 Name:           perl-Perl-Critic-More
 Version:        1.000
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Supplemental policies for Perl::Critic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Perl-Critic-More/
 Source0:        http://www.cpan.org/authors/id/E/EL/ELLIOTJS/Perl-Critic-More-%{version}.tar.gz
+# Add Miscellanea::RequireRcsKeywords removed from Perl::Critic as intended
+# by slow upstream, bug #839815, CPAN RT#69546
+Patch0:         Perl-Critic-More-1.000-Miscellanea::RequireRcsKeywords.patch
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Perl::Critic) >= 1.082
 BuildRequires:  perl(Perl::MinimumVersion) >= 0.14
 BuildRequires:  perl(Readonly) >= 1.03
 # Tests:
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(List::MoreUtils)
 BuildRequires:  perl(Perl::Critic::Config)
 BuildRequires:  perl(Perl::Critic::Policy)
@@ -26,11 +31,7 @@ Requires:       perl(Perl::Critic) >= 1.082
 Requires:       perl(Perl::MinimumVersion) >= 0.14
 Requires:       perl(Readonly) >= 1.03
 
-# Remove underspecified dependencies for RPM 4.8
-%filter_from_requires /^perl(Readonly)\s*$/d
-%filter_setup
-# filter for RPM 4.9
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(Readonly\\)\\s*$
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Readonly\\)$
 
 %description
 This is a collection of Perl::Critic policies that are not included in the
@@ -38,6 +39,7 @@ Perl::Critic core for a variety of reasons.
 
 %prep
 %setup -q -n Perl-Critic-More-%{version}
+%patch0 -p0
 
 %build
 %{__perl} Build.PL installdirs=vendor
@@ -58,6 +60,16 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul 13 2012 Petr Pisar <ppisar@redhat.com> - 1.000-6
+- Add Miscellanea::RequireRcsKeywords droped from Perl::Critic. Credits to Paul
+  Howarth. (bug #839815)
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.000-5
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.000-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

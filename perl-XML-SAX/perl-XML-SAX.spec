@@ -1,28 +1,36 @@
 Summary:        XML-SAX Perl module
 Name:           perl-XML-SAX
 Version:        0.99
-Release:        2%{?dist}
+Release:        6%{?dist}
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/XML-SAX/
 Source0:        http://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Fix rt#20126
+Patch0:         perl-XML-SAX-0.99-rt20126.patch
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Fatal)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(XML::NamespaceSupport) >= 0.03
-# The following creates circular dependency, but they are not needed for build.
-#BuildRequires:  perl(XML::LibXML) perl(XML::LibXML::Common)
 # XML::SAX::Base became independent package, BR just for test
 BuildRequires:  perl(XML::SAX::Base)
-
+BuildRequires:  perl(XML::SAX::Exception)
 Requires:       perl(:MODULE_COMPAT_%(perl -MConfig -e 'print $Config{version}'))
-Requires:       perl(XML::LibXML) perl(XML::LibXML::Common)
 
-%{?perl_default_filter}
-%global __provides_exclude %{?__provides_exclude}|perl\\(XML::SAX::PurePerl\\)
-%global __requires_exclude %{?__requires_exclude}|perl\\(XML::SAX::PurePerl::DTDDecls\\)|perl\\(XML::SAX::PurePerl::DocType\\)|perl\\(XML::SAX::PurePerl::EncodingDetect\\)|perl\\(XML::SAX::PurePerl::XMLDecl\))|perl\\(XML::SAX::PurePerl::NoUnicodeExt\\)|perl\\(XML::SAX::PurePerl::Reader::NoUnicodeExt\\)|perl\\(XML::SAX::PurePerl::UnicodeExt\\)|perl\\(XML::SAX::PurePerl::XMLDecl\\)
+# Remove bogus XML::SAX::PurePerl* dependencies and unversioned provides
+%global __requires_exclude ^perl\\(XML::SAX::PurePerl
+%global __provides_exclude ^perl\\(XML::SAX::PurePerl\\)$
 
 %description
 XML::SAX consists of several framework classes for using and building
@@ -35,6 +43,7 @@ JAXP specification (SAX part), only without the javaness.
 
 %prep
 %setup -q -n XML-SAX-%{version}
+%patch0 -p1
 
 
 %build
@@ -44,7 +53,6 @@ make %{?_smp_mflags}
 %install
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 touch $RPM_BUILD_ROOT%{perl_vendorlib}/XML/SAX/ParserDetails.ini
@@ -52,7 +60,8 @@ touch $RPM_BUILD_ROOT%{perl_vendorlib}/XML/SAX/ParserDetails.ini
 %check
 make test
 
-
+# See http://rhn.redhat.com/errata/RHBA-2010-0008.html regarding these scriptlets
+# perl-XML-LibXML-1.58-6 is in EL 5.8 and possibly later EL-5 releases
 %post
 if [ ! -f "%{perl_vendorlib}/XML/SAX/ParserDetails.ini" ] ; then
   perl -MXML::SAX -e \
@@ -77,17 +86,34 @@ rm -rf "%{perl_vendorlib}/XML/SAX/ParserDetails.ini.backup" || :
 
 %files
 %doc Changes LICENSE README
-%dir %{perl_vendorlib}/XML
+%dir %{perl_vendorlib}/XML/
 %{perl_vendorlib}/XML/SAX.pm
-%dir %{perl_vendorlib}/XML/SAX
+%dir %{perl_vendorlib}/XML/SAX/
 %{perl_vendorlib}/XML/SAX/*.pm
-%{perl_vendorlib}/XML/SAX/*.pod
-%{perl_vendorlib}/XML/SAX/PurePerl
+%doc %{perl_vendorlib}/XML/SAX/*.pod
+%{perl_vendorlib}/XML/SAX/PurePerl/
 %{_mandir}/man3/XML::*.3pm*
 %ghost %{perl_vendorlib}/XML/SAX/ParserDetails.ini
 
 
 %changelog
+* Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.99-6
+- Fixed incorrect parsing of comments (RT#20126).
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.99-4
+- Perl 5.16 rebuild
+
+* Sat Mar 17 2012 Paul Howarth <paul@city-fan.org> - 0.99-3
+- Drop redundant runtime dependencies on perl(XML::LibXML) and
+  perl(XML::LibXML::Common), which cause circular build dependencies (#720974)
+- Simplify provides and requires filters
+- Don't need to remove empty directories from buildroot
+- Mark POD files as %%doc
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

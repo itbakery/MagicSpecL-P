@@ -1,67 +1,94 @@
 Name:           perl-YAML-LibYAML
 Version:        0.38
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Perl YAML Serialization using XS and libyaml
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-LibYAML/
 Source0:        http://search.cpan.org/CPAN/authors/id/I/IN/INGY/YAML-LibYAML-%{version}.tar.gz
-BuildRequires:  perl(B::Deparse)
-BuildRequires:  perl(base)
-BuildRequires:  perl(constant)
+Patch0:         YAML-LibYAML-0.35-format-error.patch
+
+# Install
 BuildRequires:  perl(Cwd)
-BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec)
+
+# Module
+BuildRequires:  perl >= 3:5.8.3
+BuildRequires:  perl(B::Deparse)
+BuildRequires:  perl(base)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(XSLoader)
+
+# Tests
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Devel::Peek)
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::Builder::Module)
 BuildRequires:  perl(Test::More)
-# Tests only
-BuildRequires:  perl(Devel::Peek)
-BuildRequires:  perl(File::Path)
-BuildRequires:  perl(Scalar::Util)
-BuildRequires:  perl(Test::Base)
-BuildRequires:  perl(Test::Base::Filter)
 BuildRequires:  perl(Tie::Array)
 BuildRequires:  perl(Tie::Hash)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
+# Runtime
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+
+# Avoid provides for perl shared objects
 %{?perl_default_filter}
 
 %description
-Kirill Siminov's "libyaml" is arguably the best YAML
-implementation. The C library is written precisely to the YAML 1.1
-specification. It was originally bound to Python and was later
-bound to Ruby.
+Kirill Siminov's "libyaml" is arguably the best YAML implementation. The C
+library is written precisely to the YAML 1.1 specification. It was originally
+bound to Python and was later bound to Ruby.
 
 %prep
 %setup -q -n YAML-LibYAML-%{version}
 
+# Fix format string vulnerabilities (CVE-2012-1152, CPAN RT#46507)
+%patch0 -p1
+
 %build
-%{__perl} Makefile.PL INSTALLDIRS=perl OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-%{_fixperms} %{buildroot}/*
+%{_fixperms} %{buildroot}
 
 %check
 make test
 
 %files
 %doc Changes README
-%{perl_archlib}/auto/*
-%{perl_archlib}/YAML*
-%{_mandir}/man3/*
+%{perl_vendorarch}/auto/YAML/
+%{perl_vendorarch}/YAML/
+%{_mandir}/man3/YAML::XS.3pm*
+%{_mandir}/man3/YAML::XS::LibYAML.3pm*
 
 %changelog
-* Fri Jan 13 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.38-2
-- bump to 0.38
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.38-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.38-3
+- Perl 5.16 rebuild
+- Build-require Data::Dumper
+
+* Thu Mar 29 2012 Paul Howarth <paul@city-fan.org> - 0.38-2
+- Fix various format string vulnerabilities (CVE-2012-1152, CPAN RT#46507)
+- De-duplicate buildreqs, with Module>Install>Tests priority
+- Install to vendor directories
+- Don't need to remove empty directories from buildroot
+- Don't use macros for commands
+- Make %%files list more explicit
+- Tidy %%description
+
+* Fri Jan 13 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.38-1
+- Bump to 0.38
 
 * Fri Sep 30 2011 Petr Sabata <contyk@redhat.com> - 0.37-1
 - 0.37 bump

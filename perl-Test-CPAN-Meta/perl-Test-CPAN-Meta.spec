@@ -1,14 +1,15 @@
 Name:           perl-Test-CPAN-Meta
-Version:        0.17
-Release:        5%{?dist}
+Version:        0.21
+Release:        3%{?dist}
 Summary:        Validation of the META.yml file in a CPAN distribution
-License:        GPL+ or Artistic
+License:        Artistic 2.0
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-CPAN-Meta/
 Source0:        http://www.cpan.org/authors/id/B/BA/BARBIE/Test-CPAN-Meta-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(IO::File)
 BuildRequires:  perl(Parse::CPAN::Meta) >= 0.02
 BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::Builder::Tester)
@@ -52,11 +53,20 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Artistic Changes LICENSE README examples/
+%doc Changes LICENSE README examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.21-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.21-2
+- Perl 5.16 rebuild
+
+* Fri Apr 27 2012 Petr Pisar <ppisar@redhat.com> - 0.21-1
+- 0.21 bump
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.17-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,39 +1,68 @@
+# PPI::XSAccessor is experimental
+%if 0%{?rhel} >= 7
+%bcond_with XSAccessor
+%else
+%bcond_without XSAccessor
+%endif
+
 Name:           perl-PPI
 Version:        1.215
-Release:        4%{?dist}
+Release:        9%{?dist}
 Summary:        Parse, Analyze and Manipulate Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/PPI/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/PPI-%{version}.tar.gz
-Patch0:         PPI-1.215-UTF8.patch
+Patch0:         PPI-1.215-utf8.patch
 BuildArch:      noarch
+# =============== Module Build ======================
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(List::Util) >= 1.20
-BuildRequires:  perl(Storable) >= 2.17
+BuildRequires:  perl(Task::Weaken)
+# =============== Module Runtime ====================
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(Clone) >= 0.30
+BuildRequires:  perl(constant)
 BuildRequires:  perl(Digest::MD5) >= 2.35
-BuildRequires:  perl(File::Remove) >= 1.42
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec) >= 0.84
 BuildRequires:  perl(IO::String) >= 1.07
 BuildRequires:  perl(List::MoreUtils) >= 0.16
+BuildRequires:  perl(List::Util) >= 1.20
 BuildRequires:  perl(Params::Util) >= 1.00
-BuildRequires:  perl(Task::Weaken)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Storable) >= 2.17
+# =============== Test Suite ========================
+BuildRequires:  perl(Class::Inspector) >= 1.22
+BuildRequires:  perl(File::Remove) >= 0.39
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(File::Spec::Unix)
 BuildRequires:  perl(Test::More) >= 0.86
 BuildRequires:  perl(Test::NoWarnings) >= 0.084
 BuildRequires:  perl(Test::Object) >= 0.07
 BuildRequires:  perl(Test::SubCalls) >= 1.07
+BuildRequires:  perl(Time::HiRes)
+# =============== Release Tests =====================
 # Circular dependencies in release tests, so don't do them when bootstrapping:
 # Perl::MinimumVersion -> PPI
 %if 0%{!?perl_bootstrap:1}
 BuildRequires:  perl(File::Find::Rule) >= 0.32
 BuildRequires:  perl(File::Find::Rule::Perl) >= 1.09
 BuildRequires:  perl(Perl::MinimumVersion) >= 1.20
+BuildRequires:  perl(Pod::Simple) >= 3.14
 BuildRequires:  perl(Test::ClassAPI) >= 1.03
-BuildRequires:  perl(Test::CPAN::Meta)
+BuildRequires:  perl(Test::CPAN::Meta) >= 0.17
 BuildRequires:  perl(Test::MinimumVersion) >= 0.101080
-BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Pod) >= 1.44
 %endif
+# =============== Module Runtime ====================
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%if %{with XSAccessor}
+Requires:       perl(Class::XSAccessor)
+%endif
+# Run-require Task::Weaken, see Changes for more details.
+Requires:       perl(Task::Weaken)
 
 # Filter out redundant unversioned provides
 %global __provides_exclude ^perl\\(PPI::.+\\)$
@@ -41,32 +70,31 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 %description
 Parse, analyze and manipulate Perl (without perl).
 
-
 %prep
 %setup -q -n PPI-%{version}
 
-# Re-code docs as UTF-8
-%patch0 -p1
+# Recode documentation as UTF-8
+%patch0
 
+%if %{without XSAccessor}
+rm lib/PPI/XSAccessor.pm
+sed -i '/^lib\/PPI\/XSAccessor\.pm$/d' MANIFEST
+%endif
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}
 
-
 %check
-#make test
-#%if 0%{!?perl_bootstrap:1}
-#make test TEST_FILES="xt/*.t" RELEASE_TESTING=1
-#%endif
-
+make test
+%if 0%{!?perl_bootstrap:1}
+make test TEST_FILES="xt/*.t" RELEASE_TESTING=1
+%endif
 
 %files
 %doc Changes LICENSE README inline2test.conf inline2test.tpl
@@ -74,10 +102,30 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{perl_vendorlib}/PPI.pm
 %{_mandir}/man3/PPI*.3pm*
 
-
 %changelog
+* Sat Aug 25 2012 Paul Howarth <paul@city-fan.org> - 1.215-9
+- classify buildreqs by usage
+- BR: perl(Time::HiRes) for the test suite
+- BR: perl(Pod::Simple) ≥ 3.14 for the release tests
+- BR: at least version 0.17 of perl(Test::CPAN::Meta)
+- bump perl(Test::Pod) version requirement to 1.44
+- don't need to remove empty directories from the buildroot
+
+* Thu Aug 16 2012 Petr Pisar <ppisar@redhat.com> - 1.215-8
+- specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.215-7
+- rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.215-6
+- perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 1.215-5
+- perl 5.16 rebuild
+- build-require Class::Inspector for tests
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.215-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+- rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Thu Jul 21 2011 Paul Howarth <paul@city-fan.org> - 1.215-3
 - always run test suite but don't run release tests when bootstrapping

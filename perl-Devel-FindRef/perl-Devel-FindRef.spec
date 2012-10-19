@@ -1,11 +1,14 @@
 Name:           perl-Devel-FindRef
 Version:        1.42
-Release:        14%{?dist}
+Release:        18%{?dist}
 Summary:        Where is that reference to my variable hiding?
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-FindRef/
 Source0:        http://www.cpan.org/authors/id/M/ML/MLEHMANN/Devel-FindRef-%{version}2.tar.gz
+Patch0:         0001-Fix-compiler-warnings.patch
+Patch1:         0001-Fix-64-bit-warnings.patch
+Patch2:         Devel-FindRef-fix.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(common::sense)
@@ -19,6 +22,11 @@ references "backwards" is usually possible.
 
 %prep
 %setup -q -n Devel-FindRef-%{version}2
+%patch0 -p1
+%if %{__isa_bits} == 64
+%patch1 -p1
+%endif
+%patch2 -p1
 
 
 %build
@@ -50,6 +58,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel*.3*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.42-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.42-17
+- Perl 5.16 rebuild
+
+* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.42-16
+- Fix rhbz#815073 - Segfault in XS_Devel__FindRef_find_()
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.42-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

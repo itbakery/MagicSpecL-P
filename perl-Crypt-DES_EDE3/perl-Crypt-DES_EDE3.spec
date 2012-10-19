@@ -1,6 +1,6 @@
 Name:           perl-Crypt-DES_EDE3
 Version:        0.01
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        Triple-DES EDE encryption/decryption module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -10,6 +10,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Crypt::DES)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:	perl-Pod-Perldoc
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -49,8 +50,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-14
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.01-16
+- Perl 5.16 rebuild
+
+* Thu Mar 22 2012 Tom Callaway <spot@fedoraproject.org> - 0.01-15
+- fix missing BR for perldoc
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Jun 20 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.01-13
 - Perl mass rebuild

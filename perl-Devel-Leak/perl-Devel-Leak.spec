@@ -1,6 +1,6 @@
 Name:           perl-Devel-Leak
 Version:        0.03
-Release:        16%{?dist}
+Release:        19%{?dist}
 Summary:        Utility for looking for perl objects that are not reclaimed
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,6 +8,11 @@ URL:            http://search.cpan.org/dist/Devel-Leak/
 Source0:        http://www.cpan.org/authors/id/N/NI/NI-S/Devel-Leak-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(base)
+BuildRequires:  perl(DynaLoader)
+# Tests:
+BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -46,6 +51,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.03-18
+- Perl 5.16 rebuild
+
+* Mon Jun 04 2012 Petr Pisar <ppisar@redhat.com> - 0.03-17
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

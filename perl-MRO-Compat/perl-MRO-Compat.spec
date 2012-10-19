@@ -3,7 +3,7 @@
 
 Name:		perl-MRO-Compat
 Version:	0.11
-Release:	9%{?dist}
+Release:	11%{?dist}
 Summary:	Mro::* interface compatibility for Perls < 5.9.5
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -73,6 +73,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MRO::Compat.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.11-10
+- Perl 5.16 rebuild
+
 * Thu Jan 26 2012 Paul Howarth <paul@city-fan.org> - 0.11-9
 - Spec clean-up:
   - Only require Class::C3 with perl < 5.9.5

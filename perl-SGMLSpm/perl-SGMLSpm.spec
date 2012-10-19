@@ -1,6 +1,6 @@
 Name:           perl-SGMLSpm
 Version:        1.03ii
-Release:        28%{?dist}
+Release:        29%{?dist}
 Summary:        Perl library for parsing the output of nsgmls
 
 Group:          Development/Libraries
@@ -44,8 +44,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 1.03ii-28
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03ii-29
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.03ii-28
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03ii-27
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

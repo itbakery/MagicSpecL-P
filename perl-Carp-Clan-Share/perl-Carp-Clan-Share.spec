@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan-Share
 Version:        0.013
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Share your Carp::Clan settings with your whole Clan
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,8 +47,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.013-9
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.013-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.013-9
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.013-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

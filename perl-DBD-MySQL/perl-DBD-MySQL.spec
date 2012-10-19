@@ -1,20 +1,17 @@
 Name:           perl-DBD-MySQL
-Version:        4.020
-Release:        2%{?dist}
+Version:        4.022
+Release:        1%{?dist}
 Summary:        A MySQL interface for perl
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DBD-mysql/
 Source0:        http://www.cpan.org/authors/id/C/CA/CAPTTOFU/DBD-mysql-%{version}.tar.gz
-Patch0:         DBD-mysql-is_prefix.patch
-# Prevent bug #443495
-BuildRequires:  perl(DBI) >= 1.607
-
 BuildRequires:  mysql, mysql-devel, zlib-devel
-BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(DBI)
 BuildRequires:  perl(DynaLoader)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(ExtUtils::MakeMaker)
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Provides:       perl-DBD-mysql = %{version}-%{release}
 
 %{?perl_default_filter}
@@ -24,7 +21,6 @@ An implementation of DBI for MySQL for Perl.
 
 %prep
 %setup -q -n DBD-mysql-%{version}
-%patch0 -p1
 # Correct file permissions
 find . -type f | xargs chmod -x
 
@@ -57,6 +53,18 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Thu Aug 30 2012 Petr Šabata <contyk@redhat.com> - 4.022-1
+- 4.022 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.021-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 4.021-2
+- Perl 5.16 rebuild
+
+* Wed May 02 2012 Petr Šabata <contyk@redhat.com> - 4.021-1
+- 4.021 bump
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.020-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

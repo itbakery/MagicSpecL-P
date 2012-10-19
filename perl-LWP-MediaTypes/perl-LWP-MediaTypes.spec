@@ -1,6 +1,6 @@
 Name:           perl-LWP-MediaTypes
 Version:        6.01
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        Guess media type for a file or a URL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.01-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 6.01-5
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.01-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

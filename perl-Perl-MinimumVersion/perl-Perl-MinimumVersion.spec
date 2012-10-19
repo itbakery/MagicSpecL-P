@@ -1,6 +1,6 @@
 Name:           perl-Perl-MinimumVersion
 Version:        1.28
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Find a minimum required version of perl for Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.28-6
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.28-5
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -7,7 +7,7 @@
 %bcond_without ipv6
 %bcond_without pflogsumm
 
-%global sysv2systemdnvr 2.8.7-2
+%global sysv2systemdnvr 2.8.12-2
 
 # hardened build if not overrided
 %{!?_hardened_build:%global _hardened_build 1}
@@ -37,8 +37,8 @@
 
 Name: postfix
 Summary: Postfix Mail Transport Agent
-Version: 2.9.1
-Release: 1%{?dist}
+Version: 2.9.4
+Release: 3%{?dist}
 Epoch: 2
 Group: System Environment/Daemons
 URL: http://www.postfix.org
@@ -57,6 +57,7 @@ Source1: postfix-etc-init.d-postfix
 Source2: postfix.service
 Source3: README-Postfix-SASL-RedHat.txt
 Source4: postfix.aliasesdb
+Source5: postfix-chroot-update
 
 # Sources 50-99 are upstream [patch] contributions
 
@@ -242,6 +243,7 @@ install -c %{SOURCE1} $RPM_BUILD_ROOT%{_initrddir}/postfix
 mkdir -p %{buildroot}%{_unitdir}
 install -m 644 %{SOURCE2} %{buildroot}%{_unitdir}
 install -m 755 %{SOURCE4} %{buildroot}%{postfix_daemon_dir}/aliasesdb
+install -m 755 %{SOURCE5} %{buildroot}%{postfix_daemon_dir}/chroot-update
 
 install -c auxiliary/rmail/rmail $RPM_BUILD_ROOT%{_bindir}/rmail.postfix
 
@@ -316,6 +318,8 @@ do
 	touch $RPM_BUILD_ROOT$i
 done
 
+magic_rpm_clean.sh
+
 %post
 [ $1 -eq 1 ] && bin/systemctl daemon-reload >/dev/null 2>&1 || :
 
@@ -361,25 +365,25 @@ exit 0
 
 %preun
 if [ "$1" = 0 ]; then
-    /bin/systemctl --no-reload disable postfix.service > /dev/null 2>&1 || :
-    /bin/systemctl stop postfix.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl --no-reload disable postfix.service > /dev/null 2>&1 || :
+    /usr/bin/systemctl stop postfix.service > /dev/null 2>&1 || :
     %{_sbindir}/alternatives --remove mta %{postfix_command_dir}/sendmail.postfix
 fi
 exit 0
 
 %postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ "$1" -ge 1 ]; then
-    /bin/systemctl try-restart postfix.service >/dev/null 2>&1 || :
+    /usr/bin/systemctl try-restart postfix.service >/dev/null 2>&1 || :
 fi
 
 %post sysvinit
-/sbin/chkconfig --add postfix >/dev/null 2>&1 ||:
+/usr/sbin/chkconfig --add postfix >/dev/null 2>&1 ||:
 
 %preun sysvinit
 if [ "$1" = 0 ]; then
     %{_initrddir}/postfix stop >/dev/null 2>&1 ||:
-    /sbin/chkconfig --del postfix >/dev/null 2>&1 ||:
+    /usr/sbin/chkconfig --del postfix >/dev/null 2>&1 ||:
 fi
 
 %postun sysvinit
@@ -387,12 +391,12 @@ fi
 
 %triggerun -- postfix < %{sysv2systemdnvr}
 %{_bindir}/systemd-sysv-convert --save postfix >/dev/null 2>&1 ||:
-/bin/systemctl enable postfix.service >/dev/null 2>&1
-/sbin/chkconfig --del postfix >/dev/null 2>&1 || :
-/bin/systemctl try-restart postfix.service >/dev/null 2>&1 || :
+%{_bindir}/systemd-sysv-convert --apply postfix >/dev/null 2>&1 ||:
+/usr/sbin/chkconfig --del postfix >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart postfix.service >/dev/null 2>&1 || :
 
 %triggerpostun -n postfix-sysvinit -- postfix < %{sysv2systemdnvr}
-/sbin/chkconfig --add postfix >/dev/null 2>&1 || :
+/usr/sbin/chkconfig --add postfix >/dev/null 2>&1 || :
 
 
 %clean
@@ -525,6 +529,39 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Sep  6 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.4-3
+- Fixed systemd error message about missing chroot-update
+  Resolves: rhbz#832742
+
+* Fri Aug  3 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.4-2
+- Fixed sysv2systemd upgrade from f16
+
+* Thu Aug  2 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.4-1
+- New version
+  Resolves: rhbz#845298
+- Dropped biff-cloexec patch (upstreamed)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:2.9.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 03 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.3-2
+- Fixed FD leak in biff
+
+* Tue Jun  5 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.3-1
+- New version
+  Resolves: rhbz#828242
+  Fixed sysv2systemd upgrade from f16
+
+* Wed Apr 25 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.2-2
+- Fixed sysv2systemd upgrade from f15 / f16
+
+* Wed Apr 25 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.2-1
+- New version
+  Resolves: rhbz#816139
+
+* Fri Apr  6 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.1-2
+- Rebuilt with libdb-5.2
+
 * Mon Feb 20 2012 Jaroslav Škarvada <jskarvad@redhat.com> - 2:2.9.1-1
 - New version
   Resolves: rhbz#794976

@@ -3,7 +3,7 @@ Summary:        FastCGI Perl bindings
 # needed to properly replace/obsolete fcgi-perl
 Epoch:          1
 Version:        0.74
-Release:        3%{?dist}
+Release:        5%{?dist}
 # same as fcgi
 License:        OML
 Group:          Development/Libraries
@@ -11,7 +11,16 @@ Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/FCGI-%{version
 URL:            http://search.cpan.org/dist/FCGI
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(Getopt::Long)
+BuildRequires:  perl(IO::File)
+# Run-requires:
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+# Tests:
+BuildRequires:  perl(Test)
 
 Provides:       fcgi-perl =  %{epoch}:%{version}-%{release}
 Obsoletes:      fcgi-perl =< 2.4.0
@@ -52,8 +61,14 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 1:0.74-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1:0.74-4
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 1:0.74-3
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.74-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

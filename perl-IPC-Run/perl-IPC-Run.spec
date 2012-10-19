@@ -1,6 +1,6 @@
 Name:           perl-IPC-Run
 Version:        0.89
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Perl module for interacting with child processes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -11,6 +11,7 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(IO::Pty) >= 1.00
 BuildRequires:  perl(Test::More) >= 0.47
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(IO::Pty) >= 1.00
 
 %description
 IPC::Run allows you run and interact with child processes using files,
@@ -54,6 +55,15 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 13 2012 Petr Pisar <ppisar@redhat.com> - 0.89-9
+- IO::Pty is required when passing ">pty>" argument (bug #857030)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.89-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.89-7
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.89-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

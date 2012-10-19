@@ -48,7 +48,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 # These tests fail on ppc builders because of:
 # http://rt.perl.org/rt3//Public/Bug/Display.html?id=50114
 # Re-enable this when the upstream bug is resolved.
-# 
+# make test
 
 
 %clean
@@ -65,11 +65,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 1.25-20
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 1.25-19
-- 为 Magic 3.0 重建
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.25-19
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

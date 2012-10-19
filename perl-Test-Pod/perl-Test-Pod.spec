@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod
 Version:        1.45
-Release:        3%{?dist}
+Release:        6%{?dist}
 Summary:        Test POD files for correctness
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -9,7 +9,7 @@ Source0:        http://search.cpan.org/CPAN/authors/id/D/DW/DWHEELER/Test-Pod-%{
 
 BuildArch:      noarch
 BuildRequires:  perl(File::Spec)
-BuildRequires:  perl(Module::Build) >= 0.3000
+BuildRequires:  perl(Module::Build) >= 0.30
 BuildRequires:  perl(Pod::Simple) >= 3.05
 BuildRequires:  perl(Test::Builder::Tester) >= 1.02
 BuildRequires:  perl(Test::More) >= 0.62
@@ -50,6 +50,15 @@ LC_ALL=C ./Build test
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.45-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.45-5
+- Perl 5.16 rebuild
+
+* Thu May 31 2012 Petr Pisar <ppisar@redhat.com> - 1.45-4
+- Round Module::Build version to 2 digits
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.45-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

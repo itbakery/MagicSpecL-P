@@ -1,6 +1,6 @@
 Name:           perl-GTop
-Version:        0.17
-Release:        2%{?dist}
+Version:        0.18
+Release:        3%{?dist}
 Summary:        Perl interface to libgtop
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,6 @@ make pure_install DESTDIR=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
 
@@ -57,6 +56,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.18-2
+- Perl 5.16 rebuild
+
+* Tue May 29 2012 Iain Arnell <iarnell@gmail.com> 0.18-1
+- update to latest upstream version
+
 * Tue Jan 17 2012 Iain Arnell <iarnell@gmail.com> - 0.17-2
 - rebuilt again for F17 mass rebuild
 

@@ -1,17 +1,21 @@
 Name:           perl-IO-String
 Version:        1.08
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        Emulate file interface for in-core strings
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/IO-String/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/IO-String-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(IO::Handle)
+# Tests:
+BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Data::Dumper)
+Requires:       perl(IO::Handle)
 
 %description
 The "IO::String" module provides the "IO::File" interface for in-core
@@ -38,7 +42,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
@@ -49,18 +52,23 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/IO/
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1.08-16
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 1.08-15
+- Clean spec file
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

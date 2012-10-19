@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-Coverage
 Version:        1.08
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        Check for pod coverage in your distribution
 
 Group:          Development/Libraries
@@ -10,7 +10,12 @@ Source0:        http://www.cpan.org/authors/id/P/PE/PETDANCE/Test-Pod-Coverage-%
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  perl(base)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Pod::Coverage)
+BuildRequires:  perl(Test::Builder)
+BuildRequires:  perl(Test::Builder::Tester)
+BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -51,6 +56,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 08 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.08-17
+- Update BRs
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.08-15
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

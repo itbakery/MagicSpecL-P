@@ -1,6 +1,6 @@
 Name:		perl-Readonly-XS
 Version:	1.05
-Release:	10%{?dist}
+Release:	13%{?dist}
 Summary:	Companion module for Readonly
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -12,6 +12,7 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 # Build
 BuildRequires:	perl(ExtUtils::MakeMaker)
 # Module
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(strict)
 BuildRequires:	perl(vars)
 BuildRequires:	perl(warnings)
@@ -20,6 +21,7 @@ BuildRequires:	perl(XSLoader)
 BuildRequires:	perl(Test::More)
 # Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 Requires:	perl(Readonly) >= 1.02
 
 # Obsolete/provide old -tests subpackage (can be removed in F19 development cycle)
@@ -71,6 +73,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Readonly::XS.3pm*
 
 %changelog
+* Thu Aug 16 2012 Petr Pisar <ppisar@redhat.com> - 1.05-13
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.05-11
+- Perl 5.16 rebuild
+
 * Thu Mar  1 2012 Paul Howarth <paul@city-fan.org> - 1.05-10
 - Drop -tests subpackage (general lack of interest in this), but include
   them as documentation for the main package

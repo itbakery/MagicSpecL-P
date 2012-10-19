@@ -1,6 +1,6 @@
 Name:           perl-Tie-IxHash
 Version:        1.22
-Release:        6%{?dist}
+Release:        10%{?dist}
 Summary:        Ordered associative arrays for Perl
 
 Group:          Development/Libraries
@@ -11,7 +11,10 @@ Patch0:         Tie-IxHash-1.22-Makefile.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  perl(ExtUtils::MakeMaker), perl(Test::More), perl(Test::Pod)
+BuildRequires:  perl(ExtUtils::MakeMaker), perl(Test::More)
+%if !%{defined perl_bootstrap}
+BuildRequires:  perl(Test::Pod)
+%endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -61,6 +64,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.22-9
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1.22-8
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 1.22-7
+- Skip POD tests on bootstrap
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

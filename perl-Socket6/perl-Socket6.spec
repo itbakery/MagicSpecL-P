@@ -3,7 +3,7 @@
 
 Name:           perl-Socket6
 Version:        0.23
-Release:        8%{?dist}
+Release:        11%{?dist}
 Summary:        IPv6 related part of the C socket.h defines and structure manipulators
 
 Group:          Development/Libraries
@@ -13,11 +13,18 @@ Source0:        http://www.cpan.org/authors/id/U/UM/UMEMOTO/Socket6-%{version}.t
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+# Tests:
+BuildRequires:  perl(Socket)
+BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
 This module supports getaddrinfo() and getnameinfo() to intend to
-enable protocol independent programing.
+enable protocol independent programming.
 If your environment supports IPv6, IPv6 related defines such as
 AF_INET6 are included.
 
@@ -56,6 +63,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 17 2012 Petr Pisar <ppisar@redhat.com> - 0.23-11
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.23-9
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

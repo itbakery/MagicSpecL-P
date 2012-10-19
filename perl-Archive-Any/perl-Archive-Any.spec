@@ -1,6 +1,6 @@
 Name:		perl-Archive-Any
 Version:	0.0932
-Release:	9%{?dist}
+Release:	11%{?dist}
 Summary:	Single interface to deal with file archives
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -59,6 +59,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Archive::Any::Plugin::Zip.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0932-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.0932-10
+- Perl 5.16 rebuild
+
 * Tue Jan 17 2012 Paul Howarth <paul@city-fan.org> - 0.0932-9
 - Spec clean-up:
   - Drop redundant buildreq perl(Test::Perl::Critic)

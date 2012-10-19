@@ -1,6 +1,6 @@
 Name:           perl-Test-Deep
 Version:        0.108
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Extremely flexible deep comparison
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -10,6 +10,14 @@ Patch0:         perl-Test-Deep-0.103-arrayeach.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Scalar::Util) >= 1.09
+# Tests
+BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::NoWarnings) >= 0.02
 BuildRequires:  perl(Test::Tester) >= 0.04
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -53,6 +61,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.108-6
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.108-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

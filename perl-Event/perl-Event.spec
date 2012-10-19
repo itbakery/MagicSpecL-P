@@ -1,6 +1,6 @@
 Name:		perl-Event
 Version:	1.20
-Release:	1%{?dist}
+Release:	3%{?dist}
 Summary:	Event loop processing
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -61,6 +61,12 @@ make test
 %{_mandir}/man3/Event::generic.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.20-2
+- Perl 5.16 rebuild
+
 * Sun Jan 15 2012 Paul Howarth <paul@city-fan.org> 1.20-1
 - update to 1.20 (test suite fixes)
 - BR: perl(Carp), perl(Config), perl(Exporter)

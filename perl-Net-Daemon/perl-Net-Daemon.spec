@@ -1,6 +1,6 @@
 Name:           perl-Net-Daemon
 Version:        0.48
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Perl extension for portable daemons
 
 Group:          Development/Libraries
@@ -75,6 +75,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.48-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 0.48-2
+- Perl 5.16 rebuild
+
 * Mon Jan 16 2012 Petr Lautrbach <plautrba@redhat.com> 0.48-1
 - Update to 0.48 version
 - Fix build requires

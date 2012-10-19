@@ -1,6 +1,6 @@
 Name:		perl-PPIx-Utilities
 Version:	1.001000
-Release:	4%{?dist}
+Release:	6%{?dist}
 Summary:	Extensions to PPI
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -60,6 +60,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/PPIx::Utilities::Statement.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001000-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 1.001000-5
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.001000-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

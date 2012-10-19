@@ -1,16 +1,16 @@
 Name:           perl-IPC-Run-SafeHandles
-Version:        0.02
-Release:        11%{?dist}
+Version:        0.04
+Release:        1%{?dist}
 Summary:        Use IPC::Run and IPC::Run3 safely
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/IPC-Run-SafeHandles/
 Source0:        http://www.cpan.org/authors/id/C/CL/CLKAO/IPC-Run-SafeHandles-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl >= 1:5.8.0
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(List::MoreUtils)
 
 # for improved tests
 BuildRequires: perl(Test::Pod::Coverage) >= 1.04
@@ -27,12 +27,12 @@ such as under fastcgi.
 %setup -q -n IPC-Run-SafeHandles-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+# --skipdeps causes ExtUtils::AutoInstall not to try auto-installing
+# missing optional features
+%{__perl} Makefile.PL INSTALLDIRS=vendor --skipdeps
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
@@ -41,10 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -53,8 +50,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-11
-- 为 Magic 3.0 重建
+* Fri Aug 24 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 0.04-1
+- Upstream update.
+- Modernize spec.
+- BR: perl(List::MoreUtils).
+- Add --skipdeps.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.02-11
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

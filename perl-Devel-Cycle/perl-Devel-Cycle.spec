@@ -1,6 +1,6 @@
 Name:           perl-Devel-Cycle
 Version:        1.11
-Release:        9%{?dist}
+Release:        11%{?dist}
 Summary:        Find memory cycles in objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.11-10
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

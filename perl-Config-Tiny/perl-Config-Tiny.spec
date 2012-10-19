@@ -1,6 +1,6 @@
 Name:		perl-Config-Tiny
 Version:	2.14
-Release:	3%{?dist}
+Release:	6%{?dist}
 Summary:	Perl module for reading and writing .ini style configuration files
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -54,6 +54,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Config::Tiny.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 2.14-5
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 2.14-4
+- Perl 5.16 rebuild
+
 * Thu Jan 19 2012 Paul Howarth <paul@city-fan.org> - 2.14-3
 - Reinstate compatibility with older distributions like EL-5
 - Run release tests as well as the regular test suite

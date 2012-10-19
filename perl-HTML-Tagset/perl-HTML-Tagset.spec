@@ -1,6 +1,6 @@
 Name:           perl-HTML-Tagset
 Version:        3.20
-Release:        10%{?dist}
+Release:        13%{?dist}
 Summary:        HTML::Tagset - data tables useful in parsing HTML
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -41,6 +41,15 @@ make test
 %{_mandir}/man3/HTML::Tagset.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.20-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 3.20-12
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 3.20-11
+- Perl 5.16 rebuild
+
 * Fri Jan 20 2012 Paul Howarth <paul@city-fan.org> - 3.20-10
 - Clean up spec file for modern rpmbuild:
   - Drop BuildRoot definition

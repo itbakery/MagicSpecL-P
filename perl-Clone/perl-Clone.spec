@@ -1,6 +1,6 @@
 Name:           perl-Clone
 Version:        0.31
-Release:        9%{?dist}
+Release:        11%{?dist}
 Summary:        Recursively copy perl datatypes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -8,7 +8,15 @@ URL:            http://search.cpan.org/dist/Clone
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RD/RDF/Clone-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  perl(ExtUtils::ParseXS), perl(Taint::Runtime), perl(Test::More)
+BuildRequires:  perl(ExtUtils::ParseXS)
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Taint::Runtime)
+BuildRequires:  perl(Test::More)
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 # don't "provide" private Perl libs
@@ -57,6 +65,13 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.31-10
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

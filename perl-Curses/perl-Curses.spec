@@ -1,10 +1,10 @@
 Name:           perl-Curses
 Version:        1.28
-Release:        5%{?dist}
+Release:        8%{?dist}
 Summary:        Perl bindings for ncurses
 
 Group:          Development/Libraries
-License:        GPL+
+License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Curses/
 Source0:        http://search.cpan.org/CPAN/authors/id/G/GI/GIRAFFED/Curses-%{version}.tgz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -69,6 +69,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Aug 10 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.28-8
+- fix license field to correct value
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.28-6
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.28-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

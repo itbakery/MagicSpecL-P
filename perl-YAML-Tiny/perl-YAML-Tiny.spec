@@ -40,7 +40,6 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
-magic_rpm_clean.sh
 
 %check
 make test AUTOMATED_TESTING=1

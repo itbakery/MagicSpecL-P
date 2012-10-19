@@ -1,23 +1,29 @@
 Name:           perl-Business-ISBN
-Version:        2.05
-Release:        7%{?dist}
+Version:        2.05.03
+%define module_version 2.05_03
+Release:        1%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Business-ISBN/
-Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Business-ISBN-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Business-ISBN-%{module_version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
-BuildRequires:  perl(GD::Barcode::EAN13)
-BuildRequires:  perl(LWP::Simple)
+BuildRequires:  perl(base)
 BuildRequires:  perl(Business::ISBN::Data)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(GD::Barcode::EAN13)
+BuildRequires:  perl(IO::Socket)
+BuildRequires:  perl(LWP::Simple)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Pod::Coverage)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 
@@ -27,7 +33,7 @@ ISBN-10 and ISBN-13.
 
 
 %prep
-%setup -q -n Business-ISBN-%{version}
+%setup -q -n Business-ISBN-%{module_version}
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -58,6 +64,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Oct 09 2012 Jitka Plesnikova <jplesnik@redhat.com> - 2.05.03-1
+- 2.05_03 bump. Fix failing tests (RT#78671, RT#75686)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 2.05-8
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.05-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

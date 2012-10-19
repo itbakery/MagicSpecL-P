@@ -1,6 +1,6 @@
 Name:           perl-Coro
-Version:        6.07
-Release:        3%{?dist}
+Version:        6.10
+Release:        1%{?dist}
 Summary:        The only real threads in perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,7 +8,10 @@ URL:            http://search.cpan.org/dist/Coro/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Coro-%{version}.tar.gz
 Patch0:         %{name}-5.25-ucontext-default.patch
 BuildRequires:  perl(AnyEvent) >= 5
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(common::sense)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Guard) >= 0.5
 BuildRequires:  perl(Scalar::Util)
@@ -117,7 +120,6 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes COPYING README README.linux-glibc
 %doc doc/* eg
 %{perl_archlib}/auto/*
@@ -125,6 +127,27 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Oct 12 2012 Petr Pisar <ppisar@redhat.com> - 6.10-1
+- 6.10 bump
+
+* Mon Oct 08 2012 Petr Pisar <ppisar@redhat.com> - 6.09-2
+- Fix building on big endian system (bug #863991)
+
+* Sun Oct 07 2012 Nicolas Chauvet <kwizart@gmail.com> - 6.09-1
+- Update to 4.09
+
+* Fri Aug  3 2012 Jitka Plesnikova <jplesnik@redhat.com> - 6.08-4
+- Update BR
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.08-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 6.08-2
+- Perl 5.16 rebuild
+
+* Mon Apr 16 2012 Petr Pisar <ppisar@redhat.com> - 6.08-1
+- 6.08 bump
+
 * Tue Feb 21 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 6.07-3
 - Add patch to fix build on ARM. RHBZ 750805
 

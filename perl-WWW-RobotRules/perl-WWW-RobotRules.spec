@@ -1,6 +1,6 @@
 Name:           perl-WWW-RobotRules
 Version:        6.02
-Release:        1%{?dist}
+Release:        5%{?dist}
 Summary:        Database of robots.txt-derived permissions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,12 +8,11 @@ URL:            http://search.cpan.org/dist/WWW-RobotRules/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/WWW-RobotRules-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(AnyDBM_File)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Fcntl)
 BuildRequires:  perl(URI) >= 1.10
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(AnyDBM_File)
-Requires:       perl(Fcntl)
 Requires:       perl(URI) >= 1.10
 Conflicts:      perl-libwww-perl < 6
 
@@ -50,6 +49,18 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Sep 03 2012 Petr Pisar <ppisar@redhat.com> - 6.02-5
+- Drop useless build-requires LWP::RobotUA and URI::URL (bug #853147)
+
+* Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 6.02-4
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.02-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 6.02-2
+- Perl 5.16 rebuild
+
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.02-1
 - 6.02 bump
 

@@ -1,7 +1,7 @@
 Name:		perl-Params-Util
-Version:	1.06
-Release:	1%{?dist}
-Summary:	Simple standalone param-checking functions
+Version:	1.07
+Release:	4%{?dist}
+Summary:	Simple standalone parameter-checking functions
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Params-Util/
@@ -9,10 +9,15 @@ Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Params-Util-%{version
 
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.52
-BuildRequires:	perl(Test::More) >= 0.47
 BuildRequires:	perl(File::Spec) >= 0.82
+BuildRequires:	perl(File::Spec::Functions)
+BuildRequires:	perl(File::Temp)
 BuildRequires:	perl(Scalar::Util) >= 1.18
+BuildRequires:	perl(Test::More) >= 0.47
+
+%{?perl_default_filter}
 
 %description
 Params::Util provides a basic set of importable functions that 
@@ -44,6 +49,18 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Tue Aug 14 2012 Petr Pisar <ppisar@redhat.com> - 1.07-4
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.07-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.07-2
+- Perl 5.16 rebuild
+
+* Mon Mar 19 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.07-1
+- Upstream update.
+
 * Mon Mar 05 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.06-1
 - Upstream update.
 

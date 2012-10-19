@@ -1,6 +1,6 @@
 Name:		perl-Devel-EnforceEncapsulation
 Version:	0.50
-Release:	5%{?dist}
+Release:	7%{?dist}
 Summary:	Find access violations to blessed objects
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -66,6 +66,12 @@ make test AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
 %{_mandir}/man3/Devel::EnforceEncapsulation.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.50-6
+- Perl 5.16 rebuild
+
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 0.50-5
 - BR: perl(Carp) and perl(English)
 

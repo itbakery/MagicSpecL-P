@@ -1,6 +1,6 @@
 Name:           perl-Test-Exception
 Version:        0.31
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.31-6
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

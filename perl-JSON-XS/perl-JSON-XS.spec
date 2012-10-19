@@ -1,8 +1,8 @@
 Name:           perl-JSON-XS
 Summary:        JSON serialising/deserialising, done correctly and fast
 Epoch:          1
-Version:        2.32
-Release:        2%{?dist}
+Version:        2.33
+Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/JSON-XS/
@@ -10,10 +10,15 @@ Source0:        http://www.cpan.org/authors/id/M/ML/MLEHMANN/JSON-XS-%{version}.
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 BuildRequires:  perl(common::sense)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Getopt::Long)
+BuildRequires:  perl(Storable)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
-
-Requires:       perl(common::sense)
+BuildRequires:  perl(XSLoader)
 
 %{?perl_default_filter}
 %{?perl_default_subpackage_tests}
@@ -44,7 +49,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes COPYING README eg/
@@ -54,8 +59,15 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man[13]/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:2.32-2
-- 为 Magic 3.0 重建
+* Thu Aug 02 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1:2.33-1
+- Update to 2.33
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.32-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1:2.32-2
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Thu Jan 12 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1:2.32-1
 - Update to 2.32

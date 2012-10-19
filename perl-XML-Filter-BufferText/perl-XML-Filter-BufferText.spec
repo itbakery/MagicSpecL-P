@@ -1,6 +1,6 @@
 Name:           perl-XML-Filter-BufferText
 Version:        1.01
-Release:        13%{?dist}
+Release:        16%{?dist}
 Summary:        Filter to put all characters() in one event
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,9 +8,12 @@ URL:            http://search.cpan.org/dist/XML-Filter-BufferText/
 Source0:        http://www.cpan.org/modules/by-module/XML/XML-Filter-BufferText-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl(base)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(XML::SAX::Base)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:       perl(XML::SAX::Base)
-BuildRequires:  perl(XML::SAX::Base), perl(ExtUtils::MakeMaker), perl(Test::More)
+
 
 %description
 This is a very simple filter. One common cause of grief (and programmer
@@ -50,6 +53,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Fri Aug 17 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.01-16
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.01-14
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

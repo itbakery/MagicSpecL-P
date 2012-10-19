@@ -1,15 +1,18 @@
 Name:           perl-Net-HTTP
 Version:        6.03
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Low-level HTTP connection (client)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Net-HTTP/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/Net-HTTP-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(Compress::Raw::Zlib)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(IO::Compress::Gzip)
+BuildRequires:  perl(Getopt::Long)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Compress::Raw::Zlib)
+BuildRequires:  perl(IO::Uncompress::Gunzip)
 BuildRequires:  perl(IO::Select)
 BuildRequires:  perl(IO::Socket::INET)
 BuildRequires:  perl(IO::Socket::SSL) >= 1.38
@@ -18,7 +21,7 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(Compress::Raw::Zlib)
-Requires:       perl(IO::Compress::Gzip)
+Requires:       perl(IO::Uncompress::Gunzip)
 Requires:       perl(IO::Select)
 Requires:       perl(IO::Socket::INET)
 Requires:       perl(Symbol)
@@ -54,6 +57,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 6.03-4
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.03-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 6.03-2
+- Perl 5.16 rebuild
+
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.03-1
 - 6.03 bump: Restore blocking override for Net::SSL (RT #72790)
 

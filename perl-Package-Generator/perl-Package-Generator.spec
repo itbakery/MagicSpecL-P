@@ -1,6 +1,6 @@
 Name:		perl-Package-Generator
 Version:	0.103
-Release:	9%{?dist}
+Release:	14%{?dist}
 Summary:	Generate new packages quickly and easily
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -9,7 +9,10 @@ Source0:	http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/Package-Generator-%{ve
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
+BuildRequires:	perl(Cwd)
 BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(File::Path)
+BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(Params::Util)
 BuildRequires:	perl(Scalar::Util)
 BuildRequires:	perl(Symbol)
@@ -17,8 +20,7 @@ BuildRequires:	perl(Test::More)
 # Test::Perl::Critic -> Perl::Critic -> Exception::Class -> Test::EOL ->
 #   Pod::Coverage::TrustPod -> Pod::Eventual -> Mixin::Linewise ->
 #   Sub::Exporter -> Package::Generator
-# Test::Perl::Critic not available in EPEL-4
-%if "%{rhel}" != "4" && 0%{!?perl_bootstrap:1}
+%if 0%{!?perl_bootstrap:1}
 BuildRequires:	perl(Test::Perl::Critic)
 %endif
 BuildRequires:	perl(Test::Pod)
@@ -40,7 +42,6 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -50,13 +51,31 @@ make test %{!?perl_bootstrap:PERL_TEST_CRITIC=1}
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README
+%doc Changes LICENSE README
 %{perl_vendorlib}/Package/
 %{_mandir}/man3/Package::Generator.3pm*
 %{_mandir}/man3/Package::Reaper.3pm*
 
 %changelog
+* Fri Aug 24 2012 Paul Howarth <paul@city-fan.org> - 0.103-14
+- Drop EPEL-4 support
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- BR: perl(File::Spec)
+
+* Tue Aug 14 2012 Petr Pisar <ppisar@redhat.com> - 0.103-13
+- Specify all dependencies
+- Package LICENSE
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.103-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.103-11
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.103-10
+- Perl 5.16 rebuild
+
 * Tue Feb  7 2012 Paul Howarth <paul@city-fan.org> - 0.103-9
 - Don't BR: perl(Test::Perl::Critic) if we're bootstrapping
 

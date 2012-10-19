@@ -1,17 +1,18 @@
 Name: perl-Net-SMTP-SSL
 Version: 1.01
-Release: 9%{?dist}
+Release: 12%{?dist}
 Summary: SSL support for Net::SMTP
 Group: Development/Libraries
 License: GPL+ or Artistic
 URL: http://search.cpan.org/dist/Net-SMTP-SSL/
 Source0: http://www.cpan.org/modules/by-module/Net/Net-SMTP-SSL-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch: noarch
-BuildRequires: perl(ExtUtils::MakeMaker), perl(Test::More)
+BuildRequires: perl(ExtUtils::MakeMaker)
+# Run-time:
 BuildRequires: perl(Net::SMTP)
 BuildRequires: perl(IO::Socket::SSL)
+# Tests:
+BuildRequires: perl(Test::More)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -26,7 +27,6 @@ network operations.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make %{?_smp_mflags} pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
@@ -35,11 +35,7 @@ chmod -R u+w $RPM_BUILD_ROOT
 %check
 make %{?_smp_mflags} test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc README Changes
 %dir %{perl_vendorlib}/Net/
 %dir %{perl_vendorlib}/Net/SMTP/
@@ -47,6 +43,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Net::SMTP::SSL.3*
 
 %changelog
+* Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 1.01-12
+- Modernize spec file
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.01-10
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

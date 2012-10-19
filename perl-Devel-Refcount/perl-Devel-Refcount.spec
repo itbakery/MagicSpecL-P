@@ -1,6 +1,6 @@
 Name:           perl-Devel-Refcount
 Version:        0.09
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Obtain the REFCNT value of a referent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.09-2
+- Perl 5.16 rebuild
+
 * Tue Jan 17 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.09-1
 - Update to 0.09
 - Add missing BR

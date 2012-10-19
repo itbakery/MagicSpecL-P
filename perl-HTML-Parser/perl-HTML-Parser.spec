@@ -3,7 +3,7 @@
 Name:           perl-%{real_name}
 Summary:        Perl module for parsing HTML
 Version:        3.69
-Release:        4%{?dist}
+Release:        8%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/HTML-Parser-%{version}.tar.gz 
@@ -12,18 +12,17 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(HTML::Tagset) >= 3
+%if %{undefined perl_bootstrap}
+# This creates cycle with perl-HTTP-Message.
+BuildRequires:  perl(HTTP::Headers)
+%endif
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(URI)
 BuildRequires:  perl(XSLoader)
 Requires:       perl(HTML::Tagset) >= 3
+Requires:       perl(HTTP::Headers)
 Requires:       perl(URI)
 Requires:       perl(XSLoader)
-%if %{undefined perl_bootstrap}
-# This creates cycle with perl-HTTP-Message. Weaken the dependency here because
-# it's just a recommended dependency per META.yml.
-BuildRequires:  perl(HTTP::Headers)
-Requires:       perl(HTTP::Headers)
-%endif
 
 %{?perl_default_filter}
 %{?perl_default_subpackage_tests}
@@ -62,8 +61,20 @@ make test
 
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 3.69-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.69-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 3.69-7
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 3.69-6
+- Perl 5.16 rebuild
+
+* Mon Apr 16 2012 Petr Pisar <ppisar@redhat.com> - 3.69-5
+- Exclude HTTP::Headers build-dependency at Perl bootstrap (bug #810223)
+
+* Mon Apr 16 2012 Petr Pisar <ppisar@redhat.com> - 3.69-4
+- Revert "Exclude HTTP::Headers dependency at Perl bootstrap"
 
 * Wed Jan 18 2012 Petr Pisar <ppisar@redhat.com> - 3.69-3
 - Exclude HTTP::Headers dependency at Perl bootstrap

@@ -1,16 +1,16 @@
 Name:           perl-ExtUtils-CChecker
-Version:        0.04
-Release:        5%{?dist}
+Version:        0.08
+Release:        1%{?dist}
 Summary:        Configure-time utilities for using C headers, libraries, or OS features
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/ExtUtils-CChecker/
-Source0:        http://www.cpan.org/authors/id/P/PE/PEVANS/ExtUtils-CChecker-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/P/PE/PEVANS/ExtUtils-CChecker-0.08.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::CBuilder)
 BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Test::Exception)
+BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod) >= 1.00
 Requires:       perl(ExtUtils::CBuilder)
@@ -50,6 +50,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Sep 20 2012 Marcela Mašláňová <mmaslano@redhat.com> 0.08-1
+- update to 0.08
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.04-6
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

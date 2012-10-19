@@ -3,15 +3,14 @@
 
 Name:           perl-Tk
 # devel version fix for perl 5.14: 
-%define real_version 804.029_500
-Version:        804.029
-Release:        6%{?dist}
+Version:        804.030
+Release:        1%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Tk/
-Source0:        http://cpan.org/modules/by-module/Tk/Tk-%{real_version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/S/SR/SREZIC/Tk-%{version}.tar.gz
 Patch0:         perl-Tk-widget.patch
 # modified version of http://ftp.de.debian.org/debian/pool/main/p/perl-tk/perl-tk_804.027-8.diff.gz
 Patch1:         perl-Tk-debian.patch.gz
@@ -62,7 +61,7 @@ Requires: perl-Tk = %{version}-%{release}
 %{summary}
 
 %prep
-%setup -q -n Tk-%{real_version}
+%setup -q -n Tk-%{version}
 find . -type f -exec %{__perl} -pi -e \
 's,^(#!)(/usr/local)?/bin/perl\b,$1%{__perl}, if ($. == 1)' {} \;
 chmod -x pod/Popup.pod Tixish/lib/Tk/balArrow.xbm
@@ -120,6 +119,18 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
+* Wed Aug 29 2012 Jitka Plesnikova <jplesnik@redhat.com> - 804.030-1
+- 804.030 bump, update source link
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.029-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 804.029-8
+- Perl 5.16 rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 804.029-7
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 804.029-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

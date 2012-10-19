@@ -1,6 +1,6 @@
 Name:		perl-Readonly
 Version:	1.03
-Release:	18%{?dist}
+Release:	21%{?dist}
 Summary:	Facility for creating read-only scalars, arrays, hashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -9,12 +9,14 @@ Source0:	http://search.cpan.org/CPAN/authors/id/R/RO/ROODE/Readonly-%{version}.t
 Patch0:		Readonly-1.03-interpreter.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(strict)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(vars)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 # Speed it up since we can
 Requires:	perl(Readonly::XS)
 
@@ -67,6 +69,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Readonly.3pm*
 
 %changelog
+* Thu Aug 16 2012 Petr Pisar <ppisar@redhat.com> - 1.03-21
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.03-19
+- Perl 5.16 rebuild
+
 * Thu Mar  1 2012 Paul Howarth <paul@city-fan.org> - 1.03-18
 - Drop -tests subpackage (general lack of interest in this), but include
   them as documentation for the main package

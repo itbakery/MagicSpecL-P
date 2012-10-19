@@ -1,6 +1,6 @@
 Name:           perl-Async-MergePoint
 Version:        0.03
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Resynchronise diverged control flow
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.03-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

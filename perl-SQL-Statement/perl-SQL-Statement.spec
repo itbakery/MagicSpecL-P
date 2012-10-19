@@ -1,6 +1,6 @@
 Name:           perl-SQL-Statement
 Version:        1.33
-Release:        4%{?dist}
+Release:        9%{?dist}
 Summary:        SQL parsing and processing engine
 
 Group:          Development/Libraries
@@ -16,8 +16,10 @@ BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Clone) >= 0.30
 BuildRequires:  perl(Params::Util) >= 1.00
 # for tests only:
-BuildRequires:  perl(DBD::AnyData) >= 0.110
+# DBD::CSV buildrequires SQL::Statement
+%if 0%{!?perl_bootstrap:1}
 BuildRequires:  perl(DBD::CSV) >= 0.30
+%endif
 BuildRequires:  perl(DBD::DBM) >= 0.06
 BuildRequires:  perl(DBD::File) >= 0.40
 BuildRequires:  perl(DBD::SQLite)
@@ -76,6 +78,21 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.33-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.33-8
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Sun Jun 17 2012 Petr Pisar <ppisar@redhat.com> - 1.33-7
+- Perl 5.16 rebuild
+
+* Tue Apr 10 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.33-6
+- remove DBD::AnyData which were removed by upstream for now 810377
+
+* Fri Apr  6 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.33-5
+- apply Paul's bootstrap macro 810377
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.33-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

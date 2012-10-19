@@ -1,6 +1,6 @@
 Name:           perl-URI
-Version:        1.59
-Release:        3%{?dist}
+Version:        1.60
+Release:        5%{?dist}
 Summary:        A Perl module implementing URI parsing and manipulation
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -8,15 +8,26 @@ URL:            http://search.cpan.org/dist/URI/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/URI-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Encode)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(MIME::Base64)
+BuildRequires:  perl(Net::Domain)
+BuildRequires:  perl(Storable)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
 # Business::ISBN -> Test::Pod -> Pod::Simple -> HTML::Entities (HTML::Parser) -> URI
 %if 0%{!?perl_bootstrap:1}
 BuildRequires:  perl(Business::ISBN)
 %endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Cwd)
+Requires:       perl(Data::Dumper)
+Requires:       perl(Net::Domain)
 
 %description
 This module implements the URI class. Objects of this class represent
@@ -25,7 +36,7 @@ updated by RFC 2732).
 
 %prep
 %setup -q -n URI-%{version}
-chmod 644 uri-test
+chmod -c 644 uri-test
 
 %build
 perl Makefile.PL INSTALLDIRS=perl
@@ -34,7 +45,6 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -type d -depth -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -57,6 +67,27 @@ make test
 %{_mandir}/man3/URI::ldap.3pm*
 
 %changelog
+* Tue Aug 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.60-5
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.60-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.60-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.60-2
+- Perl 5.16 rebuild
+
+* Mon Mar 26 2012 Paul Howarth <paul@city-fan.org> - 1.60-1
+- Update to 1.60
+  - Do not reverse the order of new parameters
+  - Avoid test failure if the local hostname is 'foo' (CPAN RT#75519)
+  - Work around a stupid join bug in 5.8.[12] (CPAN RT#59274)
+  - Updated repository URL
+- Don't need to remove empty directories from buildroot
+- BR: perl(constant)
+
 * Fri Jan 20 2012 Paul Howarth <paul@city-fan.org> - 1.59-3
 - Break build dependency loop by only using perl(Business::ISBN) if we're not
   bootstrapping

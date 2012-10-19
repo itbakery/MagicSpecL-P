@@ -1,5 +1,5 @@
 Name:		perl-Net-SSLeay
-Version:	1.45
+Version:	1.49
 Release:	1%{?dist}
 Summary:	Perl extension for using OpenSSL
 Group:		Development/Libraries
@@ -7,23 +7,37 @@ License:	OpenSSL
 URL:		http://search.cpan.org/dist/Net-SSLeay/
 Source0:	http://search.cpan.org/CPAN/authors/id/M/MI/MIKEM/Net-SSLeay-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
-BuildRequires:	openssl-devel, pkgconfig
+BuildRequires:	openssl, openssl-devel
+# =========== Module Build ===========================
+BuildRequires:	perl(Cwd)
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(File::Path)
+BuildRequires:	perl(lib)
+# =========== Module Runtime =========================
 BuildRequires:	perl(AutoLoader)
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter)
-BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(MIME::Base64)
 BuildRequires:	perl(Socket)
+BuildRequires:	perl(XSLoader)
+# =========== Test Suite =============================
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(IO::Handle)
 BuildRequires:	perl(Test::Exception)
 # Test::Kwalitee => Module::CPANTS::Analyze => Net::HTTP => IO::Socket::SSL => Net::SSLeay
-%if 0%{!?perl_bootstrap:1}
+# Net::SSLeay in RHEL-7 cannot BR: Test::Kwalitee from EPEL-7
+%if 0%{!?perl_bootstrap:1} && 0%{?rhel} < 7
 BuildRequires:	perl(Test::Kwalitee)
 %endif
+BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::NoWarnings)
 BuildRequires:	perl(Test::Pod)
 BuildRequires:	perl(Test::Pod::Coverage)
 BuildRequires:	perl(Test::Warn)
+BuildRequires:	perl(threads)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(MIME::Base64)
+Requires:	perl(XSLoader)
 
 # Don't "provide" private Perl libs or the redundant unversioned perl(Net::SSLeay) provide
 %global __provides_exclude ^(perl\\(Net::SSLeay\\)$|SSLeay\\.so)
@@ -38,10 +52,8 @@ so you can write servers or clients for more complicated applications.
 %prep
 %setup -q -n Net-SSLeay-%{version}
 
-# Fix permissions and shellbangs in examples
-# to avoid bogus doc-file dependencies
+# Fix permissions in examples to avoid bogus doc-file dependencies
 chmod -c 644 examples/*
-perl -pi -e 's|/usr/local/bin/perl|/usr/bin/perl|' examples/*.pl
 
 # Remove redundant unversioned provide if we don't have rpm 4.9 or later
 %global provfilt /bin/sh -c "%{__perl_provides} | grep -Fvx 'perl(Net::SSLeay)'"
@@ -50,8 +62,6 @@ perl -pi -e 's|/usr/local/bin/perl|/usr/bin/perl|' examples/*.pl
 %build
 PERL_MM_USE_DEFAULT=1 perl Makefile.PL \
 	INSTALLDIRS=vendor \
-	INC="$(pkg-config --cflags-only-I openssl)" \
-	LIBS="$(pkg-config --libs openssl)" \
 	OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
@@ -72,8 +82,7 @@ make test
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
-%doc Changes Credits QuickRef README examples/ TODO
+%doc Changes Credits QuickRef README examples/
 %{perl_vendorarch}/auto/Net/
 %dir %{perl_vendorarch}/Net/
 %{perl_vendorarch}/Net/SSLeay/
@@ -83,6 +92,80 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Net::SSLeay::Handle.3pm*
 
 %changelog
+* Tue Sep 25 2012 Paul Howarth <paul@city-fan.org> - 1.49-1
+- update to 1.49
+  - fixed problem where on some platforms test t/local/07_tcpecho.t would bail
+    out if it could not bind port 1212; it now tries a number of ports to bind
+    to until successful
+  - improvements to unsigned casting
+  - improvements to Net::SSLeay::read to make it easier to use with
+    non-blocking IO: it modifies Net::SSLeay::read() to return the result from
+    SSL_read() as the second return value, if Net::SSLeay::read() is called in
+    list context (its behavior should be unchanged if called in scalar or void
+    context)
+  - fixed a problem where t/local/kwalitee.t fails with
+    Module::CPANTS::Analyse 0.86
+  - fixed a number of typos
+  - fixed a compiler warning from Compiling with gcc-4.4 and -Wall
+  - Fixed problems with get_https4: documentation was wrong, $header_ref was
+    not correctly set and $server_cert was not returned
+  - fixed a problem that could cause a Perl exception about no blength method
+    on undef (CPAN RT#79309)
+  - added documentation about how to mitigate various SSL/TLS vulnerabilities
+  - SSL_MODE_* are now available as constants
+- drop upstreamed pod encoding patch
+
+* Mon Aug 20 2012 Paul Howarth <paul@city-fan.org> - 1.48-6
+- fix POD encoding (CPAN RT#78281)
+- classify buildreqs by usage
+- BR:/R: perl(XSLoader)
+
+* Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 1.48-5
+- specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.48-4
+- rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.48-3
+- perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.48-2
+- perl 5.16 rebuild
+
+* Wed Apr 25 2012 Paul Howarth <paul@city-fan.org> - 1.48-1
+- update to 1.48
+  - removed unneeded Debian_CPANTS.txt from MANIFEST
+  - fixed incorrect documentation about the best way to call CTX_set_options
+  - fixed problem that caused "Undefined subroutine utf8::encode" in
+    t/local/33_x509_create_cert.t (on perl 5.6.2)
+  - in examples and pod documentation, changed #!/usr/local/bin/perl
+    to #!/usr/bin/perl
+  - t/local/06_tcpecho.t now tries a number of ports to bind to until
+    successful
+- no longer need to fix shellbangs in examples
+
+* Thu Apr 19 2012 Paul Howarth <paul@city-fan.org> - 1.47-3
+- simplify Test::Kwalitee conditional
+
+* Thu Apr 19 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.47-2
+- make module Kwalitee conditional
+
+* Wed Apr  4 2012 Paul Howarth <paul@city-fan.org> - 1.47-1
+- update to 1.47
+  - fixed overlong lines and spelling errors in pod
+  - fixed extra "garbage" files in 1.46 tarball
+  - fixed incorrect fail reports on some 64 bit platforms
+  - fix to avoid FAIL reports from cpantesters with missing openssl
+  - use my_snprintf from ppport.h to prevent link failures with perl 5.8 and
+    earlier when compiled with MSVC
+
+* Tue Apr  3 2012 Paul Howarth <paul@city-fan.org> - 1.46-1
+- update to 1.46 (see Changes file for details)
+- BR: openssl as well as openssl-devel, needed for building
+- no longer need help to find openssl
+- upstream no longer shipping TODO
+- drop %%defattr, redundant since rpm 4.4
+
 * Sat Feb 25 2012 Paul Howarth <paul@city-fan.org> - 1.45-1
 - update to 1.45 (see Changes file for full details)
   - added thread safety and dynamic locking, which should complete thread

@@ -1,6 +1,6 @@
 Name:           perl-AnyData
 Version:        0.10
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Easy access to data in many formats
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -10,7 +10,22 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+# Not tested:   perl(CGI)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+# Not tested:   perl(HTML::TableExtract)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(IO::File)
+# Not tested:   perl(XML::Twig)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(CGI)
+Requires:  perl(constant)
+Requires:  perl(Data::Dumper)
+Requires:  perl(HTML::TableExtract)
+Requires:  perl(Exporter)
+Requires:  perl(IO::File)
+Requires:  perl(XML::Twig)
 
 %description
 The AnyData modules provide simple and uniform access to data from
@@ -54,8 +69,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 0.10-15
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.10-15
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

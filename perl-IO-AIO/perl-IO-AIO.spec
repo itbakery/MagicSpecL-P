@@ -1,6 +1,6 @@
 Name:		perl-IO-AIO
-Version:	4.12
-Release:	1%{?dist}
+Version:	4.15
+Release:	3%{?dist}
 Summary:	Asynchronous Input/Output
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -8,10 +8,14 @@ URL:		http://search.cpan.org/dist/IO-AIO/
 Source0:	http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/IO-AIO-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildRequires:	perl >= 3:5.8.2
+BuildRequires:	perl(base)
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(common::sense)
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(XSLoader)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(XSLoader)
 
 %{?perl_default_filter}
 
@@ -29,14 +33,12 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
+%{_fixperms} %{buildroot}
 
 # Remove script we don't want packaged
 rm %{buildroot}%{_bindir}/treescan
-
-find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
-%{_fixperms} %{buildroot}
 
 %check
 make test
@@ -52,6 +54,32 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::AIO.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.15-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 4.15-2
+- Perl 5.16 rebuild
+
+* Tue Apr 10 2012 Paul Howarth <paul@city-fan.org> - 4.15-1
+- Update to 4.15:
+  - Always include linux/types.h for fiemap, for compatibility with ancient
+    systems
+  - Experimental support for IO::AIO::splice and ::tee (no aio_...)
+  - Provide SEEK_HOLE and SEEK_DATA, if available
+  - Work around (again!) an immensely stupid bug in RHEL, defining autoconf
+    macros in linux system headers
+
+* Sat Apr  7 2012 Paul Howarth <paul@city-fan.org> - 4.14-1
+- Update to 4.14:
+  - Fix stat structure usage on windows, which caused bogus stat results
+  - (libeio) make readahead emulation behave more like actual readahead by
+    never failing
+  - New request aio_seek
+  - New request aio_fiemap
+  - Auto-generate the #ifdef/#define 0 blocks for symbols we export
+- BR:/R: Perl core modules that might be dual-lived
+- Don't need to remove empty directories from buildroot
+
 * Thu Feb  2 2012 Paul Howarth <paul@city-fan.org> - 4.12-1
 - Update to 4.12 (see Changes file for details)
   - INCOMPATIBLE CHANGE: fork is no longer supported (indeed, it never was);

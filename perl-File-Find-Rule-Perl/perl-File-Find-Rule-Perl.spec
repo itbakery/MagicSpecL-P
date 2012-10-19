@@ -1,6 +1,6 @@
 Name:		perl-File-Find-Rule-Perl
 Version:	1.12
-Release:	2%{?dist}
+Release:	5%{?dist}
 Summary:	Common rules for searching for Perl things
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -59,6 +59,15 @@ cd ..
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.12-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.12-3
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

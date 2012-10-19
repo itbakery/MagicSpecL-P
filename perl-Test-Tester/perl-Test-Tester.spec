@@ -1,6 +1,6 @@
 Name:           perl-Test-Tester
 Version:        0.107
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Ease testing test modules built with Test::Builder
 License:        Artistic clarified
 Group:          Development/Libraries
@@ -9,7 +9,10 @@ Source0:        http://www.cpan.org/authors/id/F/FD/FDALY/Test-Tester-%{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Test::Builder)
+BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -46,6 +49,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.107-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 0.107-11
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.107-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

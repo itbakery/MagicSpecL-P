@@ -1,6 +1,6 @@
 Name:		perl-Perl-Critic
-Version:	1.117
-Release:	4%{?dist}
+Version:	1.118
+Release:	2%{?dist}
 Summary:	Critique Perl source code for best-practices
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -9,21 +9,22 @@ Source0:	http://search.cpan.org/CPAN/authors/id/T/TH/THALJEF/Perl-Critic-%{versi
 BuildArch:	noarch
 
 # Build process
+BuildRequires:	perl(lib)
 BuildRequires:	perl(Module::Build)
 BuildRequires:	perl(Task::Weaken)
 
 # Module requirements
+%if ! (0%{?rhel} >= 7)
 BuildRequires:	aspell-en
+%endif
 BuildRequires:	perl(B::Keywords) >= 1.05
+BuildRequires:	perl(base)
 BuildRequires:	perl(Carp)
-BuildRequires:	perl(charnames)
 BuildRequires:	perl(Config::Tiny) >= 2
 BuildRequires:	perl(Email::Address) >= 1.889
 BuildRequires:	perl(English)
 BuildRequires:	perl(Exception::Class) >= 1.23
-BuildRequires:	perl(Exporter)
-BuildRequires:	perl(File::Basename)
-BuildRequires:	perl(File::Find)
+BuildRequires:	perl(Exporter) >= 5.58
 BuildRequires:	perl(File::Path)
 BuildRequires:	perl(File::Spec)
 BuildRequires:	perl(File::Spec::Unix)
@@ -33,7 +34,6 @@ BuildRequires:	perl(IO::String)
 BuildRequires:	perl(List::MoreUtils) >= 0.19
 BuildRequires:	perl(List::Util)
 BuildRequires:	perl(Module::Pluggable) >= 3.1
-BuildRequires:	perl(overload)
 BuildRequires:	perl(Perl::Tidy)
 BuildRequires:	perl(Pod::Parser)
 BuildRequires:	perl(Pod::PlainText)
@@ -42,14 +42,14 @@ BuildRequires:	perl(Pod::Spell) >= 1
 BuildRequires:	perl(Pod::Usage)
 BuildRequires:	perl(PPI) >= 1.215
 BuildRequires:	perl(PPIx::Regexp) >= 0.010
+BuildRequires:	perl(PPIx::Utilities::Node)
 BuildRequires:	perl(PPIx::Utilities::Statement) >= 1.001
 BuildRequires:	perl(Readonly) >= 1.03
 BuildRequires:	perl(Scalar::Util)
-BuildRequires:	perl(strict)
 BuildRequires:	perl(String::Format) >= 1.13
+BuildRequires:	perl(Test::Builder) >= 0.92
 BuildRequires:	perl(Text::ParseWords) >= 3
 BuildRequires:	perl(version) >= 0.77
-BuildRequires:	perl(warnings)
 
 # Optional module requirements
 BuildRequires:	perl(File::HomeDir)
@@ -58,6 +58,7 @@ BuildRequires:	perl(Readonly::XS)
 BuildRequires:	perl(Term::ANSIColor) >= 2.02
 
 # Main test suite
+BuildRequires:	perl(File::Spec::Functions)
 BuildRequires:	perl(Test::Deep)
 BuildRequires:	perl(Test::Memory::Cycle)
 BuildRequires:	perl(Test::More)
@@ -68,7 +69,9 @@ BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Devel::EnforceEncapsulation)
 BuildRequires:	perl(Perl::Critic::Policy::Editor::RequireEmacsFileVariables)
 BuildRequires:	perl(Perl::Critic::Policy::ErrorHandling::RequireUseOfExceptions)
+%if ! (0%{?rhel} >= 7)
 BuildRequires:	perl(Test::Kwalitee)
+%endif
 BuildRequires:	perl(Test::Perl::Critic)
 BuildRequires:	perl(Test::Pod) >= 1.00
 BuildRequires:	perl(Test::Pod::Coverage) >= 1.04
@@ -77,7 +80,9 @@ BuildRequires:	perl(Test::Without::Module)
 
 # Optional/not automatically detected runtime dependencies
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+%if ! (0%{?rhel} >= 7)
 Requires:	aspell
+%endif
 Requires:	perl(File::HomeDir)
 Requires:	perl(File::Which)
 Requires:	perl(Module::Pluggable) >= 3.1
@@ -111,6 +116,12 @@ of Perl code were mixed directly in the test script. That sucked.
 %prep
 %setup -q -n Perl-Critic-%{version}
 
+# Drop Test::Kwalitee tests in RHEL ≥ 7
+%if 0%{?rhel} >= 7
+rm xt/author/95_kwalitee.t
+sed -i -e '/^xt\/author\/95_kwalitee.t$/ d' MANIFEST
+%endif
+
 # Drop exec bits from samples/docs to avoid dependency bloat
 find tools examples -type f -exec chmod -c -x {} ';'
 
@@ -137,8 +148,50 @@ LC_ALL=en_US ./Build %{!?perl_bootstrap:author}test
 %{_mandir}/man3/Test::Perl::Critic::Policy.3pm*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 1.117-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.118-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Paul Howarth <paul@city-fan.org> - 1.118-1
+- update to 1.118
+  Policy Changes:
+  - CodeLayout::RequireTidyCode: revise to work with incompatible changes in
+    Perl::Tidy 20120619 (CPAN RT#77977)
+  - TestingAndDebugging::ProhibitNoWarnings: correct the parse of the
+    'no warnings' statement, so that 'no warnings "qw"' is recognized as
+    suppressing just 'qw' warnings (CPAN RT#74647)
+  - Miscellanea::RequireRcsKeywords has been moved to the Perl-Critic-More
+    distribution (CPAN RT#69546)
+  Other Changes:
+  - make all unescaped literal "{" characters in regexps into character
+    classes; these are deprecated, and became noisy with Perl 5.17.0
+    (CPAN RT#77510)
+- drop now-redundant patch for Perl::Tidy compatibility
+- BR: perl(lib) for the build process
+- BR: perl(base), perl(PPIx::Utilities::Node) and perl(Test::Builder) ≥ 0.92
+  for the module (Test::Builder required by Test::Perl::Critic::Policy)
+- BR: perl(Exporter) ≥ 5.58; with older versions we get:
+  ":color_severity" is not exported by the Perl::Critic::Utils::Constants module
+- BR: perl(File::Spec::Functions) for the test suite
+- drop buildreqs for perl(charnames), perl(File::Basename), perl(File::Find),
+  perl(overload), perl(strict) and perl(warnings) - not dual lived
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.117-9
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jul 10 2012 Paul Howarth <paul@city-fan.org> - 1.117-8
+- fix breakage with Perl::Tidy ≥ 20120619 (CPAN RT#77977)
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.117-7
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.117-6
+- Perl 5.16 rebuild
+
+* Thu Jun  7 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.117-5
+- conditionalize aspell
+
+* Tue Apr 24 2012 Petr Pisar <ppisar@redhat.com> - 1.117-4
+- do not use Test::Kwalitee on RHEL ≥ 7
 
 * Tue Feb 28 2012 Paul Howarth <paul@city-fan.org> - 1.117-3
 - spec clean-up

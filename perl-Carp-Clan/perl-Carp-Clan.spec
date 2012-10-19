@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan
 Version:        6.04
-Release:        6%{?dist}
+Release:        9%{?dist}
 Summary:        Perl module to print improved warning messages
 
 Group:          Development/Libraries
@@ -16,6 +16,8 @@ BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Object::Deadly)
 %endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(DB\\)
 
 %description
 This module reports errors from the perspective of the caller of a
@@ -58,8 +60,17 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Mar 12 2012 Liu Di <liudidi@gmail.com> - 6.04-6
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.04-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 6.04-8
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 6.04-7
+- Perl 5.16 rebuild
+
+* Thu May 31 2012 Petr Pisar <ppisar@redhat.com> - 6.04-6
+- Do not export private modules
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.04-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

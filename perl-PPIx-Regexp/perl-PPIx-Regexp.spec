@@ -1,18 +1,30 @@
 Name:           perl-PPIx-Regexp
-Version:        0.026
-Release:        1%{?dist}
+Version:        0.028
+Release:        5%{?dist}
 Summary:        Represent a regular expression of some sort
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/PPIx-Regexp/
 Source0:        http://www.cpan.org/authors/id/W/WY/WYANT/PPIx-Regexp-%{version}.tar.gz
 BuildArch:      noarch
-BuildRequires:  perl(List::MoreUtils)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Module::Build)
+BuildRequires:  perl(YAML)
+# Run-time
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(List::MoreUtils)
+BuildRequires:  perl(List::Util)
 BuildRequires:  perl(PPI::Document) >= 1.117
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Task::Weaken)
+# Tests:
 BuildRequires:  perl(Test::More) >= 0.88
+# Text::CSV is never required
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Exporter)
 Requires:       perl(PPI::Document) >= 1.117
 Requires:       perl(Task::Weaken)
 
@@ -46,6 +58,24 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 0.028-5
+- Run-require Exporter
+
+* Thu Aug 16 2012 Petr Pisar <ppisar@redhat.com> - 0.028-4
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.028-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 0.028-2
+- Perl 5.16 rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.028-1
+- 0.028 bump
+
+* Mon Jun 04 2012 Petr Pisar <ppisar@redhat.com> - 0.027-1
+- 0.027 bump
+
 * Mon Feb 27 2012 Petr Pisar <ppisar@redhat.com> - 0.026-1
 - 0.026 bump
 

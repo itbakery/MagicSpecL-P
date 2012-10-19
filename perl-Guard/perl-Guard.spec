@@ -1,6 +1,6 @@
 Name:           perl-Guard
-Version:        1.021
-Release:        6%{?dist}
+Version:        1.022
+Release:        3%{?dist}
 Summary:        Safe cleanup blocks
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.022-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.022-2
+- Perl 5.16 rebuild
+
+* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.022-1
+- Update to 1.022
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.021-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,16 +1,20 @@
 Name:           perl-B-Keywords
 Version:        1.12
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Lists of reserved barewords and symbol names
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/B-Keywords/
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RU/RURBAN/B-Keywords-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(YAML)
+# Tests
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test)
+BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 
@@ -28,7 +32,6 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
@@ -39,18 +42,23 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE
 %{perl_vendorlib}/B/
 %{_mandir}/man3/B::Keywords.3pm*
 
 
 %changelog
+* Wed Aug  1 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.12-4
+- Add BR: perl(File::Spec), perl(lib), perl(Test), perl(Exporter)
+- Clean up for modern rpmbuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.12-2
+- Perl 5.16 rebuild
+
 * Fri Feb 10 2012 Paul Howarth <paul@city-fan.org> - 1.12-1
 - Update to 1.12
   - Add new keyword fc (Unicode casefolding) for 5.16

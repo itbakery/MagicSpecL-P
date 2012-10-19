@@ -1,7 +1,7 @@
 Name:           perl-Data-OptList
 Summary:        Parse and validate simple name/value option pairs
 Version:        0.107
-Release:        5%{?dist}
+Release:        7%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-OptList/
@@ -63,6 +63,12 @@ make test RELEASE_TESTING=1
 %{_mandir}/man3/Data::OptList.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.107-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.107-6
+- Perl 5.16 rebuild
+
 * Sat Jan 21 2012 Paul Howarth <paul@city-fan.org> - 0.107-5
 - obsolete/provide old -tests subpackage to support upgrades
 

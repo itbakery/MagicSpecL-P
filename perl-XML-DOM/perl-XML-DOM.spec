@@ -1,6 +1,6 @@
 Name:           perl-XML-DOM
 Version:        1.44
-Release:        13%{?dist}
+Release:        16%{?dist}
 Summary:        DOM extension to XML::Parser
 
 Group:          Development/Libraries
@@ -10,10 +10,14 @@ Source0:        http://www.cpan.org/authors/id/T/TJ/TJMATHER/XML-DOM-%{version}.
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  perl(XML::Parser::PerlSAX)
-BuildRequires:  perl(XML::RegExp)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(XML::Parser)
+BuildRequires:  perl(XML::Parser) >= 2.30
+BuildRequires:  perl(XML::Parser::PerlSAX) >= 0.07
+BuildRequires:  perl(XML::RegExp)
+BuildRequires:  perl(Test)
+Requires:       perl(XML::Parser) >= 2.30
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Obsoletes:      perl-libxml-enno <= 1.02
 
@@ -65,6 +69,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Aug 16 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.44-16
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.44-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 1.44-14
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.44-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

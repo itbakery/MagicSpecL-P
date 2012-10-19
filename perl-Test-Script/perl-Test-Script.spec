@@ -1,6 +1,6 @@
 Name:           perl-Test-Script
 Version:        1.07
-Release:        7%{?dist}
+Release:        10%{?dist}
 Summary:        Cross-platform basic tests for scripts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.07-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.07-9
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.07-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.07-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

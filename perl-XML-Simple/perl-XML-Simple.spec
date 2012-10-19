@@ -1,63 +1,81 @@
 Name:           perl-XML-Simple
-Version:        2.18
-Release:        11%{?dist}
+Version:        2.20
+Release:        4%{?dist}
 Summary:        Easy API to maintain XML in Perl
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/XML-Simple/
 Source0:        http://www.cpan.org/authors/id/G/GR/GRANTM/XML-Simple-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
-BuildRequires:  perl(Tie::IxHash), perl(XML::NamespaceSupport)
-BuildRequires:  perl(XML::LibXML), perl(XML::LibXML::Common), perl(XML::Parser), perl(XML::SAX)
-BuildRequires:  perl(ExtUtils::MakeMaker), perl(Test::More)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires:  perl(XML::Parser)
-# XML-SAX-ExpatXS up to 0.98 has known namespace bugs, and will cause the
-# tests to fail if it is installed as the default SAX parser.
-BuildConflicts: perl(XML::SAX::ExpatXS)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(Storable)
+#BuildRequires:  perl(XML::LibXML)
+#BuildRequires:  perl(XML::LibXML::Common)
+BuildRequires:  perl(XML::NamespaceSupport)
+BuildRequires:  perl(XML::Parser)
+BuildRequires:  perl(XML::SAX)
+# Tests only
+BuildRequires:  perl(base)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Tie::IxHash)
+BuildRequires:  perl(XML::SAX::Base)
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(File::Spec)
+Requires:       perl(IO::Handle)
+Requires:       perl(Storable)
+Requires:       perl(XML::NamespaceSupport)
+Requires:       perl(XML::Parser)
+Requires:       perl(XML::SAX)
 
 %description
 The XML::Simple module provides a simple API layer on top of an
 underlying XML parsing module (either XML::Parser or one of the SAX2
 parser modules).
 
-
 %prep
 %setup -q -n XML-Simple-%{version}
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w %{buildroot}/*
 
 %check
 make test
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/XML/
 %{_mandir}/man3/*.3*
 
-
 %changelog
+* Fri Aug 24 2012 Jitka Plesnikova <jplesnik@redhat.com> - 2.20-4
+- Add test BR perl(XML::SAX::Base)
+- Add R perl(IO::Handle), remove duplicate R perl(File::Spec).
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.20-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 2.20-2
+- Perl 5.16 rebuild
+
+* Thu Jun 21 2012 Petr Šabata <contyk@redhat.com> - 2.20-1
+- 2.20 bump
+- Modernize spec
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 2.18-12
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.18-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

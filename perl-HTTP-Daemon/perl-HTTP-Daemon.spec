@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Daemon
 Version:        6.01
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Simple HTTP server class
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -69,6 +69,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.01-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 6.01-2
+- Perl 5.16 rebuild
+
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.01-1
 - 6.01 bump
 

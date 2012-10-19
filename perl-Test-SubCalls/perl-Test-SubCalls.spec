@@ -1,69 +1,86 @@
 Name:           perl-Test-SubCalls
 Version:        1.09
-Release:        7%{?dist}
+Release:        11%{?dist}
 Summary:        Track the number of times subs are called
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Test-SubCalls/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/Test-SubCalls-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires:  perl(File::Spec) >= 0.80
 BuildRequires:  perl(Hook::LexWrap) >= 0.20
+BuildRequires:  perl(Test::Builder)
 BuildRequires:  perl(Test::Builder::Tester) >= 1.02
-BuildRequires:  perl(Test::Pod) >= 1.00
-BuildRequires:  perl(Test::More) >= 0.60
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-# for improved tests
-BuildRequires:  perl(Test::CPAN::Meta) >= 0.12
-# FIXME: Fedora's Pod::Simple is outdated
-# BuildRequires:  perl(Pod::Simple) >= 3.07
-BuildRequires:  perl(Pod::Simple)
-BuildRequires:	perl(Test::Pod) >= 1.26
+BuildRequires:  perl(Test::More) >= 0.42
+# Release tests include circular dependencies, so don't do them when bootstrapping:
+# Test::MinimumVersion -> Perl::MinimumVersion -> perl-PPI (needs Test::SubCalls to build)
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:  perl(Pod::Simple) >= 3.07
+BuildRequires:  perl(Test::CPAN::Meta)
 BuildRequires:  perl(Test::MinimumVersion) >= 0.008
+BuildRequires:  perl(Test::Pod) >= 1.26
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
-There are a number of different situations (like testing cacheing
+There are a number of different situations (like testing caching
 code) where you want to want to do a number of tests, and then verify
 that some underlying subroutine deep within the code was called a
 specific number of times.
 
-
 %prep
 %setup -q -n Test-SubCalls-%{version}
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
-make test AUTOMATED_TESTING=1
-
+make test %{!?perl_bootstrap:AUTOMATED_TESTING=1}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorlib}/Test/
-%{_mandir}/man3/*.3pm*
-
+%{_mandir}/man3/Test::SubCalls.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.09-10
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.09-9
+- Perl 5.16 rebuild
+
+* Thu Apr  5 2012 Paul Howarth <paul@city-fan.org> - 1.09-8
+- Don't run the release tests when bootstrapping, to avoid circular build deps
+- Sync buildreqs with upstream:
+  - BR: perl(Exporter)
+  - BR: perl(ExtUtils::MakeMaker) ≥ 6.42
+  - BR: perl(File::Spec) ≥ 0.80
+  - Bump perl(Pod::Simple) version requirement to at least 3.07
+  - BR: perl(Test::Builder)
+  - Drop perl(Test::More) version requirement to a minimum of 0.42
+- Make %%files list more explicit
+- Drop %%defattr, redundant since rpm 4.4
+- Use %%{_fixperms} macro rather than our own chmod incantation
+- Don't need to remove empty directories from the buildroot
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Don't use macros for commands
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

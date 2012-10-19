@@ -1,17 +1,36 @@
 Name:           perl-Glib
-Version:        1.241
-Release:        2%{?dist}
+Version:        1.260
+Release:        3%{?dist}
 Summary:        Perl interface to GLib
 Group:          Development/Libraries
 License:        LGPLv2+
 URL:            http://search.cpan.org/dist/Glib/
-Source0:        http://www.cpan.org/authors/id/T/TS/TSCH/Glib-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/X/XA/XAOC/Glib-%{version}.tar.gz
 BuildRequires:  perl >= 2:5.8.0
 BuildRequires:  glib2-devel
-BuildRequires:  perl(ExtUtils::Depends), perl(ExtUtils::PkgConfig)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(ExtUtils::Depends) >= 0.300
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::PkgConfig) >= 1.00
+BuildRequires:  perl(File::Spec)
+# Run-time
+BuildRequires:  perl(base)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Storable)
+# Tests
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Tie::Hash)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+# Do not export private modules and libraries
+%{?perl_default_filter}
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(MY\\)
 
 %description
 This module provides perl access to GLib and GLib's GObject libraries.
@@ -22,9 +41,9 @@ that make up the Gnome environment, and are used in many unrelated
 projects.
 
 %package devel
-Summary:	Development part of Perl interface to GLib
-Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Summary:    Development part of Perl interface to GLib
+Group:      Development/Libraries
+Requires:   %{name} = %{version}-%{release}
 
 %description devel
 Development part of package perl-Glib, the Perl module providing interface
@@ -32,14 +51,11 @@ to GLib and GObject libraries.
 
 %prep
 %setup -q -n Glib-%{version}
-
-# Provides: exclude perl(MY)
-cat <<__EOF__ > %{name}-perl.prov
-#!/bin/sh
-/usr/lib/rpm/perl.prov \$* | grep -v '^perl(MY)$'
-__EOF__
-%define __perl_provides %{_builddir}/Glib-%{version}/%{name}-perl.prov
-chmod +x %{__perl_provides}
+for F in AUTHORS; do
+    iconv -f ISO-8859-1 -t UTF-8 < "$F" > "${F}.utf8"
+    touch -r "$F" "${F}.utf8"
+    mv "${F}.utf8" "$F"
+done
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -80,6 +96,21 @@ make test
 %{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.260-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 1.260-2
+- Perl 5.16 rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.260-1
+- 1.260 bump
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.241-4
+- Perl 5.16 rebuild
+
+* Thu May 31 2012 Petr Pisar <ppisar@redhat.com> - 1.241-3
+- Do not export private modules and libraries
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.241-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

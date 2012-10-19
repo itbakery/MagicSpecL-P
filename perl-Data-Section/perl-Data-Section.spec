@@ -3,7 +3,7 @@
 
 Name:           perl-Data-Section
 Version:        0.101621
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Read multiple hunks of data out of your DATA section
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Data::Section.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101621-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.101621-3
+- Perl 5.16 rebuild
+
 * Wed Mar  7 2012 Paul Howarth <paul@city-fan.org> - 0.101621-2
 - Add test suite patch to support building with Test::More < 0.88 so that we
   can build for EPEL-5, only applying the patch when necessary

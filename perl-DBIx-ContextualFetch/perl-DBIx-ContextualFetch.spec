@@ -1,6 +1,6 @@
 Name:           perl-DBIx-ContextualFetch
 Version:        1.03
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Add contextual fetches to DBI
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes
@@ -42,8 +42,11 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.03-16
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Petr Pisar <ppisar@redhat.com> - 1.03-16
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

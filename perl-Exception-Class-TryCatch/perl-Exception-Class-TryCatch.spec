@@ -1,17 +1,18 @@
 Name:           perl-Exception-Class-TryCatch
 Version:        1.12
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Syntactic try/catch sugar for use with Exception::Class
 License:        ASL 2.0
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Exception-Class-TryCatch/
 Source0:        http://www.cpan.org/authors/id/D/DA/DAGOLDEN/Exception-Class-TryCatch-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Exception::Class) >= 1.2
 BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Test::More) >= 0.47
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 Exception::Class::TryCatch provides syntactic sugar for use with
@@ -30,8 +31,6 @@ various Exception::Class methods to process the exception.
 ./Build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
@@ -40,18 +39,21 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %check
 ./Build test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README Todo
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.12-10
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.12-11
+- Perl 5.16 rebuild
+
+* Wed May 30 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1.12-10
+- Clean up spec file
+- Add perl default filter
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

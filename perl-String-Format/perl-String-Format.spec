@@ -1,6 +1,6 @@
 Name:           perl-String-Format
 Version:        1.16
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Sprintf-like string formatting capabilities with arbitrary format definitions
 
 Group:          Development/Libraries
@@ -54,6 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.16-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.16-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.16-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

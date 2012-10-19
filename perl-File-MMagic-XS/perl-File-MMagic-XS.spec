@@ -1,6 +1,6 @@
 Name:           perl-File-MMagic-XS
 Version:        0.09006
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Guess file type with XS
 Group:          Development/Libraries
 License:        ASL 2.0 and (GPL+ or Artistic)
@@ -40,7 +40,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,8 +54,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09006-8
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09006-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.09006-8
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09006-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

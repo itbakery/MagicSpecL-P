@@ -1,5 +1,5 @@
 Name:           perl-YAML-Tiny
-Version:        1.50
+Version:        1.51
 Release:        5%{?dist}
 Summary:        Read/Write YAML files with as little code as possible
 License:        GPL+ or Artistic
@@ -7,17 +7,19 @@ Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-Tiny/
 Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/YAML-Tiny-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec) >= 0.80
+BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More) >= 0.47
-BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(YAML)
 BuildRequires:  perl(YAML::Syck)
+Requires:       perl(Carp)
 Requires:       perl(Exporter)
 Requires:       perl(Scalar::Util)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -30,7 +32,7 @@ memory overhead.
 %setup -q -n YAML-Tiny-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -38,6 +40,7 @@ make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test AUTOMATED_TESTING=1
@@ -48,6 +51,22 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Tue Aug 21 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.51-5
+- Add perl(Carp) to requires.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.51-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.51-3
+- Perl 5.16 rebuild
+
+* Mon Jun 04 2012 Petr Pisar <ppisar@redhat.com> - 1.51-2
+- The POD tests do not run by default
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 1.51-1
+- 1.51 bump
+- Remove command macros
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.50-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

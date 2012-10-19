@@ -1,6 +1,6 @@
 Name: 		perl-File-Slurp
 Version: 	9999.19
-Release: 	4%{?dist}
+Release: 	5%{?dist}
 Summary: 	Efficient Reading/Writing of Complete Files
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -11,8 +11,17 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch: noarch
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(Test::Pod::Coverage) >= 1.04
-BuildRequires:	perl(Test::Pod) >= 1.14
+# Run-time
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+# Tests
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(IO::Handle)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test::More)
+# Optional tests
+BuildRequires:  perl(Test::Pod) >= 1.14
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
 
 %{?perl_default_filter}
 
@@ -54,8 +63,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 9999.19-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9999.19-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 9999.19-4
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9999.19-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

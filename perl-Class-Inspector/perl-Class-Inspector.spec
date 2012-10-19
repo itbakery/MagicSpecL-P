@@ -1,6 +1,6 @@
 Name: 		perl-Class-Inspector
 Version: 	1.27
-Release: 	1%{?dist}
+Release: 	4%{?dist}
 Summary: 	Get information about a class and its structure
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -51,6 +51,15 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.27-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.27-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1.27-2
+- Perl 5.16 rebuild
+
 * Fri Jan 27 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.27-1
 - Upstream update.
 - Spec file modernization.

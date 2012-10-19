@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-can
 Version:        1.15
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Hack around people calling UNIVERSAL::can() as a function
 
 Group:          Development/Libraries
@@ -58,6 +58,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.15-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.15-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

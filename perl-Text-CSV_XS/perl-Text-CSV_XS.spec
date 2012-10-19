@@ -1,19 +1,22 @@
 Name:           perl-Text-CSV_XS
-Version:        0.86
+Version:        0.91
 Release:        1%{?dist}
 Summary:        Comma-separated values manipulation routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Text-CSV_XS/
 Source0:        http://www.cpan.org/authors/id/H/HM/HMBRAND/Text-CSV_XS-%{version}.tgz
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(Test::Harness)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(Test::Pod::Coverage)
 BuildRequires:  perl(Tie::Scalar)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -21,7 +24,6 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 Text::CSV provides facilities for the composition and decomposition of
 comma-separated values.  An instance of the Text::CSV class can combine
 fields into a CSV string and parse a CSV string into fields.
-
 
 %prep
 %setup -q -n Text-CSV_XS-%{version}
@@ -33,34 +35,51 @@ chmod -c a-x examples/*
 # I must admit that some have evolved into being like that."
 #find . -type f -exec sed -i '1s/pro/usr/' {} \;
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
-
 %install
-make pure_install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w %{buildroot}/*
 
 %check
 # TODO: Parallel testing supported since 0.73
 make test
 
-
 %files
-%defattr(-,root,root,-)
 %doc ChangeLog README examples/
 %{perl_vendorarch}/Text/
 %{perl_vendorarch}/auto/Text/
 %{_mandir}/man3/*.3pm*
 
-
 %changelog
+* Wed Aug 22 2012 Petr Šabata <contyk@redhat.com> - 0.91-1
+- 0.91 bump (mostly test-cases updates)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.90-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 0.90-2
+- Perl 5.16 rebuild
+
+* Tue Jun 19 2012 Petr Šabata <contyk@redhat.com> - 0.90-1
+- 0.90 bump
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.88-2
+- Perl 5.16 rebuild
+
+* Mon Mar 19 2012 Petr Pisar <ppisar@redhat.com> - 0.88-1
+- 0.88 bump
+- Fix parsing fields that contain excessive $/
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 0.87-1
+- 0.87 bump
+- Remove command macros and defattr
+
 * Tue Jan 24 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.86-1
 - update to 0.86
 

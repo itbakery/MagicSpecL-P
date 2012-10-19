@@ -1,6 +1,6 @@
 Name:           perl-Socket-GetAddrInfo
 Version:        0.19
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        RFC 2553's "getaddrinfo" and "getnameinfo" functions
 
 Group:          Development/Libraries
@@ -66,6 +66,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.19-2
+- Perl 5.16 rebuild
+
 * Thu Jan 19 2012 Petr Šabata <contyk@redhat.com> - 0.19-1
 - Just updating to 0.19, as it's needed by current POE::* packages
 

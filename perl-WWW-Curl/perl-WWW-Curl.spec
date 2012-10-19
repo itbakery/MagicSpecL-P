@@ -1,15 +1,19 @@
 Name:           perl-WWW-Curl
 Version:        4.15
-Release:        5%{?dist}
+Release:        8%{?dist}
 Summary:        Perl extension interface for libcurl
 License:        MPLv1.1 or MIT
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/WWW-Curl/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SZ/SZBALINT/WWW-Curl-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  perl >= 1:5.6.1
+
+BuildRequires:  perl(inc::Module::Install)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Test::Base)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(XSLoader)
 BuildRequires:  libcurl-devel
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -21,14 +25,14 @@ WWW::Curl is a Perl extension interface for libcurl.
 %prep
 %setup -q -n WWW-Curl-%{version}
 
+# Remove bundled modules
+rm -rf inc/*
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
@@ -36,8 +40,6 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
-
-magic_rpm_clean.sh
 
 %check
 # These tests require network, use "--with network_tests" to execute them
@@ -54,17 +56,23 @@ magic_rpm_clean.sh
 %{?!_with_network_tests: rm t/21write-to-scalar.t }
 make test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc Changes LICENSE README
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/WWW*
 %{_mandir}/man3/*
 
 %changelog
+* Thu Aug 16 2012 Jitka Plesnikova <jplesnik@redhat.com> - 4.15-8
+- Specify all dependencies
+- Modernize spec file
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 4.15-6
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.15-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

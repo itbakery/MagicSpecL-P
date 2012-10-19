@@ -1,6 +1,6 @@
 Name:           perl-AnyEvent-BDB
 Version:        1.1
-Release:        7%{?dist}
+Release:        9%{?dist}
 Summary:        Truly asynchronous Berkeley DB access
 
 Group:          Development/Libraries
@@ -50,6 +50,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.1-8
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

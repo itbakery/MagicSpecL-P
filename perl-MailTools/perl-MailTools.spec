@@ -1,6 +1,6 @@
 Summary:	Various mail-related perl modules
 Name:		perl-MailTools
-Version:	2.09
+Version:	2.11
 Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -10,8 +10,8 @@ Patch0:		MailTools-2.08-UTF8.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl >= 3:5.8.1
+BuildRequires:	perl(base)
 BuildRequires:	perl(Carp)
-BuildRequires:	perl(Config)
 BuildRequires:	perl(Date::Format)
 BuildRequires:	perl(Date::Parse)
 BuildRequires:	perl(Exporter)
@@ -19,7 +19,6 @@ BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(IO::Handle)
 BuildRequires:	perl(Net::Domain) >= 1.05
 BuildRequires:	perl(Net::SMTP) >= 1.03
-BuildRequires:	perl(POSIX)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::Pod)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
@@ -52,10 +51,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
-
-magic_rpm_clean.sh
 
 %check
 make test
@@ -65,7 +61,6 @@ make test TEST_FILES="xt/*.t"
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc ChangeLog README* examples/
 %dir %{perl_vendorlib}/Mail/
 %dir %{perl_vendorlib}/Mail/Field/
@@ -114,6 +109,27 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Util.3pm*
 
 %changelog
+* Wed Aug 29 2012 Paul Howarth <paul@city-fan.org> 2.11-1
+- Update to 2.11
+  - Fix typo in Mail::Mailer::smtp, which only shows up in Perl > 5.14
+
+* Tue Aug 28 2012 Paul Howarth <paul@city-fan.org> 2.10-1
+- Update to 2.10
+  - Mail::Mailer::smtp set from address twice (CPAN RT#77161)
+  - Mail::Mailer::smtps did not support the From option (CPAN RT#77161)
+  - Mail::Util::mailaddress has now an optional parameter to set the returned
+    value explicitly (CPAN #75975)
+- BR: perl(base)
+- Drop BR: perl(Config) and perl(POSIX), not dual-lived
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.09-2
+- Perl 5.16 rebuild
+
 * Sat Feb 25 2012 Paul Howarth <paul@city-fan.org> - 2.09-1
 - Update to 2.09
   - Remove dependency to Test::Pod by moving 99pod.t from t/ to xt/

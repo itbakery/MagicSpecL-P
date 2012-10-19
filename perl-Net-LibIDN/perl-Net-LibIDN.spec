@@ -6,13 +6,22 @@
 Summary: 	Perl bindings for GNU LibIDN
 Name: 		perl-Net-LibIDN
 Version: 	0.12
-Release: 	8%{?dist}
+Release: 	12%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/%{pkgname}/
 Source:		http://search.cpan.org/CPAN/authors/id/T/TH/THOR/%{pkgname}-%{version}.tar.gz
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-BuildRequires:	libidn-devel >= 0.4.0, perl >= 5.8.0, perl(ExtUtils::MakeMaker)
+BuildRequires:	libidn-devel >= 0.4.0
+BuildRequires:	perl >= 5.8.0
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(Getopt::Long)
+# Run-time:
+BuildRequires:	perl(AutoLoader)
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(Exporter)
+# Tests:
+BuildRequires:	perl(Test)
 BuildRoot: 	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -53,6 +62,18 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/auto/Net
 
 %changelog
+* Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 0.12-12
+- Build-require Carp
+
+* Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 0.12-11
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 0.12-9
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.12-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

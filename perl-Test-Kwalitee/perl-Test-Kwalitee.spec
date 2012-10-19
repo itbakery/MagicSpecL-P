@@ -1,6 +1,6 @@
 Name:		perl-Test-Kwalitee
 Version:	1.01
-Release:	12%{?dist}
+Release:	14%{?dist}
 Summary:	Test the Kwalitee of a distribution before you release it
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -50,6 +50,12 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Kwalitee.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 1.01-13
+- Perl 5.16 rebuild
+
 * Thu Mar  8 2012 Paul Howarth <paul@city-fan.org> - 1.01-12
 - BR: perl(Cwd), perl(strict), perl(Test::Builder), perl(vars), perl(warnings)
 - Don't need to remove empty directories from buildroot

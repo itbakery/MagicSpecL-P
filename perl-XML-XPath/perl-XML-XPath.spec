@@ -1,6 +1,6 @@
 Name:           perl-XML-XPath
 Version:        1.13
-Release:        16%{?dist}
+Release:        21%{?dist}
 
 Summary:        XPath parser and evaluator for Perl
 
@@ -11,8 +11,12 @@ Source0:    http://www.cpan.org/authors/id/M/MS/MSERGEANT/XML-XPath-1.13.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  perl(XML::Parser)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Test)
+BuildRequires:  perl(XML::Parser)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -24,7 +28,6 @@ this as they support functionality beyond XPath.
 
 %prep
 %setup -q -n XML-XPath-%{version}
-
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -38,6 +41,10 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
+mkdir -p $RPM_BUILD_ROOT/%{_mandir}/man1/
+cat >> $RPM_BUILD_ROOT/%{_mandir}/man1/xpath.1 << EOF
+.so man3/XML::XPath.3pm
+EOF
 
 %check
 make test
@@ -52,10 +59,28 @@ rm -rf $RPM_BUILD_ROOT
 %doc README TODO
 %{_bindir}/xpath
 %{perl_vendorlib}/XML
+%{_mandir}/man1/xpath*
 %{_mandir}/man3/*.3*
 
 
 %changelog
+* Tue Oct 16 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.13-21
+- revert the patch. It breaks backward compatibility for some apps. 
+- the xpath has still man page installed.
+
+* Fri Aug 24 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.13-20
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 1.13-18
+- Perl 5.16 rebuild
+
+* Fri Mar 16 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.13-17
+- 680418 - missing man page for xpath
+- applied debian patch, which added POD into xpath code, but also fix debian bug(#185292)
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

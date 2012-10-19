@@ -1,6 +1,6 @@
 Name:		perl-Module-Find
-Version:	0.10
-Release:	4%{?dist}
+Version:	0.11
+Release:	3%{?dist}
 Summary:	Find and use installed modules in a (sub)category
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -37,7 +37,6 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -47,12 +46,23 @@ make test
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README examples/
 %{perl_vendorlib}/Module/
 %{_mandir}/man3/Module::Find.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.11-2
+- Perl 5.16 rebuild
+
+* Tue May 22 2012 Paul Howarth <paul@city-fan.org> - 0.11-1
+- Update to 0.11:
+  - defined(@array) is deprecated under Perl 5.15.7 (CPAN RT#74251)
+- Don't need to remove empty directories from buildroot
+- Drop %%defattr, redundant since rpm 4.4
+
 * Wed Jan 25 2012 Paul Howarth <paul@city-fan.org> - 0.10-4
 - BR: perl(ExtUtils::MakeMaker), perl(File::Find), perl(File::Spec) and
   perl(Pod::Perldoc)

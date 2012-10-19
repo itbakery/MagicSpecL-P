@@ -1,54 +1,67 @@
 Name:           perl-Class-Data-Inheritable
 Version:        0.08
-Release:        9%{?dist}
+Release:        12%{?dist}
 Summary:        Inheritable, overridable class data
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-Data-Inheritable/
 Source0:        http://search.cpan.org/CPAN/authors/id/T/TM/TMTM/Class-Data-Inheritable-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
-BuildRequires:  perl >= 1:5.6.1, perl(Test::More)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-# For improved tests
-BuildRequires: perl(Test::Pod::Coverage) >= 1.00
-BuildRequires: perl(Test::Pod) >= 1.00
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.00
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Carp)
 
 %description
 Class::Data::Inheritable is for creating accessor/mutators to 
 class data. That is, if you want to store something about your 
 class as a whole (instead of about a single object). This data 
-is then inherited by your subclasses and can be overriden.
+is then inherited by your sub-classes and can be overridden.
 
 %prep
 %setup -q -n Class-Data-Inheritable-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+rm -rf %{buildroot}
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}
 
 %check
 make test
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %{perl_vendorlib}/Class/
-%{_mandir}/man3/*.3*
-
+%{_mandir}/man3/Class::Data::Inheritable.3pm*
 
 %changelog
+* Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.08-12
+- BR:/R: perl(Carp)
+- BR: perl(base)
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Use %%{_fixperms} macro rather than our own chmod incantation
+- Don't need to remove empty directories from the buildroot
+- Don't use macros for commands
+- Make %%files list more explicit
+- Fix typos in %%description
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.08-10
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
@@ -59,7 +72,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 15 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.08-6
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri Apr 30 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.08-5
 - Mass rebuild with perl-5.12.0

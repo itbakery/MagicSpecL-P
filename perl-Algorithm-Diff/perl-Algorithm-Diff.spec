@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Diff
 Version:        1.1902
-Release:        14%{?dist}
+Release:        16%{?dist}
 Summary:        Algorithm::Diff Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -9,7 +9,15 @@ Source0:        http://www.cpan.org/authors/id/T/TY/TYEMQ/Algorithm-Diff-%{versi
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+# Tests:
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Carp)
 
 %description
 This is a module for computing the difference between two files, two
@@ -51,6 +59,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1902-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.1902-15
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1902-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

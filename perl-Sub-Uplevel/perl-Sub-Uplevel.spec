@@ -1,19 +1,25 @@
 Name:           perl-Sub-Uplevel
 Summary:        Apparently run a function in a higher stack frame
 Epoch:          1
-Version:        0.22
-Release:        6%{?dist}
+Version:        0.24
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/Sub-Uplevel-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Sub-Uplevel
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+# Run-time:
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Test::More) >= 0.47
+BuildRequires:  perl(constant)
+# Tests:
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(Test::More)
+# Optional:
+BuildRequires:  perl(Test::Script) >= 1.05
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Carp)
 
 %{?perl_default_filter}
 
@@ -26,30 +32,36 @@ are avoided.
 %setup -q -n Sub-Uplevel-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
-./Build
+%{__perl} Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+%{_fixperms} %{buildroot}/*
 
 %check
-./Build test
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes LICENSE README Todo examples/
+%doc Changes LICENSE README README.PATCHING examples/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.24-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1:0.24-2
+- Perl 5.16 rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1:0.24-1
+- 0.24 bump
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1:0.22-7
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.22-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

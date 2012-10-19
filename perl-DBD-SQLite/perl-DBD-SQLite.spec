@@ -1,6 +1,6 @@
 Name:           perl-DBD-SQLite
-Version:        1.35
-Release:        2%{?dist}
+Version:        1.37
+Release:        3%{?dist}
 Summary:        SQLite DBI Driver
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -12,12 +12,19 @@ patch0:         perl-DBD-SQLite-bz543982.patch
 # else
 #   perl-DBD-SQLite is self-contained (uses the sqlite local copy)
 BuildRequires:  sqlite-devel
+BuildRequires:  perl(constant)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Test::More) >= 0.42
-BuildRequires:  perl(File::Spec) >= 0.82
 # Prevent bug #443495
 BuildRequires:  perl(DBI) >= 1.607
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Tests only
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Spec) >= 0.82
+BuildRequires:  perl(File::Spec::Functions)
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(Test::More) >= 0.42
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -33,7 +40,7 @@ libraries.
 %patch0 -p1 -b .bz543982
 
 %build
-CFLAGS="%{optflags}" %{__perl} Makefile.PL INSTALLDIRS=vendor
+CFLAGS="%{optflags}" perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags} OPTIMIZE="%{optflags}"
 
 %install
@@ -53,6 +60,17 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.37-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 1.37-2
+- Perl 5.16 rebuild
+
+* Tue Jun 12 2012 Petr Šabata <contyk@redhat.com> - 1.37-1
+- 1.37 bump (sqlite3.7.11 and various bugfixes)
+- Drop command macros
+- Fix dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.35-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

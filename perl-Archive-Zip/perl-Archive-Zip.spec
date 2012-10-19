@@ -1,6 +1,6 @@
 Name:           perl-Archive-Zip
 Version:        1.30
-Release:        7%{?dist}
+Release:        10%{?dist}
 Summary:        Perl library for accessing Zip archives
 
 Group:          Development/Libraries
@@ -9,10 +9,26 @@ URL:            http://search.cpan.org/dist/Archive-Zip/
 Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Archive-Zip-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+#https://rt.cpan.org/Public/Bug/Display.html?id=54827
+Patch0:         Archive-Zip-cpan-rt-54827.patch
 
-BuildRequires:  perl(Compress::Zlib) >= 1.14
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::Which) >= 0.05
+# Run-time
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Compress::Raw::Zlib)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec) >= 0.80
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(IO::Seekable)
+BuildRequires:  perl(Time::Local)
+# Tests
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(File::Spec::Unix)
+BuildRequires:  perl(IO::Scalar)
 BuildRequires:  perl(Test::More)
 BuildRequires:  unzip
 BuildRequires:  zip
@@ -33,6 +49,7 @@ existing Zip files, or from existing directories, files, or strings.
 
 %prep
 %setup -q -n Archive-Zip-%{version}
+%patch0 -p1
 %{__perl} -pi -e 's|^#!/bin/perl|#!%{__perl}|' examples/*.pl
 %{__perl} -pi -e 's|^#!/usr/local/bin/perl|#!%{__perl}|' examples/selfex.pl
 
@@ -67,6 +84,16 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.30-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.30-9
+- Perl 5.16 rebuild
+- Specify all dependencies
+
+* Mon Mar 19 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.30-8
+- 543660 apply patch from rt cpan 54827
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.30-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

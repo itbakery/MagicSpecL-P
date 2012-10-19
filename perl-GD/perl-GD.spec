@@ -1,6 +1,6 @@
 Name:           perl-GD
 Version:        2.44
-Release:        10%{?dist}
+Release:        12%{?dist}
 Summary:        Perl interface to the GD graphics library
 
 Group:          Development/Libraries
@@ -76,6 +76,12 @@ base64 t/test.out.3.png_new
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.44-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.44-11
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.44-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

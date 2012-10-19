@@ -3,7 +3,7 @@
 
 Name:           perl-Software-License
 Version:        0.103004
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        Package that provides templated software licenses
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Software::LicenseUtils.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.103004-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.103004-3
+- Perl 5.16 rebuild
+
 * Wed Mar  7 2012 Paul Howarth <paul@city-fan.org> - 0.103004-2
 - Add test suite patch to support building with Test::More < 0.88 so that we
   can build for EPEL-5, only applying the patch when necessary

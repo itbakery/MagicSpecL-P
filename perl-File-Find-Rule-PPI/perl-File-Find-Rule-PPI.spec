@@ -1,6 +1,6 @@
 Name:           perl-File-Find-Rule-PPI
 Version:        0.05
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Add support for PPI queries to File::Find::Rule
 
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -55,8 +55,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.05-12
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 0.05-12
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

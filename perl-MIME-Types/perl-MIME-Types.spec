@@ -1,19 +1,20 @@
 Name:           perl-MIME-Types
-Version:        1.31
-Release:        3%{?dist}
+Version:        1.35
+Release:        1%{?dist}
 Summary:        MIME types module for Perl
-
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/MIME-Types/
-Source0:        http://www.cpan.org/authors/id/M/MA/MARKOV/MIME-Types-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MARKOV/MIME-Types-%{version}.tar.gz
+Patch0:         MIME-Types-1.31-utf8.patch
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Test::Pod) >= 1.00
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 MIME types are used in MIME compliant lines, for instance as part of
@@ -24,42 +25,59 @@ one known mime type. There are many types defined by RFCs and vendors,
 so the list is long but not complete. Please don't hesitate to ask to
 add additional information.
 
-
 %prep
 %setup -q -n MIME-Types-%{version}
-f=ChangeLog ; iconv -f iso-8859-1 -t utf-8 $f > $f.utf8 ; mv $f.utf8 $f
 
+# Recode ChangeLog as UTF-8
+%patch0 -p1
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+rm -rf %{buildroot}
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+%{_fixperms} %{buildroot}
 
 %check
 make test
 make test TEST_FILES="xt/*.t"
 
-
 %clean
-rm -rf $RPM_BUILD_ROOT
-
+rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc ChangeLog README
 %{perl_vendorlib}/MIME/
-%{_mandir}/man3/MIME::Type*.3*
-
+%{_mandir}/man3/MIME::Type.3pm*
+%{_mandir}/man3/MIME::Types.3pm*
 
 %changelog
+* Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 1.35-1
+- Update to 1.35:
+  - Explain how to use MIME::Types in mod_perl; when you do not read the
+    documentation about mod_perl/fork it will work as always, but
+    inefficiently
+  - subType() did not handle subType's with '+' in them
+  - Added video/webm and audio/webm, although not (yet) IANA registered
+- BR: perl(Carp) and perl(Exporter)
+- BR: at least version 1.00 of  perl(Test::Pod)
+- Use a patch rather than scripted iconv to fix character encooding
+- Don't need to remove empty directories from the buildroot
+- Drop %%defattr, redundant since rpm 4.4
+- Use %%{_fixperms} macro rather than our own chmod incantation
+- Use DESTDIR rather than PERL_INSTALL_ROOT
+- Don't use macros for commands
+- Make %%files list more explicit
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.31-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.31-4
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.31-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

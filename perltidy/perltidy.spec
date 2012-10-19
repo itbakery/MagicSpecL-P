@@ -1,16 +1,20 @@
 Name:           perltidy
-Version:        20101217
-Release:        4%{?dist}
+Version:        20120714
+Release:        3%{?dist}
 Summary:        Tool for indenting and reformatting Perl scripts
 
-Group:          Development/Tools
 License:        GPLv2+
 URL:            http://perltidy.sourceforge.net/
 Source:         http://downloads.sourceforge.net/perltidy/Perl-Tidy-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Test)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -37,23 +41,17 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+%{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc BUGS CHANGES COPYING README TODO docs/ examples/
 %{_bindir}/perltidy
 %{perl_vendorlib}/Perl/
@@ -62,6 +60,31 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 20120714-3
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20120714-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 16 2012 Ville Skyttä <ville.skytta@iki.fi> - 20120714-1
+- Update to 20120714.
+
+* Mon Jul 09 2012 Petr Pisar <ppisar@redhat.com> - 20120701-2
+- Perl 5.16 rebuild
+
+* Sat Jul  7 2012 Ville Skyttä <ville.skytta@iki.fi> - 20120701-1
+- Update to 20120701.
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 20120619-2
+- Perl 5.16 rebuild
+
+* Wed Jun 20 2012 Ville Skyttä <ville.skytta@iki.fi> - 20120619-1
+- Update to 20120619.
+- Clean up specfile constructs no longer needed in Fedora or EL6+.
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 20101217-5
+- Perl 5.16 rebuild
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20101217-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
@@ -83,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20090616-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
-* Thu Jun 18 2009 Ville Skyttä <ville.skytta at iki.fi> - 20090616-1
+* Thu Jun 18 2009 Ville Skyttä <ville.skytta@iki.fi> - 20090616-1
 - Update to 20090616.
 
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 20071205-4
@@ -95,66 +118,66 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Jan 13 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 20071205-2
 - rebuild for new perl
 
-* Thu Dec  6 2007 Ville Skyttä <ville.skytta at iki.fi> - 20071205-1
+* Thu Dec  6 2007 Ville Skyttä <ville.skytta@iki.fi> - 20071205-1
 - 20071205.
 - Convert docs to UTF-8.
 
-* Wed Aug  1 2007 Ville Skyttä <ville.skytta at iki.fi> - 20070801-1
+* Wed Aug  1 2007 Ville Skyttä <ville.skytta@iki.fi> - 20070801-1
 - 20070801.
 
-* Wed May  9 2007 Ville Skyttä <ville.skytta at iki.fi> - 20070508-1
+* Wed May  9 2007 Ville Skyttä <ville.skytta@iki.fi> - 20070508-1
 - 20070508.
 
-* Sat May  5 2007 Ville Skyttä <ville.skytta at iki.fi> - 20070504-1
+* Sat May  5 2007 Ville Skyttä <ville.skytta@iki.fi> - 20070504-1
 - 20070504.
 
-* Tue Apr 24 2007 Ville Skyttä <ville.skytta at iki.fi> - 20070424-1
+* Tue Apr 24 2007 Ville Skyttä <ville.skytta@iki.fi> - 20070424-1
 - 20070424.
 
-* Tue Apr 17 2007 Ville Skyttä <ville.skytta at iki.fi> - 20060719-3
+* Tue Apr 17 2007 Ville Skyttä <ville.skytta@iki.fi> - 20060719-3
 - BuildRequire perl(ExtUtils::MakeMaker).
 
-* Fri Sep 15 2006 Ville Skyttä <ville.skytta at iki.fi> - 20060719-2
+* Fri Sep 15 2006 Ville Skyttä <ville.skytta@iki.fi> - 20060719-2
 - Rebuild.
 
-* Thu Jul 20 2006 Ville Skyttä <ville.skytta at iki.fi> - 20060719-1
+* Thu Jul 20 2006 Ville Skyttä <ville.skytta@iki.fi> - 20060719-1
 - 20060719.
 - Fix order of options to find(1) in %%install.
 
-* Thu Jun 15 2006 Ville Skyttä <ville.skytta at iki.fi> - 20060614-1
+* Thu Jun 15 2006 Ville Skyttä <ville.skytta@iki.fi> - 20060614-1
 - 20060614, specfile cleanups, include examples in docs.
 
 * Fri Apr  7 2005 Michael Schwendt <mschwendt[AT]users.sf.net>
 - rebuilt
 
-* Thu Dec 16 2004 Ville Skyttä <ville.skytta at iki.fi> - 0:20031021-1
+* Thu Dec 16 2004 Ville Skyttä <ville.skytta@iki.fi> - 0:20031021-1
 - Sync with fedora-rpmdevtools' Perl spec template to fix x86_64 build.
 - Move version to the version field.
 
-* Wed Oct 22 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.3.20031021
+* Wed Oct 22 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.3.20031021
 - Update to 20031021.
 
-* Sat Oct 11 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.3.20030726
+* Sat Oct 11 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.3.20030726
 - Install into vendor dirs.
 - Spec cleanups.
 
-* Tue Jul 29 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.2.20030726
+* Tue Jul 29 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.2.20030726
 - Update to 20030726.
 - Use fedora-rpm-helper.
 
-* Mon Jun 23 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.2.20021130
+* Mon Jun 23 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.2.20021130
 - Address issues in #194:
 - Patch to get rid of a warning on startup.
 - Do defattr before doc.
 
-* Fri May 30 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.1.20021130
+* Fri May 30 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.1.20021130
 - Fix release naming scheme (this is snapshot-only).
 
-* Wed May  7 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.0.2.20021130
+* Wed May  7 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.0.2.20021130
 - Own dirs.
 - Save .spec in UTF-8.
 
-* Mon Apr 21 2003 Ville Skyttä <ville.skytta at iki.fi> 0:0.0-0.fdr.0.1.20021130
+* Mon Apr 21 2003 Ville Skyttä <ville.skytta@iki.fi> 0:0.0-0.fdr.0.1.20021130
 - First Fedora release, based on Simon Perreault's work.
 
 * Mon Mar 10 2003 Simon Perreault <nomis80@nomis80.org> 20021130-2

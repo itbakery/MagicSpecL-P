@@ -1,7 +1,7 @@
 Name:           perl-JSON
 Summary:        Parse and convert to JSON (JavaScript Object Notation)
 Version:        2.53
-Release:        4%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MA/MAKAMAKA/JSON-%{version}.tar.gz 
@@ -9,13 +9,22 @@ URL:            http://search.cpan.org/dist/JSON/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(CGI)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Encode)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(HTTP::Daemon)
+BuildRequires:  perl(Math::BigFloat)
+BuildRequires:  perl(Math::BigInt)
 BuildRequires:  perl(LWP::UserAgent)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(Tie::IxHash)
 
 
 %{?perl_default_filter:
@@ -61,6 +70,13 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.53-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 2.53-5
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.53-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

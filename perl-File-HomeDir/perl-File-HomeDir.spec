@@ -1,6 +1,6 @@
 Name:           perl-File-HomeDir
 Version:        0.99
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Find your home and other directories on any platform
 
 Group:          Development/Libraries
@@ -67,6 +67,15 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.99-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.99-2
+- Perl 5.16 rebuild
+
 * Tue Jan 31 2012 Tom Callaway <spot@fedoraproject.org> - 0.99-1
 - Update to 0.99
 

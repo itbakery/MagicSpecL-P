@@ -1,25 +1,25 @@
 Name:           perl-Email-Address
-Version:        1.889
-Release:        10%{?dist}
+Version:        1.896
+Release:        1%{?dist}
 Summary:        RFC 2822 Address Parsing and Creation
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Email-Address/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Email-Address-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Test::More) >= 0.47
 BuildRequires:  perl(Test::Pod) >= 1.14
 BuildRequires:  perl(Test::Pod::Coverage) >= 1.08
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
-This class implements a complete RFC 2822 parser that locates email
-addresses in strings and returns a list of "Email::Address" objects
-found. Alternatley you may construct objects manually. The goal of this
-software is to be correct, and very very fast.
-
+This class implements a regex-based RFC 2822 parser that locates email
+addresses in strings and returns a list of Email::Address objects found.
+Alternatively you may construct objects manually. The goal of this software
+is to be correct, and very very fast.
 
 %prep
 %setup -q -n Email-Address-%{version}
@@ -49,12 +49,21 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc Changes LICENSE README bench/
+%doc Changes LICENSE README META.json bench/
 %{perl_vendorlib}/Email/
 %{_mandir}/man3/*.3pm*
 
 
 %changelog
+* Tue Sep 18 2012 Marcela Mašláňová <mmaslano@redhat.com> 1.896-1
+- update to 1.896
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.889-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.889-11
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.889-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

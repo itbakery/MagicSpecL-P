@@ -1,5 +1,5 @@
 Name:           perl-Module-Install
-Version:        1.04
+Version:        1.06
 Release:        1%{?dist}
 Summary:        Standalone, extensible Perl module installer
 License:        GPL+ or Artistic
@@ -14,12 +14,12 @@ BuildArch:      noarch
 
 BuildRequires:  perl(Archive::Tar) >= 1.44
 BuildRequires:  perl(CPAN)
-BuildRequires:  perl(Devel::PPPort)
+BuildRequires:  perl(Devel::PPPort) >= 3.16
 BuildRequires:  perl(ExtUtils::Install) >= 1.52
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(ExtUtils::ParseXS) >= 2.19
 BuildRequires:  perl(File::Remove) >= 1.42
-BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(File::Spec) >= 3.28
 BuildRequires:  perl(JSON) >= 2.14
 BuildRequires:  perl(LWP::UserAgent) >= 5.812
 BuildRequires:  perl(Module::Build) >= 0.29
@@ -34,6 +34,9 @@ BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(YAML::Tiny) >= 1.38
 Requires:       perl(Archive::Tar)
+Requires:       perl(Carp)
+Requires:       perl(CPAN)
+Requires:       perl(CPANPLUS::Backend)
 Requires:       perl(ExtUtils::ParseXS)
 Requires:       perl(Module::Build)
 Requires:       perl(Module::ScanDeps)
@@ -71,6 +74,18 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Fri Oct 05 2012 Petr Šabata <contyk@redhat.com> - 1.06-1
+- 1.06 bump
+
+* Fri Sep 14 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.04-4
+- Update requires: perl(Carp), perl(CPAN), perl(CPANPLUS::Backend)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 1.04-2
+- Perl 5.16 rebuild
+
 * Thu Jan 12 2012 Iain Arnell <iarnell@gmail.com> 1.04-1
 - update to latest upstream version
 

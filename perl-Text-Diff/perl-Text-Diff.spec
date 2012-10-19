@@ -1,6 +1,6 @@
 Name:           perl-Text-Diff
 Version:        1.41
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Perform diffs on files and record sets
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,12 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.41-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.41-2
+- Perl 5.16 rebuild
+
 * Fri Jan 27 2012 Petr Šabata <contyk@redhat.com> - 1.41-1
 - 1.41 bump, spec modernization and cleanup
 - Update Source URL

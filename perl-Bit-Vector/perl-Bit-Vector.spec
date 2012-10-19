@@ -1,6 +1,6 @@
 Name:           perl-Bit-Vector
-Version:        7.1
-Release:        8%{?dist}
+Version:        7.2
+Release:        4%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
 
 Group:          Development/Libraries
@@ -10,8 +10,11 @@ URL:            http://search.cpan.org/dist/Bit-Vector/
 Source0:        http://www.cpan.org/authors/id/S/ST/STBEY/Bit-Vector-%{version}.tar.gz
 
 BuildRequires:  perl(Carp::Clan) >= 5.4
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Storable)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -28,20 +31,20 @@ widespread use of divide-and-conquer algorithms.
 %prep
 %setup -q -n Bit-Vector-%{version} 
 chmod 644 examples/*.pl
-%{__perl} -pi -e 's|^#!/usr/local/bin/perl\b|#!%{__perl}|' examples/benchmk1.pl
-%{__perl} -pi -e 's|^#!perl\b|#!%{__perl}|' \
+perl -pi -e 's|^#!/usr/local/bin/perl\b|#!%{__perl}|' examples/benchmk1.pl
+perl -pi -e 's|^#!perl\b|#!%{__perl}|' \
     examples/{benchmk{2,3},primes,SetObject}.pl
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+%{_fixperms} %{buildroot}/*
 
 %check
 make test
@@ -55,6 +58,19 @@ make test
 
 
 %changelog
+* Wed Sep 19 2012 Jitka Plesnikova <jplesnik@redhat.com> - 7.2-4
+- Use latest version of Bit-Vector-7.2.tar.gz from CPAN
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 7.2-2
+- Perl 5.16 rebuild
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 7.2-1
+- 7.2 bumpity
+- Remove command macros
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

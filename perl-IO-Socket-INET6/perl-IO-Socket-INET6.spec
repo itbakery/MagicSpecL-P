@@ -1,6 +1,6 @@
 Name:           perl-IO-Socket-INET6
 Version:        2.69
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Perl Object interface for AF_INET|AF_INET6 domain sockets
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -47,6 +47,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/IO::Socket::INET6.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.69-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 2.69-2
+- Perl 5.16 rebuild
+
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> - 2.69-1
 - Update to 2.69:
   - Solved symbol clashes in t/io_multihomed6.t (CPAN RT#72769)

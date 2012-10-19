@@ -1,6 +1,6 @@
 Name:           perl-Encode-Locale
 Version:        1.03
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        Determine the locale encoding
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -50,6 +50,12 @@ make test
 %{_mandir}/man3/Encode::Locale.3*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.03-2
+- Perl 5.16 rebuild
+
 * Mon Feb 13 2012 Petr Pisar <ppisar@redhat.com> - 1.03-1
 - 1.03 bump
 

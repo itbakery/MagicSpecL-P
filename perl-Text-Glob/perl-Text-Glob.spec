@@ -1,6 +1,6 @@
 Name: 		perl-Text-Glob
 Version: 	0.09
-Release: 	3%{?dist}
+Release: 	6%{?dist}
 Summary: 	Perl module to match globbing patterns against text
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -9,19 +9,21 @@ Source0: 	http://www.cpan.org/authors/id/R/RC/RCLAMP/Text-Glob-%{version}.tar.gz
 
 BuildArch: noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Test::More)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Text::Glob implements glob(3) style matching that can be used to match
-against text, rather than fetching names from a filesystem.  If you
+against text, rather than fetching names from a file-system.  If you
 want to do full file globbing use the File::Glob module instead.
 
 %prep
 %setup -q -n Text-Glob-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -34,12 +36,20 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes
 %{perl_vendorlib}/Text
 %{_mandir}/man3/*
 
 %changelog
+* Fri Aug 10 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.09-6
+- Update BRs and remove %%defattr.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.09-4
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

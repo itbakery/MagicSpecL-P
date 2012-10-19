@@ -1,15 +1,20 @@
 Name:           perl-XML-SAX-Base
 Version:        1.08
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Base class SAX Drivers and Filters
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/XML-SAX-Base/
 Source0:        http://www.cpan.org/authors/id/G/GR/GRANTM/XML-SAX-Base-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Pod) >= 1.41
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(File::Spec)
 Conflicts:      perl-XML-SAX < 0.99-1
 
 %description
@@ -45,6 +50,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.08-5
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.08-3
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

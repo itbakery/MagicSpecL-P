@@ -1,7 +1,7 @@
 Summary:	I/O on in-core objects like strings and arrays for Perl
 Name:		perl-IO-stringy
 Version:	2.110
-Release:	18%{?dist}
+Release:	20%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/IO-stringy/
@@ -14,9 +14,6 @@ BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(FileHandle)
 BuildRequires:	perl(IO::File)
 BuildRequires:	perl(IO::Handle)
-BuildRequires:	perl(IO::Scalar)
-BuildRequires:	perl(IO::ScalarArray)
-BuildRequires:	perl(IO::WrapTie)
 BuildRequires:	perl(Symbol)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
@@ -45,7 +42,6 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -55,7 +51,6 @@ make test
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc README COPYING examples
 %{perl_vendorlib}/IO/
 %{_mandir}/man3/IO::AtomicFile.3pm*
@@ -68,8 +63,17 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::WrapTie.3pm*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 2.110-18
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.110-20
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.110-19
+- Perl 5.16 rebuild
+
+* Fri Apr  6 2012 Paul Howarth <paul@city-fan.org> 2.110-18
+- don't build-require modules that this package provides (problem stupidly
+  introduced in previous release)
+- don't need to remove empty directories from buildroot
+- drop %%defattr, redundant since rpm 4.4
 
 * Thu Jan 12 2012 Paul Howarth <paul@city-fan.org> 2.110-17
 - spec clean-up:

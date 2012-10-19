@@ -1,6 +1,6 @@
 Name:		perl-Sub-Exporter
-Version:	0.982
-Release:	10%{?dist}
+Version:	0.984
+Release:	3%{?dist}
 Summary:	Sophisticated exporter for custom-built routines
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -17,10 +17,16 @@ BuildRequires:	perl(Package::Generator)
 BuildRequires:	perl(Params::Util) >= 0.14
 BuildRequires:	perl(Sub::Install) >= 0.92
 # Test suite
+BuildRequires:	perl(base)
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(Test::More)
 # Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:	perl(Package::Generator)
+
+# Don't want doc-file provides or dependencies
+%global __provides_exclude_from ^%{_datadir}/doc/%{name}-%{version}/
+%global __requires_exclude_from ^%{_datadir}/doc/%{name}-%{version}/
 
 %description
 Sub::Exporter provides a sophisticated alternative to Exporter.pm. It allows
@@ -34,6 +40,12 @@ Sub::Exporter::Tutorial first!
 
 # Fix shellbangs
 find t/ -type f -exec sed -i -e 's|^#!perl|#!/usr/bin/perl|' {} \;
+
+# Filter bogus provides/requires if we don't have rpm ≥ 4.9
+%global provfilt /bin/sh -c "%{__perl_provides} | grep -Ev '^perl[(]Test::SubExporter.*[)]'"
+%define __perl_provides %{provfilt}
+%global reqfilt /bin/sh -c "%{__perl_requires} | grep -Ev '^perl[(](base|Test::SubExporter.*)[)]'"
+%define __perl_requires %{reqfilt}
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -52,7 +64,6 @@ make test
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README t/
 %dir %{perl_vendorlib}/Sub/
 %dir %{perl_vendorlib}/Sub/Exporter/
@@ -66,6 +77,20 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Exporter::Util.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.984-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.984-2
+- Perl 5.16 rebuild
+
+* Tue Jun  5 2012 Paul Howarth <paul@city-fan.org> - 0.984-1
+- Update to 0.984 (documentation fixes)
+- Add filters for provides/requires from the test suite
+- BR: perl(base) and perl(Exporter) for the test suite
+
+* Sun Mar 18 2012 Paul Howarth <paul@city-fan.org> - 0.982-11
+- Drop %%defattr, redundant since rpm 4.4
+
 * Sat Mar  3 2012 Paul Howarth <paul@city-fan.org> - 0.982-10
 - Explicitly require perl(Package::Generator)
 - Make %%files list more explicit

@@ -1,19 +1,17 @@
 Name:		perl-File-Remove
-Version:	1.51
-Release:	2%{?dist}
+Version:	1.52
+Release:	3%{?dist}
 Summary:	Convenience module for removing files and directories
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/File-Remove/
 Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/File-Remove-%{version}.tar.gz
-# Perl versions are causing havoc to rpm versions
-Patch0:		File-Remove-%{version}.diff
 
 Requires:	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Test::More) >= 0.42
-BuildRequires:	perl(File::Spec) >= 3.28
+BuildRequires:	perl(File::Spec) >= 3.29
 BuildRequires:	perl(File::Path)
 BuildRequires:	perl(File::Glob)
 
@@ -24,7 +22,6 @@ BuildArch:	noarch
 
 %prep
 %setup -q -n File-Remove-%{version}
-%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -40,12 +37,22 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README LICENSE
 %{perl_vendorlib}/File
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.52-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.52-2
+- Perl 5.16 rebuild
+
+* Tue Mar 20 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 1.52-1
+- Upstream update.
+- Remove File-Remove-1.51.diff.
+- BR: perl(File::Spec) >= 3.29.
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.51-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

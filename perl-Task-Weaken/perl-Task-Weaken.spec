@@ -1,6 +1,6 @@
 Name:           perl-Task-Weaken
 Version:        1.04
-Release:        2%{?dist}
+Release:        5%{?dist}
 Summary:        Ensure that a platform has weaken support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,8 +8,11 @@ URL:            http://search.cpan.org/dist/Task-Weaken/
 Source0:        http://www.cpan.org/authors/id/A/AD/ADAMK/Task-Weaken-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec) >= 0.80
+BuildRequires:  perl(File::Spec::Functions)
 BuildRequires:  perl(Scalar::Util) >= 1.14
 BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -54,6 +57,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Aug 20 2012 Petr Pisar <ppisar@redhat.com> - 1.04-5
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.04-3
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

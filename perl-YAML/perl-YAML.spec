@@ -1,17 +1,27 @@
 Name:           perl-YAML
-Version:        0.73
-Release:        3%{?dist}
+Version:        0.84
+Release:        4%{?dist}
 Summary:        YAML Ain't Markup Language (tm)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML/
-Source0:        http://search.cpan.org/CPAN/authors/id/I/IN/INGY/YAML-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/M/MS/MSTROUT/YAML-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-%if !%{defined perl_bootstrap}
-BuildRequires:  perl(Test::CPAN::Meta), perl(Test::MinimumVersion), perl(Test::Pod)
-%endif
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(lib)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Carp)
+Requires:       perl(Data::Dumper)
+
+# Filter private provides:
+# perl(yaml_mapping) perl(yaml_scalar) perl(yaml_sequence)
+%global __provides_exclude ^perl\\(yaml_
 
 %description
 The YAML.pm module implements a YAML Loader and Dumper based on the
@@ -25,32 +35,23 @@ specification.
 %prep
 %setup -q -n YAML-%{version}
 
-# Re-code docs as UTF-8
-iconv -f iso-8859-1 -t utf8 < README > README.utf8
-mv README.utf8 README
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor < /dev/null
+perl Makefile.PL INSTALLDIRS=vendor < /dev/null
 make %{?_smp_mflags}
 
 %install
-make pure_install DESTDIR=$RPM_BUILD_ROOT
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+%{_fixperms} %{buildroot}
 
 # Removing Test::YAML (at least temporarily) due
 # to security concerns and questionable value.
 # https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=197539
-rm -f $RPM_BUILD_ROOT%{perl_vendorlib}/Test/YAML* \
-    $RPM_BUILD_ROOT%{_mandir}/man3/Test::YAML*.3*
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+rm -f %{buildroot}%{perl_vendorlib}/Test/YAML* \
+    %{buildroot}%{_mandir}/man3/Test::YAML*.3*
 
 %check
-%if !%{defined perl_bootstrap}
-make test AUTOMATED_TESTING=1
-%endif
+make test
 
 %files
 %doc Changes README LICENSE
@@ -58,6 +59,41 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/YAML*.3*
 
 %changelog
+* Tue Aug 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.84-4
+- Specify all dependencies.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.84-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Paul Howarth <paul@city-fan.org> - 0.84-2
+- Haven't needed to fix documentation character encoding since 0.79
+- Drop Test::Base build dependency again to avoid a BR loop (#215637)
+- Filter private provides perl(yaml_mapping), perl(yaml_scalar) and
+  perl(yaml_sequence)
+- Don't need to remove empty directories from the buildroot
+- This release by MSTROUT -> update source URL
+
+* Mon Jul 16 2012 Petr Šabata <contyk@redhat.com> - 0.84-1
+- 0.84 bump
+- Drop command macros
+- Drop previously added patch (included in 0.82)
+
+* Fri Jun 22 2012 Jitka Plesnikova <jplesnik@redhat.com> 0.81-4
+- apply patch to for YAML::Any RT#74226
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 0.81-3
+- Perl 5.16 rebuild
+
+* Mon Apr 23 2012 Paul Howarth <paul@city-fan.org> - 0.81-2
+- R: perl(Carp) and perl(Data::Dumper)
+- BR: perl(Carp), perl(constant) and perl(Exporter)
+- Release tests no longer shipped, so drop buildreqs for them and don't bother
+  setting AUTOMATED_TESTING; run tests even when bootstrapping
+
+* Mon Apr 23 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.81-1
+- Update to 0.81
+- Add BR Data::Dumper
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.73-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

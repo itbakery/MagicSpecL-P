@@ -1,6 +1,6 @@
 Name:           perl-Parse-RecDescent
-Version:        1.967006
-Release:        1%{?dist}
+Version:        1.967009
+Release:        3%{?dist}
 Summary:        Generate Recursive-Descent Parsers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -8,17 +8,22 @@ URL:            http://search.cpan.org/dist/Parse-RecDescent/
 Source0:        http://search.cpan.org/CPAN/authors/id/J/JT/JTBRAUN/Parse-RecDescent-%{version}.tar.gz
 Patch0:         Parse-RecDescent-1.967002-utf8.patch
 BuildArch:      noarch
+BuildRequires:  perl(Module::Build)
+# Run-time
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Data::Dumper)
-BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Text::Balanced)
+BuildRequires:  perl(Text::Balanced) >= 1.95
+# Tests:
 BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::Pod)
+# Optional tests:
+BuildRequires:  perl(Test::Pod) >= 1.14
 BuildRequires:  perl(Test::Warn)
-BuildRequires:  perl(version)
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:       perl(Text::Balanced) >= 1.95
 
 %{?perl_default_filter}
+# Remove under-specified dependencies
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Text::Balanced\\)$
 
 %description
 Parse::RecDescent incrementally generates top-down recursive-descent
@@ -66,6 +71,15 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/Parse::RecDescent.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.967009-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.967009-2
+- Perl 5.16 rebuild
+
+* Mon Mar 19 2012 Petr Pisar <ppisar@redhat.com> - 1.967009-1
+- 1.967009 bump
+
 * Sat Feb 11 2012 Paul Howarth <paul@city-fan.org> - 1.967006-1
 - Update to 1.967006 (#789560)
   - Localize the OUT filehandle during Precompile

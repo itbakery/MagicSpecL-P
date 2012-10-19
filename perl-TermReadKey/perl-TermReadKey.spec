@@ -1,16 +1,19 @@
 Name:           perl-TermReadKey
 Version:        2.30
-Release:        14%{?dist}
+Release:        17%{?dist}
 Summary:        A perl module for simple terminal control
-
 Group:          Development/Libraries
-License:        Copyright only
-URL:            http://search.cpan.org/dist/TermReadKey/
+License:        (Copyright only) and (Artistic or GPL+)
+URL:            http://search.cpan.org/~jstowe/TermReadKey/
 Source0:        http://www.cpan.org/authors/id/J/JS/JSTOWE/TermReadKey-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Exporter)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+
+%{?perl_default_filter}
 
 %description
 Term::ReadKey is a compiled perl module dedicated to providing simple
@@ -21,35 +24,23 @@ main goals is to have the functions as portable as possible, so you
 can just plug in "use Term::ReadKey" on any architecture and have a
 good likelyhood of it working.
 
-
 %prep
 %setup -q -n TermReadKey-%{version} 
-
 
 %build
 CFLAGS="$RPM_OPT_FLAGS" %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS"
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
 
 %check
 make test
 
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc README
 %{perl_vendorarch}/Term/
 %{perl_vendorarch}/auto/Term/
@@ -57,6 +48,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 2.30-17
+- Modernize spec file
+- Specify all dependencies
+- Change license to "(Copyright only) and (Artistic or GPL+)" because of
+  ppport.h
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 2.30-15
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.30-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

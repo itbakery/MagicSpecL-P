@@ -1,6 +1,6 @@
 Name:           perl-Error
-Version:        0.17016
-Release:        7%{?dist}
+Version:        0.17018
+Release:        4%{?dist}
 Epoch:          1
 Summary:        Error/exception handling in an OO-ish way
 License:        GPL+ or Artistic
@@ -9,10 +9,23 @@ URL:            http://search.cpan.org/dist/Error/
 Source0:        http://www.cpan.org/authors/id/S/SH/SHLOMIF/Error-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
+# Run-requires:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(Scalar::Util)
+# Tests:
+BuildRequires:  perl(base)
+BuildRequires:  perl(Test::More)
+# Optional tests:
+%if !%{defined perl_bootstrap}
+BuildRequires:  perl(Test::Pod) >= 1.14
+BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
+%endif
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Carp)
 
 %description
 The Error package provides two interfaces. Firstly Error provides a
@@ -48,6 +61,20 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.17018-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1:0.17018-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 1:0.17018-2
+- Perl 5.16 rebuild
+
+* Thu Jun 07 2012 Petr Pisar <ppisar@redhat.com> - 1:0.17018-1
+- 0.17018 bump
+- Specify all dependencies
+- Skip POD tests on bootstrap
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.17016-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

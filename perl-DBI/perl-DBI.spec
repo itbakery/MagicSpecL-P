@@ -1,6 +1,14 @@
+# According to documentation, module using Coro is just:
+# A PROOF-OF-CONCEPT IMPLEMENTATION FOR EXPERIMENTATION.
+%if 0%{?rhel} >= 7 
+%bcond_with coro
+%else
+%bcond_without coro
+%endif
+
 Name:           perl-DBI
-Version:        1.618
-Release:        2%{?dist}
+Version:        1.622
+Release:        6%{?dist}
 Summary:        A database access API for perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -13,9 +21,11 @@ BuildRequires:  perl(constant)
 BuildRequires:  perl(Carp)
 # Clone is optional
 BuildRequires:  perl(Clone)
+%if %{with coro}
 BuildRequires:  perl(Coro)
 BuildRequires:  perl(Coro::Handle)
 BuildRequires:  perl(Coro::Select)
+%endif
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 # DB_File is optional
@@ -24,27 +34,27 @@ BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(Errno)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Fcntl)
-BuildRequires:  perl(File::Basename)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(IO::File)
 BuildRequires:  perl(IO::Select)
-BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Math::BigInt)
 # MLDBM is optional
+%if ! ( 0%{?rhel} )
 BuildRequires:  perl(MLDBM)
+%endif
 # RPC::PlClient is optional
 BuildRequires:  perl(RPC::PlClient) >= 0.2000
 # RPC::PlServer is optional
 BuildRequires:  perl(RPC::PlServer)
 BuildRequires:  perl(Scalar::Util)
-# SQL::Statement is optional
+# SQL::Statement is optional, and it requires DBI
+%if 0%{!?perl_bootstrap:1} && ! ( 0%{?rhel} )
 BuildRequires:  perl(SQL::Statement) >= 1.28
+%endif
 BuildRequires:  perl(Storable)
-BuildRequires:  perl(Symbol)
 BuildRequires:  perl(threads)
 BuildRequires:  perl(Tie::Hash)
-BuildRequires:  perl(UNIVERSAL)
 # Tests
 BuildRequires:  perl(Encode)
 BuildRequires:  perl(File::Path)
@@ -60,7 +70,7 @@ Requires:       perl(Math::BigInt)
 
 # Filter unwanted dependencies
 %{?perl_default_filter}
-%global __requires_exclude %{?__requires_exclude|%__requires_exclude|}^perl\\(RPC::
+%global __requires_exclude %{?__requires_exclude|%__requires_exclude|}^perl\\(RPC::\\)
 
 %description 
 DBI is a database access Application Programming Interface (API) for
@@ -75,6 +85,10 @@ iconv -f iso8859-1 -t utf-8 lib/DBD/Gofer.pm >lib/DBD/Gofer.pm.new &&
 chmod 644 ex/*
 chmod 744 dbixs_rev.pl
 sed -i 's?#!perl?#!%{__perl}?' ex/corogofer.pl
+%if %{without coro}
+rm lib/DBD/Gofer/Transport/corostream.pm
+sed -i -e '/^lib\/DBD\/Gofer\/Transport\/corostream.pm$/d' MANIFEST
+%endif
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
@@ -109,6 +123,32 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 1.622-6
+- Disable Coro properly
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.622-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.622-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 27 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.622-3
+- Conditionalize usage of Coro, which is used in experimental module
+  and MLDB and SLQ::Statement. 
+ 
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 1.622-2
+- Perl 5.16 rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1.622-1
+- 1.622 bump
+
+* Fri Apr 27 2012 Petr Šabata <contyk@redhat.com> - 1.620-1
+- 1.620 bump
+- Removing some perl-provided explicit dependencies
+
+* Fri Apr  6 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.618-3
+- 810370 apply Paul's bootstrap macro
+
 * Mon Feb 27 2012 Petr Pisar <ppisar@redhat.com> - 1.618-2
 - Build-require optional Test::Pod::Coverage
 

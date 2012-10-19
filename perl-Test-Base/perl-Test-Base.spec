@@ -1,6 +1,6 @@
 Name:           perl-Test-Base
 Version:        0.60
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Data Driven Testing Framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,8 +49,11 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 0.60-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.60-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.60-4
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.60-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

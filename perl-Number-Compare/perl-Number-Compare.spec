@@ -1,6 +1,6 @@
 Name: 		perl-Number-Compare
 Version: 	0.03
-Release: 	2%{?dist}
+Release: 	5%{?dist}
 Summary: 	Perl module for numeric comparisons
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -8,6 +8,7 @@ URL: 		http://search.cpan.org/dist/Number-Compare/
 Source0: 	http://www.cpan.org/authors/id/R/RC/RCLAMP/Number-Compare-%{version}.tar.gz
 
 BuildArch: 	noarch
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(Test::More)
 Requires:  	perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
@@ -40,6 +41,15 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Tue Aug 14 2012 Petr Pisar <ppisar@redhat.com> - 0.03-5
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.03-3
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -1,20 +1,18 @@
 Name: 		perl-File-Copy-Recursive
 Version: 	0.38
-Release: 	10%{?dist}
+Release: 	13%{?dist}
 Summary: 	Extension for recursively copying files and directories 
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/File-Copy-Recursive/
 Source0: 	http://www.cpan.org/modules/by-module/File/File-Copy-Recursive-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 BuildArch: noarch
-
-BuildRequires:	perl(Test::More)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(File::Copy)
 BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(Test::More)
 
 %description
 This module copies and moves directories recursively to an optional depth and
@@ -24,29 +22,33 @@ attempts to preserve each file or directory's mode.
 %setup -q -n File-Copy-Recursive-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w %{buildroot}/*
 
 %check
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/File
 %{_mandir}/man3/*
 
 %changelog
+* Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 0.38-13
+- Modernize spec, drop command macros, and fix dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.38-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 0.38-11
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.38-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

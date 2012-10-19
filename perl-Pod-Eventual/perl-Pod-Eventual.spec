@@ -1,6 +1,6 @@
 Name:           perl-Pod-Eventual
 Version:        0.093330
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        Read a POD document as a series of trivial events
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -67,6 +67,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.093330-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.093330-9
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.093330-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

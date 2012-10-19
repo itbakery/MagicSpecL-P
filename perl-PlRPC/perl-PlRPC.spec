@@ -1,6 +1,6 @@
 Name:       perl-PlRPC 
 Version:    0.2020 
-Release:    9%{?dist}
+Release:    11%{?dist}
 License:    GPL+ or Artistic
 Group:      Development/Libraries
 Summary:    Interface for writing PlRPC clients and servers
@@ -60,6 +60,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2020-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.2020-10
+- Perl 5.16 rebuild
+
 * Thu Jan 26 2012 Petr Pisar <ppisar@redhat.com> - 0.2020-9
 - Modernize spec file
 - Enable tests

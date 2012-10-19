@@ -1,13 +1,15 @@
 Name:           perl-POE-Test-Loops
 Summary:        Reusable tests for POE::Loop authors
-Version:        1.350
-Release:        2%{?dist}
+Version:        1.351
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RC/RCAPUTO/POE-Test-Loops-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/POE-Test-Loops
 BuildArch:      noarch
 BuildRequires:  perl(constant)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(File::Spec)
@@ -16,9 +18,36 @@ BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(IO::Socket)
 BuildRequires:  perl(IO::Socket::INET)
 BuildRequires:  perl(POE)
+BuildRequires:  perl(POE::Component::Client::TCP)
+BuildRequires:  perl(POE::Component::Server::TCP)
+BuildRequires:  perl(POE::Driver::SysRW)
+BuildRequires:  perl(POE::Filter::Line)
+BuildRequires:  perl(POE::Filter::Map)
+BuildRequires:  perl(POE::Filter::Stream)
+BuildRequires:  perl(POE::NFA)
+BuildRequires:  perl(POE::Pipe::OneWay)
+BuildRequires:  perl(POE::Pipe::TwoWay)
+BuildRequires:  perl(POE::Session)
+BuildRequires:  perl(POE::Wheel::FollowTail)
+BuildRequires:  perl(POE::Wheel::ListenAccept)
+BuildRequires:  perl(POE::Wheel::ReadWrite)
+BuildRequires:  perl(POE::Wheel::Run)
+BuildRequires:  perl(POE::Wheel::SocketFactory)
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Socket)
 BuildRequires:  perl(Test::More) >= 0.94
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Carp)
+Requires:       perl(POE::Component::Client::TCP)
+Requires:       perl(POE::Component::Server::TCP)
+Requires:       perl(POE::Driver::SysRW)
+Requires:       perl(POE::Filter::Line)
+Requires:       perl(POE::Filter::Map)
+Requires:       perl(POE::Filter::Stream)
+Requires:       perl(POE::Pipe::TwoWay)
+Requires:       perl(POE::Wheel::FollowTail)
+Requires:       perl(POE::Wheel::ListenAccept)
+Requires:       perl(POE::Wheel::SocketFactory)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 # RPM 4.8 style
 %{?filter_from_provides: %filter_from_provides /perl([DIFMOSU].*)/d; /perl(POE::MySession)/d; /perl(POE::Kernel)/d; /perl(PoeTestWorker)/d; /perl(Switch)/d }
@@ -43,7 +72,7 @@ the POE::Test::Loops system in more detail.
 find . -type f -exec chmod -c -x {} ';'
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -63,6 +92,17 @@ make test
 %{_mandir}/man1/poe-gen-tests.1.gz
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.351-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.351-2
+- Perl 5.16 rebuild
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 1.351-1
+- 1.351 bump
+- Remove commands macros
+- Explicitly add all the POE dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.350-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

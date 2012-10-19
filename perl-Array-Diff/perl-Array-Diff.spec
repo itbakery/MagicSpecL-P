@@ -3,7 +3,7 @@
 
 Name:           perl-Array-Diff
 Version:        0.07
-Release:        7%{?dist}
+Release:        9%{?dist}
 # Because 0.07 compares newer than 0.05002 in Perl world
 # but not in RPM world :-(
 Epoch:          1
@@ -56,6 +56,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Array::Diff.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.07-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1:0.07-8
+- Perl 5.16 rebuild
+
 * Tue Mar  6 2012 Paul Howarth <paul@city-fan.org> - 1:0.07-7
 - Explicitly require perl(Class::Accessor::Fast) unless we have rpm ≥ 4.9,
   which can auto-detect the dependency

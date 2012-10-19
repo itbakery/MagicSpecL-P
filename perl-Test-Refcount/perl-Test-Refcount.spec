@@ -1,6 +1,6 @@
 Name:           perl-Test-Refcount
 Version:        0.07
-Release:        1%{?dist}
+Release:        7%{?dist}
 Summary:        Assert reference counts on objects
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-#make test
+make test
 
 %files
 %doc Changes LICENSE README
@@ -53,6 +53,21 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.07-6
+- Perl 5.16 rebuild
+
+* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 0.07-5
+- Rebuilt for f17
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Mon Jul 18 2011 Petr Sabata <contyk@redhat.com> - 0.07-2
+- Perl mass rebuild
+
 * Tue Jun 21 2011 Marcela Mašláňová <mmaslano@redhat.com> - 0.07-1
 - update to 0.07
 

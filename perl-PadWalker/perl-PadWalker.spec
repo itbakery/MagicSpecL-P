@@ -1,6 +1,6 @@
 Name:           perl-PadWalker
 Version:        1.92
-Release:        5%{?dist}
+Release:        7%{?dist}
 Summary:        Play with other peoples' lexical variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -8,6 +8,8 @@ URL:            http://search.cpan.org/dist/PadWalker/
 Source0:        http://www.cpan.org/authors/id/R/RO/ROBIN/PadWalker-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -49,6 +51,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.92-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.92-6
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.92-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

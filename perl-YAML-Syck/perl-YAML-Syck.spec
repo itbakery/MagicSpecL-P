@@ -1,16 +1,32 @@
 Name:           perl-YAML-Syck
-Version:        1.17 
-Release:        4%{?dist}
+Version:        1.20 
+Release:        3%{?dist}
 Summary:        Fast, lightweight YAML loader and dumper
 License:        BSD and MIT
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/YAML-Syck/
-Source0:        http://www.cpan.org/authors/id/A/AV/AVAR/YAML-Syck-%{version}.tar.gz
+Source0:        http://www.cpan.org/authors/id/T/TO/TODDR/YAML-Syck-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  perl(Devel::Leak)
+# Keep bundled inc::Module::Install to break cycle perl-Modules-Install
+# → perl-YAML-Tiny → perl-YAML-Syck.
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(JSON)
+# Run-time
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(XSLoader)
+# Tests
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Storable)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Tie::Hash)
+# Optional tests
+BuildRequires:  perl(Devel::Leak)
+BuildRequires:  perl(JSON)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -22,6 +38,7 @@ structures to YAML strings, and the other way around.
 
 %prep
 %setup -q -n YAML-Syck-%{version}
+rm -rf inc/parent inc/PerlIO.pm inc/Test
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="$RPM_OPT_FLAGS"
@@ -37,6 +54,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -53,6 +71,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.20-2
+- Perl 5.16 rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.20-1
+- 1.20 bump
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 1.17-5
+- Perl 5.16 rebuild
+- Specify all dependencies
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.17-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

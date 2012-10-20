@@ -1,26 +1,26 @@
 Name:           perl-DBD-CSV
-Version:        0.33
-Release:        2%{?dist}
+Version:        0.36
+Release:        1%{?dist}
 Summary:        DBI driver for CSV files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/DBD-CSV/
 Source0:        http://search.cpan.org/CPAN/authors/id/H/HM/HMBRAND/DBD-CSV-%{version}.tgz
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
 BuildRequires:  perl(DBD::File) >= 0.40
 BuildRequires:  perl(DBI) >= 1.614
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(IO::File)
 BuildRequires:  perl(SQL::Statement) >= 1.33
-BuildRequires:  perl(Text::CSV_XS) >= 0.71
+BuildRequires:  perl(Text::CSV_XS) >= 0.91
 BuildRequires:  perl(Test::Harness)
-# BuildRequires >= 0.90, but 0.98 is recommended
 BuildRequires:  perl(Test::More) >= 0.98
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(DBD::File) >= 0.40
 Requires:       perl(DBI) >= 1.614
 Requires:       perl(SQL::Statement) >= 1.31
-# Requires >= 0.71, but 0.83 is recommended
-Requires:       perl(Text::CSV_XS) >= 0.71
+Requires:       perl(Text::CSV_XS) >= 0.91
 
 # RPM 4.8 style
 %filter_from_requires /^perl(DBD::File)$/d
@@ -43,7 +43,7 @@ MS Excel data.
 chmod -c a-x ChangeLog README lib/DBD/*.pm lib/Bundle/DBD/*.pm
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
@@ -62,6 +62,22 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Aug 27 2012 Petr Šabata <contyk@redhat.com> - 0.36-1
+- 0.36 bump, debugging enhancements
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.35-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Petr Pisar <ppisar@redhat.com> - 0.35-2
+- Perl 5.16 rebuild
+
+* Tue Jun 05 2012 Petr Šabata <contyk@redhat.com> - 0.35-1
+- 0.35 bump (documentation changes)
+
+* Tue May 15 2012 Petr Šabata <contyk@redhat.com> - 0.34-1
+- 0.34 bump (no code changes)
+- Drop commands macros
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

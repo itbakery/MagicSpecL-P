@@ -1,6 +1,6 @@
 Name:      perl-POE
-Version:   1.350
-Release:   3%{?dist}
+Version:   1.354
+Release:   4%{?dist}
 Summary:   POE - portable multitasking and networking framework for Perl
 
 Group:     Development/Libraries
@@ -8,7 +8,7 @@ License:   GPL+ or Artistic
 URL:       http://search.cpan.org/dist/POE/
 Source0:   http://search.cpan.org/CPAN/authors/id/R/RC/RCAPUTO/POE-%{version}.tar.gz
 BuildArch: noarch
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Compress::Zlib) >= 1.33
@@ -27,7 +27,10 @@ BuildRequires:  perl(HTTP::Date)
 BuildRequires:  perl(HTTP::Request)
 BuildRequires:  perl(HTTP::Response)
 BuildRequires:  perl(HTTP::Status)
-BuildRequires:  perl(POE::Test::Loops) >= 1.350
+# POE::Test::Loops unsurprisingly requires POE
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:  perl(POE::Test::Loops) >= 1.351
+%endif
 BuildRequires:  perl(Socket) >= 1.7
 BuildRequires:  perl(Socket6) >= 0.14
 BuildRequires:  perl(Storable) >= 2.16
@@ -53,8 +56,20 @@ Requires:       perl(POSIX) >= 1.02
 Requires:       perl(Socket) >= 1.7
 Requires:       perl(Socket6) >= 0.14
 Requires:       perl(Storable) >= 2.16
+Requires:       perl(Time::HiRes) >= 1.59
 
 %{?perl_default_filter}
+
+%global __requires_exclude %{?__requires_exclude:__requires_exclude|}perl\\(Errno\\)
+%global __requires_exclude %__requires_exclude|perl\\(File::Spec\\)
+%global __requires_exclude %__requires_exclude|perl\\(IO::Handle\\)
+%global __requires_exclude %__requires_exclude|perl\\(IO::Tty\\)
+%global __requires_exclude %__requires_exclude|perl\\(POE::Test::Loops\\)
+%global __requires_exclude %__requires_exclude|perl\\(POSIX\\)
+%global __requires_exclude %__requires_exclude|perl\\(Socket\\)
+%global __requires_exclude %__requires_exclude|perl\\(Socket6\\)
+%global __requires_exclude %__requires_exclude|perl\\(Storable\\)
+%global __requires_exclude %__requires_exclude|perl\\(Time::HiRes\\)
 
 %description
 POE is a framework for cooperative, event driven multitasking in Perl.
@@ -78,13 +93,12 @@ find t/ -type f -exec chmod -c -x {} +
 find t/ -type f -name '*.t' -exec perl -pi -e 's|^#!perl|#!%{__perl}|' {} +
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor --default
+perl Makefile.PL INSTALLDIRS=vendor --default
 # yah.  don't do the network tests
 %{?!_with_network_tests: rm run_network_tests }
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
@@ -105,8 +119,32 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 1.350-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.354-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.354-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1.354-2
+- Perl 5.16 rebuild
+
+* Wed May 16 2012 Petr Šabata <contyk@redhat.com> - 1.354-1
+- 1.354 bump
+
+* Fri May 11 2012 Petr Šabata <contyk@redhat.com> - 1.353-1
+- 1.353 bump
+
+* Thu Apr 05 2012 Petr Šabata <contyk@redhat.com> - 1.352-2
+- Remove POE::Test::Loops circular buildtime and runtime dependency
+  (thanks, Paul; #810234)
+
+* Wed Mar 28 2012 Petr Šabata <contyk@redhat.com> - 1.352-1
+- 1.352 bump
+- Filter underspecified dependencies
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 1.351-1
+- 1.351 bump
+- Remove command macros
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.350-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

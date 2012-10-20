@@ -1,42 +1,93 @@
-%global subver 1
+#global subver 1
+
+# A noarch-turned-arch package should not have debuginfo
+%global debug_package %{nil}
 
 Name:           perl-AnyEvent
-Version:        5.27
-Release:        7%{?dist}
+Version:        7.02
+Release:        1%{?dist}
 Summary:        Framework for multiple event loops
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/AnyEvent/
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/AnyEvent-%{version}%{?subver}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildArch:      noarch
+# Build requirements
 BuildRequires:  perl(ExtUtils::MakeMaker)
-# Needed for test
-BuildRequires:  perl(Test::Simple)
 
-# RPM 4.8 style
-%{?filter_setup:
-%filter_from_requires /perl(Tk)/d; /perl(EV)/d; /perl(Irssi)/d; /perl(Qt/d; /perl(AnyEvent::Impl::Qt/d
-%filter_from_provides /perl(AnyEvent::Impl::Qt/d
-%filter_setup
-}
-# RPM 4.9 style
-%global __requires_exclude %{?__requires_exclude:__requires_exclude|}perl(Tk)
-%global __requires_exclude %__requires_exclude|perl(EV)
-%global __requires_exclude %__requires_exclude|perl(Irssi)
-%global __requires_exclude %__requires_exclude|perl(Qt
-%global __requires_exclude %__requires_exclude|perl(AnyEvent::Impl::Qt
-%global __provides_exclude %{?__provides_exclude:__provides_exclude|}perl(AnyEvent::Impl::Qt
+# Module requirements
+BuildRequires:  perl >= 3:5.8.1
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(List::Util)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Socket)
+BuildRequires:  perl(Task::Weaken)
+BuildRequires:  perl(Time::HiRes)
 
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Test suite requirements
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(Net::SSLeay)
+BuildRequires:  perl(Test::More)
+
+# Event loop testing
+#
+# Many of these modules require or build-require AnyEvent themselves,
+# so don't do event loop testing when bootstrapping
+#
+# Cocoa and FLTK are not in Fedora/EPEL
+# Version of IO::Async::Loop in Fedora is too old
+# TODO: BuildRequires: perl(IO::Async::Loop) >= 0.33
+# Test suite does not currently test the Qt event loop
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:  perl(AnyEvent::AIO)
+BuildRequires:  perl(EV)
+BuildRequires:  perl(Event)
+BuildRequires:  perl(Event::Lib)
+BuildRequires:  perl(Glib) >= 1.210
+BuildRequires:  perl(IO::AIO) >= 4.13
+BuildRequires:  perl(POE) >= 1.312
+BuildRequires:  perl(Tk)
+%endif
+
+# Runtime requires
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+# Optional but recommended
+Requires:       perl(Task::Weaken)
+
+# Optional dependencies we don't want to require
+%global optional_deps                  AnyEvent::AIO
+%global optional_deps %{optional_deps}|Cocoa::EventLoop
+%global optional_deps %{optional_deps}|EV
+%global optional_deps %{optional_deps}|Event
+%global optional_deps %{optional_deps}|Event::Lib
+%global optional_deps %{optional_deps}|EventLoop
+%global optional_deps %{optional_deps}|FLTK
+%global optional_deps %{optional_deps}|Glib
+%global optional_deps %{optional_deps}|IO::AIO
+%global optional_deps %{optional_deps}|IO::Async::Loop
+%global optional_deps %{optional_deps}|Irssi
+%global optional_deps %{optional_deps}|POE
+%global optional_deps %{optional_deps}|Qt
+%global optional_deps %{optional_deps}|Qt::isa
+%global optional_deps %{optional_deps}|Qt::slots
+%global optional_deps %{optional_deps}|Tk
+
+# Don't include optional dependencies
+%global __requires_exclude ^perl[(](%{optional_deps})[)]
+
+# Filter unversioned and bogus provides
+# AnyEvent::Impl::Cocoa and AnyEvent::Impl::FLTK are filtered as the required
+# underlying modules are not currently available in Fedora
+%global __provides_exclude ^perl[(](AnyEvent(::Impl::(Cocoa|FLTK))?|DB)[)]$
+
 
 %description
-AnyEvent provides an identical interface to multiple event loops. This
-allows module authors to utilise an event loop without forcing module users
-to use the same event loop (as only a single event loop can coexist
-peacefully at any one time).
+AnyEvent provides an identical interface to multiple event loops. This allows
+module authors to utilize an event loop without forcing module users to use the
+same event loop (as multiple event loops cannot coexist peacefully at any one
+time).
 
 
 %prep
@@ -44,37 +95,115 @@ peacefully at any one time).
 
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-# PERL_ANYEVENT_NET_TESTS shoudn't be set to avoid network tests
+# PERL_ANYEVENT_NET_TESTS shouldn't be set to avoid network tests
 # on our builder.
+export PERL_ANYEVENT_LOOP_TESTS=1
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes COPYING README
-%{perl_vendorlib}/AE.pm
-%{perl_vendorlib}/AnyEvent*
-%{_mandir}/man3/*.3*
+%{perl_vendorarch}/AE.pm
+%{perl_vendorarch}/AnyEvent.pm
+%{perl_vendorarch}/AnyEvent/
+%{_mandir}/man3/AE.3pm*
+%{_mandir}/man3/AnyEvent.3pm*
+%{_mandir}/man3/AnyEvent::DNS.3pm*
+%{_mandir}/man3/AnyEvent::Debug.3pm*
+%{_mandir}/man3/AnyEvent::FAQ.3pm*
+%{_mandir}/man3/AnyEvent::Handle.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Cocoa.3pm*
+%{_mandir}/man3/AnyEvent::Impl::EV.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Event.3pm*
+%{_mandir}/man3/AnyEvent::Impl::EventLib.3pm*
+%{_mandir}/man3/AnyEvent::Impl::FLTK.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Glib.3pm*
+%{_mandir}/man3/AnyEvent::Impl::IOAsync.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Irssi.3pm*
+%{_mandir}/man3/AnyEvent::Impl::POE.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Perl.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Qt.3pm*
+%{_mandir}/man3/AnyEvent::Impl::Tk.3pm*
+%{_mandir}/man3/AnyEvent::Intro.3pm*
+%{_mandir}/man3/AnyEvent::IO.3pm*
+%{_mandir}/man3/AnyEvent::IO::IOAIO.3pm*
+%{_mandir}/man3/AnyEvent::IO::Perl.3pm*
+%{_mandir}/man3/AnyEvent::Log.3pm*
+%{_mandir}/man3/AnyEvent::Loop.3pm*
+%{_mandir}/man3/AnyEvent::Socket.3pm*
+%{_mandir}/man3/AnyEvent::Strict.3pm*
+%{_mandir}/man3/AnyEvent::TLS.3pm*
+%{_mandir}/man3/AnyEvent::Util.3pm*
 
 
 %changelog
+* Tue Aug 21 2012 Paul Howarth <paul@city-fan.org> - 7.02-1
+- Update to 7.02:
+  - AnyEvent::Util::run_cmd could block indefinitely
+  - Verified that AnyEvent::Socket follows RFC5952
+  - Try to parse "ADDR#PORT" in addition to "ADDR PORT"
+- Make %%files list more explicit
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.01-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 7.01-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 7.01-2
+- Perl 5.16 rebuild
+
+* Sun May 13 2012 Paul Howarth <paul@city-fan.org> - 7.01-1
+- Update to 7.01:
+  - Fail with EPROTO in AnyEvent::Handle when TLS is requested but not
+    available, instead of throwing an exception
+  - Use File::Spec to get the tmpdir in t/*, to avoid needless failures on
+    (most, not mine :) windows boxes
+  - New handle read types: tls_detect and tls_autostart
+- BR: perl(File::Spec)
+
+* Thu Apr 26 2012 Paul Howarth <paul@city-fan.org> - 7.0-1
+- Update to 7.0
+- Package generates no debuginfo, so avoid creation of debuginfo sub-package
+- Add explicit build requirements for the module's needs
+- Add build requirements for as much event loop testing as is possible in
+  Fedora, breaking potential build dependency cycles by use of the
+  %%{perl_bootstrap} macro
+- Clean up spec for modern rpmbuild:
+  - Drop %%defattr, redundant since rpm 4.4
+  - Use DESTDIR rather than PERL_INSTALL_ROOT
+  - Drop buildroot definition and cleaning
+  - Drop requires/provides filters for rpm versions prior to 4.9
+- Simplify requires/provides filtering
+- Explicitly require perl(Task::Weaken) as per upstream recommendation
+
+* Mon Apr 23 2012 Nicolas Chauvet <kwizart@gmail.com> - 6.14-2
+- Filter requires perl(FLTK) perl(Cocoa) - rhbz#815496
+- Filter perl(IO::Async::Loop) to reintroduce later.
+- Remove filter on perl(AnyEvent::Impl::Qt) since there is perl(Qt)
+
+* Sun Apr 22 2012 Nicolas Chauvet <kwizart@gmail.com> - 6.14-1
+- Update to 6.14
+- Make the package arch specific
+
+* Mon Jan 16 2012 Nicolas Chauvet <kwizart@gmail.com> - 6.13-1
+- Update to 6.13
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.27-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Sat Jul 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 5.34-1
+- Update to 5.34
 
 * Fri Jul 22 2011 Petr Pisar <ppisar@redhat.com> - 5.27-6
 - RPM 4.9 dependency filtering added

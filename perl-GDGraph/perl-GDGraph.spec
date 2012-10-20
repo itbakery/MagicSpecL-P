@@ -1,6 +1,6 @@
 Name:           perl-GDGraph
 Version:        1.44
-Release:        13%{?dist}
+Release:        14%{?dist}
 Epoch:          1
 Summary:        Graph generation package for Perl
 
@@ -11,10 +11,25 @@ Source0:        http://www.cpan.org/authors/id/B/BW/BWARFIELD/GDGraph-%{version}
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  perl(GD), perl(GD::Text)
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(GD) >= 1.18
+BuildRequires:  perl(GD::Text) >= 0.80
+BuildRequires:  perl(GD::Text::Align)
+# Tests
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(Data::Dumper)
+Requires:       perl(GD) >= 1.18
+Requires:       perl(GD::Text) >= 0.80
+
+# Remove under-specified dependencies
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(GD\\)
 
 %description
 %{summary}.
@@ -40,7 +55,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %clean
@@ -55,8 +70,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:1.44-13
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.44-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1:1.44-13
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.44-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

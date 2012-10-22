@@ -1,6 +1,6 @@
 Name:           perl-Capture-Tiny
-Version:        0.15
-Release:        3%{?dist}
+Version:        0.20
+Release:        1%{?dist}
 Summary:        Capture STDOUT and STDERR from Perl, XS or external programs
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -10,14 +10,18 @@ BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.31
 BuildRequires:  perl(Test::More) >= 0.62
 # Tests only:
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(Config)
 BuildRequires:  perl(Exporter)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(IO::Handle)
 BuildRequires:  perl(Scalar::Util)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Optional
+BuildRequires:  perl(Inline)
+BuildRequires:  perl(Inline::C)
+BuildRequires:  perl(Parse::RecDescent)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Capture::Tiny provides a simple, portable way to capture anything sent to
@@ -31,7 +35,7 @@ in any particular situation and just use this one.
 %setup -q -n Capture-Tiny-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=perl
+perl Makefile.PL INSTALLDIRS=perl
 make %{?_smp_mflags}
 
 %install
@@ -49,8 +53,26 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.15-3
-- 为 Magic 3.0 重建
+* Thu Oct 04 2012 Petr Šabata <contyk@redhat.com> - 0.20-1
+- 0.20 bump
+
+* Wed Aug 08 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.19-1
+- 0.19 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 0.18-2
+- Perl 5.16 rebuild
+
+* Mon May 07 2012 Petr Šabata <contyk@redhat.com> - 0.18-1
+- 0.18 bump
+
+* Thu Feb 23 2012 Petr Šabata <contyk@redhat.com> - 0.17-1
+- 0.17 bump
+
+* Mon Feb 13 2012 Petr Šabata <contyk@redhat.com> - 0.16-1
+- 0.16 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

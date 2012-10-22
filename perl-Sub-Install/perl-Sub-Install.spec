@@ -1,61 +1,86 @@
 Name:           perl-Sub-Install
-Version:        0.925
-Release:        10%{?dist}
+Version:        0.926
+Release:        6%{?dist}
 Summary:        Install subroutines into packages easily
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Sub-Install/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/Sub-Install-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
+# ================= Module Build ============================
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
+# ================= Run-time ================================
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Scalar::Util)
+# ================= Test Suite ==============================
+BuildRequires:  perl(Test::More)
 %if !%{defined perl_bootstrap}
-BuildRequires:  perl(Test::Pod), perl(Test::Pod::Coverage)
+# Test::Output -> Sub::Exporter -> Sub::Install
+BuildRequires:  perl(Test::Output)
+# Test::Perl::Critic -> Perl::Critic -> Exception::Class ->
+#   Test::EOL -> Pod::Coverage::TrustPod -> Pod::Eventual ->
+#   Mixin::Linewise -> Sub::Exporter -> Sub::Install
 BuildRequires:  perl(Test::Perl::Critic)
 %endif
+BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(Test::Pod::Coverage)
+# ================= Run-time ================================
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 This module makes it easy to install subroutines into packages without the
-unslightly mess of no strict or typeglobs lying about where just anyone
+unsightly mess of no strict or typeglobs lying about where just anyone
 can see them.
 
 %prep
 %setup -q -n Sub-Install-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-
 make pure_install DESTDIR=%{buildroot}
-
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} %{buildroot}/*
+%{_fixperms} %{buildroot}
 
 %check
-# you'll note a number of tests are skipped due to Test::Output not being
-# present.  However, Test::Output requires Sub::Exporter which requires...
-# Sub::Install.  Holy circular loop, Batman!  :)
-%if !%{defined perl_bootstrap}
-make test
-%endif
+make test %{!?perl_bootstrap:PERL_TEST_CRITIC=1}
 
 %clean
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
-%doc Changes README LICENSE
-%{perl_vendorlib}/*
-%{_mandir}/man3/*
+%doc Changes LICENSE README
+%{perl_vendorlib}/Sub/
+%{_mandir}/man3/Sub::Install.3pm*
 
 %changelog
+* Thu Aug 23 2012 Paul Howarth <paul@city-fan.org> - 0.926-6
+- Be more selective about what to exclude when bootstrapping
+- Don't use macros for commands
+- Drop %%defattr, redundant since rpm 4.4
+- Don't need to remove empty directories from the buildroot
+- Make %%files list more explicit
+- Fix typo in %%description
+
+* Mon Aug 20 2012 Petr Pisar <ppisar@redhat.com> - 0.926-5
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.926-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.926-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Sun Jun 10 2012 Petr Pisar <ppisar@redhat.com> - 0.926-2
+- Perl 5.16 rebuild
+
+* Mon Mar 12 2012 Robin Lee <cheeselee@fedoraproject.org> - 0.926-1
+- Update to 0.926
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.925-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

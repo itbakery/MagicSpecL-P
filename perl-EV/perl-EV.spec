@@ -1,9 +1,8 @@
 Name:           perl-EV
-Version:        4.03
-Release:        8%{?dist}
+Version:        4.11
+Release:        1%{?dist}
 Summary:        Wrapper for the libev high-performance event loop library
 
-Group:          Development/Libraries
 # Note: The source archive includes a libev/ folder which contents are licensed
 #       as "BSD or GPLv2+". However, those are removed at build-time and
 #       perl-EV is instead built against the system-provided libev.
@@ -17,13 +16,8 @@ BuildRequires:  perl(common::sense)
 BuildRequires:  gdbm-devel
 BuildRequires:  libev-source >= %{version}
 BuildRequires:  perl(AnyEvent) => 2.6
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
-# As per review, a perl-EV-devel subpackage had at first been pushed to the
-# repositories. It now has broken deps if it's not properly obsoleted/provided.
-# TODO: Remove those two lines during the Fedora 17 development cycle.
-Provides:       %{name}-devel = %{version}-%{release}
-Obsoletes:      %{name}-devel < 4.03-5
+Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -41,11 +35,10 @@ much more detailed information.
 %prep
 %setup -q -n EV-%{version}
 
-# no questins during build
 %patch0 -p1
 
 # remove all traces of the bundled libev
-rm -fr libev/*
+rm -fr ./libev
 
 # use the sources from the system libev
 mkdir -p ./libev
@@ -59,22 +52,18 @@ make %{?_smp_mflags}
 
 %install
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
+
+%{_fixperms} $RPM_BUILD_ROOT/*
 
 
 %check
 make test
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc Changes COPYING README
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/EV.pm
@@ -84,6 +73,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Sep 28 2012 Mathieu Bridon <bochecha@fedoraproject.org> - 4.11-1
+- Update to 4.11
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.03-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 4.03-9
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.03-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

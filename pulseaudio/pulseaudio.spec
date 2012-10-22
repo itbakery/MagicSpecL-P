@@ -1,7 +1,11 @@
+%ifarch %{ix86} x86_64 %{arm}
+%global with_webrtc 1
+%endif
+
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
-Version:        2.0
-Release:        3%{?dist}
+Version:        2.1
+Release:        4%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -10,7 +14,6 @@ Source1:        default.pa-for-gdm
 
 # activate pulseaudio early at login
 Patch0:         pulseaudio-activation.patch
-Patch1:         pulseaudio-new-udev.patch
 
 BuildRequires:  m4
 BuildRequires:  libtool-ltdl-devel
@@ -26,8 +29,10 @@ BuildRequires:  glib2-devel
 BuildRequires:  gtk2-devel
 BuildRequires:  GConf2-devel
 BuildRequires:  avahi-devel
+%if 0%{?rhel} == 0
 BuildRequires:  lirc-devel
 BuildRequires:  jack-audio-connection-kit-devel
+%endif
 BuildRequires:  libatomic_ops-static, libatomic_ops-devel
 %ifnarch s390 s390x
 BuildRequires:  bluez-libs-devel
@@ -49,6 +54,9 @@ BuildRequires:  libasyncns-devel
 BuildRequires:  systemd-devel >= 184
 BuildRequires:  json-c-devel
 BuildRequires:  dbus-devel
+%if 0%{?with_webrtc}
+BuildRequires:  webrtc-audio-processing-devel
+%endif
 # retired along with -libs-zeroconf, add Obsoletes here for lack of anything better
 Obsoletes:      padevchooser < 1.0
 Requires:       %{name}-libs%{?_isa} = %{version}-%{release}
@@ -189,7 +197,6 @@ This package contains GDM integration hooks for the PulseAudio sound server.
 %prep
 %setup -q -T -b0
 %patch0 -p1 -b .activation
-%patch1 -p1 -b .udev
 
 ## kill rpaths
 %if "%{_libdir}" != "/usr/lib"
@@ -206,11 +213,16 @@ sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
   --with-access-group=pulse-access \
   --disable-hal \
   --without-fftw \
-  --enable-systemd
+  --enable-systemd \
+%if 0%{?with_webrtc}
+  --enable-webrtc-aec
+%else
+  %{nil}
+%endif
 
 # we really should preopen here --preopen-mods=module-udev-detect.la, --force-preopen
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 make doxygen
 
 %install
@@ -238,7 +250,7 @@ install -p -m644 -D %{SOURCE1} $RPM_BUILD_ROOT%{_localstatedir}/lib/gdm/.pulse/d
 
 sed -i -e 's/^load-module module-console-kit/#load-module module-console-kit/' $RPM_BUILD_ROOT/etc/pulse/default.pa
 magic_rpm_clean.sh
-%find_lang %{name} || touch %{name}.lang
+%find_lang %{name}
 
 %pre
 /usr/sbin/groupadd -f -r pulse || :
@@ -276,6 +288,9 @@ exit 0
 %{_libdir}/pulse-%{version}/modules/libprotocol-native.so
 %{_libdir}/pulse-%{version}/modules/libprotocol-simple.so
 %{_libdir}/pulse-%{version}/modules/librtp.so
+%if 0%{?with_webrtc}
+%{_libdir}/pulse-%{version}/modules/libwebrtc-util.so
+%endif
 %{_libdir}/pulse-%{version}/modules/module-alsa-sink.so
 %{_libdir}/pulse-%{version}/modules/module-alsa-source.so
 %{_libdir}/pulse-%{version}/modules/module-alsa-card.so
@@ -414,7 +429,7 @@ exit 0
 %config(noreplace) %{_sysconfdir}/pulse/client.conf
 %{_libdir}/libpulse.so.*
 %{_libdir}/libpulse-simple.so.*
-%{_libdir}/pulseaudio/libpulsecommon-2.0.*
+%{_libdir}/pulseaudio/libpulsecommon-2.1.*
 
 %files libs-glib2
 %defattr(-,root,root)
@@ -462,6 +477,21 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Wed Oct 10 2012 Dan Horák <dan[at]danny.cz> 2.1-4
+- fix the with_webrtc condition
+
+* Tue Oct 09 2012 Dan Horák <dan[at]danny.cz> 2.1-3
+- webrtc-aec is x86 and ARM only for now
+
+* Mon Oct 08 2012 Debarshi Ray <rishi@fedoraproject.org> 2.1-2
+- Enable webrtc-aec
+
+* Tue Sep 25 2012 Rex Dieter <rdieter@fedoraproject.org> 2.1-1
+- pulseaudio-2.1
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jun 23 2012 Kalev Lember <kalevlember@gmail.com> - 2.0-3
 - Move module-jackdbus-detect.so to -module-jack subpackage with the
   rest of the jack modules

@@ -1,16 +1,23 @@
 Summary: XS Blowfish implementation for Perl
 Name: perl-Crypt-Blowfish
 Version: 2.10
-Release: 15%{?dist}
+Release: 16%{?dist}
 License: Copyright only
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Crypt-Blowfish/
 Source0: http://search.cpan.org/CPAN/authors/id/D/DP/DPARIS/Crypt-Blowfish-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Requires: perl-Crypt-CBC
+Requires: perl(Carp)
+# Recommended:
+Requires: perl(Crypt::CBC)
 BuildRequires: perl(ExtUtils::MakeMaker)
-BuildRequires: perl-Crypt-CBC
+# Runt-time:
+BuildRequires: perl(Carp)
+BuildRequires: perl(DynaLoader)
+BuildRequires: perl(Exporter)
+# Tests:
+BuildRequires: perl(Crypt::CBC)
 
 %description
 Crypt::Blowfish is an XS-based implementation of the Blowfish
@@ -47,8 +54,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.10-15
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.10-15
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

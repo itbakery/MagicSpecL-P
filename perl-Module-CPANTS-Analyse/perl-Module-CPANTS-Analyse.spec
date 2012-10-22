@@ -1,31 +1,36 @@
 Name:           perl-Module-CPANTS-Analyse
-Version:        0.85
-Release:        11%{?dist}
+Version:        0.86
+Release:        4%{?dist}
 Summary:        Generate Kwalitee ratings for a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Module-CPANTS-Analyse/
-Source0:        http://www.cpan.org/authors/id/C/CH/CHORNY/Module-CPANTS-Analyse-%{version}.tar.gz
-Patch1:         Module-CPANTS-Analyse-0.85-Meta-YAML.patch
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAXIM/Module-CPANTS-Analyse-%{version}.tar.gz
+Source1:        66B25843.asc
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:      noarch
 BuildRequires:  perl(Archive::Any) >= 0.06
-BuildRequires:  perl(Archive::Tar) >= 1.30
+BuildRequires:  perl(Archive::Tar) >= 1.48
 BuildRequires:  perl(Array::Diff) >= 0.04
 BuildRequires:  perl(Class::Accessor) >= 0.19
 BuildRequires:  perl(CPAN::DistnameInfo) >= 0.06
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(ExtUtils::Manifest)
+BuildRequires:  perl(File::chdir)
 BuildRequires:  perl(File::Find::Rule)
 BuildRequires:  perl(File::Slurp)
 BuildRequires:  perl(IO::Capture) >= 0.05
 BuildRequires:  perl(List::MoreUtils)
 BuildRequires:  perl(LWP::Simple)
-BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Module::ExtractUse) >= 0.18
 BuildRequires:  perl(Module::Pluggable) >= 2.96
+BuildRequires:  perl(Module::Signature)
 BuildRequires:  perl(Pod::Simple::Checker) >= 2.02
 BuildRequires:  perl(Readonly)
-BuildRequires:  perl(Software::License)
-BuildRequires:  perl(Test::CPAN::Meta::YAML::Version) >= 0.11
+BuildRequires:  perl(Set::Scalar)
+BuildRequires:  perl(Software::License) >= 0.003
+BuildRequires:  perl(Test::CPAN::Meta::YAML::Version)
 BuildRequires:  perl(Test::Deep)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::NoWarnings)
@@ -36,14 +41,13 @@ BuildRequires:  perl(Test::NoWarnings)
 BuildRequires:  perl(Test::Perl::Critic)
 %endif
 BuildRequires:  perl(Test::Pod)
-# Naked subroutines present in 0.85
-#BuildRequires: perl(Test::Pod::Coverage)
-BuildRequires:  perl(Test::Warn)
-BuildRequires:  perl(Text::CSV_XS)
+BuildRequires:  perl(Test::Pod::Coverage)
+BuildRequires:  perl(Test::Warn) >= 0.11
+BuildRequires:  perl(Text::CSV_XS) >= 0.45
 BuildRequires:  perl(version) >= 0.73
-BuildRequires:  perl(YAML::Syck) >= 0.95
+BuildRequires:  perl(YAML::Any)
 Requires:       perl(Archive::Any) >= 0.06
-Requires:       perl(Archive::Tar) >= 1.30
+Requires:       perl(Archive::Tar) >= 1.48
 Requires:       perl(Array::Diff) >= 0.04
 Requires:       perl(Class::Accessor) >= 0.19
 Requires:       perl(CPAN::DistnameInfo) >= 0.06
@@ -51,9 +55,7 @@ Requires:       perl(IO::Capture) >= 0.05
 Requires:       perl(Module::ExtractUse) >= 0.18
 Requires:       perl(Module::Pluggable) >= 2.96
 Requires:       perl(Pod::Simple::Checker) >= 2.02
-Requires:       perl(Test::CPAN::Meta::YAML::Version) >= 0.11
 Requires:       perl(version) >= 0.73
-Requires:       perl(YAML::Syck) >= 0.95
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
@@ -64,25 +66,28 @@ metadata for all distributions on CPAN.
 %prep
 %setup -q -n Module-CPANTS-Analyse-%{version}
 
-# Test::YAML::Meta::Version superseded by Test::CPAN::Meta::YAML::Version
-# (CPAN RT#65903)
-%patch1 -p1
-
 # Fix line endings
 sed -i -e 's/\r$//' bin/cpants_lint.pl Changes README TODO
 
+# Don't want to clobber home directory when using gpg
+mkdir --mode=0700 gpghome
+export GNUPGHOME=$(pwd)/gpghome
+gpg --import %{SOURCE1} || :
+
 %build
-perl Build.PL installdirs=vendor
-./Build
+perl Makefile.PL INSTALLDIRS=vendor
+make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
+make pure_install DESTDIR=$RPM_BUILD_ROOT
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-#./Build test
-#AUTHOR_TEST=1 ./Build test --test_files="xt/*.t"
+export GNUPGHOME=$(pwd)/gpghome
+make test
+make test AUTHOR_TEST=1 TEST_FILES="xt/*.t"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -112,10 +117,47 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Pod.3pm*
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Prereq.3pm*
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Repackageable.3pm*
+%{_mandir}/man3/Module::CPANTS::Kwalitee::Signature.3pm*
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Uses.3pm*
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Version.3pm*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.86-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.86-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 0.86-2
+- Perl 5.16 rebuild
+
+* Mon May 28 2012 Paul Howarth <paul@city-fan.org> - 0.86-1
+- Update to 0.86 release
+  - Add several strict and warnings equivalents and make it easy to add more
+  - Fix when Moose is used and strict is not used
+  - Add info about MIN_PERL_VERSION
+  - Better remedy for metayml_declares_perl_version
+  - metayml_declares_perl_version moved from experimental to extra
+  - Some pod improvements
+  - Fix CPAN RT#65903 - no more Test::YAML::Meta::Version on CPAN
+  - Replace YAML::Syck with YAML::Any
+  - no_symlinks checks only files in MANIFEST, use "maniread" in
+    ExtUtils::Manifest
+  - Add more equivalents for use_strict and use_warnings tests
+  - Implement valid_signature metric
+- This release by DAXIM -> update source URL
+- Drop patch for Test::CPAN::Meta::YAML::Version, no longer needed
+- Bump module version requirements:
+  - perl(Archive::Tar) => 1.48
+  - perl(Software::License) => 0.003
+  - perl(Test::Warn) => 0.11
+  - perl(Text::CSV_XS) => 0.45
+- Switch to ExtUtils::MakeMaker flow so we don't need Module::Build ≥ 0.40
+- BR: perl(Cwd), perl(ExtUtils::Manifest), perl(File::chdir),
+  perl(Module::Signature), perl(Set::Scalar) and perl(Test::Pod::Coverage)
+- BR: perl(YAML::Any) rather than perl(YAML::Syck)
+- Drop perl(Test::CPAN::Meta::YAML::Version) version requirement
+
 * Wed Mar  7 2012 Paul Howarth <paul@city-fan.org> - 0.85-11
 - Fix line endings of cpants_lint.pl script and documentation
 - Run the author tests too

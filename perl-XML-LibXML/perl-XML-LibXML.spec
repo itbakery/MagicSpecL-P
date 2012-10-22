@@ -3,8 +3,8 @@ Name:           perl-XML-LibXML
 # https://bugzilla.redhat.com/show_bug.cgi?id=469480
 # it might not be needed anymore
 # this module is maintained, the other is not
-Version:        1.93
-Release:        1%{?dist}
+Version:        2.0006
+Release:        2%{?dist}
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 
@@ -14,6 +14,7 @@ URL:            http://search.cpan.org/dist/XML-LibXML/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXML-%{version}.tar.gz 
 
 BuildRequires:  libxml2-devel
+BuildRequires:  perl(Devel::CheckLib)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 # Run-time
@@ -62,6 +63,9 @@ chmod -x *.c
 for i in Changes; do
   /usr/bin/iconv -f iso8859-1 -t utf-8 $i > $i.conv && /bin/mv -f $i.conv $i
 done
+# Remove bundled modules
+rm -r inc/*
+sed -i -e '/^inc\// d' MANIFEST
 
 %build
 perl Makefile.PL SKIP_SAX_INSTALL=1 INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
@@ -75,10 +79,6 @@ find %{buildroot} -type d -depth -exec rmdir {} ';' 2>/dev/null
 chmod -R u+w %{buildroot}/*
 
 %check
-%ifarch ppc64 s390x
-# see rhbz#769537
-rm t/12html.t
-%endif
 THREAD_TEST=1 make test
 
 %triggerin -- perl-XML-SAX
@@ -102,6 +102,55 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Oct 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.0006-1
+- 2.0006 bump
+- Remove bundled library and add BR perl(Devel::CheckLib).
+
+* Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.0004-2
+- Rebuild for the latest libxml2.
+
+* Thu Aug 09 2012 Petr Šabata <contyk@redhat.com> - 1:2.0004-1
+- 2.0004 bump
+
+* Fri Aug 03 2012 Petr Pisar <ppisar@redhat.com> - 1:2.0003-2
+- Re-enable 12html test as the bug has been fixed (bug #769537)
+
+* Mon Jul 30 2012 Petr Šabata <contyk@redhat.com> - 1:2.0003-1
+- 2.0003 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.0002-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Petr Pisar <ppisar@redhat.com> - 1:2.0002-2
+- Perl 5.16 rebuild
+
+* Tue Jul 10 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.0002-1
+- 2.0002 bump
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 1:2.0001-2
+- Perl 5.16 rebuild
+
+* Thu Jun 21 2012 Petr Šabata <contyk@redhat.com> - 1:2.0001-1
+- 2.0001 bump
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 1:1.99-2
+- Perl 5.16 rebuild
+
+* Mon Jun 04 2012 Petr Šabata <contyk@redhat.com> - 1:1.99-1
+- 1.99 bump, test updates
+
+* Mon May 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.98-1
+- 1.98 bump
+
+* Wed May 02 2012 Petr Šabata <contyk@redhat.com> - 1:1.97-1
+- 1.97 bump
+
+* Mon Mar 19 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1:1.96-1
+- 1.96 bump
+
+* Wed Mar 14 2012 Petr Šabata <contyk@redhat.com> - 1:1.95-1
+- 1.95 bump, tests bugfixes
+
 * Mon Feb 27 2012 Petr Šabata <contyk@redhat.com> - 1:1.93-1
 - 1.93 bumpity, minor bugfix
 

@@ -1,23 +1,23 @@
 # use netsnmp_tcp_wrappers 0 to disable tcp_wrappers support
 %{!?netsnmp_tcp_wrappers:%global netsnmp_tcp_wrappers 1}
 # use nestnmp_check 0 to speed up packaging by disabling 'make test'
-%{!?netsnmp_check: %global netsnmp_check 0}
+%{!?netsnmp_check: %global netsnmp_check 1}
 
 # allow compilation on Fedora 11 and older
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 # Arches on which we need to prevent arch conflicts on net-snmp-config.h
-%define multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64 sparc sparcv9 sparc64
+%global multilib_arches %{ix86} ia64 ppc ppc64 s390 s390x x86_64 sparc sparcv9 sparc64
 
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
-Version: 5.7.1
-Release: 7%{?dist}
+Version: 5.7.2
+Release: 1%{?dist}
 Epoch: 1
 
 License: BSD
 Group: System Environment/Daemons
 URL: http://net-snmp.sourceforge.net/
-Source0: http://dl.sourceforge.net/net-snmp/net-snmp-%{version}.tar.gz
+Source0: https://downloads.sourceforge.net/project/net-snmp/net-snmp/%{version}/net-snmp-%{version}.tar.gz
 Source1: net-snmp.redhat.conf
 Source2: net-snmpd.init
 Source3: net-snmptrapd.init
@@ -29,17 +29,12 @@ Source8: net-snmptrapd.sysconfig
 Source9: net-snmp-tmpfs.conf
 Source10: snmpd.service
 Source11: snmptrapd.service
-Patch1: net-snmp-5.6-pie.patch
+Patch1: net-snmp-5.7.2-pie.patch
 Patch2: net-snmp-5.5-dir-fix.patch
 Patch3: net-snmp-5.6-multilib.patch
-Patch4: net-snmp-5.5-include-struct.patch
-Patch5: net-snmp-5.5-apsl-copying.patch
-Patch6: net-snmp-5.5-perl-linking.patch
-Patch7: net-snmp-5.6-test-debug.patch
-Patch8: net-snmp-5.6.1-mysql.patch
-Patch9: net-snmp-5.7.1-systemd.patch
-Patch10: net-snmp-5.7-libtool.patch
-Patch11: net-snmp-5.7-mibs-perl-linking.patch
+Patch4: net-snmp-5.5-apsl-copying.patch
+Patch5: net-snmp-5.5-perl-linking.patch
+Patch6: net-snmp-5.6-test-debug.patch
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
@@ -54,7 +49,6 @@ Requires: mysql-libs
 # should fire just after this package is installed.
 Requires(post): systemd-sysv
 
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: openssl-devel, bzip2-devel, elfutils-devel
 BuildRequires: elfutils-libelf-devel, rpm-devel
 BuildRequires: perl-devel, perl(ExtUtils::Embed), gawk, procps
@@ -191,18 +185,13 @@ The net-snmp-sysvinit package provides SysV init scripts for Net-SNMP daemons.
 
 %patch2 -p1 -b .dir-fix
 %patch3 -p1 -b .multilib
-%patch4 -p1 -b .include-struct
-%patch5 -p1 -b .apsl
+%patch4 -p1 -b .apsl
 # Following patch removes -Wl,-rpath,/usr/lib64/perl5/CORE from 
 # net-snmp-config --agent-libs output. As for Fedora 15, this
 # rpath is needed to link subagents, because libperl.so is in
 # non-default directory - so leave the rpath there.
-#%patch6 -p1 -b .perl-linking
-%patch7 -p1
-%patch8 -p1 -b .mysql
-%patch9 -p1 -b .systemd
-%patch10 -p1 -b .libtool
-%patch11 -p1 -b .mibs-perl
+#%patch5 -p1 -b .perl-linking
+%patch6 -p1
 
 %ifarch sparc64 s390 s390x
 # disable failing test - see https://bugzilla.redhat.com/show_bug.cgi?id=680697
@@ -315,6 +304,8 @@ rm -f ${RPM_BUILD_ROOT}/%{_bindir}/ipf-mod.pl
 rm -f ${RPM_BUILD_ROOT}/%{_libdir}/*.la
 rm -f ${RPM_BUILD_ROOT}/%{_libdir}/libsnmp*
 
+magic_rpm_clean.sh
+
 # remove special perl files
 find $RPM_BUILD_ROOT -name perllocal.pod \
     -o -name .packlist \
@@ -356,36 +347,29 @@ install -m 644 %SOURCE9 $RPM_BUILD_ROOT/%{_sysconfdir}/tmpfiles.d/net-snmp.conf
 install -m 755 -d $RPM_BUILD_ROOT/%{_unitdir}
 install -m 644 %SOURCE10 %SOURCE11 $RPM_BUILD_ROOT/%{_unitdir}/
 
-magic_rpm_clean.sh
-
 %check
 %if %{netsnmp_check}
+%ifarch ppc ppc64
+rm -vf testing/fulltests/default/T200snmpv2cwalkall_simple
+%endif
 # restore libtool, for unknown reason it does not work with the one without rpath
 cp -f libtool.orig libtool
+# temporary workaround to make test "extending agent functionality with pass" working
+chmod 755 local/passtest
+
 LD_LIBRARY_PATH=${RPM_BUILD_ROOT}/%{_libdir} make test
 %endif
 
 
 %post
-if [ $1 -eq 1 ] ; then 
-    # Initial installation 
-    /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
+%systemd_post snmpd.service snmptrapd.service
 
 %preun
-if [ $1 = 0 ]; then
-    /usr/bin/systemctl --no-reload disable snmpd.service > /dev/null 2>&1 || :
-    /usr/bin/systemctl --no-reload disable snmptrapd.service > /dev/null 2>&1 || :
-    /usr/bin/systemctl stop snmpd.service > /dev/null 2>&1 || :
-    /usr/bin/systemctl stop snmptrapd.service > /dev/null 2>&1 || :
-fi
+%systemd_preun snmpd.service snmptrapd.service
 
 
 %postun
-if [ "$1" -ge "1" ]; then
-    /usr/bin/systemctl try-restart snmpd.service >/dev/null 2>&1 || :
-    /usr/bin/systemctl try-restart snmptrapd.service >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart snmpd.service snmptrapd.service
 
 
 %triggerun -- net-snmp < 1:5.7-5
@@ -406,26 +390,25 @@ echo date >>/tmp/snmp
 /usr/sbin/chkconfig --add snmpd >/dev/null 2>&1 || :
 /usr/sbin/chkconfig --add snmptrapd >/dev/null 2>&1 || :
 
-%post libs -p /usr/sbin/ldconfig
+%post libs -p /sbin/ldconfig
 
-%postun libs -p /usr/sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
-%post agent-libs -p /usr/sbin/ldconfig
+%post agent-libs -p /sbin/ldconfig
 
-%postun agent-libs -p /usr/sbin/ldconfig
+%postun agent-libs -p /sbin/ldconfig
 
 %clean
 rm -rf ${RPM_BUILD_ROOT}
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING ChangeLog.trimmed EXAMPLE.conf FAQ NEWS TODO
 %doc README README.agent-mibs README.agentx README.krb5 README.snmpv3
 %doc local/passtest local/ipf-mod.pl
-%doc README.thread AGENT.txt PORTING local/README.mib2c README.systemd
+%doc README.thread AGENT.txt PORTING local/README.mib2c
 %dir %{_sysconfdir}/snmp
-%config(noreplace,missingok) %{_sysconfdir}/snmp/snmpd.conf
-%config(noreplace,missingok) %{_sysconfdir}/snmp/snmptrapd.conf
+%config(noreplace) %{_sysconfdir}/snmp/snmpd.conf
+%config(noreplace) %{_sysconfdir}/snmp/snmptrapd.conf
 %{_bindir}/snmpconf
 %{_bindir}/agentxtrap
 %{_bindir}/net-snmp-create-v3-user
@@ -437,15 +420,13 @@ rm -rf ${RPM_BUILD_ROOT}
 %attr(0644,root,root) %{_mandir}/man1/snmpconf.1.gz
 %dir %{_datadir}/snmp
 %{_datadir}/snmp/snmpconf-data
-%dir %{_localstatedir}/lib/net-snmp
 %dir %{_localstatedir}/run/net-snmp
 %config(noreplace) %{_sysconfdir}/tmpfiles.d/net-snmp.conf
 %{_unitdir}/snmp*
-%config(noreplace,missingok) %{_sysconfdir}/sysconfig/snmpd
-%config(noreplace,missingok) %{_sysconfdir}/sysconfig/snmptrapd
+%config(noreplace) %{_sysconfdir}/sysconfig/snmpd
+%config(noreplace) %{_sysconfdir}/sysconfig/snmptrapd
 
 %files utils
-%defattr(-,root,root,-)
 %{_bindir}/encode_keychange
 %{_bindir}/snmp[^c-]*
 %attr(0644,root,root) %{_mandir}/man1/snmp[^-]*.1*
@@ -455,7 +436,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %attr(0644,root,root) %{_mandir}/man5/variables.5.gz
 
 %files devel
-%defattr(0644,root,root,0755)
 %{_libdir}/lib*.so
 /usr/include/*
 %attr(0644,root,root) %{_mandir}/man3/*.3.*
@@ -463,7 +443,6 @@ rm -rf ${RPM_BUILD_ROOT}
 %attr(0644,root,root) %{_mandir}/man1/net-snmp-config*.1.*
 
 %files perl
-%defattr(-,root,root)
 %{_bindir}/mib2c-update
 %{_bindir}/mib2c
 %{_bindir}/snmp-bridge-mib
@@ -481,44 +460,54 @@ rm -rf ${RPM_BUILD_ROOT}
 %{perl_vendorarch}/auto/Bundle/*SNMP*
 
 %files python
-%defattr(-,root,root,-)
 %doc README
 %{python_sitearch}/*
 
 %files gui
-%defattr(-,root,root)
 %{_bindir}/tkmib
 %attr(0644,root,root) %{_mandir}/man1/tkmib.1*
 
 %files libs
-%defattr(-,root,root)
 %doc COPYING README ChangeLog.trimmed FAQ NEWS TODO
 %{_libdir}/libnetsnmp.so.*
 %dir %{_datadir}/snmp
 %dir %{_datadir}/snmp/mibs
 %{_datadir}/snmp/mibs/*
+%dir %{_localstatedir}/lib/net-snmp
 
 %files agent-libs
-%defattr(-,root,root)
 %{_libdir}/libnetsnmpagent*.so.*
 %{_libdir}/libnetsnmphelpers*.so.*
 %{_libdir}/libnetsnmpmibs*.so.*
 %{_libdir}/libnetsnmptrapd*.so.*
 
 %files sysvinit
-%defattr(-,root,root)
 %{_initrddir}/snmpd
 %{_initrddir}/snmptrapd
 
 %changelog
-* Sun Apr 15 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-7
-- 为 Magic 3.0 重建
+* Thu Oct 18 2012 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-1
+- Updated to 5.7.2
 
-* Sat Mar 10 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-6
-- 为 Magic 3.0 重建
+* Mon Aug 27 2012 Jan Safranek <jsafrane@redhat.com> - 1:5.7.1-10
+- Updated RPM scriplets with latest systemd-rpm macros (#850403).
+- Fixed fedora-review tool complaints.
 
-* Sat Mar 10 2012 Liu Di <liudidi@gmail.com> - 1:5.7.1-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.1-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 1:5.7.1-8
+- Perl 5.16 rebuild
+
+* Fri May 18 2012 Jan Safranek <jsafrane@redhat.com> 5.7.1-7
+- Move /var/lib/net-snmp from net-snmp to net-snmp-libs (#822508)
+
+* Mon Apr 23 2012 Karsten Hopp <karsten@redhat.com> 5.7.1-6
+- Temporarily disable T200snmpv2cwalkall_simple test on ppc(64) until
+  bug 814829 is fixed
+
+* Fri Mar 30 2012 Jan Safranek <jsafrane@redhat.com> - 1:5.7.1-5
+- Rebuilt for new rpm
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.7.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

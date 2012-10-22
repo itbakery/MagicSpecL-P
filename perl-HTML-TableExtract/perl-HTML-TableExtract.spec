@@ -1,6 +1,6 @@
 Name:           perl-HTML-TableExtract
 Version:        2.10
-Release: 	12%{?dist}
+Release: 	13%{?dist}
 Summary:        A Perl module for extracting content in HTML tables
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,8 +48,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.10-12
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 2.10-12
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

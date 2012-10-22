@@ -1,27 +1,40 @@
 Name:           perl-Inline
-Version:        0.49
-Release:        3%{?dist}
+Version:        0.51
+Release:        1%{?dist}
 Summary:        Inline Perl module
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 Url:            http://search.cpan.org/dist/Inline/
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SI/SISYPHUS/Inline-%{version}.tar.gz
-
 BuildArch:      noarch
+BuildRequires:  perl(base)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(AutoLoader)
 BuildRequires:  perl(Carp)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Digest::MD5)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
-BuildRequires:  perl(Parse::RecDescent)
+BuildRequires:  perl(File::Spec::Unix)
 BuildRequires:  perl(Inline::Files)
-# tests
+BuildRequires:  perl(Parse::RecDescent)
+BuildRequires:  perl(Socket)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Warn)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Optional tests
+#Optional, not yet in Fedora
+#BuildRequires:  perl(Inline::Filters)
+#BuildRequires:  perl(Inline::Struct)
+BuildRequires:  perl(Time::HiRes)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # not automatically detected
-Requires:       perl(Data::Dumper)
 Requires:       perl(Digest::MD5)
+Requires:       perl(Socket)
+
+%{?perl_default_filter}
+%global __provides_exclude %{?__provides_exclude}|perl\\(Inline\\)$
 
 %description
 The Inline module allows you to put source code from other programming
@@ -42,46 +55,42 @@ once. Code that is Inlined into distributed modules (like on the CPAN)
 will get compiled when the module is installed, so the end user will
 never notice the compilation time.
 
-
-%{?perl_default_filter}
-%global __provides_exclude %{?__provides_exclude}|perl\\(Inline\\)$
-
 %prep
 %setup -q -n Inline-%{version} 
 
-
 %build
 # trick avoiding installation other modules
-%{__perl} Makefile.PL INSTALLDIRS=vendor < /dev/null
+perl Makefile.PL INSTALLDIRS=vendor < /dev/null
 make %{?_smp_mflags}
 
-
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w %{buildroot}/*
 
 %check
-
-
-
-%clean 
-rm -rf $RPM_BUILD_ROOT
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/Inline*
 %{perl_vendorlib}/auto/
 %{_mandir}/man3/*.3*
 
-
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.49-3
-- 为 Magic 3.0 重建
+* Mon Oct 15 2012 Petr Šabata <contyk@redhat.com> - 0.51-1
+- 0.51 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 0.50-2
+- Perl 5.16 rebuild
+
+* Tue Feb 07 2012 Petr Šabata <contyk@redhat.com> - 0.50-1
+- 0.50 bump
+- Minor cleanup
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.49-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

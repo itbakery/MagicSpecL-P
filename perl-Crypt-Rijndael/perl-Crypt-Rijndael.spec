@@ -1,12 +1,11 @@
 Name:           perl-Crypt-Rijndael
-Version:        1.09
-Release:        8%{?dist}
+Version:        1.11
+Release:        1%{?dist}
 Summary:        Crypt::CBC compliant Rijndael encryption module
-License:        LGPLv2+
+License:        LGPLv3
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Crypt-Rijndael/
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BD/BDFOY/Crypt-Rijndael-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  perl(Digest::MD5)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::Manifest) >= 1.14
@@ -29,32 +28,36 @@ the Advanced Encryption Standard.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 make pure_install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes COPYING LICENSE NEWS README
 %{perl_vendorarch}/auto/*
 %{perl_vendorarch}/Crypt*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.09-8
-- 为 Magic 3.0 重建
+* Fri Aug 03 2012 Iain Arnell <iarnell@gmail.com> 1.11-1
+- update to latest upstream version
+- license change from LGPLv2+ to LGPLv3
+
+* Sat Jul 21 2012 Iain Arnell <iarnell@gmail.com> 1.10-1
+- update to latest upstream version
+- clean up spec for modern rpmbuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.09-8
+- Perl 5.16 rebuild
 
 * Sat Jan 14 2012 Iain Arnell <iarnell@gmail.com> 1.09-7
 - BuildRequires perl(Digest::MD5)

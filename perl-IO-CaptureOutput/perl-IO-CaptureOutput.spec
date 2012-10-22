@@ -1,16 +1,25 @@
 Name:           perl-IO-CaptureOutput
 Version:        1.1102
-Release:        6%{?dist}
-Summary:        Capture STDOUT/STDERR from subprocesses and XS/C modules
+Release:        8%{?dist}
+Summary:        Capture STDOUT/STDERR from sub-processes and XS/C modules
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/IO-CaptureOutput
-Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/IO-CaptureOutput-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/IO-CaptureOutput-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
-BuildRequires:  perl(Inline), perl(Parse::RecDescent), perl(Test::Pod::Coverage), perl(Test::Pod)
-BuildRequires:  perl(Test::More)
+BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Temp) >= 0.16
+# Tests:
+BuildRequires:  perl(File::Spec) >= 3.27
+BuildRequires:  perl(IO::File)
+BuildRequires:  perl(Test::More) >= 0.62
+# Optional test:
+BuildRequires:  perl(Inline::C)
 Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -31,7 +40,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -44,8 +53,14 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.1102-6
-- 为 Magic 3.0 重建
+* Tue Oct 16 2012 Petr Pisar <ppisar@redhat.com> - 1.1102-8
+- Specify all dependencies
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1102-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 16 2012 Petr Pisar <ppisar@redhat.com> - 1.1102-6
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1102-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,20 +1,29 @@
 Name:		perl-IO-Socket-SSL
-Version:	1.58
+Version:	1.77
 Release:	1%{?dist}
 Summary:	Perl library for transparent SSL
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/IO-Socket-SSL/
 Source0:	http://search.cpan.org/CPAN/authors/id/S/SU/SULLR/IO-Socket-SSL-%{version}.tar.gz
-Patch0:		IO-Socket-SSL-1.58-dhe.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
 BuildRequires:	perl(Carp)
+BuildRequires:	perl(constant)
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(IO::Socket::INET6)
+BuildRequires:	perl(IO::Socket)
 BuildRequires:	perl(Net::LibIDN)
 BuildRequires:	perl(Net::SSLeay) >= 1.21
 BuildRequires:	procps
+# Use IO::Socket::IP for IPv6 support where available, else IO::Socket::INET6
+%if 0%{?fedora} > 15 || 0%{?rhel} > 6
+BuildRequires:	perl(IO::Socket::IP) >= 0.11, perl(Socket) >= 1.95
+Requires:	perl(IO::Socket::IP) >= 0.11, perl(Socket) >= 1.95
+%else
+BuildRequires:	perl(IO::Socket::INET6), perl(Socket6)
+Requires:	perl(IO::Socket::INET6), perl(Socket6)
+%endif
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:	perl(Net::LibIDN)
 
@@ -29,11 +38,6 @@ mod_perl.
 
 %prep
 %setup -q -n IO-Socket-SSL-%{version}
-
-# Need to drop back the OPENSSL_VERSION_NUMBER value in the dhe.t workaround
-# because OPENSSL_VERSION_NUMBER is patched in Fedora to look like 1.0.0 beta3
-# even though it's 1.0.1 beta2, which breaks the workaround
-%patch0 -p1
 
 %build
 perl Makefile.PL INSTALLDIRS=vendor
@@ -52,12 +56,103 @@ make test
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc BUGS Changes README docs/ certs/ example/ util/
 %{perl_vendorlib}/IO/
 %{_mandir}/man3/IO::Socket::SSL.3pm*
 
 %changelog
+* Fri Oct  5 2012 Paul Howarth <paul@city-fan.org> - 1.77-1
+- Update to 1.77
+  - support _update_peer for IPv6 too (CPAN RT#79916)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.76-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 1.76-2
+- Perl 5.16 rebuild
+
+* Mon Jun 18 2012 Paul Howarth <paul@city-fan.org> - 1.76-1
+- Update to 1.76
+  - add support for IO::Socket::IP, which supports inet6 and inet4
+    (CPAN RT#75218)
+  - fix documentation errors (CPAN RT#77690)
+  - made it possible to explicitly disable TLSv11 and TLSv12 in SSL_version
+  - use inet_pton from either Socket.pm 1.95 or Socket6.pm
+- Use IO::Socket::IP for IPv6 support where available, else IO::Socket::INET6
+- Add runtime dependency for appropriate IPv6 support module so that we can
+  ensure that we run at runtime what we tested with at build time
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.74-2
+- Perl 5.16 rebuild
+
+* Mon May 14 2012 Paul Howarth <paul@city-fan.org> - 1.74-1
+- Update to 1.74
+  - accept a version of SSLv2/3 as SSLv23, because older documentation could
+    be interpreted like this
+
+* Fri May 11 2012 Paul Howarth <paul@city-fan.org> - 1.73-1
+- Update to 1.73
+  - set DEFAULT_CIPHER_LIST to ALL:!LOW instead of HIGH:!LOW
+  - make test t/dhe.t hopefully work with more versions of openssl
+
+* Wed May  9 2012 Paul Howarth <paul@city-fan.org> - 1.71-1
+- Update to 1.71
+  - 1.70 done right: don't disable SSLv2 ciphers; SSLv2 support is better
+    disabled by the default SSL_version of 'SSLv23:!SSLv2'
+
+* Tue May  8 2012 Paul Howarth <paul@city-fan.org> - 1.70-1
+- Update to 1.70
+  - make it possible to disable protocols using SSL_version, and make
+    SSL_version default to 'SSLv23:!SSLv2'
+
+* Tue May  8 2012 Paul Howarth <paul@city-fan.org> - 1.69-1
+- Update to 1.69 (changes for CPAN RT#76929)
+  - if no explicit cipher list is given, default to ALL:!LOW instead of the
+    openssl default, which usually includes weak ciphers like DES
+  - new config key SSL_honor_cipher_order and document how to use it to fight
+    BEAST attack
+  - fix behavior for empty cipher list (use default)
+  - re-added workaround in t/dhe.t
+
+* Mon Apr 16 2012 Paul Howarth <paul@city-fan.org> - 1.66-1
+- Update to 1.66
+  - make it thread safer (CPAN RT#76538)
+
+* Mon Apr 16 2012 Paul Howarth <paul@city-fan.org> - 1.65-1
+- Update to 1.65
+  - added NPN (Next Protocol Negotiation) support (CPAN RT#76223)
+
+* Sat Apr  7 2012 Paul Howarth <paul@city-fan.org> - 1.64-1
+- Update to 1.64
+  - ignore die from within eval to make tests more stable on Win32
+    (CPAN RT#76147)
+  - clarify some behavior regarding hostname verification
+- Drop patch for t/dhe.t, no longer needed
+
+* Wed Mar 28 2012 Paul Howarth <paul@city-fan.org> - 1.62-1
+- Update to 1.62
+  - small fix to last version
+
+* Tue Mar 27 2012 Paul Howarth <paul@city-fan.org> - 1.61-1
+- Update to 1.61
+  - call CTX_set_session_id_context so that server's session caching works with
+    client certificates too (CPAN RT#76053)
+
+* Tue Mar 20 2012 Paul Howarth <paul@city-fan.org> - 1.60-1
+- Update to 1.60
+  - don't make blocking readline if socket was set nonblocking, but return as
+    soon no more data are available (CPAN RT#75910)
+  - fix BUG section about threading so that it shows package as thread safe
+    as long as Net::SSLeay ≥ 1.43 is used (CPAN RT#75749)
+- BR: perl(constant), perl(Exporter) and perl(IO::Socket)
+
+* Thu Mar  8 2012 Paul Howarth <paul@city-fan.org> - 1.59-1
+- Update to 1.59
+  - if SSLv2 is not supported by Net::SSLeay set SSL_ERROR with useful message
+    when attempting to use it
+  - modify constant declarations so that 5.6.1 should work again
+- Drop %%defattr, redundant since rpm 4.4
+
 * Mon Feb 27 2012 Paul Howarth <paul@city-fan.org> - 1.58-1
 - Update to 1.58
   - fix t/dhe.t for openssl 1.0.1 beta by forcing TLSv1, so that it does not

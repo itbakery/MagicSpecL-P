@@ -1,7 +1,7 @@
 Summary: Encrypt Data with Cipher Block Chaining Mode
 Name: perl-Crypt-CBC
 Version: 2.29
-Release: 8%{?dist}
+Release: 14%{?dist}
 # Upstream confirms that they're under the same license as perl.
 # Wording in CBC.pm is less than clear, but still.
 License: GPL+ or Artistic
@@ -11,7 +11,22 @@ Source0: http://search.cpan.org/CPAN/authors/id/L/LD/LDS/Crypt-CBC-%{version}.ta
 BuildArch: noarch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires: perl(bytes)
+BuildRequires: perl(constant)
+BuildRequires: perl(Digest::MD5)
 BuildRequires: perl(ExtUtils::MakeMaker)
+# Modules used for test suite, skipped when bootstrapping as
+# some of these modules use Crypt::CBC themselves
+# Crypt::CAST5 not yet packaged in Fedora
+# Crypt::IDEA is unavailable due to patents
+%if 0%{!?perl_bootstrap:1}
+BuildRequires: perl(Crypt::DES)
+%if ! (0%{?rhel} >= 7)
+BuildRequires: perl(Crypt::Blowfish)
+BuildRequires: perl(Crypt::Blowfish_PP)
+BuildRequires: perl(Crypt::Rijndael)
+%endif
+%endif
 
 %description
 This is Crypt::CBC, a Perl-only implementation of the cryptographic
@@ -48,6 +63,28 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.29-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 2.29-13
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.29-12
+- Perl 5.16 rebuild
+
+* Mon Jun 11 2012 Marcela Mašláňová <mmaslano@redhat.com> - 2.29-11
+- Do not build-require Crypt::Blowfish, Crypt::Blowfish_PP, and Crypt::Rijndael
+  on RHEL >= 7
+- Resolves: rhbz#822812
+
+* Sat Apr 21 2012 Paul Howarth <paul@city-fan.org> - 2.29-10
+- BR: perl(bytes), perl(constant), perl(Digest::MD5) - required by module
+- BR: perl(Crypt::Blowfish), perl(Crypt::Blowfish_PP), perl(Crypt::DES),
+  perl(Crypt::Rijndael) for improved test coverage, except when bootstrapping
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.29-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Jun 17 2011 Marcela Mašláňová <mmaslano@redhat.com> - 2.29-8
 - Perl mass rebuild
 
@@ -55,7 +92,7 @@ rm -rf $RPM_BUILD_ROOT
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
 * Wed Dec 15 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.29-6
-- 661697 rebuild for fixing problems with vendorach/lib
+- Rebuild to fix problems with vendorarch/lib (#661697)
 
 * Fri Apr 30 2010 Marcela Maslanova <mmaslano@redhat.com> - 2.29-5
 - Mass rebuild with perl-5.12.0

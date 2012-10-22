@@ -1,23 +1,24 @@
 # TODO: uses private copy of libedit, should be modified to use system one
 
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 Summary: IPMI (Intelligent Platform Management Interface) library and tools
 Name: OpenIPMI
-Version: 2.0.18
-Release: 13%{?dist}
+Version: 2.0.19
+Release: 2%{?dist}
 License: LGPLv2+ and GPLv2+ or BSD
 Group: System Environment/Base
 URL: http://sourceforge.net/projects/openipmi/
 Source: http://downloads.sourceforge.net/openipmi/%{name}-%{version}.tar.gz
 Source1: openipmi.sysconf
-Source2: openipmi.initscript
-Source3: README.initscript
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source2: openipmi-helper
+Source3: ipmi.service
 BuildRequires: gdbm-devel swig glib2-devel net-snmp-devel ncurses-devel
 BuildRequires: openssl-devel python-devel perl-devel tcl-devel tkinter
 BuildRequires: desktop-file-utils
-Requires(post): chkconfig
-Requires(preun): chkconfig
+Requires(post): systemd-units
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+Requires(post): systemd-sysv
 
 Patch1: OpenIPMI-2.0.18-pthread-pkgconfig.patch
 
@@ -73,53 +74,55 @@ export CFLAGS="-fPIC $RPM_OPT_FLAGS"
     --with-tkinter=no
 
 # get rid of rpath
-sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
-sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+#sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+#sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make   # not %{?_smp_mflags} safe
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT/%{_libdir}/*.la
 
 install -d ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig
 install -m 644 %SOURCE1 ${RPM_BUILD_ROOT}%{_sysconfdir}/sysconfig/ipmi
-install -d ${RPM_BUILD_ROOT}%{_initrddir}
-install -m 755 %SOURCE2 ${RPM_BUILD_ROOT}%{_initrddir}/ipmi
-
-install -m 644 %SOURCE3 .
+install -d ${RPM_BUILD_ROOT}%{_libexecdir}
+install -m 755 %SOURCE2 ${RPM_BUILD_ROOT}%{_libexecdir}/openipmi-helper
+install -d ${RPM_BUILD_ROOT}%{_unitdir}
+install -m 644 %SOURCE3 ${RPM_BUILD_ROOT}%{_unitdir}/ipmi.service
 
 rm ${RPM_BUILD_ROOT}/%{_mandir}/man1/openipmigui.1
-
-#magic_rpm_clean.sh
+magic_rpm_clean.sh
 
 %post
-/usr/sbin/chkconfig --add ipmi
+%systemd_post ipmi.service
 
 %preun
-if [ $1 = 0 ]; then
-   service ipmi stop >/dev/null 2>&1
-   /usr/sbin/chkconfig --del ipmi
-fi
+%systemd_preun ipmi.service
 
 %postun
-if [ "$1" -ge "1" ]; then
-    service ipmi condrestart >/dev/null 2>&1 || :
-fi
+%systemd_postun_with_restart ipmi.service
 
 %post libs -p /sbin/ldconfig
 
 %postun libs -p /sbin/ldconfig
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+### A sysv => systemd migration contains all of the same scriptlets as a
+### systemd package.  These are additional scriptlets
+
+%triggerun -- OpenIPMI < 2.0.18-14
+# Save the current service runlevel info
+# User must manually run systemd-sysv-convert --apply httpd
+# to migrate them to systemd targets
+/usr/bin/systemd-sysv-convert --save ipmi >/dev/null 2>&1 ||:
+/usr/bin/systemctl --no-reload enable ipmi.service >/dev/null 2>&1 ||:
+# Run these because the SysV package being removed won't do them
+/usr/sbin/chkconfig --del ipmi >/dev/null 2>&1 || :
+/usr/bin/systemctl try-restart ipmi.service >/dev/null 2>&1 || :
 
 %files
-%defattr(-,root,root)
-%doc CONFIGURING_FOR_LAN COPYING COPYING.BSD COPYING.LIB FAQ README README.Force README.MotorolaMXP README.initscript
+%doc CONFIGURING_FOR_LAN COPYING COPYING.BSD COPYING.LIB FAQ README README.Force README.MotorolaMXP
 %config(noreplace) %{_sysconfdir}/sysconfig/ipmi
-%{_initrddir}/ipmi
+%{_libexecdir}/openipmi-helper
 %{_bindir}/ipmicmd
 %{_bindir}/ipmilan
 %{_bindir}/ipmish
@@ -128,6 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/openipmish
 %{_bindir}/rmcp_ping
 %{_bindir}/solterm
+%{_unitdir}/ipmi.service
 %{_mandir}/man1/ipmi_ui*
 %{_mandir}/man1/openipmicmd*
 %{_mandir}/man1/openipmish*
@@ -138,25 +142,37 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/ipmilan*
 
 %files perl
-%defattr(-,root,root)
 %attr(644,root,root) %{perl_vendorarch}/OpenIPMI.pm
 %{perl_vendorarch}/auto/OpenIPMI/
 
 %files python
-%defattr(-,root,root)
 %{python_sitearch}/*OpenIPMI*
 
 %files libs
-%defattr(-,root,root)
 %{_libdir}/*.so.*
 
 %files devel
-%defattr(-,root,root)
 %{_includedir}/OpenIPMI
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Mon Aug 27 2012 Jan Safranek <jsafrane@redhat.com> - 2.0.19-2
+- Updated RPM scriptlets with latest systemd-rpm macros (#850246)
+- Fixed fedora-review tool complaints
+
+* Wed Aug  8 2012 Jan Safranek <jsafrane@redhat.com> - 2.0.19-1
+- Update to 2.0.19
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.0.18-15
+- Perl 5.16 rebuild
+
+* Mon May  7 2012 Jan Safranek <jsafrane@redhat.com> - 2.0.18-14
+- Added ipmi systemd unit
+
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.18-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

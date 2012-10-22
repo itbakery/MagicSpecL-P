@@ -1,5 +1,5 @@
 Name:           perl-HTTP-Message
-Version:        6.03
+Version:        6.04
 Release:        1%{?dist}
 Summary:        HTTP style message
 License:        GPL+ or Artistic
@@ -7,16 +7,17 @@ Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/HTTP-Message/
 Source0:        http://www.cpan.org/authors/id/G/GA/GAAS/HTTP-Message-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(ExtUtils::MakeMaker)
+# Run-time:
 BuildRequires:  perl(Compress::Raw::Zlib)
-BuildRequires:  perl(Encode) >= 2.12
+BuildRequires:  perl(Encode) >= 2.21
 BuildRequires:  perl(Encode::Locale) >= 1
 BuildRequires:  perl(Exporter)
-BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(HTML::Parser) >= 3.33
 BuildRequires:  perl(HTTP::Date) >= 6
 BuildRequires:  perl(IO::Compress::Bzip2) >= 2.021
 BuildRequires:  perl(IO::Compress::Deflate)
 BuildRequires:  perl(IO::Compress::Gzip)
+BuildRequires:  perl(IO::HTML)
 BuildRequires:  perl(IO::Uncompress::Bunzip2) >= 2.021
 BuildRequires:  perl(IO::Uncompress::Gunzip)
 BuildRequires:  perl(IO::Uncompress::Inflate)
@@ -28,16 +29,16 @@ BuildRequires:  perl(URI) >= 1.10
 # Tests only:
 BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
-# Testing requires Time::Local used on MasOS only
+# Testing requires Time::Local on MacOS only
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(Compress::Raw::Zlib)
-Requires:       perl(Encode) >= 2.12
+Requires:       perl(Encode) >= 2.21
 Requires:       perl(Encode::Locale) >= 1
-Requires:       perl(HTML::Parser) >= 3.33
 Requires:       perl(HTTP::Date) >= 6
 Requires:       perl(IO::Compress::Bzip2) >= 2.021
 Requires:       perl(IO::Compress::Deflate)
 Requires:       perl(IO::Compress::Gzip)
+Requires:       perl(IO::HTML)
 Requires:       perl(IO::Uncompress::Bunzip2) >= 2.021
 Requires:       perl(IO::Uncompress::Gunzip)
 Requires:       perl(IO::Uncompress::Inflate)
@@ -49,14 +50,8 @@ Requires:       perl(URI) >= 1.10
 Conflicts:      perl-libwww-perl < 6
 
 # Remove underspecified dependencies
-%filter_from_requires /^perl(HTTP::Date)\s*$/d
-%filter_from_requires /^perl(URI)\s*$/d
-%filter_from_provides /^perl(HTTP::Headers)\s*$/d
-%filter_setup
-
-%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(HTTP::Date|URI\\)$
-%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}perl\\(HTTP::Headers\\)$
-
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\((HTTP::Date|URI)\\)$
+%global __provides_exclude %{?__provides_exclude:%__provides_exclude|}^perl\\(HTTP::Headers\\)$
 
 %description
 The HTTP-Message distribution contains classes useful for representing the
@@ -71,21 +66,34 @@ requests, responses and the headers contained within them.
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
+make pure_install DESTDIR=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
+* Tue Oct 02 2012 Petr Pisar <ppisar@redhat.com> - 6.04-1
+- 6.04 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.03-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 6.03-4
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 6.03-3
+- Perl 5.16 rebuild
+
+* Fri Apr 06 2012 Petr Pisar <ppisar@redhat.com> - 6.03-2
+- Break build-time cycle while boostrapping perl (bug #810223)
+
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.03-1
 - 6.03 bump
 

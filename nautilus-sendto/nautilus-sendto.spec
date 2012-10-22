@@ -1,13 +1,13 @@
 Name:           nautilus-sendto
 Epoch:          1
-Version:        3.0.1
-Release:        5%{?dist}
+Version:        3.6.0
+Release:        1%{?dist}
 Summary:        Nautilus context menu for sending files
 
 Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            ftp://ftp.gnome.org/pub/gnome/sources/%{name}
-Source0:        http://download.gnome.org/sources/%{name}/3.0/%{name}-%{version}.tar.bz2
+Source0:        http://download.gnome.org/sources/%{name}/3.6/%{name}-%{version}.tar.xz
 
 BuildRequires:  gtk3-devel
 BuildRequires:  evolution-data-server-devel >= 1.9.1
@@ -16,10 +16,6 @@ BuildRequires:  gettext
 BuildRequires:  perl-XML-Parser intltool
 BuildRequires:  dbus-glib-devel >= 0.70
 BuildRequires:  gupnp-devel >= 0.13
-
-Requires(pre): GConf2
-Requires(post): GConf2
-Requires(preun): GConf2
 
 # For compat with old nautilus-sendto packaging
 Provides: nautilus-sendto-gaim
@@ -51,32 +47,25 @@ make %{?_smp_mflags}
 
 
 %install
-export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
 make install DESTDIR=$RPM_BUILD_ROOT
-unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 
 find $RPM_BUILD_ROOT \( -name '*.a' -o -name '*.la' \) -exec rm -f {} \;
 
 rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus-sendto/plugins/libnstbluetooth.so
 # now shipped with nautilus itself
 rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
-
+magic_rpm_clean.sh
 %find_lang %{name}
 
 %posttrans
-glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
+/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %postun
-glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
-
-%pre
-%gconf_schema_prepare nst
-
-%preun
-%gconf_schema_remove nst
+if [ $1 -eq 0 ] ; then
+   /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
+fi
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog ChangeLog.pre-1.1.4.1 COPYING NEWS
 %dir %{_libdir}/nautilus-sendto
 %dir %{_libdir}/nautilus-sendto/plugins
@@ -88,15 +77,38 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas || :
 %{_datadir}/GConf/gsettings/nautilus-sendto-convert
 
 %files devel
-%defattr(-,root,root,-)
 %{_datadir}/gtk-doc
 %{_libdir}/pkgconfig/nautilus-sendto.pc
 %dir %{_includedir}/nautilus-sendto
 %{_includedir}/nautilus-sendto/nautilus-sendto-plugin.h
 
 %changelog
-* Wed Mar 21 2012 Liu Di <liudidi@gmail.com> - 1:3.0.1-5
-- 为 Magic 3.0 重建
+* Wed Sep 26 2012 Kalev Lember <kalevlember@gmail.com> - 1:3.6.0-1
+- Update to 3.6.0
+
+* Wed Aug 22 2012 Brian Pepple <bpepple@fedoraproject.org> - 1:3.5.3-4
+- Drop old GConf bits. Fedora versions that needed this haven't been supported for awhile.
+
+* Tue Aug 21 2012 Brian Pepple <bpepple@fedoraproject.org> - 1:3.5.3-3
+- Rebuild for new libcamel.
+
+* Tue Jul 17 2012 Paul W. Frields <stickster@gmail.com> - 1:3.5.3-2
+- Rebuild for newer libcamel
+
+* Tue Jun 26 2012 Richard Hughes <hughsient@gmail.com> - 1:3.5.3-1
+- Update to 3.5.3
+
+* Fri May 11 2012 Bastien Nocera <bnocera@redhat.com> 3.0.3-1
+- Update to 3.0.3
+
+* Mon Apr 30 2012 Paul W. Frields <stickster@gmail.com> - 1:3.0.2-3
+- Rebuild against newer evolution-data-server
+
+* Tue Apr 24 2012 Kalev Lember <kalevlember@gmail.com> - 1:3.0.2-2
+- Silence rpm scriptlet output
+
+* Wed Mar 21 2012 Kalev Lember <kalevlember@gmail.com> - 1:3.0.2-1
+- Update to 3.0.2
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.0.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

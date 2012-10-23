@@ -2,21 +2,28 @@
 %global noarch_package %(perl -e 'print (($] >= 5.013007) ? 1 : 0);')
 
 Name:		perl-Devel-GlobalDestruction
-Version:	0.04
-Release:	2%{?dist}
+Version:	0.09
+Release:	1%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Expose PL_dirty, the flag that marks global destruction
 Url:		http://search.cpan.org/dist/Devel-GlobalDestruction
-Source:		http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Devel-GlobalDestruction-%{version}.tar.gz
+Source:		http://search.cpan.org/CPAN/authors/id/R/RI/RIBASUSHI/Devel-GlobalDestruction-%{version}.tar.gz
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 %if %{noarch_package}
 BuildArch:	noarch
-%endif
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
-BuildRequires:	perl(ExtUtils::MakeMaker)
-BuildRequires:	perl(Sub::Exporter)
+%else
+BuildRequires:	perl(ExtUtils::CBuilder) >= 0.27
 BuildRequires:	perl(XSLoader)
+Requires:	perl(XSLoader)
+%endif
+BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(File::Spec)
+BuildRequires:	perl(File::Temp)
+BuildRequires:	perl(Sub::Exporter::Progressive) >= 0.001002
+BuildRequires:	perl(threads)
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
 
 # Don't "provide" private Perl libs
 %{?perl_default_filter}
@@ -44,17 +51,15 @@ rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
 
 %files
-%defattr(-,root,root,-)
 %doc Changes t/
 %if %{noarch_package}
 %{perl_vendorlib}/Devel/
@@ -65,8 +70,49 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Devel::GlobalDestruction.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-2
-- 为 Magic 3.0 重建
+* Thu Aug  9 2012 Paul Howarth <paul@city-fan.org> - 0.09-1
+- Update to 0.09
+  - Rewrite completely broken pure-perl GD detection under threads
+  - Fix pure-perl implementation incorrectly reporting GD during END phase
+- This release by RIBASUSHI -> update source URL
+
+* Wed Aug  1 2012 Paul Howarth <paul@city-fan.org> - 0.08-1
+- Update to 0.08
+  - Switch to Sub::Exporter::Progressive
+- BR: perl(Sub::Exporter::Progressive) ≥ 0.001002 rather than plain
+  perl(Sub::Exporter)
+
+* Thu Jul 26 2012 Paul Howarth <paul@city-fan.org> - 0.07-1
+- Update to 0.07
+  - Actually detect errors in pure-perl test
+  - Add prototype to pure-perl pre-5.14 version
+- This release by FLORA -> update source URL
+- BR: perl(File::Spec), perl(File::Temp) and perl(threads)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 0.06-2
+- Perl 5.16 rebuild
+
+* Thu Jun 14 2012 Paul Howarth <paul@city-fan.org> - 0.06-1
+- Update to 0.06
+  - De-retardize XS-less behavior under SpeedyCGI
+  - Test suite now works from within space-containing paths
+- This release by RIBASUSHI -> update source URL
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.05-2
+- Perl 5.16 rebuild
+
+* Fri Apr 27 2012 Paul Howarth <paul@city-fan.org> - 0.05-1
+- Update to 0.05
+  - Add pure-perl implementation for situations where neither ${^GLOBAL_PHASE}
+    nor XS are available
+- This release by DOY -> update source URL
+- BR: perl(XSLoader) only if we're doing an XS build, and in that case add a
+  runtime dependency on it and BR: perl(ExtUtils::CBuilder) ≥ 0.27 too
+- Add runtime dependency on perl(Carp)
+- Drop %%defattr, redundant since rpm 4.4
 
 * Fri Jan 13 2012 Paul Howarth <paul@city-fan.org> - 0.04-1
 - Update to 0.04

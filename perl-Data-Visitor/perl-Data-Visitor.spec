@@ -1,29 +1,24 @@
 Name:           perl-Data-Visitor
-Version:        0.27
-Release:        7%{?dist}
+Version:        0.28
+Release:        3%{?dist}
 Summary:        Visitor style traversal of Perl data structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Data-Visitor/
-Source0:        http://search.cpan.org/CPAN/authors/id/N/NU/NUFFIN/Data-Visitor-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DO/DOY/Data-Visitor-%{version}.tar.gz
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
-BuildRequires:  perl(Class::Accessor)
+BuildRequires:  perl(Class::Load)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Moose) >= 0.89
-BuildRequires:  perl(namespace::clean) >= 0.08
+BuildRequires:  perl(namespace::clean) >= 0.19
 BuildRequires:  perl(Task::Weaken)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Requires)
 BuildRequires:  perl(Tie::ToObject) >= 0.01
 
-# tests
-BuildRequires:  perl(Test::MockObject) >= 1.04
-BuildRequires:  perl(Test::More)
-BuildRequires:  perl(Test::use::ok)
-
-# not picked up automatically
-Requires:       perl(Class::Accessor)
+%{?perl_default_filter}
 
 %description
 This module is a simple visitor implementation for Perl values.
@@ -31,34 +26,40 @@ This module is a simple visitor implementation for Perl values.
 %prep
 %setup -q -n Data-Visitor-%{version}
 
+# silence rpmlint warnings
+sed -i '1s,^#!.*perl,#!%{__perl},' t/*.t
+
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
-make pure_install PERL_INSTALL_ROOT=%{buildroot}
+make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} +
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
 
 %check
-
-
-%clean
-rm -rf %{buildroot}
+make test
 
 %files
-%defattr(-,root,root,-)
-%doc Changes t/
+%doc Changes LICENSE README t/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.27-7
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.28-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 0.28-2
+- Perl 5.16 rebuild
+
+* Sun Feb 19 2012 Iain Arnell <iarnell@gmail.com> 0.28-1
+- update to latest upstream version
+- clean up spec for modern rpmbuild
+- use perl_default_filter and DESTDIR
+- add LICENSE and README to docs
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.27-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

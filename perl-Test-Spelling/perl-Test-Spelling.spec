@@ -13,8 +13,6 @@ BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Pod::Spell) >= 1.01
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Tester)
-BuildRequires:	perl(Module::Install::GithubMeta)
-BuildRequires:  perl(Module::Install::ManifestSkip)
 Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       hunspell
 

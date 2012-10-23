@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-HTTP
 Version:        0.40
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        HTTP protocol date conversion routines
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 %check
 # These will be VERY noisy.  Don't Panic.
-
+make test
 
 
 %files
@@ -55,8 +55,11 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.40-6
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.40-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.40-6
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.40-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

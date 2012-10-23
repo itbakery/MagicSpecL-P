@@ -1,6 +1,6 @@
 Name:           perl-Math-Round
 Version:        0.06
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl extension for rounding numbers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,7 +40,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -53,8 +53,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Math::Round.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-13
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.06-13
+- Perl 5.16 rebuild
 
 * Fri Jan 20 2012 Paul Howarth <paul@city-fan.org> - 0.06-12
 - BR: perl(Exporter) and perl(POSIX)

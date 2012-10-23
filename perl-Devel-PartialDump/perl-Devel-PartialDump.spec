@@ -1,6 +1,6 @@
 Name:           perl-Devel-PartialDump
 Version:        0.15
-Release:        4%{?dist}
+Release:        7%{?dist}
 Summary:        Partial dumping of data structures, optimized for argument printing
 # from PartialDump.pm
 License:        GPL+ or Artistic
@@ -9,7 +9,13 @@ URL:            http://search.cpan.org/dist/Devel-PartialDump/
 Source0:        http://www.cpan.org/authors/id/F/FL/FLORA/Devel-PartialDump-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
+# Moose has a manual dependency on Devel::PartialDump for enhanced reporting
+# Devel::PartialDump itself requires Moose, so when bootstrapping we do a blind
+# build of Devel::PartialDump without running the test suite, then build Moose,
+# then rebuild Devel::PartialDump with Moose, running the test suite
+%if !0%{?perl_bootstrap}
 BuildRequires:  perl(Moose)
+%endif
 BuildRequires:  perl(namespace::clean) >= 0.20
 BuildRequires:  perl(Sub::Exporter)
 BuildRequires:  perl(Test::use::ok)
@@ -38,7 +44,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+%if 0%{!?perl_bootstrap:1}
+make test
+%endif
 
 %files
 %doc Changes
@@ -46,8 +54,18 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.15-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.15-6
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.15-5
+- Perl 5.16 rebuild
+
+* Fri Apr 06 2012 Iain Arnell <iarnell@gmail.com> 0.15-4
+- avoid circular build dependency with perl-Moose (patch from Paul Howarth
+  rhbz#810532)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

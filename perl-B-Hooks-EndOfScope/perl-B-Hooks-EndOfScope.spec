@@ -1,23 +1,25 @@
 Name:		perl-B-Hooks-EndOfScope
-Version:	0.09
-Release:	2%{?dist}
+Version:	0.11
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Execute code after scope compilation finishes
 Url:		http://search.cpan.org/dist/B-Hooks-EndOfScope
-Source:		http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/B-Hooks-EndOfScope-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
+Source0:	http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/B-Hooks-EndOfScope-%{version}.tar.gz
+Patch0:		B-Hooks-EndOfScope-0.10-shellbangs.patch
 BuildArch:	noarch
 # Build
-BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.31
+BuildRequires:	perl(ExtUtils::MakeMaker) >= 6.30
 # Module
 BuildRequires:	perl(Sub::Exporter)
-BuildRequires:	perl(Variable::Magic) >= 0.34
+BuildRequires:	perl(Variable::Magic) >= 0.48
 # Test suite
-BuildRequires:	perl(Test::More)
+BuildRequires:	perl(Test::More) >= 0.89
 # Release tests
 BuildRequires:	perl(Pod::Coverage::TrustPod)
-BuildRequires:	perl(Test::Pod) >= 1.41
+BuildRequires:	perl(Test::EOL)
+BuildRequires:	perl(Test::NoTabs)
+BuildRequires:	perl(Test::Pod)
 BuildRequires:	perl(Test::Pod::Coverage) >= 1.08
 # Runtime
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
@@ -29,32 +31,50 @@ surrounding scope.
 %prep
 %setup -q -n B-Hooks-EndOfScope-%{version}
 
+# Remove shellbangs from tests to placate rpmlint
+%patch0 -p1
+
 %build
 perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
 make test RELEASE_TESTING=1
 
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
-%doc Changes README t/
+%doc Changes LICENSE README t/
 %{perl_vendorlib}/B/
 %{_mandir}/man3/B::Hooks::EndOfScope.3pm*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.09-2
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 0.11-2
+- Perl 5.16 rebuild
+
+* Thu Feb 23 2012 Paul Howarth <paul@city-fan.org> - 0.11-1
+- Update to 0.11 (a minor efficiency improvement)
+- Bump perl(Variable::Magic) version requirement to 0.48
+
+* Thu Feb 16 2012 Paul Howarth <paul@city-fan.org> - 0.10-1
+- Update to 0.10 (stop propagating our magic through localisation)
+- Package LICENSE file
+- Downgrade ExtUtils::MakeMaker version requirement to 6.30
+- Upgrade Test::More version requirement to 0.89
+- Drop Test::Pod version requirement for EPEL-6 spec compatibility
+- BR: perl(Test::EOL) and perl(Test::NoTabs) for additional test coverage
+- Clean up for modern rpmbuild since we have no branches prior to EPEL-6
+  - Don't specify BuildRoot:
+  - Skip cleaning of buildroot in %%install
+  - Remove %%clean section
+  - Drop redundant %%defattr
+- Remove shellbangs from tests to placate rpmlint
 
 * Tue Jan 17 2012 Paul Howarth <paul@city-fan.org> - 0.09-1
 - Update to 0.09 (improve distribution metadata)

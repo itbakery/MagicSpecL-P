@@ -1,6 +1,6 @@
 Name:           perl-Test-Exception
 Version:        0.31
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -9,6 +9,9 @@ Source0:        http://search.cpan.org/CPAN/authors/id/A/AD/ADIE/Test-Exception-
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build) >= 0.35
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Pod::Coverage)
 BuildRequires:  perl(Sub::Uplevel) >= 0.18
 BuildRequires:  perl(Test::Builder) >= 0.7
@@ -56,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Thu Oct 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.31-8
+- Specify all dependencies.
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.31-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

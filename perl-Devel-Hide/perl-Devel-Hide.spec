@@ -1,11 +1,14 @@
 Name:           perl-Devel-Hide
 Version:        0.0008
-Release:        10%{?dist}
+Release:        13%{?dist}
 Summary:        Forces the unavailability of specified Perl modules (for testing)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Devel-Hide/
 Source0:        http://www.cpan.org/authors/id/F/FE/FERREIRA/Devel-Hide-%{version}.tar.gz
+# 'defined(@array)' is deprecated - avoid warnings
+# see https://rt.cpan.org/Public/Bug/Display.html?id=74225
+Patch0:         rt74225.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
@@ -21,6 +24,7 @@ installed or not).
 
 %prep
 %setup -q -n Devel-Hide-%{version}
+%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -37,7 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -49,8 +53,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.0008-10
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0008-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 09 2012 Petr Pisar <ppisar@redhat.com> - 0.0008-12
+- Perl 5.16 rebuild
+
+* Thu Jun 28 2012 Iain Arnell <iarnell@gmail.com> 0.0008-11
+- patch to avoid warnings for 'defined(@array)' - rt#74225
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.0008-10
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0008-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

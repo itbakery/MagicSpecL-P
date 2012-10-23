@@ -1,7 +1,7 @@
 Name:           perl-Class-Method-Modifiers
 Summary:        Provides Moose-like method modifiers
-Version:        1.08
-Release:        4%{?dist}
+Version:        1.09
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Class-Method-Modifiers-%{version}.tar.gz 
@@ -9,7 +9,8 @@ URL:            http://search.cpan.org/dist/Class-Method-Modifiers
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
-BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
+BuildRequires:  perl(Class::MOP)
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.36
 BuildRequires:  perl(Test::Fatal)
 BuildRequires:  perl(Test::More)
 
@@ -46,7 +47,6 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 %{_fixperms} %{buildroot}/*
 
@@ -59,8 +59,14 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.08-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 1.09-2
+- Perl 5.16 rebuild
+
+* Tue Apr 03 2012 Iain Arnell <iarnell@gmail.com> 1.09-1
+- update to latest upstream version
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 1.08-3
 - drop tests subpackage; move tests to main package documentation

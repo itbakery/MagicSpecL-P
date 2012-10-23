@@ -1,6 +1,6 @@
 Name:		perl-Algorithm-C3
 Version:	0.08
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	Module for merging hierarchies using the C3 algorithm
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -51,8 +51,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Algorithm::C3.3pm*
 
 %changelog
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.08-10
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.08-10
+- Perl 5.16 rebuild
 
 * Mon Jan 16 2012 Paul Howarth <paul@city-fan.org> - 0.08-9
 - Spec clean-up:

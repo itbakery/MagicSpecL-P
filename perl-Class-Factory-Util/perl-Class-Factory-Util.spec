@@ -1,16 +1,18 @@
 Name:           perl-Class-Factory-Util
 Version:        1.7
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Provide utility methods for factory classes 
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Class-Factory-Util            
 Source0: http://search.cpan.org/CPAN/authors/id/D/DR/DROLSKY/Class-Factory-Util-%{version}.tar.gz        
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 BuildRequires:  perl(Module::Build)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod) >= 1.14
 BuildRequires:  perl(Test::Pod::Coverage) >= 1.04
@@ -30,8 +32,6 @@ This module exports utility functions that are useful for factory classes.
 
 
 %install
-rm -rf %{buildroot}
-
 ./Build install destdir=%{buildroot} create_packlist=0
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
@@ -42,20 +42,21 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 ./Build test
 
 
-%clean
-rm -rf %{buildroot}
-
-
 %files
-%defattr(-,root,root,-)
 %doc LICENSE Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.7-12
-- 为 Magic 3.0 重建
+* Tue Aug  7 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.7-14
+- Update BR and clean up spec for modern rpmbuild.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.7-12
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

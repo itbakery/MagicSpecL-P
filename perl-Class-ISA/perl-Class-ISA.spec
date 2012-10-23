@@ -1,54 +1,51 @@
 Name:           perl-Class-ISA
 Version:        0.36
-Release:        1007%{?dist}
+Release:        1009%{?dist}
 Summary:        Report the search path for a class's ISA tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Class-ISA/
 Source0:        http://www.cpan.org/authors/id/S/SM/SMUELLER/Class-ISA-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Test)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
-Suppose you have a class (like Food::Fish::Fishstick) that is derived, via
-its @ISA, from one or more superclasses (as Food::Fish::Fishstick is from
-Food::Fish, Life::Fungus, and Chemicals), and some of those superclasses
-may themselves each be derived, via its @ISA, from one or more superclasses
-(as above).
+This library provides functions that return the list (in order) of names of
+(super-)classes Perl would search to find a method, with no duplicates.
 
 %prep
 %setup -q -n Class-ISA-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
-make pure_install DESTDIR=$RPM_BUILD_ROOT
-
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-rm -rf $RPM_BUILD_ROOT/%{_mandir}/man3/*
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
+rm -rf %{buildroot}/%{_mandir}/man3/*
+%{_fixperms} %{buildroot}/*
 
 %check
 make test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc ChangeLog README
 %{perl_vendorlib}/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.36-1007
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.36-1009
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.36-1008
+- Perl 5.16 rebuild
+
+* Fri Apr 13 2012 Petr Šabata <contyk@redhat.com> - 0.36-1007
+- Change description to something more descriptive (#811144)
+- Modernize spec
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.36-1006
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

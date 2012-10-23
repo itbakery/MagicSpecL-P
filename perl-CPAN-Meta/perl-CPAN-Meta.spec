@@ -1,27 +1,30 @@
 Name:           perl-CPAN-Meta
 Summary:        Distribution metadata for a CPAN dist
-Version:        2.113640
+Version:        2.120921
 Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
-Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/CPAN-Meta-2.113640.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-%{version}.tar.gz
 URL:            http://search.cpan.org/dist/CPAN-Meta/
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(CPAN::Meta::YAML) >= 0.002
+BuildRequires:  perl(CPAN::Meta::Requirements) >= 2.121
+BuildRequires:  perl(CPAN::Meta::YAML) >= 0.008
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+BuildRequires:  perl(File::Basename)
 BuildRequires:  perl(File::Find)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp) >= 0.20
 BuildRequires:  perl(IO::Dir)
-BuildRequires:  perl(JSON::PP) >= 2.27103
+BuildRequires:  perl(JSON::PP) >= 2.27200
 BuildRequires:  perl(overload)
-BuildRequires:  perl(Parse::CPAN::Meta) >= 1.4400
+BuildRequires:  perl(Parse::CPAN::Meta) >= 1.4403
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More) >= 0.88
-BuildRequires:  perl(version) >= 0.82
+BuildRequires:  perl(version) >= 0.88
 
 # obsolete/provide old tests subpackage
 # can be removed during F19 development cycle
@@ -64,8 +67,29 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.113640-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.120921-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 2.120921-3
+- Perl 5.16 rebuild
+
+* Fri Jun 01 2012 Petr Pisar <ppisar@redhat.com> - 2.120921-2
+- Build-require Data::Dumper for tests
+
+* Mon Apr 02 2012 Iain Arnell <iarnell@gmail.com> 2.120921-1
+- update to latest upstream version
+
+* Fri Mar 30 2012 Iain Arnell <iarnell@gmail.com> 2.120900-1
+- update to latest upstream version
+
+* Sun Mar 04 2012 Iain Arnell <iarnell@gmail.com> 2.120630-1
+- update to latest upstream version
+
+* Wed Feb 22 2012 Iain Arnell <iarnell@gmail.com> 2.120530-1
+- update to latest upstream version
+
+* Sat Feb 04 2012 Iain Arnell <iarnell@gmail.com> 2.120351-1
+- update to latest upstream version
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 2.113640-3
 - drop tests subpackage; move tests to main package documentation

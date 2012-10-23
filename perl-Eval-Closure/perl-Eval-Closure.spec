@@ -1,6 +1,6 @@
 Name:           perl-Eval-Closure
-Version:        0.06
-Release:        4%{?dist}
+Version:        0.08
+Release:        3%{?dist}
 Summary:        Safely and cleanly create closures via string eval
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -25,18 +25,14 @@ Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $versi
 %description
 String eval is often used for dynamic code generation. For instance, Moose uses
 it heavily, to generate inlined versions of accessors and constructors, which
-speeds code up at runtime by a significant amount.  String eval is not without
+speeds code up at runtime by a significant amount. String eval is not without
 its issues however - it's difficult to control the scope it's used in (which
-determines which variables are in scope inside the eval), and it can be quite
-slow, especially if doing a large number of evals.
+determines which variables are in scope inside the eval), and it's easy to miss
+compilation errors, since eval catches them and sticks them in $@ instead.
 
-This module attempts to solve both of those problems. It provides an
-eval_closure function, which evals a string in a clean environment, other than
-a fixed list of specified variables. It also caches the result of the eval, so
-that doing repeated evals of the same source, even with a different
-environment, will be much faster (but note that the description is part of the
-string to be evaled, so it must also be the same (or non-existent) if caching
-is to work properly).
+This module attempts to solve these problems. It provides an eval_closure
+function, which evals a string in a clean environment, other than a fixed list
+of specified variables. Compilation errors are rethrown automatically.
 
 %prep
 %setup -q -n Eval-Closure-%{version}
@@ -54,7 +50,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes LICENSE README
@@ -62,8 +58,18 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.08-2
+- Perl 5.16 rebuild
+
+* Fri Feb 10 2012 Iain Arnell <iarnell@gmail.com> 0.08-1
+- update to latest upstream version
+
+* Sat Feb 04 2012 Iain Arnell <iarnell@gmail.com> 0.07-1
+- update to latest upstream version
+- update description
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

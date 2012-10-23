@@ -1,6 +1,6 @@
 Name: 		perl-ExtUtils-AutoInstall
 Version: 	0.63
-Release: 	18%{?dist}
+Release: 	19%{?dist}
 Summary: 	Automatic install of dependencies via CPAN
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -42,7 +42,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 rm -rf $RPM_BUILD_ROOT
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -52,8 +52,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.63-18
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.63-19
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Petr Pisar <ppisar@redhat.com> - 0.63-18
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.63-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

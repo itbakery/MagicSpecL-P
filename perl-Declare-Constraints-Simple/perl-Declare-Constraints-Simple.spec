@@ -1,6 +1,6 @@
 Name:		perl-Declare-Constraints-Simple
 Version:	0.03
-Release:	16%{?dist}
+Release:	17%{?dist}
 Summary:	Declarative Validation of Data Structures
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -49,7 +49,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -73,8 +73,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Declare::Constraints::Simple::Result.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.03-16
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-17
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 0.03-16
+- Perl 5.16 rebuild
 
 * Mon Jan 23 2012 Paul Howarth <paul@city-fan.org> - 0.03-15
 - Spec clean-up

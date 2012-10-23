@@ -1,6 +1,6 @@
 Name:           perl-Class-XSAccessor
-Version:        1.13
-Release:        3%{?dist}
+Version:        1.14
+Release:        1%{?dist}
 Summary:        Generate fast XS accessors without run-time compilation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -10,7 +10,7 @@ BuildRequires:  perl(AutoXS::Header)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Test::More)
 Requires:       perl(AutoXS::Header)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 # RPM 4.8 style
 %filter_from_requires /perl(Class::XSAccessor::Heavy)/d
@@ -30,7 +30,7 @@ internal representation.
 %setup -q -n Class-XSAccessor-%{version}
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
+perl Makefile.PL INSTALLDIRS=vendor OPTIMIZE="%{optflags}"
 make %{?_smp_mflags}
 
 %install
@@ -50,8 +50,15 @@ make test
 %{_mandir}/man3/Class::*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.13-3
-- 为 Magic 3.0 重建
+* Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 1.14-1
+- 1.14 bump (no changes for Fedora)
+- Drop command macros
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 1.13-3
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,7 +1,7 @@
 Name:           perl-B-Hooks-OP-Check
 Summary:        Wrap OP check callbacks
 Version:        0.19
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/B-Hooks-OP-Check-%{version}.tar.gz
@@ -51,8 +51,11 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.19-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.19-4
+- Perl 5.16 rebuild
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 0.19-3
 - drop old tests subpackage; move tests to main package documentation

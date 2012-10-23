@@ -1,6 +1,6 @@
 Name:           perl-indirect
 Version:        0.26
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Lexically warn about using the indirect object syntax
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README
@@ -49,8 +49,11 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.26-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.26-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 0.26-3
+- Perl 5.16 rebuild
 
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.26-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

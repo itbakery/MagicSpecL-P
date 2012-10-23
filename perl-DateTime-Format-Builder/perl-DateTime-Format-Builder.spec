@@ -13,7 +13,7 @@
 Name:           perl-DateTime-Format-Builder
 # 0.80 in reality, but rpm can't get it
 Version:        0.8000
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Create DateTime parser classes and objects        
 
 Group:          Development/Libraries
@@ -99,7 +99,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %check
-
+make test
 
 
 %files
@@ -110,8 +110,11 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.8000-9
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8000-10
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 0.8000-9
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8000-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

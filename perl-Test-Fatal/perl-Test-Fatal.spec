@@ -1,7 +1,7 @@
 Summary:	Incredibly simple helpers for testing code with exceptions 
 Name:		perl-Test-Fatal
 Version:	0.010
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Test-Fatal/
@@ -12,11 +12,13 @@ BuildArch:	noarch
 BuildRequires:	perl(Carp)
 BuildRequires:	perl(Exporter) >= 5.57
 BuildRequires:	perl(ExtUtils::MakeMaker)
+BuildRequires:	perl(Test::Builder)
 BuildRequires:	perl(Test::Builder::Tester)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::Pod)
 BuildRequires:	perl(Try::Tiny) >= 0.07
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Test::Builder)
 
 %description
 Test::Fatal is an alternative to the popular Test::Exception. It does much
@@ -55,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Fatal.3pm*
 
 %changelog
+* Thu Oct 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.010-4
+- Specify all dependencies
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.010-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

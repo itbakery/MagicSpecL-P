@@ -1,12 +1,11 @@
 Name:		perl-Class-Autouse
-Version:	2.00
-Release:	5%{?dist}
+Version:	2.01
+Release:	3%{?dist}
 Summary:	Run-time class loading on first method call
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Class-Autouse/
 Source0:	http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/Class-Autouse-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # Upstream does its very best to prevent us from running them.
 %bcond_with	xt_tests
@@ -18,12 +17,12 @@ BuildRequires:	perl(Carp)
 BuildRequires:	perl(File::Spec) >= 0.80
 BuildRequires:	perl(File::Temp) >= 0.17
 BuildRequires:	perl(prefork)
-BuildRequires:	perl(List::Util) >= 1.19
+BuildRequires:	perl(List::Util) >= 1.18
 BuildRequires:	perl(Test::More) >= 0.47
 
 # for xt tests
 %if %{with xt_tests}
-BuildRequires:	perl(Perl::MinimumVersion) >= 1.25
+BuildRequires:	perl(Perl::MinimumVersion) >= 1.27
 BuildRequires:	perl(Pod::Simple) >= 3.14
 BuildRequires:	perl(Test::Pod) >= 1.44
 BuildRequires:	perl(Test::MinimumVersion) >= 0.101080
@@ -44,14 +43,10 @@ AUTOMATED_TESTING=1 %{__perl} Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %check
 make test
@@ -67,8 +62,16 @@ AUTOMATED_TESTING=1 PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.00-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.01-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 2.01-2
+- Perl 5.16 rebuild
+
+* Sun Feb 05 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.01-1
+- Upstream update.
+- Adjust BR:'s.
+- Modernize spec.
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.00-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,6 +1,6 @@
 Name:           perl-DateTime-TimeZone
-Version:        1.42
-Release:        3%{?dist}
+Version:        1.51
+Release:        1%{?dist}
 Summary:        Time zone object base class and factory
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -21,7 +21,6 @@ BuildRequires:  perl(Pod::Man) >= 1.14
 BuildRequires:  perl(Test::More) >= 0.88
 BuildRequires:  perl(Test::Output)
 # not automatically detected
-Requires:       perl(Cwd) >= 3
 Requires:       perl(File::Compare)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -68,7 +67,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes LICENSE README
@@ -76,8 +75,35 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.42-3
-- 为 Magic 3.0 重建
+* Thu Oct 18 2012 Petr Pisar <ppisar@redhat.com> - 1.51-1
+- update to latest upstream version - Olson 2012g
+
+* Sat Sep 15 2012 Iain Arnell <iarnell@gmail.com> 1.49-1
+- update to latest upstream version - Olson 2012f
+
+* Fri Aug 03 2012 Iain Arnell <iarnell@gmail.com> 1.48-1
+- update to latest upstream version - Olson 2012e
+
+* Sat Jul 21 2012 Iain Arnell <iarnell@gmail.com> 1.47-1
+- update to latest upstream version - Olson 2012d
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.46-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1.46-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Wed Jun 20 2012 Petr Pisar <ppisar@redhat.com> - 1.46-2
+- Perl 5.16 rebuild
+
+* Tue Apr 03 2012 Iain Arnell <iarnell@gmail.com> 1.46-1
+- update to latest upstream - Olson 2012c
+
+* Sun Mar 04 2012 Iain Arnell <iarnell@gmail.com> 1.45-1
+- update to latest upstream version
+
+* Fri Mar 02 2012 Iain Arnell <iarnell@gmail.com> 1.44-1
+- update to latest upstream version - Olson 2012b
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.42-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

@@ -1,6 +1,6 @@
 Name: 		perl-Algorithm-Dependency
 Version: 	1.110
-Release: 	14%{?dist}
+Release: 	11%{?dist}
 Summary: 	Algorithmic framework for implementing dependency trees
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -44,7 +44,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 rm -rf $RPM_BUILD_ROOT
 
 %check
- AUTOMATED_TESTING=1
+make test AUTOMATED_TESTING=1
 
 %files
 %defattr(-,root,root,-)
@@ -53,20 +53,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.110-14
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.110-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.110-13
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.110-12
-- 为 Magic 3.0 重建
-
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.110-11
-- 为 Magic 3.0 重建
-
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.110-10
-- 为 Magic 3.0 重建
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 1.110-10
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.110-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

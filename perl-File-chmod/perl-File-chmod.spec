@@ -1,17 +1,16 @@
 Name:           perl-File-chmod
 Version:        0.32
-Release:        13%{?dist}
+Release:        15%{?dist}
 Summary:        Implements symbolic and ls chmod modes
-
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/File-chmod/
 Source0:        http://search.cpan.org/CPAN/authors/id/P/PI/PINYAN/File-chmod-%{version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
 BuildArch:      noarch
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:  perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 %{summary}
@@ -19,38 +18,34 @@ Requires:  perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 %prep
 %setup -q -n File-chmod-%{version}
 
-
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
-
 %install
-rm -rf $RPM_BUILD_ROOT
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-chmod -R u+w $RPM_BUILD_ROOT/*
-
+rm -rf %{buildroot}
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
+chmod -R u+w %{buildroot}/*
 
 %check
-
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
-
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.32-13
-- 为 Magic 3.0 重建
+* Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 0.32-15
+- Modernize spec, specify all dependencies, and drop command macros
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.32-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.32-13
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.32-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

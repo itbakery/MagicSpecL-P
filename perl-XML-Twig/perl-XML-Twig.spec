@@ -1,6 +1,6 @@
 Name:           perl-XML-Twig
-Version:        3.39
-Release:        3%{?dist}
+Version:        3.41
+Release:        1%{?dist}
 Summary:        Perl module for processing huge XML documents in tree mode
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -9,7 +9,9 @@ Source0:        http://www.cpan.org/authors/id/M/MI/MIROD/XML-Twig-%{version}.ta
 BuildArch:      noarch
 
 BuildRequires:  expat >= 2.0.1
+BuildRequires:  perl(base)
 BuildRequires:  perl(bytes)
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config)
 BuildRequires:  perl(Cwd)
@@ -27,7 +29,6 @@ BuildRequires:  perl(LWP)
 BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test)
-BuildRequires:  perl(Test::Kwalitee)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
@@ -35,7 +36,11 @@ BuildRequires:  perl(Text::Iconv)
 BuildRequires:  perl(Tie::IxHash)
 #BuildRequires:  perl(Tree::XPathEngine) # not available in Fedora yet
 BuildRequires:  perl(Test)
+%if 0%{!?perl_bootstrap:1}
+%if 0%{?fedora}  || 0%{?rhel} < 7
 BuildRequires:  perl(Test::Kwalitee)
+%endif
+%endif
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
@@ -50,12 +55,10 @@ BuildRequires:  perl(XML::Handler::YAWriter)
 BuildRequires:  perl(XML::Parser) >= 2.34
 BuildRequires:  perl(XML::SAX::Writer)
 BuildRequires:  perl(XML::Simple)
-BuildRequires:  perl(XML::Twig::Elt)
-BuildRequires:  perl(XML::Twig::XPath)
 BuildRequires:  perl(XML::XPathEngine)
 BuildRequires:  perl(XML::XPath)
 Requires:       perl(XML::Parser) >= 2.34
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %{?perl_default_filter}
 
@@ -82,22 +85,21 @@ twig_print_outside_roots options.
 %setup -q -n XML-Twig-%{version}
 
 %build
-%{__perl} Makefile.PL -y INSTALLDIRS=perl
+perl Makefile.PL -y INSTALLDIRS=perl
 make %{?_smp_mflags}
 cp Changes Changes.orig
 iconv -f iso88591 -t utf8 < Changes.orig > Changes
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install PERL_INSTALL_ROOT=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} \;
+find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
+%{_fixperms} %{buildroot}/*
 
 %check
 make test
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README 
 %{perl_privlib}/*
 %{_bindir}/*
@@ -105,8 +107,28 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sun Mar 11 2012 Liu Di <liudidi@gmail.com> - 3.39-3
-- 为 Magic 3.0 重建
+* Tue Aug 14 2012 Petr Šabata <contyk@redhat.com> - 3.41-1
+- 3.41 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.40-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 3.40-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Mon Jun 18 2012 Petr Pisar <ppisar@redhat.com> - 3.40-2
+- Perl 5.16 rebuild
+
+* Fri May 11 2012 Petr Šabata <contyk@redhat.com> - 3.40-1
+- 3.40 bump
+- Dropping defattr and perl command macros
+
+* Thu Apr 19 2012 Marcela Mašláňová <mmaslano@redhat.com> - 3.39-4
+- make module Kwalitee conditional
+
+* Tue Apr 10 2012 Marcela Mašláňová <mmaslano@redhat.com> - 3.39-3
+- remove cyclic dependency added by mistake  810563 
+  XML::Twig::Elt, XML::Twig::XPath
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.39-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

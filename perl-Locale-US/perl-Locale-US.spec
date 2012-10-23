@@ -1,14 +1,18 @@
 Name:           perl-Locale-US
 Version:        2.112150
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Two letter codes for state identification in the United States and vice versa
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Locale-US/
 Source0:        http://www.cpan.org/authors/id/T/TB/TBONE/Locale-US-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.30
+# Run-time
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Data::Section::Simple)
-BuildRequires:  perl(ExtUtils::MakeMaker)
+# Tests
+BuildRequires:  perl(Test)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -36,7 +40,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README kruft2codes.pl
@@ -44,8 +48,12 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.112150-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.112150-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 2.112150-3
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.112150-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

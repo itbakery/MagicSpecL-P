@@ -6,7 +6,7 @@
 
 Name:		perl-Dist-CheckConflicts
 Version:	0.02
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Declare version conflicts for your dist
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -72,7 +72,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
- RELEASE_TESTING=1
+make test RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -84,8 +84,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Dist::CheckConflicts.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-6
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 0.02-6
+- Perl 5.16 rebuild
 
 * Wed Jan 11 2012 Paul Howarth <paul@city-fan.org> - 0.02-5
 - Pod::Coverage::TrustPod now available in all supported releases

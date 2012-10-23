@@ -1,6 +1,6 @@
 Name:		perl-CPAN-Changes
 Summary:	Read and write Changes files
-Version:	0.18
+Version:	0.19
 Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -38,7 +38,6 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
@@ -46,7 +45,6 @@ make test
 make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 
 %files
-%defattr(-,root,root,-)
 %doc Changes README
 %{perl_vendorlib}/CPAN/
 %{perl_vendorlib}/Test/
@@ -56,8 +54,19 @@ make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 %{_mandir}/man3/Test::CPAN::Changes.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.18-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.19-2
+- Perl 5.16 rebuild
+
+* Tue May  1 2012 Paul Howarth <paul@city-fan.org> - 0.19-1
+- Update to 0.19:
+  - Test::CPAN::Changes now accepts version entries ending in '-TRIAL'
+    (CPAN RT#76882)
+  - releases() in CPAN::Changes also accepts entries ending in '-TRIAL'
+- Don't need to remove empty directories from buildroot
+- Drop %%defattr, redundant since rpm 4.4
 
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 0.18-2
 - Fedora 17 mass rebuild

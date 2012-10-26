@@ -4,7 +4,7 @@
 
 Name:           lxsession
 Version:        0.4.6.1
-Release:        1%{?dist}
+Release:        4%{?dist}
 Summary:        Lightweight X11 session manager
 Summary(de):    Leichtgewichtiger X11 Sitzungsverwalter
 
@@ -24,6 +24,7 @@ Provides:       lxsession-lite = %{version}-%{release}
 Obsoletes:      lxde-settings-daemon <= 0.4.1-2
 Provides:       lxde-settings-daemon = 0.4.1-3
 # required for suspend and hibernate
+Requires:       ConsoleKit
 Requires:       upower
 
 
@@ -60,6 +61,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+magic_rpm_clean.sh
 %find_lang %{name}
 mkdir -p -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/xdg/%{name}
 
@@ -79,6 +81,15 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/xdg/%{name}
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6.1-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Mar 21 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.6.1-3
+- Require ConsoleKit (#800658)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Dec 09 2011 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.6.1-1
 - Update to 0.4.6.1
 - Require upower (#755376)

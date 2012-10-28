@@ -4,7 +4,7 @@ Summary: A Grammar Checking library
 Summary(zh_CN.UTF-8): 一个语法检查库
 Name: link-grammar
 Version: 4.7.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
@@ -120,5 +120,8 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sun Oct 28 2012 Liu Di <liudidi@gmail.com> - 4.7.4-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 26 2011 Liu Di <liudidi@gmail.com> - 4.7.4-1
 - 从 fedora 移植 spec

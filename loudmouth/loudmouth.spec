@@ -3,7 +3,7 @@
 
 Name:           loudmouth
 Version:        1.4.3
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        XMPP/Jabber C programming library
 
 Group:          System Environment/Libraries
@@ -109,6 +109,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Oct 28 2012 Liu Di <liudidi@gmail.com> - 1.4.3-10
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Liu Di <liudidi@gmail.com> - 1.4.3-9
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name:		ots
 Summary:	A text summarizer
 Summary(zh_CN.UTF-8): 一个文本统计器
 Version:	0.5.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 
 License:	GPLv2+
 URL:		http://libots.sourceforge.net/
@@ -74,6 +74,7 @@ rm -rf %{buildroot}
 %{__make} install DESTDIR=%{buildroot}
 rm -f %{buildroot}%{_libdir}/*.a
 rm -f %{buildroot}%{_libdir}/*.la
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -105,6 +106,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Oct 28 2012 Liu Di <liudidi@gmail.com> - 0.5.0-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 20 2012 Liu Di <liudidi@gmail.com> - 0.5.0-4
 - 为 Magic 3.0 重建
 

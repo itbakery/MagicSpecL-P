@@ -1,6 +1,6 @@
 Name:           mcs
 Version:        0.7.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A configuration file abstraction library
 Summary(zh_CN.UTF-8): 配置文件抽象层库
 
@@ -89,7 +89,7 @@ perl -pi -e "s/-soname=.*'/-soname=\\\$\{LIB\}.\\\$\{LIB_MAJOR\}'/" configure
 %build
 %configure \
     --disable-gconf \
-    --with-qt-path=/usr/lib/qt-3.3 \
+    --disable-kconfig \
     --disable-dependency-tracking
 
 make %{?_smp_mflags}
@@ -103,7 +103,6 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
 echo "gconf" > $RPM_BUILD_ROOT%{_sysconfdir}/mcs-backend
 chmod 0644 $RPM_BUILD_ROOT%{_sysconfdir}/mcs-backend
 magic_rpm_clean.sh
-
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -131,5 +130,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libmcs.pc
 
 %changelog
+* Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 0.7.2-2
+- 为 Magic 3.0 重建
+
 * Tue Nov 01 2011 Liu Di <liudidi@gmail.com> - 0.7.2-1
 - 更新到 0.7.2

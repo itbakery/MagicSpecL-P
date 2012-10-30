@@ -2,8 +2,8 @@
 Summary: Gstreamer phonon backend 
 Name:    phonon-backend-gstreamer
 Epoch:   2
-Version: 4.5.90
-Release: 5%{?dist}
+Version: 4.6.2
+Release: 1%{?dist}
 Group:   System Environment/Libraries
 License: LGPLv2+
 URL:     http://phonon.kde.org/
@@ -12,9 +12,11 @@ Source0: phonon-backend-gstreamer-%{version}-%{snap}.tar.bz2
 # run this script to generate a snapshot tarball
 Source1: phonon-gstreamer_snapshot.sh
 %else
-Source0: ftp://ftp.kde.org/pub/kde/unstable/phonon/phonon-backend-gstreamer/%{version}/src/phonon-backend-gstreamer-%{version}.tar.bz2
+Source0: http://download.kde.org/stable/phonon/phonon-backend-gstreamer/%{version}/src/phonon-backend-gstreamer-%{version}.tar.xz
 %endif
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+## upstream patches
 
 BuildRequires: automoc4
 BuildRequires: cmake
@@ -54,7 +56,7 @@ Requires: qt4%{?_isa} >= %{_qt4_version}
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
-%{cmake_kde4} \
+%{cmake} \
   -DUSE_INSTALL_PLUGIN:BOOL=ON \
   ..
 popd
@@ -66,7 +68,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 rm -rf %{buildroot}
 
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -89,11 +91,25 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null ||:
 %doc COPYING.LIB
 %{_kde4_libdir}/kde4/plugins/phonon_backend/phonon_gstreamer.so
 %{_kde4_datadir}/kde4/services/phononbackends/gstreamer.desktop
-%{_kde4_datadir}/icons/hicolor/*/apps/phonon-gstreamer.*
-
+%{_datadir}/icons/hicolor/*/apps/phonon-gstreamer.*
 
 
 %changelog
+* Mon Aug 13 2012 Rex Dieter <rdieter@fedoraproject.org> 2:4.6.2-1
+- 4.6.2
+
+* Thu Jul 26 2012 Rex Dieter <rdieter@fedoraproject.org> 2:4.6.1-3
+- upstream fixes for gapless/repeat issues seen in amarok (#841941)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:4.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 12 2012 Rex Dieter <rdieter@fedoraproject.org> 4.6.1-1
+- 4.6.1
+
+* Fri Feb 17 2012 Rex Dieter <rdieter@fedoraproject.org> 4.6.0-1
+- 4.6.0
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:4.5.90-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

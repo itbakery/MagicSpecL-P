@@ -1,463 +1,348 @@
+%define build_type release
 
-# enabling for the build sanity, the results
-# aren't all that useful, yet.
-%define phonon_build_tests -DPHONON_BUILD_TESTS:BOOL=ON
+# path define for backends
+%define PLUGIN_INSTALL_DIR /usr/lib/kde4
+%define SERVICES_INSTALL_DIR /usr/share/kde4/services
+%define ICON_INSTALL_DIR /usr/share/icons
 
-## split -experimental subpkgs
-#define experimental 1
-
-Summary: Multimedia framework api
-Name:    phonon
+Name: phonon
+Summary: KDE4 Multimedia Framework
+Summary(zh_CN.UTF-8): KDE4 多媒体框架
 Version: 4.6.0
-Release: 5%{?dist}
-Group:   System Environment/Libraries
-License: LGPLv2+
-URL:     http://phonon.kde.org/
-%if 0%{?snap}
-Source0: phonon-%{version}-%{snap}.tar.bz2
-%else
-Source0: ftp://ftp.kde.org/pub/kde/stable/phonon/%{version}/src/phonon-%{version}.tar.xz
-%endif
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Release: 6%{?dist}
+URL: http://websvn.kde.org/branches/phonon/4.2/
+License: LGPL v2+
+Group: System/Libraries
+Group(zh_CN.UTF-8): 系统环境/库
 
-## upstreamable patches
-# phonon_backend ... could not be loaded
-# http://bugzilla.redhat.com/760039
-Patch50: phonon-4.5.57-plugindir.patch 
-Patch51: phonon-4.6.0-syntax.patch
-# https://git.reviewboard.kde.org/r/103423
-Patch52: phonon-4.6.0-rpath.patch
+Source0: %{name}-%{version}.tar.xz
+Source1: http://gstreamer.freedesktop.org/data/images/artwork/gstreamer-logo.svg
 
-## Upstream patches
+# svn export svn://anonsvn.kde.org/home/kde/trunk/playground/multimedia/phonon-backends/mplayer
+Source2: phonon-mplayer.tar.bz2
 
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot-%(%{__id_u} -n)
+
+BuildRequires: cmake >= 2.6.2
+BuildRequires: qt4-devel >= 4.4.3
 BuildRequires: automoc4 >= 0.9.86
-BuildRequires: cmake >= 2.6.0
-BuildRequires: pkgconfig
-BuildRequires: pkgconfig(glib-2.0)
-BuildRequires: pkgconfig(libpulse-mainloop-glib) > 0.9.15
-BuildRequires: pkgconfig(libxml-2.0)
-BuildRequires: pkgconfig(QtGui) >= 4.7.2
-BuildRequires: pkgconfig(QZeitgeist)
-BuildRequires: pkgconfig(xcb)
+BuildRequires: glib2-devel
+BuildRequires: libxml2-devel
+BuildRequires: ImageMagick
 
-%global pulseaudio_version %(pkg-config --modversion libpulse 2>/dev/null || echo 0.9.15)
+# 修正 phonon_gstreamer 本地媒体对象文件名编码问题
+# patch written by nihui, Feb.1st, 2009
+Patch21: phonon-4.3.80-gstreamer_localfile_path.patch
+# phonon_gstreamer 添加 ape 格式媒体支持
+# patch written by nihui, Feb.1st, 2009
+Patch22: phonon-4.3.80-gstreamer-ape_mediatype.patch
+# 总是列出 alsa 和 oss 音频输出设备
+# patch written by nihui, Jul.31, 2009
+Patch23: phonon-4.3.1-xine-always_list_default_devices.patch
+# phonon_mplayer 添加 ape 格式媒体支持
+# patch written by nihui, Jan.3rd, 2010
+Patch24: phonon-4.3.80-phonon-mplayer.patch
+Patch25: phonon-4.3.80-mplayer-ape_mediatype.patch
+# 修正 phonon_mplayer 中文语言输出解析的问题
+# patch written by nihui, Jan.15th, 2010
+Patch26: phonon-4.3.80-mplayer-cn_regexp.patch
+# 修正 phonon_mplayer 启动时音量过响的问题
+# patch written by nihui, Apr.11st, 2010
+Patch27: phonon-4.4.0-mplayer-using_sysvolume.patch
 
-## Beware bootstrapping, have -Requires/+Requires this for step 0, then build at least one backend
-Requires: phonon-backend%{?_isa} => 4.4
-#Provides: phonon-backend%{?_isa} = 4.4
-Requires: pulseaudio-libs%{?_isa} >= %{pulseaudio_version}
-Requires: qt4%{?_isa} >= %{_qt4_version}
 
-%if ! 0%{?experimental}
-#Obsoletes: phonon-experimental < %{version}-%{release}
-Provides:  phonon-experimental = %{version}-%{release}
-%endif
+
+
+# revert broken upstream patch
+Patch7000: 18b0efac45247f35b7f8aa5a54d2b269035713e6.patch
+
 
 %description
-%{summary}.
+Phonon is the KDE4 Multimedia Framework.
 
+%description -l zh_CN.UTF-8
+Phonon 是 KDE4 多媒体框架。
+
+#--------------------------------------------------------------------
+#后端独立出去
+%if 0
+%package -n phonon-gstreamer
+Summary: GStreamer backend to Phonon
+Summary(zh_CN.UTF-8): Phonon 的 GStreamer 后端
+Group: System/Libraries
+Group(zh_CN.UTF-8): 系统/库
+BuildRequires: gstreamer-devel
+BuildRequires: gstreamer-plugins-base-devel
+Requires: gstreamer-plugins-good
+Provides: phonon-backend
+
+%description -n phonon-gstreamer
+GStreamer backend to Phonon.
+
+%description -n phonon-gstreamer -l zh_CN.UTF-8
+Phonon 的 GStreamer 后端。
+
+#--------------------------------------------------------------------
+%package -n phonon-xine
+Summary: Xine backend to Phonon
+Summary(zh_CN.UTF-8): Phonon 的 Xine 后端
+Group: System/Libraries
+Group(zh_CN.UTF-8): 系统/库
+BuildRequires: xine-lib-devel
+Requires: xine-lib
+Provides: phonon-backend
+
+%description -n phonon-xine
+Xine backend to Phonon.
+
+%description -n phonon-xine -l zh_CN.UTF-8
+Phonon 的 Xine 后端。
+
+#--------------------------------------------------------------------
+%package -n phonon-mplayer
+Summary: MPlayer backend to Phonon
+Summary(zh_CN.UTF-8): Phonon 的 MPlayer 后端
+Group: System/Libraries
+Group(zh_CN.UTF-8): 系统/库
+BuildRequires: mplayer
+Requires: mplayer
+Provides: phonon-backend
+
+%description -n phonon-mplayer
+MPlayer backend to Phonon.
+
+%description -n phonon-mplayer -l zh_CN.UTF-8
+Phonon 的 MPlayer 后端。
+%endif
+
+#--------------------------------------------------------------------
 %package devel
-Summary: Developer files for %{name}
-Group:   Development/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
-Requires: qt4-devel
-Requires: pkgconfig
-%if ! 0%{?experimental}
-#Obsoletes: phonon-experimental-devel < %{version}-%{release}
-Provides:  phonon-experimental-devel = %{version}-%{release}
-%endif
+Group: Development/Libraries
+Group(zh_CN.UTF-8): 开发/库
+Summary: Header files and documentation for compiling KDE applications
+Summary(zh_CN.UTF-8): 编译 KDE 应用程序所需的头文件和文档
+Requires: %{name} = %{version}
+
 %description devel
-%{summary}.
+This package includes the header files you will need to compile applications
+for KDE. Also included is the KDE API documentation in HTML format for easy
+browsing.
 
-%if 0%{?experimental}
-%package experimental
-Summary: Experimental interfaces for %{name}
-Group:   System Environment/Libraries
-Requires: %{name}%{?_isa} = %{version}-%{release}
-%description experimental 
-%{summary}.
+%description devel -l zh_CN.UTF-8
+本软件包包含了需要编译 KDE 应用程序所需的头文件和文档。同时也包含了方便浏览
+的 HTML 格式的 KDE API 文档。
 
-%package experimental-devel
-Summary: Developer files for %{name}-experimental
-Group:   System Environment/Libraries
-Requires: %{name}-experimental%{?_isa} = %{version}-%{release}
-Requires: %{name}-devel%{?_isa} = %{version}-%{release}
-%description experimental-devel
-%{summary}.
-Includes experimental and unstable apis.
-%endif
-
+#--------------------------------------------------------------------
 
 %prep
-%setup -q 
+%setup -q -n %{name}-%{version}
 
-%patch50 -p1 -b .plugindir
-%patch51 -p1 -b .syntax
-%patch52 -p1 -b .rpath
+#%patch21 -p1
+#%patch22 -p1
+#%patch23 -p0
+
+# phonon-mplayer
+#tar -xf %{SOURCE2} -C .
+#%patch24 -p1
+#%patch25 -p1
+#%patch26 -p1
+#%patch27 -p0
+
+
+#%patch7000 -p1 -R
 
 %build
-mkdir -p %{_target_platform}
-pushd %{_target_platform}
-%{cmake} \
-  %{?phonon_build_tests} \
-  -DPHONON_INSTALL_QT_EXTENSIONS_INTO_SYSTEM_QT:BOOL=ON \
-  ..
-popd
+mkdir build
+cd build
+export CFLAGS=$RPM_OPT_FLAGS
+%cmake_kde4 -DCMAKE_INSTALL_PREFIX=%{_prefix} \
+	-DCMAKE_BUILD_TYPE=%{build_type} \
+	-DCMAKE_CXX_FLAGS_DEBUG:STRING="$RPM_OPT_FLAGS" \
+	-DLIB_INSTALL_DIR=%{_libdir} \
+	-DPLUGIN_INSTALL_DIR=%{PLUGIN_INSTALL_DIR} \
+	-DSERVICES_INSTALL_DIR=%{SERVICES_INSTALL_DIR} \
+	-DICON_INSTALL_DIR=%{ICON_INSTALL_DIR} \
+	-DCONFIG_INSTALL_DIR=%{_sysconfdir} ..
 
-make %{?_smp_mflags} -C %{_target_platform}
-
+make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
+cd build
+%{__rm} -rf %{buildroot}
+%{__make} DESTDIR=%{buildroot} install
 
-make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
+# qt4 phonon hack  --- nihui
+mkdir -p %{buildroot}%{qt4_libdir}
+mkdir -p %{buildroot}%{qt4_includedir}
+pushd %{buildroot}%{_libdir}
+for i in *.so* ; do
+        ln -sf %{_libdir}/$i %{buildroot}%{qt4_libdir}
+done
+popd
+pushd %{buildroot}%{_includedir}
+for i in phonon ; do
+        ln -sf %{_includedir}/$i %{buildroot}%{qt4_includedir}
+done
+popd
 
-# symlink for qt/phonon compatibility
-ln -s ../KDE/Phonon %{buildroot}%{_includedir}/phonon/Phonon
+# set #include <Phonon/XXXX> for backward compability in Qt 4.4+   --- nihui
+#mkdir -p %{buildroot}%{qt4_includedir}/Phonon
+cp -r %{buildroot}%{_includedir}/KDE/Phonon %{buildroot}%{qt4_includedir}
+pushd %{buildroot}%{qt4_includedir}/Phonon
+for i in `ls -l | awk '/^-/{print $NF}'` ; do
+	sed -i 's/\"\.\.\/\.\.\/phonon\//\"\.\.\/phonon\//g' $i
+done
+popd
+pushd %{buildroot}%{qt4_includedir}/Phonon/Experimental
+for i in * ; do
+        sed -i 's/\"\.\.\/\.\.\/phonon\//\"\.\.\/phonon\//g' $i
+done
+popd
 
-# own these dirs
-mkdir -p %{buildroot}%{_kde4_libdir}/kde4/plugins/phonon_backend/
-mkdir -p %{buildroot}%{_kde4_datadir}/kde4/services/phononbackends/
-magic_rpm_clean.sh
 
-%check
-export PKG_CONFIG_PATH=%{buildroot}%{_datadir}/pkgconfig:%{buildroot}%{_libdir}/pkgconfig
-test "$(pkg-config --modversion phonon)" = "%{version}"
-%if 0%{?phonon_build_tests:1}
-# many of these fail currently (4/10)
-make test -C %{_target_platform} ||:
+%if 0
+# move the oxygen-only phonon-xine icons to hicolor
+test -d %{buildroot}%ICON_INSTALL_DIR/hicolor && exit 0
+mv %{buildroot}%ICON_INSTALL_DIR/oxygen %{buildroot}%ICON_INSTALL_DIR/hicolor
+
+# install gstreamer icons
+install -D -m 0644 %{SOURCE1} %{buildroot}%ICON_INSTALL_DIR/hicolor/scalable/apps/phonon-gstreamer.svg
+for i in 16 22 32 48 64 128; do
+  mkdir -p %{buildroot}%ICON_INSTALL_DIR/hicolor/${i}x${i}/apps
+  convert -background None -geometry ${i}x${i}  %{SOURCE1} %{buildroot}%ICON_INSTALL_DIR/hicolor/${i}x${i}/apps/phonon-gstreamer.png
+done
+
+# install mplayer icons
+# no 64x64 and 128x128 icons, and svgz icon
+for i in 16 22 32 48; do
+    mkdir -p %{buildroot}%ICON_INSTALL_DIR/hicolor/${i}x${i}/apps
+    cp -r ../mplayer/icons/${i}x${i}/phonon-mplayer.png %{buildroot}%ICON_INSTALL_DIR/hicolor/${i}x${i}/apps/phonon-mplayer.png
+done
 %endif
 
+magic_rpm_clean.sh
 
 %clean
-rm -rf %{buildroot}
-
+%{__rm} -rf %{buildroot} %{_builddir}/%{buildsubdir}
 
 %post -p /sbin/ldconfig
+
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
-%doc COPYING.LIB
-%{_libdir}/libphonon.so.4*
+%defattr(-,root,root)
+%{_libdir}/libphononexperimental.so.*
 %{_datadir}/dbus-1/interfaces/org.kde.Phonon.AudioOutput.xml
-%{_qt4_plugindir}/designer/libphononwidgets.so
-%dir %{_datadir}/phonon/
-%dir %{_kde4_libdir}/kde4/plugins/phonon_backend/
-%dir %{_kde4_datadir}/kde4/services/phononbackends/
+%{_libdir}/libphonon.so.*
+%{qt4_libdir}/*.so.*
 
-%if 0%{?experimental}
-%post experimental -p /sbin/ldconfig
-%postun experimental -p /sbin/ldconfig
+%if 0
+%files -n phonon-gstreamer
+%defattr(-,root,root)
+%PLUGIN_INSTALL_DIR/plugins/phonon_backend/phonon_gstreamer.so
+%SERVICES_INSTALL_DIR/phononbackends/gstreamer.desktop
+%ICON_INSTALL_DIR/hicolor/*/apps/phonon-gstreamer.*
 
-%files experimental
-%defattr(-,root,root,-)
+%files -n phonon-xine
+%defattr(-,root,root)
+%PLUGIN_INSTALL_DIR/plugins/phonon_backend/phonon_xine.so
+%SERVICES_INSTALL_DIR/phononbackends/xine.desktop
+%ICON_INSTALL_DIR/hicolor/*/apps/phonon-xine.*
+
+%files -n phonon-mplayer
+%defattr(-,root,root)
+%PLUGIN_INSTALL_DIR/plugins/phonon_backend/phonon_mplayer.so
+%SERVICES_INSTALL_DIR/phononbackends/mplayer.desktop
+%ICON_INSTALL_DIR/hicolor/*/apps/phonon-mplayer.*
 %endif
-%{_libdir}/libphononexperimental.so.4*
 
 %files devel
 %defattr(-,root,root,-)
-%{_datadir}/phonon/buildsystem/
-%dir %{_libdir}/cmake/
-%{_libdir}/cmake/phonon/
-%dir %{_includedir}/KDE
-%{_includedir}/KDE/Phonon/
-%{_includedir}/phonon/
-%{_libdir}/pkgconfig/phonon.pc
+%{_includedir}/phonon
+%{_includedir}/KDE
 %{_libdir}/libphonon.so
-%{_qt4_datadir}/mkspecs/modules/qt_phonon.pri
-
-%if 0%{?experimental}
-%exclude %{_includedir}/KDE/Phonon/Experimental/
-%exclude %{_includedir}/phonon/experimental/
-%files experimental-devel
-%defattr(-,root,root,-)
-%endif
-%{_includedir}/KDE/Phonon/Experimental/
-%{_includedir}/phonon/experimental/
 %{_libdir}/libphononexperimental.so
-
+%{_libdir}/pkgconfig/phonon.pc
+%{_libdir}/cmake/phonon/*
+%{qt4_libdir}/*.so
+%{_datadir}/qt4/mkspecs/modules/qt_phonon.pri
+%{qt4_includedir}/*
+%{_datadir}/phonon/buildsystem/*
+%{qt4_pluginsdir}/designer/libphononwidgets.so
 
 %changelog
-* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
-
-* Sun May 20 2012 Rex Dieter <rdieter@fedoraproject.org> 4.6.0-4
-- refresh rpath patch
-
-* Wed Mar 28 2012 Than Ngo <than@redhat.com> - 4.6.0-3
-- fix syntax in *.pri file
-
-* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.0-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
-
-* Tue Dec 20 2011 Rex Dieter <rdieter@fedoraproject.org> 4.6.0-1
-- 4.6.0
-
-* Wed Dec 07 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.57-4.20111031
-- fix plugindir usage (#760039)
-
-* Wed Nov 02 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.57-3.20111031
-- fix release
-
-* Mon Oct 31 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.57-1.20111031
-- 20111031 snapshot
-
-* Mon Oct 31 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.57-2.20110914
-- rebuild (qzeitgeist)
-
-* Fri Sep 23 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.57-1.20110914
-- 4.5.57 20110914 snapshot
-- pkgconfig-style deps
-
-* Tue May 24 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.0-3
-- BR: libqzeitgeist-devel
-
-* Fri Apr 08 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.0-2
-- avoid Conflicts with judicious (Build)Requires: qt4(-devel) instead
-
-* Fri Mar 25 2011 Rex Dieter <rdieter@fedoraproject.org> 4.5.0-1
-- phonon-4.5.0
-- qt-designer-plugin-phonon moved here (from qt)
-
-* Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.4.4-3
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
-
-* Fri Jan 21 2011 Rex Dieter <rdieter@fedoraproject.org> 4.4.4-2
-- re-instate allow-stop-empty-source match from mdv
-
-* Fri Jan 21 2011 Rex Dieter <rdieter@fedoraproject.org> 4.4.4-1
-- phonon-4.4.4
-
-* Wed Jan 05 2011 Rex Dieter <rdieter@fedoraproject.org> - 4.4.4-0.1.20110104
-- Requires: phonon-backend
-
-* Wed Jan 05 2011 Rex Dieter <rdieter@fedoraproject.org> - 4.4.4-0.0.20110104
-- phonon-4.4.4 snapshot (sans backends)
-- bootstrap without Requires: phonon-backend
-
-* Tue Nov 30 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-2
-- recognize audio/flac in gstreamer backend (kde#257488)
-
-* Wed Nov 24 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-1
-- phonon-4.4.3
-
-* Mon Nov 22 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-0.4.20101122
-- phonon-4.4.3 20101122 snapshot
-
-* Fri Nov 12 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-0.3.20101112
-- phonon-4.4.3 20101112 snapshot
-
-* Tue Oct 19 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-0.2.20100909
-- Requires: kde-filesystem (#644571)
-- own %%{_kde4_libdir}/kde4 (<f15) (#644571)
-
-* Thu Sep 09 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.3-0.1.20100909
-- phonon-4.4.3 20100909 snapshot
-
-* Tue Jun 08 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.2-1
-- phonon-4.4.2
-
-* Sat Apr 24 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.1-2
-- phonon-backend-xine-4.4.1 (with pulseaudio) = no audio (kde#235193)
-
-* Thu Apr 22 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.1-1
-- phonon-4.4.1
-
-* Thu Apr 01 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.0-3
-- add minimal pulseaudio runtime dep
-
-* Wed Mar 17 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.0-2
-- pa glib/qt eventloop patch (kde#228324)
-
-* Tue Mar 16 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.0-1
-- phonon-4.4.0 final
-
-* Fri Mar 12 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.0-0.3
-- phonon-4.3.80-pulse-devicemove-rejig.patch (from mdv)
-
-* Wed Feb 24 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.4.0-0.2
-- preliminary phonon-4.4.0 tarball
-
-* Fri Jan 22 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-6
-- sync w/mdv patches
-
-* Fri Jan 22 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-5.2
-- F11: patch/modularize pa device-manager bits 
-
-* Fri Jan 22 2010 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.3.80-5.1
-- F11: port the old PA device priorities patch as we don't have PA integration
-
-* Thu Jan 21 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-5
-- no sound with phonon-xine/pulseaudio (kde#223662, rh#553945)
-
-* Thu Jan 21 2010 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-4
-- snarf mdv patches
-
-* Mon Jan 18 2010 Than Ngo <than@redhat.com> - 4.3.80-3
-- backport GStreamer backend bugfixes, fix random disappearing sound under KDE
-
-* Thu Dec 03 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-2
-- phonon-4.3.80 (upstream tarball, yes getting ridiculous now)
-
-* Thu Dec 03 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.80-1.20091203
-- phonon-4.3.80 (20091203 snapshot)
-
-* Thu Dec 03 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-6.20091203
-- phonon-4.3.50 (20091203 snapshot)
-
-* Mon Nov 30 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-5.20091124
-- backend-gstreamer: Requires: gstreamer-plugins-good
-
-* Fri Nov 27 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-4.20091124
-- ln -s ../KDE/Phonon %%_includedir/phonon/Phonon (qt/phonon compat)
-
-* Wed Nov 18 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-3.20091124
-- phonon-4.3.50 (20091124 snapshot)
-- enable pulseaudio integration (F-12+)
-
-* Wed Nov 18 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-2.20091118
-- phonon-4.3.50 (20091118 snapshot)
-
-* Mon Oct 19 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.50-1.20091019
-- phonon-4.3.50 (20091019 snapshot)
-
-* Sat Oct 03 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-102
-- Requires: qt4 >= 4.5.2-21 (f12+)
-
-* Tue Sep 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-101
-- revert to kde/phonon
-- inflate to Release: 101
-- -backend-gstreamer: Epoch: 2
-
-* Sun Jul 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.1-12
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
-
-* Thu Jun 18 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-11
-- fix for '#' in filenames
-
-* Tue Jun 09 2009 Than Ngo <than@redhat.com> - 4.3.1-10
-- make InitialPreference=9
-
-* Sun Jun 07 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-9
-- optimize scriptlets
-- Req: phonon >= %%phonon_version_major
-
-* Fri Jun 05 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.3.1-8
-- restore patches to the xine backend
-
-* Fri Jun 05 2009 Than Ngo <than@redhat.com> - 4.3.1-7
-- only xine-backend
-
-* Wed May 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-6
-- phonon-backend-gstreamer multilib conflict (#501816)
-
-* Wed May 20 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-5
-- s/ImageMagick/GraphicsMagick/, avail on more secondary archs, is faster,
-  yields better results.
-
-* Mon May 04 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-4
-- fix Source0 Url
-- xine backend will not play files with non-ascii names (kdebug#172242)
-
-* Sat Apr 11 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.1-3
-- optimize scriptlets
-- Provides/Requires: phonon-backend%%{_isa} ...
-
-* Tue Mar  3 2009 Lukáš Tinkl <ltinkl@redhat.com> - 4.3.1-2
-- backport GStreamer backend bugfixes (UTF-8 file handling, volume
-fader)
-
-* Fri Feb 27 2009 Than Ngo <than@redhat.com> - 4.3.1-1
-- 4.3.1
-
-* Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.0-6
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Sun Feb 01 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.0-5
-- put icons in the right subpkg
-
-* Thu Jan 29 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.0-4
-- Requires: phonon-backend >= %%version
-- move icons to hicolor theme and into -backend subpkgs
-- BR: libxcb-devel
-- move phonon-gstreamer.svg to sources
-
-* Mon Jan 26 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.3.0-3
-- BR: automoc4 >= 0.9.86
-
-* Fri Jan 23 2009 Kevin Kofler <Kevin@tigcc.ticalc.org> - 4.3.0-2
-- fix typo in postun scriptlet (introduced in 4.2.96-3)
-
-* Thu Jan 22 2009 Than Ngo <than@redhat.com> - 4.3.0-1
-- 4.3.0
-
-* Thu Jan 08 2009 Rex Dieter <rdieter@fedoraproject.org> - 4.2.96-3
-- new tarball
-- put icons/scriptlets into main pkg
-- Requires: phonon-backend
-
-* Thu Jan 08 2009 Lorenzo Villani <lvillani@binaryhelix.net> - 4.2.96-2
-- add gstreaer-logo.svg
-
-* Thu Jan 08 2009 Lorenzo Villani <lvillani@binaryhelix.net> - 4.2.96-1
-- 4.2.96
-- rebase phonon-4.2.0-pulseaudio.patch (-> phonon-4.2.96-pulseaudio.patch)
-- rebase phonon-4.2.70-xine-pulseaudio.patch 
-  (-> phonon-4.2.96-xine-pulseaudio.patch)
-
-* Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2.80-3
-- rebuild for pkgconfig deps
-
-* Tue Nov 25 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.2.80-2
-- phonon-backend-xine: don't Obsolete/Provide itself, Provides: phonon-backend
-
-* Tue Nov 25 2008 Than Ngo <than@redhat.com> 4.2.80-1
-- 4.2.80
-
-* Fri Nov 21 2008 Lorenzo Villani <lvillani@binaryhelix.net> - 4.2.80-0.1.20081121svn887051
-- Use subversion (4.2.80) snapshot
-- phonon-backend-xine subpkg
-- make VERBOSE=1
-- make install/fast
-- Xine backend is in phonon now, add xine-lib-devel as BR
-- BR cmake >= 2.6.0
-- forward-port xine pulseaudio patch
-
-* Tue Sep 30 2008 Than Ngo <than@redhat.com> 4.2.0-7
-- fix tranparent issue by convert
-
-* Tue Sep 30 2008 Than Ngo <than@redhat.com> 4.2.0-6
-- add missing icon
-
-* Wed Sep 17 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2.0-5
-- Requires: phonon-backend-xine
-
-* Sun Aug 10 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.2.0-4
-- rename -backend-gst back to -backend-gstreamer (longer name as -backend-xine)
-  The GStreamer backend isn't ready to be the default, and KDE 4.1 also defaults
-  to the Xine backend when both are installed.
-- fix PulseAudio not being the default in the Xine backend (4.2 regression)
-
-* Sat Aug 02 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2.0-3
-- -backend-gst: Obsoletes: -backend-gstreamer < 4.2.0-2
-
-* Thu Jul 24 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2.0-2
-- rename -backend-gstreamer -> backend-gst
-
-* Wed Jul 23 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2.0-1
-- phonon-4.2.0
-
-* Mon Jul 14 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2-0.4.beta2
-- BR: automoc4
-- -backend-gstreamer subpkg
-
-* Tue Jul 01 2008 Kevin Kofler <Kevin@tigcc.ticalc.org> 4.2-0.3.beta2
-- drop automoc libsuffix patch, no longer needed
-
-* Fri Jun 20 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2-0.2.beta2
-- phonon 4.2beta2 (aka 4.1.83)
-
-* Sat Jun 14 2008 Rex Dieter <rdieter@fedoraproject.org> 4.2-0.1.20080614svn820634
-- first try
-
+* Fri Jan 15 2010 Ni Hui <shuizhuyuanluo@126.com> - 4.3.80-2mgc
+- 修正 mplayer 中文语言输出解析的问题(patch 26 written by nihui)
+- 乙丑  十二月初一
+
+* Sun Jan 3 2010 Ni Hui <shuizhuyuanluo@126.com> - 4.3.80-1mgc
+- 更新至 4.3.80
+- 添加 phonon-mplayer
+- gstreamer 和 mplayer 后端的 ape 格式支持
+- 己丑  十一月十九
+
+* Fri Jul 31 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.1-2mgc
+- 总是列出 alsa 和 oss 音频输出设备(patch 23 written by nihui)
+- 己丑  六月初十
+
+* Sun Mar 15 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.1-0.3mgc
+- xine mrl 上游补丁(替代 patch 20)
+- 还原 gstreamer 本地媒体编码
+- 图标目录改为 hicolor，添加 gstreamer 徽标 
+- 己丑  二月十九
+
+* Sat Mar 7 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.1-0.2mgc
+- gstreamer 上游补丁两个，代替原中文文件名媒体修正
+- 己丑  二月十一
+
+* Sun Mar 1 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.1-0.1mgc
+- 更新至 4.3.1
+- 禁用 patch 1000(need review...)
+- 己丑  二月初五
+
+* Sun Feb 1 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-0.3mgc
+- 修正 phonon_gstreamer 本地媒体对象文件名编码问题(patch 21 written by nihui, unused)
+- phonon_gstreamer 添加 ape 格式媒体支持(patch 22 written by nihui)
+- 己丑  正月初七
+
+* Fri Jan 23 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-0.2mgc
+- 重建
+- 戊子  十二月廿八
+
+* Thu Jan 22 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.3.0-0.1mgc
+- 更新至 4.3.0
+- 戊子  十二月廿七
+
+* Tue Jan 13 2009 Ni Hui <shuizhuyuanluo@126.com> - 4.2.96-0.1mgc
+- 更新至 4.2.96
+- relwithdeb 编译模式
+- 戊子  十二月十八
+
+* Fri Nov 28 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.2.80-0.1mgc
+- 更新至 4.2.80
+- 戊子  十一月初一
+
+* Sat Nov 22 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.2.71-0.1mgc
+- 更新至 4.2.71
+- 拆出 phonon-xine
+- 戊子  十月廿五  [小雪]
+
+* Fri Aug 29 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.2.0-0.2mgc
+- 重建
+- 戊子  七月廿九
+
+* Thu Jul 24 2008 Liu Di <liudidi@gmail.com> - 4.2.0-0.1mgc
+- 更新到 4.2.0 正式版
+
+* Mon Jun 30 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.1.83-0.2mgc
+- 更改 gstreamer 后端安装路径
+- 戊子  五月廿七
+
+* Sat Jun 21 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.1.83-0.1mgc
+- 更新至 4.1.83
+- 戊子  五月十八  [夏至]
+
+* Wed Jun 4 2008 Ni Hui <shuizhuyuanluo@126.com> - 4.2-0.svn815960.1mgc
+- 首次生成 rpm 包
+- 更新至 4.2-svn815960(KDE4 branches phonon)
+- 戊子  五月初一

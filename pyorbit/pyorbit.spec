@@ -2,7 +2,7 @@
 
 Name: pyorbit
 Version: 2.24.0
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Summary: Python bindings for ORBit2
@@ -52,6 +52,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name "*.la" -exec rm -f {} ';'
+magic_rpm_clean.sh
 
 %files
 %defattr(-,root,root,-)
@@ -65,6 +66,9 @@ find $RPM_BUILD_ROOT -name "*.la" -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 2.24.0-10
+- 为 Magic 3.0 重建
+
 * Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 2.24.0-9
 - 为 Magic 3.0 重建
 

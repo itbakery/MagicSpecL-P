@@ -6,7 +6,7 @@
 
 Name: openbabel
 Version: 2.3.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Chemistry software file format converter
 Summary(zh_CN.UTF-8): 化学软件文件格式转换器
 License: GPLv2
@@ -222,6 +222,9 @@ magic_rpm_clean.sh
 %endif
 
 %changelog
+* Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 2.3.1-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 30 2008 Ni Hui <shuizhuyuanluo@126.com> - 2.2.0-1mgc
 - 更新至 2.2.0 正式版
 - 戊子  九月初二

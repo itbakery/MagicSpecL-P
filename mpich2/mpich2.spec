@@ -3,7 +3,7 @@
 Summary:	A high-performance implementation of MPI
 Name:		mpich2
 Version:	1.4.1p1
-Release:	4%{?dist}
+Release:	6%{?dist}
 License:	MIT
 Group:		Development/Libraries
 URL:		http://www.mcs.anl.gov/research/projects/mpich2
@@ -208,15 +208,16 @@ rm -rf %{buildroot}%{_sbindir}/mpe*
 
 find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 rm -f %{buildroot}%{_libdir}/%{name}/lib/lib{*mpich*,opa,mpl}.a
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
 
 %post
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 %postun
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 %pre
 if [ $1 -gt 1 ] ; then
@@ -239,17 +240,17 @@ fi
 %dir %{_libdir}/%{name}
 %dir %{_libdir}/%{name}/lib
 %dir %{_libdir}/%{name}/bin
-%{_libdir}/%{name}/lib/*.jar
+#%{_libdir}/%{name}/lib/*.jar
 %{_libdir}/%{name}/lib/mpe*.o
 %{_libdir}/%{name}/lib/*.so.*
 %{_libdir}/%{name}/bin/*
 %config %{_sysconfdir}/%{name}-%{_arch}/
 %dir %{python_sitearch}/%{name}
-%dir %{_mandir}/%{name}
-%doc %{_mandir}/%{name}/man1/
+#%dir %{_mandir}/%{name}
+#%doc %{_mandir}/%{name}/man1/
 %{_sysconfdir}/modulefiles/%{name}-%{_arch}
 %exclude %{_libdir}/%{name}/bin/*log*
-%exclude %{_libdir}/%{name}/bin/jumpshot
+#%exclude %{_libdir}/%{name}/bin/jumpshot
 
 %files autoload
 %defattr(-,root,root,-)
@@ -258,12 +259,12 @@ fi
 %files devel
 %defattr(-,root,root,-)
 %{_libdir}/%{name}/bin/*log*
-%{_libdir}/%{name}/bin/jumpshot
+#%{_libdir}/%{name}/bin/jumpshot
 %{_includedir}/%{name}-%{_arch}/
 #%{_fmoddir}/%{name}/
 %{_libdir}/%{name}/lib/*.a
 %{_libdir}/%{name}/lib/*.so
-%{_libdir}/%{name}/lib/trace_rlog/libTraceInput.so
+#%{_libdir}/%{name}/lib/trace_rlog/libTraceInput.so
 %{_libdir}/pkgconfig/%{name}-*.pc
 %{_libdir}/pkgconfig/openpa.pc
 %{_datadir}/%{name}/examples*/Makefile-%{_arch}
@@ -274,12 +275,18 @@ fi
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/doc/
 %{_datadir}/%{name}/examples*
-%{_datadir}/%{name}/logfiles/
-%{_mandir}/%{name}/man3/
-%{_mandir}/%{name}/man4/
+#%{_datadir}/%{name}/logfiles/
+#%{_mandir}/%{name}/man3/
+#%{_mandir}/%{name}/man4/
 %exclude %{_datadir}/%{name}/examples*/Makefile-%{_arch}
 
 %changelog
+* Wed Oct 31 2012 Liu Di <liudidi@gmail.com> - 1.4.1p1-6
+- 为 Magic 3.0 重建
+
+* Wed Oct 31 2012 Liu Di <liudidi@gmail.com> - 1.4.1p1-5
+- 为 Magic 3.0 重建
+
 * Mon Jan  2 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 1.4.1p1-4
 - Bump spec.
 

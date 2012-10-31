@@ -1,15 +1,15 @@
-%if (0%{?fedora} > 12 || 0%{?rhel} > 5)
+%if 0%{?fedora} > 12
 %global with_python3 1
 %else
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 %endif
 
 #uncomment next line for a release candidate or a beta
-%global relc %{nil}
+%global relc b2
 
 Name:           numpy
-Version:        1.6.1
-Release:        2%{?dist}
+Version:        1.7.0
+Release:        0.4.%{relc}%{?dist}
 Epoch:		1
 Summary:        A fast multidimensional array facility for Python
 
@@ -17,6 +17,7 @@ Group:          Development/Languages
 License:        BSD
 URL:            http://numeric.scipy.org/
 Source0:        http://downloads.sourceforge.net/numpy/%{name}-%{version}%{?relc}.tar.gz
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  python2-devel lapack-devel python-setuptools gcc-gfortran atlas-devel python-nose
@@ -24,8 +25,9 @@ Requires:	python-nose
 %if 0%{?with_python3}
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
-#BuildRequires:  python3-nose
+BuildRequires:  python3-nose
 %endif
+BuildRequires:  Cython
 
 %description
 NumPy is a general-purpose array-processing package designed to
@@ -82,6 +84,10 @@ This package includes a version of f2py that works properly with NumPy.
 
 %prep
 %setup -q -n %{name}-%{version}%{?relc}
+
+# workaround for rhbz#849713
+# http://mail.scipy.org/pipermail/numpy-discussion/2012-July/063530.html
+rm numpy/distutils/command/__init__.py && touch numpy/distutils/command/__init__.py
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -156,6 +162,7 @@ rm -f %{buildroot}%{python_sitearch}/%{name}/LICENSE.txt
 rm -f %{buildroot}%{python_sitearch}/%{name}/README.txt
 rm -f %{buildroot}%{python_sitearch}/%{name}/THANKS.txt
 rm -f %{buildroot}%{python_sitearch}/%{name}/site.cfg.example
+magic_rpm_clean.sh
 
 %check
 # doc/io.py conflicts with the regular io module causing
@@ -173,9 +180,9 @@ popd &> /dev/null
 %if 0%{?with_python3}
 pushd doc &> /dev/null
 # there is no python3-nose yet
-#PYTHONPATH="%{buildroot}%{python3_sitearch}" %{__python3} -c "import pkg_resources, numpy ; numpy.test()" \
+PYTHONPATH="%{buildroot}%{python3_sitearch}" %{__python3} -c "import pkg_resources, numpy ; numpy.test()" \
 %ifarch s390 s390x
-#|| :
+|| :
 %endif
 # don't remove this comment
 popd &> /dev/null
@@ -247,6 +254,43 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep 20 2012 Orion Poplawski <orion@nwra.com> - 1:1.7.0-0.4.b2
+- Update to 1.7.0b2
+- Drop patches applied upstream
+
+* Wed Aug 22 2012 Orion Poplawski <orion@nwra.com> - 1:1.7.0-0.3.b1
+- Add patch from github pull 371 to fix python 3.3 pickle issue
+- Remove cython .c source regeneration - fails now
+
+* Wed Aug 22 2012 Orion Poplawski <orion@nwra.com> - 1:1.7.0-0.2.b1
+- add workaround for rhbz#849713 (fixes FTBFS)
+
+* Tue Aug 21 2012 Orion Poplawski <orion@cora.nwra.com> - 1:1.7.0-0.1.b1
+- Update to 1.7.0b1
+- Rebase python 3.3 patchs to current git master
+- Drop patches applied upstream
+
+* Sun Aug  5 2012 David Malcolm <dmalcolm@redhat.com> - 1:1.6.2-5
+- rework patches for 3.3 to more directly reflect upstream's commits
+- re-enable test suite on python 3
+- forcibly regenerate Cython .c source to avoid import issues on Python 3.3
+
+* Sun Aug  5 2012 Thomas Spura <tomspur@fedoraproject.org> - 1:1.6.2-4
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+- needs unicode patch
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 1:1.6.2-3
+- remove rhel logic from with_python3 conditional
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.6.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun May 20 2012 Orion Poplawski <orion@cora.nwra.com> - 1:1.6.2-1
+- Update to 1.6.2 final
+
+* Sat May 12 2012 Orion Poplawski <orion@cora.nwra.com> - 1:1.6.2rc1-0.1
+- Update to 1.6.2rc1
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:1.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

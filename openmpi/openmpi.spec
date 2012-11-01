@@ -19,7 +19,7 @@
 
 Name:			openmpi%{?_cc_name_suffix}
 Version:		1.6.2
-Release:		1%{?dist}
+Release:		2%{?dist}
 Summary:		Open Message Passing Interface
 Group:			Development/Libraries
 License:		BSD, MIT and Romio
@@ -225,6 +225,9 @@ magic_rpm_clean.sh
 %{_sysconfdir}/rpm/macros.%{namearch}
 
 %changelog
+* Thu Nov 01 2012 Liu Di <liudidi@gmail.com> - 1.6.2-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 13 2012 Orion Poplawski <orion@cora.nwra.com> 1.6.2-1
 - Update to 1.6.2
 - Add BR torque-devel to enable torque support

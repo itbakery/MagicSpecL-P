@@ -3,15 +3,14 @@
 %define release_version %(echo %{version} | awk -F. '{print $1"."$2}')
 
 Name:           pangomm
-Version:        2.28.3
-Release:        1%{?dist}
+Version:        2.28.4
+Release:        2%{?dist}
 Summary:        C++ interface for Pango
 
 Group:          System Environment/Libraries
 License:        LGPLv2+
 URL:            http://www.gtkmm.org/
 Source0:        http://ftp.gnome.org/pub/GNOME/sources/pangomm/%{release_version}/%{name}-%{version}.tar.xz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  glibmm24-devel >= 2.14.1
 BuildRequires:  cairomm-devel >= 1.2.2
@@ -65,15 +64,10 @@ make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -82,24 +76,30 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-, root, root, -)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_libdir}/*.so.*
 
 
 %files devel
-%defattr(-, root, root, -)
 %{_includedir}/pangomm-%{apiver}
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/*.pc
 %{_libdir}/pangomm-%{apiver}
 
 %files doc
-%defattr(-, root, root, -)
 %doc %{_docdir}/pangomm-%{apiver}/
 %{_datadir}/devhelp/
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.28.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Feb 27 2012 Kalev Lember <kalevlember@gmail.com> - 2.28.4-1
+- Update to 2.28.4
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.28.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Sep 27 2011 Ray <rstrode@redhat.com> - 2.28.3-1
 - Update to 2.28.3
 

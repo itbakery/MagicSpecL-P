@@ -5,15 +5,17 @@
 %define fontconfig_version 2.6
 %define cairo_version 1.7.6
 %define libthai_version 0.1.9
+%define harfbuzz_version 0.9.3
+%define bin_version 1.8.0
 
 Summary: System for layout and rendering of internationalized text
 Name: pango
-Version: 1.30.1
+Version: 1.32.1
 Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
-Source: http://download.gnome.org/sources/pango/1.29/pango-%{version}.tar.xz
+Source: http://download.gnome.org/sources/pango/1.31/pango-%{version}.tar.xz
 URL: http://www.pango.org
 
 Requires: glib2 >= %{glib2_version}
@@ -21,26 +23,18 @@ Requires: freetype >= %{freetype_version}
 Requires: freetype >= %{freetype_version}
 Requires: cairo >= %{cairo_version}
 Requires: libthai >= %{libthai_version}
-Requires(post): sed
-Requires(postun): sed
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: pkgconfig >= %{pkgconfig_version}
 BuildRequires: freetype-devel >= %{freetype_version}
 BuildRequires: fontconfig-devel >= %{fontconfig_version}
-BuildRequires: libXrender-devel
-BuildRequires: libX11-devel
-BuildRequires: libXext-devel
 BuildRequires: libXft-devel
-BuildRequires: libXt-devel
 BuildRequires: cairo-devel >= %{cairo_version}
 BuildRequires: libthai-devel >= %{libthai_version}
+BuildRequires: harfbuzz-devel >= %{harfbuzz_version}
 BuildRequires: gobject-introspection-devel
 BuildRequires: cairo-gobject-devel
 # Bootstrap requirements
 BuildRequires: gnome-common intltool gtk-doc
-
-# Look for pango.modules in an arch-specific directory
-Patch0: pango-lib64.patch
 
 %description
 Pango is a library for laying out and rendering of text, with an emphasis
@@ -57,16 +51,11 @@ quality text handling and graphics rendering.
 %package devel
 Summary: Development files for pango
 Group: Development/Libraries
-Requires: pango = %{version}-%{release}
-Requires: libXrender-devel
-Requires: libX11-devel
-Requires: libXext-devel
-Requires: libXft-devel
+Requires: pango%{?_isa} = %{version}-%{release}
 Requires: glib2-devel >= %{glib2_version}
 Requires: freetype-devel >= %{freetype_version}
 Requires: fontconfig-devel >= %{fontconfig_version}
 Requires: cairo-devel >= %{cairo_version}
-Requires: pkgconfig
 
 %description devel
 The pango-devel package includes the header files and developer documentation
@@ -75,44 +64,17 @@ for the pango package.
 %prep
 %setup -q -n pango-%{version}
 
-%patch0 -p1 -b .lib64
-
 %build
 
 # We try hard to not link to libstdc++
 (if ! test -x configure; then NOCONFIGURE=1 ./autogen.sh; CONFIGFLAGS=--enable-gtk-doc; fi;
  %configure $CONFIGFLAGS \
           --enable-doc-cross-references \
-  --with-included-modules=basic-fc )
+          --with-included-modules=basic-fc )
 make %{?_smp_mflags}
 
 
 %install
-
-# Deriving /etc/pango/$host location
-# NOTE: Duplicated below
-#
-# autoconf changes linux to linux-gnu
-case "%{_host}" in
-  *linux) host="%{_host}-gnu"
-  ;;
-  *) host="%{_host}"
-  ;;
-esac
-
-# autoconf uses powerpc not ppc
-host=`echo $host | sed "s/^ppc/powerpc/"`
-# autoconf uses ibm-linux not redhat-linux on s390x
-host=`echo $host | sed "s/^s390\(x\)*-redhat/s390\1-ibm/"`
-
-# Make sure that the host value that is passed to the compile
-# is the same as the host that we're using in the spec file
-#
-compile_host=`grep 'host_triplet =' pango/Makefile | sed "s/.* = //"`
-
-if test "x$compile_host" != "x$host" ; then
-  echo 1>&2 "Host mismatch: compile='$compile_host', spec file='$host'" && exit 1
-fi
 
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 
@@ -130,74 +92,22 @@ fi
 # We need to have separate 32-bit and 64-bit pango-querymodules binaries
 # for places where we have two copies of the Pango libraries installed.
 # (we might have x86_64 and i686 packages on the same system, for example.)
-case "$host" in
-  alpha*|ia64*|powerpc64*|s390x*|sparc64*|x86_64*)
-   mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-64
-   ;;
-  *)
-   mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-32
-   ;;
-esac
+mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-%{__isa_bits}
 
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/pango/$host
-touch $RPM_BUILD_ROOT%{_sysconfdir}/pango/$host/pango.modules
-
-#
-# We need the substitution of $host so we use an external
-# file list
-#
-echo %dir %{_sysconfdir}/pango/$host > modules.files
-echo %ghost %{_sysconfdir}/pango/$host/pango.modules >> modules.files
+touch $RPM_BUILD_ROOT%{_libdir}/pango/%{bin_version}/modules.cache
 magic_rpm_clean.sh
 
 %post
 /usr/sbin/ldconfig
-
-umask 0022
-# Deriving /etc/pango/$host location
-#
-# autoconf changes linux to linux-gnu
-case "%{_host}" in
-  *linux) host="%{_host}-gnu"
-  ;;
-  *) host="%{_host}"
-  ;;
-esac
-
-# autoconf uses powerpc not ppc
-host=`echo $host | sed "s/^ppc/powerpc/"`
-# autoconf uses ibm-linux not redhat-linux on s390x
-host=`echo $host | sed "s/^s390\(x\)*-redhat/s390\1-ibm/"`
-
-%{_bindir}/pango-querymodules-%{__isa_bits} > %{_sysconfdir}/pango/$host/pango.modules || :
+/usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
 
 %postun
 /usr/sbin/ldconfig
-
 if test $1 -gt 0; then
-
-umask 0022
-# Deriving /etc/pango/$host location
-#
-# autoconf changes linux to linux-gnu
-case "%{_host}" in
-  *linux) host="%{_host}-gnu"
-  ;;
-  *) host="%{_host}"
-  ;;
-esac
-
-# autoconf uses powerpc not ppc
-host=`echo $host | sed "s/^ppc/powerpc/"`
-# autoconf uses ibm-linux not redhat-linux (s390x)
-host=`echo $host | sed "s/^s390\(x\)*-redhat/s390\1-ibm/"`
-
-%{_bindir}/pango-querymodules-%{__isa_bits} > %{_sysconfdir}/pango/$host/pango.modules || :
-
+  /usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
 fi
 
-%files -f modules.files
-%defattr(-, root, root,-)
+%files
 %doc README AUTHORS COPYING NEWS
 %doc pango-view/HELLO.txt
 %{_libdir}/libpango*-*.so.*
@@ -206,8 +116,7 @@ fi
 %{_mandir}/man1/pango-view.1.gz
 %{_mandir}/man1/pango-querymodules.1.gz
 %{_libdir}/pango
-%dir %{_sysconfdir}/pango
-%config %{_sysconfdir}/pango/pangox.aliases
+%ghost %{_libdir}/pango/%{bin_version}/modules.cache
 %{_libdir}/girepository-1.0/Pango-1.0.typelib
 %{_libdir}/girepository-1.0/PangoCairo-1.0.typelib
 %{_libdir}/girepository-1.0/PangoFT2-1.0.typelib
@@ -215,7 +124,6 @@ fi
 
 
 %files devel
-%defattr(-, root, root,-)
 %{_libdir}/libpango*.so
 %{_includedir}/*
 %{_libdir}/pkgconfig/*
@@ -227,6 +135,24 @@ fi
 
 
 %changelog
+* Thu Sep 27 2012 Matthias Clasen <mclasen@redhat.com> - 1.32.1-1
+- Update to 1.32.1
+- Move module cache file to /usr/lib64/pango/1.8.0/modules.cache
+- No more /etc/pango
+
+* Sat Aug 25 2012 Ville Skyttä <ville.skytta@iki.fi> - 1.31.0-3
+- Fix %%postun error on multilib erase (#684729).
+
+* Wed Aug 22 2012 Parag Nemade <paragn AT fedoraproject DOT org> - 1.31.0-2
+- Add missing BR:harfbuzz-devel
+- Remove file pangox.aliases as pangox support is now removed
+
+* Tue Aug 21 2012 Richard Hughes <hughsient@gmail.com> - 1.31.0-1
+- Update to 1.31.0
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.30.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Thu Jun 07 2012 Richard Hughes <hughsient@gmail.com> - 1.30.1-1
 - Update to 1.30.1
 

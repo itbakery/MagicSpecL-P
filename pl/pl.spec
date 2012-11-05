@@ -1,18 +1,15 @@
 %define with_java 0
-%define separate_xpce 0
-
-# Require openjdk 1.6 until bug #740762 becomes resolved.
-%define jdkvershort 1.6.0
-%define jdkverlong %{jdkvershort}.0
+%define separate_xpce 1
 
 Name:       pl
-Version:    5.10.5
-Release:    7%{?dist}
+Version:    6.2.2
+Release:    1%{?dist}
 
 Summary:    SWI-Prolog - Edinburgh compatible Prolog compiler
 
 Group:      Development/Languages
-#packages/clib/random.c         Artistic
+#library/dialect/iso/iso_predicates.pl  GPLv2+ with SWI-Prolog extra clause
+#                                       or Artistic 2.0
 #packages/clib/uri.c            LGPLv2+
 #packages/sgml/Test/test.pl     LGPLv2
 #library/qsave.pl               GPLv2+
@@ -20,22 +17,17 @@ Group:      Development/Languages
 #library/unicode/blocks.pl      UCD
 #packages/http/examples/calc.pl Public Domain
 #External: JavaConfig.java      GPLv3+
-License:    Artistic and LGPLv2+ and LGPLv2 and GPLv2 and GPLv2+ and UCD and Public Domain and GPLv3+
-URL:        http://www.swi-prolog.org
-Source:     http://www.swi-prolog.org/download/stable/src/%{name}-%{version}.tar.gz
-Source1:    http://www.swi-prolog.org/download/stable/doc/SWI-Prolog-%{version}.pdf
-Source2:    http://www.swi-prolog.org/download/xpce/doc/userguide/userguide.html.tgz
+License:    (GPLv2+ or Artistic 2.0) and LGPLv2+ and LGPLv2 and GPLv2 and GPLv2+ and UCD and Public Domain and GPLv3+
+URL:        http://www.swi-prolog.org/
+Source:     %{url}download/stable/src/%{name}-%{version}.tar.gz
+Source1:    %{url}download/stable/doc/SWI-Prolog-%{version}.pdf
+Source2:    %{url}download/xpce/doc/userguide/userguide.html.tgz
 Source3:    JavaConfig.java
-Patch1:     %{name}-5.10.5-jpl-configure.patch
+Patch1:     %{name}-6.2.2-jpl-configure.patch
 Patch2:     %{name}-5.10.5-man-files.patch
-Patch3:     %{name}-5.10.2-jni.patch
-Patch4:     %{name}-5.10.5-pc.patch
-# Upstream bug #9, will be in 5.10.6, rhbz#732952
-Patch5:     xpce-5.10.5-SECURITY-Bug-9-Loading-incomplete-GIF-files-causes-a.patch
-# Upstream bug #9, will be in 5.10.6, rhbz#732952
-Patch6:     xpce-5.10.5-SECURITY-Make-sure-all-pixels-are-within-the-allocat.patch
+Patch3:     %{name}-6.0.2-jni.patch
+Patch4:     %{name}-6.2.0-pc.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 # Base
 BuildRequires:  gmp-devel
 BuildRequires:  ncurses-devel
@@ -51,6 +43,7 @@ BuildRequires:  libXinerama-devel
 BuildRequires:  libXpm-devel
 BuildRequires:  libXt-devel
 # Freetype support in XPCE
+BuildRequires:  fontconfig-devel
 BuildRequires:  freetype-devel
 BuildRequires:  libXaw-devel
 BuildRequires:  libXext-devel
@@ -63,7 +56,7 @@ BuildRequires:  openssl-devel
 # jpl
 %if %{with_java}
 BuildRequires:  jpackage-utils
-BuildRequires:  java-%{jdkvershort}-devel = 1:%{jdkverlong}
+BuildRequires:  java-devel
 %endif
 # zlib
 BuildRequires:  zlib-devel
@@ -87,6 +80,38 @@ Requires: readline-devel, pkgconfig
 
 %description devel
 Development files for SWI Prolog.
+
+
+%package doc
+Summary: Documentation for SWI Prolog
+Group: Documentation
+# This must be archicture dependend because some files live in %%{_libdir}
+# because they can are used by built-in documentation system.
+Requires: %{name} = %{version}-%{release}
+
+%description doc
+%{summary}.
+
+
+%package odbc
+Summary: SWI-Prolog ODBC interface
+Group: Development/Languages
+Requires: %{name} = %{version}-%{release}
+
+%description odbc
+The value of RDMS for Prolog is often over-estimated, as Prolog itself can
+manage substantial amounts of data. Nevertheless a Prolog/RDMS interface
+provides advantages if data is already provided in an RDMS, data must be
+shared with other applications, there are strong persistency requirements
+or there is too much data to fit in memory.                                  
+                                                                            
+The popularity of ODBC makes it possible to design a single
+foreign-language module that provides RDMS access for a wide variety of
+databases on a wide variety of platforms. The SWI-Prolog RDMS interface is
+closely modeled after the ODBC API. This API is rather low-level, but
+defaults and dynamic typing provided by Prolog give the user quite simple
+access to RDMS, while the interface provides the best possible performance
+given the RDMS independency constraint.   
 
 
 %package static
@@ -141,11 +166,6 @@ in Prolog. In both setups it provides a re-entrant bidirectional interface.
 %patch3 -p1 -b .jni
 %patch4 -p1 -b .pc
 (
-cd packages/xpce
-%patch5 -p1 -b .incomplete_gif
-%patch6 -p1 -b .validate_pixel_color
-)
-(
    cd src
    autoconf
 )
@@ -166,6 +186,7 @@ cd packages/xpce
 # Adjustments to take into account the new location of JNI stuff
 sed --in-place=.jni2 -e 's#LIBDIR#%{_libdir}#g' packages/jpl/jpl.pl
 sed --in-place=.jni2 -e 's#LIBDIR#%{_libdir}#g' packages/jpl/src/java/jpl/fli/Prolog.java
+sed --in-place=.jni2 -e 's#LIBDIR#"%{_libdir}/swipl-jpl"#g' packages/jpl/src/java/jpl/JPL.java
 
 
 %build
@@ -173,27 +194,6 @@ sed --in-place=.jni2 -e 's#LIBDIR#%{_libdir}#g' packages/jpl/src/java/jpl/fli/Pr
 LC_CTYPE=en_US.UTF-8 javac JavaConfig.java
 JAVA_HOME=$(java JavaConfig --home)
 JAVA_LIBS=$(java JavaConfig --libs-only-L)
-
-#export JAVA_HOME=/usr/lib/jvm/java-%{jdkvershort}-openjdk-%{jdkverlong}.%{_arch}
-#%%ifarch x86_64
-#export JAVA_LIB=$JAVA_HOME/jre/lib/amd64
-#%%else
-#%%ifarch sparcv9
-#export JAVA_HOME=/usr/lib/jvm/java-%{jdkvershort}-openjdk-%{jdkverlong}
-#%export JAVA_LIB=$JAVA_HOME/jre/lib/sparc
-#%%else
-#%%ifarch sparc64
-#export JAVA_LIB=$JAVA_HOME/jre/lib/sparcv9
-#%%else
-#%%ifarch %{arm}
-#export JAVA_HOME=/usr/lib/jvm/java-%{jdkvershort}-openjdk-%{jdkverlong}
-#export JAVA_LIB=$JAVA_HOME/jre/lib/arm
-#%%else
-#export JAVA_LIB=$JAVA_HOME/jre/lib/%{_arch}
-#%%endif
-#%%endif
-#%%endif
-#%%endif
 %else
 # Processed by packages/configure
 export DISABLE_PKGS="jpl"
@@ -211,7 +211,7 @@ popd
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+# See <http://www.swi-prolog.org/build/guidelines.html> for file layout
 make install DESTDIR=$RPM_BUILD_ROOT
 # Library must be executable to get its debuginfo
 chmod 0755 $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/lib/*/libswipl.so.*
@@ -228,108 +228,131 @@ popd
 %if %{with_java}
 # Move the JPL JNI stuff to where the Java packaging guidelines 
 # say it should be
-mkdir -p $RPM_BUILD_ROOT%{_libdir}/swipl-jpl
-mv $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/lib/*/libjpl.so \
-        $RPM_BUILD_ROOT%{_libdir}/swipl-jpl/
-mv $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/lib/jpl.jar \
-        $RPM_BUILD_ROOT%{_libdir}/swipl-jpl/
+pushd $RPM_BUILD_ROOT%{_libdir}
+mkdir -p swipl-jpl
+mv swipl-%{version}/lib/*/libjpl.so swipl-jpl/
+mv swipl-%{version}/lib/jpl.jar swipl-jpl/
+# Original JAR locations is referenced by internal libraries and examples
+ln -s ../../swipl-jpl/jpl.jar swipl-%{version}/lib/jpl.jar
+popd
 %endif
-
-%if %{separate_xpce}
-# Move the various include files into /usr/include
-mkdir -p $RPM_BUILD_ROOT%{_includedir}/swipl/xpce
-mv $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/include/*.h \
-        $RPM_BUILD_ROOT%{_includedir}/swipl
-#mv $RPM_BUILD_ROOT%%{_libdir}/swipl-%%{version}/xpce-*/include/* \
-#        $RPM_BUILD_ROOT%%{_includedir}/swipl/xpce
-rm -rf $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/include
-#rm -rf $RPM_BUILD_ROOT%%{_libdir}/swipl-%%{version}/xpce-*/include
-%endif
-
-# Move the binaries into %%{_bindir} directly instead of using links
-rm -f $RPM_BUILD_ROOT%{_bindir}/*
-mv $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/bin/*/* $RPM_BUILD_ROOT%{_bindir}
-rm -rf $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/bin
 
 # Clean up the other stuff that shouldn't be packaged
-rm -rf $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/man
-rm -rf $RPM_BUILD_ROOT%{_libdir}/swipl-%{version}/doc
-rm -rf $RPM_BUILD_ROOT%{_mandir}/man3/readline*
 find packages/jpl/examples -name "*.class" | xargs rm -f
 find packages/jpl/examples -name ".cvsignore" | xargs rm -f
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %files
-%defattr(-,root,root,-)
 %doc ReleaseNotes/relnotes-5.10 README COPYING VERSION
-%doc dotfiles/dotplrc
-%doc %{docdir}/*
+%doc customize/dotplrc
 %{_mandir}/man1/*
 %dir %{_libdir}/swipl-%{version}
 %{_libdir}/swipl-%{version}/*
 %{_bindir}/*
-%if ! %{separate_xpce}
-%doc %{docdir}-xpce/*
-%endif
 
 # Exclude the files that are in the sub-packages
 %if %{with_java}
 # JPL
+%exclude %{_libdir}/swipl-%{version}/lib/jpl.jar
 %exclude %{_libdir}/swipl-%{version}/library/jpl.pl
 %endif
 # Devel
 %exclude %{_libdir}/swipl-%{version}/lib/*/libswipl.so
 %exclude %{_libdir}/swipl-%{version}/include
-#%%exclude %%{_libdir}/swipl-%%{version}/xpce-*/include
+# Doc
+%exclude %{_libdir}/swipl-%{version}/doc
+# ODBC
+%exclude %{_libdir}/swipl-%{version}/lib/*-linux/odbc4pl.so
+%exclude %{_libdir}/swipl-%{version}/library/odbc.pl
 # Static
 %exclude %{_libdir}/swipl-%{version}/lib/*/libswipl.a
 %if %{separate_xpce}
 # XPCE
 %exclude %{_bindir}/xpce*
-%exclude %{_libdir}/swipl-%{version}/bin/*/xpce
-%exclude %{_libdir}/swipl-%{version}/dotfiles/dotxpcerc
-%exclude %{_libdir}/swipl-%{version}/xpce*
+%exclude %{_libdir}/swipl-%{version}/customize/dotxpcerc
+%exclude %{_libdir}/swipl-%{version}/lib/*-linux/pl2xpce.so
 %exclude %{_libdir}/swipl-%{version}/library/http/xpce_httpd.pl
+%exclude %{_libdir}/swipl-%{version}/Makefile
+%exclude %{_libdir}/swipl-%{version}/swipl.rc
+%exclude %{_libdir}/swipl-%{version}/xpce
+%exclude %{_mandir}/man1/xpce-client.1*
 %endif
 
 %if %{separate_xpce}
 %files xpce
-%defattr(-,root,root,-)
-%doc %[docdir-xpce}/*
-%doc dotfiles/dotxpcerc
+%doc customize/dotxpcerc packages/xpce/INFO
 %{_bindir}/xpce*
-%{_includedir}/swipl/xpce
-%{_libdir}/swipl-%{version}/bin/*/xpce
-%{_libdir}/swipl-%{version}/xpce*
+%{_libdir}/swipl-%{version}/customize/dotxpcerc
+%{_libdir}/swipl-%{version}/lib/*-linux/pl2xpce.so
 %{_libdir}/swipl-%{version}/library/http/xpce_httpd.pl
+%{_libdir}/swipl-%{version}/Makefile
+%{_libdir}/swipl-%{version}/swipl.rc
+%{_libdir}/swipl-%{version}/xpce
+%{_mandir}/man1/xpce-client.1*
 %endif
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/swipl-%{version}/include
-#%%{_libdir}/swipl-%%{version}/xpce-*/include
 %{_libdir}/swipl-%{version}/lib/*/libswipl.so
 %{_libdir}/pkgconfig/swipl.pc
 
+%files doc
+%{_libdir}/swipl-%{version}/doc
+%doc %{docdir}/*
+%doc %{docdir}-xpce/*
+
+%files odbc
+%{_libdir}/swipl-%{version}/lib/*-linux/odbc4pl.so
+%{_libdir}/swipl-%{version}/library/odbc.pl
+%doc packages/odbc/{demo,ChangeLog,odbc.html,README}
+
 %files static
-%defattr(-,root,root,-)
 %{_libdir}/swipl-%{version}/lib/*/libswipl.a
 
 %if %{with_java}
 %files jpl
-%defattr(-,root,root,-)
 %doc packages/jpl/docs/*
 %doc packages/jpl/examples
+%{_libdir}/swipl-%{version}/lib/jpl.jar
 %{_libdir}/swipl-%{version}/library/jpl.pl
 %{_libdir}/swipl-jpl
 %endif
 
 
 %changelog
+* Tue Oct 02 2012 Petr Pisar <ppisar@redhat.com> - 6.2.2-1
+- 6.2.2 bump
+
+* Mon Sep 10 2012 Petr Pisar <ppisar@redhat.com> - 6.2.1-1
+- 6.2.1 bump
+
+* Thu Aug 23 2012 Petr Pisar <ppisar@redhat.com> - 6.2.0-1
+- 6.2.0 bump
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.0.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Mar 22 2012 Petr Pisar <ppisar@redhat.com> - 6.0.2-3
+- Remove JDK version constrain by hacking JDK paths (bug #740897)
+
+* Fri Mar 09 2012 Petr Pisar <ppisar@redhat.com> - 6.0.2-2
+- Own jpl.jar file by jpl sub-package only
+
+* Mon Mar 05 2012 Petr Pisar <ppisar@redhat.com> - 6.0.2-1
+- 6.0.2 bump
+- Artistic licensed code dual-lincensed under GPLv2+ or Artistic 2.0 now
+- Keep executables as symlinks because interpreter uses the symlink value to
+  locate standard library
+- xpce is run as swipl now
+- Move documentation into separate sub-package
+- Move XPCE into separate sub-package
+- Move ODBC interface into separate sub-package
+- Fix JPL interface (bug #590499)
+
+* Thu Mar 01 2012 Petr Pisar <ppisar@redhat.com> - 6.0.1-1
+- 6.0.1 bump
+- Clean spec file
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.10.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

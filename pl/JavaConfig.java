@@ -39,7 +39,8 @@ class JavaConfig {
     System.out.print(
         "JavaConfig [OPTIONS]\n" +
         "  --home         Output path to Java home\n" +
-        "  --libs-only-L  Output -L linker flags\n"
+        "  --libs-only-L  Output -L linker flags\n" +
+        "  --version      Output Java version on first separate line\n"
     );
     System.exit(exitCode);
   }
@@ -59,12 +60,27 @@ class JavaConfig {
    * */
   public static String libsOnlyL() {
     String value;
+    String architecture = System.getProperty("os.arch");
+    String home = home();
+    String filesep = System.getProperty("file.separator");
     String paths[];
    
+    /* The java.library.path works up to JDK 1.6. */
     if (null == (value = System.getProperty("java.library.path"))) {
       return null;
     }
 
+    /* The java.library.path does not work since JDK 1.7. See
+     * <https://bugzilla.redhat.com/show_bug.cgi?id=740762>. */
+    if (null == architecture || null == home || null == filesep) {
+      return null;
+    }
+    value = value + ":" +
+      home + filesep + "lib" + filesep + architecture + ":" +
+      home + filesep + "lib" + filesep + architecture + filesep + "server";
+
+
+    /* Convert the collon delimited paths to LDFLAGS format */
     paths = value.split(":");
 
     for (int i = 0; i < paths.length; i++) {
@@ -84,6 +100,14 @@ class JavaConfig {
 
 
   /*
+   * @Return version of Java home or null in case of error.
+   */
+  public static String version() {
+    return System.getProperty("java.version");
+  }
+
+
+  /*
    * Entry point to this class.
    */
   public static void main(String argv[]) {
@@ -96,12 +120,21 @@ class JavaConfig {
           concatenate(home());
       } else if (argv[i].equals("--libs-only-L")) {
           concatenate(libsOnlyL());
+      } else if (argv[i].equals("--version")) {
+          /* pkg-config prints version on first line */
+          String version = version();
+          if (null == version) {
+            System.exit(2);
+          }
+          System.out.println(version);
       } else {
           usage(1);
       }
     }
 
-    System.out.println(output);
+    if (!output.equals("")) {
+      System.out.println(output);
+    }
     System.exit(0);
   }
 }

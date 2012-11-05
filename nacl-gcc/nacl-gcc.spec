@@ -1,6 +1,6 @@
 %global gitver 3937565
 %global gcc_target_platform x86_64-nacl
-%global bootstrap 1
+%global bootstrap 0
 
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl

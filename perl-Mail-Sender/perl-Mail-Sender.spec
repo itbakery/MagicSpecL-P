@@ -1,6 +1,6 @@
 Name:           perl-Mail-Sender
 Version:        0.8.16
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Module for sending mails with attachments through an SMTP server
 
 Group:          Development/Libraries
@@ -39,10 +39,10 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 # Remove the Win32 module in order to avoid requiring perl(Win32API::Registry)
 find $RPM_BUILD_ROOT -type f -name Win32.pm -exec rm -f {} ';'
-
+magic_rpm_clean.sh
 
 %check
-
+make test
 
 
 %clean
@@ -60,8 +60,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.8.16-10
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.16-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.8.16-10
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.16-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

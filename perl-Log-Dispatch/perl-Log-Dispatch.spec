@@ -1,34 +1,31 @@
-# Build switch:
-#   --with mailtests         Enable mail tests
-
-%define mailtests      0
-
-%{?_with_mailtests:%define mailtests 1}
-
 Name:           perl-Log-Dispatch
-Version:        2.27
-Release:        5%{?dist}
+Version:        2.29
+Release:        3%{?dist}
 Summary:        Dispatches messages to one or more outputs
 Group:          Development/Libraries
 License:        Artistic 2.0
 URL:            http://search.cpan.org/dist/Log-Dispatch/
 Source0:        http://www.cpan.org/authors/id/D/DR/DROLSKY/Log-Dispatch-%{version}.tar.gz
-Patch0:         Log-Dispatch-2.11-enable-mail-tests.patch
+
+# Hacks to make spell checking tests work with hunspell
+Patch0:         Log-Dispatch-2.29.diff
 BuildArch:      noarch
-BuildRequires:  perl(Module::Build)
-BuildRequires:  perl(Params::Validate)
-%if %{mailtests}
+BuildRequires:  perl(Apache2::Log)
 BuildRequires:  perl(Mail::Send), perl(Mail::Sender)
 BuildRequires:  perl(Mail::Sendmail), perl(MIME::Lite)
-%endif
-BuildRequires:  perl(File::Find::Rule)
-BuildRequires:  perl(Apache2::Log)
-BuildRequires:  perl(Sys::Syslog) >= 0.16
+BuildRequires:  perl(Params::Validate) >= 0.15
+BuildRequires:  perl(Sys::Syslog) >= 0.25
+
+# testsuite
+BuildRequires:  perl(Test::More) >= 0.88
 
 # for improved tests
-BuildRequires:  perl(Test::Kwalitee)
+BuildRequires:  perl(Test::EOL)
+BuildRequires:  perl(Test::NoTabs)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
+BuildRequires:  perl(Test::Spelling)
+BuildRequires:  hunspell-en
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description
@@ -39,32 +36,25 @@ new dispatcher object and particularly for creating new outputs.
 
 %prep
 %setup -q -n Log-Dispatch-%{version}
-%if %{mailtests}
 %patch0 -p1
-%endif
-
-# Requirements list: exclude mod_perl
-cat <<__EOF__ > %{name}-perlreq
-#!/bin/sh
-/usr/lib/rpm/perl.req \$* | grep -v 'perl(Apache'
-__EOF__
-%define __perl_requires %{_builddir}/Log-Dispatch-%{version}/%{name}-perlreq
-chmod +x %{__perl_requires}
+sed -i -e "s,set_spell_cmd(.*),set_spell_cmd(\'hunspell -l\')," t/release-pod-spell.t
 
 %build
 %{__perl} Makefile.PL installdirs=vendor
 make
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT create_packlist=0
-chmod -R u+w $RPM_BUILD_ROOT/*
+make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 
-# Delete unnecessary files.
-rm -rf $RPM_BUILD_ROOT%{perl_vendorarch}/auto/
-rm -rf $RPM_BUILD_ROOT%{perl_archlib}/perllocal.pod
+find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
+find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
+
+%{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
-IS_MAINTAINER=1 
+RELEASE_TESTING=1 LOG_DISPATCH_TEST_EMAIL="root@localhost.localdomain" \
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -73,8 +63,19 @@ IS_MAINTAINER=1
 %{_mandir}/man3/*.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.27-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.29-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 29 2012 Petr Pisar <ppisar@redhat.com> - 2.29-2
+- Perl 5.16 rebuild
+
+* Mon Feb 06 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 2.29-1
+- Upstream update.
+- Remove --with mailtests build option (unnecessary).
+- Remove Log-Dispatch-2.11-enable-mail-tests.patch (rotten, obsolete).
+- Rework spec.
+- Enable release tests.
+- Make hunspell checks working.
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.27-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

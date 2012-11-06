@@ -1,6 +1,6 @@
 Name:           perl-Log-Log4perl
-Version:        1.35
-Release:        2%{?dist}
+Version:        1.39
+Release:        1%{?dist}
 Summary:        Log4j implementation for Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -8,22 +8,37 @@ URL:            http://search.cpan.org/dist/Log-Log4perl/
 Source0:        http://www.cpan.org/authors/id/M/MS/MSCHILLI/Log-Log4perl-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(File::Spec) >= 0.82
-BuildRequires:  perl(Test::More) >= 0.45
-
-# Tests
+# Run-time:
+BuildRequires:  perl(base)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(constant)
 BuildRequires:  perl(Data::Dumper)
-BuildRequires:  perl(IO::Socket::INET)
-# Optional tests
-BuildRequires:  perl(DBD::CSV)
 BuildRequires:  perl(DBI)
-BuildRequires:  perl(Log::Dispatch)
-BuildRequires:  perl(Log::Dispatch::FileRotate)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Spec) >= 0.82
+BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(IO::Socket::INET)
+BuildRequires:  perl(IPC::Semaphore)
+BuildRequires:  perl(IPC::SysV)
+BuildRequires:  perl(Log::Dispatch::File)
+BuildRequires:  perl(Log::Dispatch::FileRotate) >= 1.10
+BuildRequires:  perl(Log::Dispatch::Screen)
+BuildRequires:  perl(Log::Dispatch::Syslog)
 BuildRequires:  perl(RRDs)
-BuildRequires:  perl(SQL::Statement)
+BuildRequires:  perl(Storable)
+# Term::ANSIColor is not needed for runing tests
 BuildRequires:  perl(XML::DOM)
-
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+# Tests
+BuildRequires:  perl(fields)
+BuildRequires:  perl(lib)
+BuildRequires:  perl(Test::More) >= 0.45
+# Optional tests
+%if ! (0%{?rhel} >= 7)
+BuildRequires:  perl(DBD::CSV)
+BuildRequires:  perl(Log::Dispatch)
+BuildRequires:  perl(SQL::Statement)
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Log::Log4perl lets you remote-control and fine-tune the logging
@@ -32,23 +47,21 @@ popular (Java-based) Log4j logging package in pure Perl.
 
 %prep
 %setup -q -n Log-Log4perl-%{version}
-find lib -name "*.pm" -exec chmod -c a-x {} ';'
-%{__perl} -pi -e 's|^#!/usr/local/bin/perl|#!%{__perl}|' eg/newsyslog-test eg/benchmarks/simple
+find lib -name "*.pm" -exec chmod -c a-x {} +
+perl -pi -e 's|^#!/usr/local/bin/perl|#!%{__perl}|' eg/newsyslog-test eg/benchmarks/simple
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
-make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+make pure_install DESTDIR=%{buildroot}
+find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
+%{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
- L4P_ALL_TESTS=1
-
+make test L4P_ALL_TESTS=1
 
 %files
 %doc Changes LICENSE README
@@ -57,10 +70,28 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*
 %{_bindir}/*
 
-
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.35-2
-- 为 Magic 3.0 重建
+* Tue Oct 30 2012 Petr Šabata <contyk@redhat.com> - 1.39-1
+- 1.39 bump
+
+* Wed Sep 26 2012 Petr Pisar <ppisar@redhat.com> - 1.38-2
+- Disable optional tests on RHEL >= 7
+
+* Wed Sep 26 2012 Petr Pisar <ppisar@redhat.com> - 1.38-1
+- 1.38 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.37-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 29 2012 Petr Pisar <ppisar@redhat.com> - 1.37-2
+- Perl 5.16 rebuild
+
+* Fri Jun 08 2012 Petr Šabata <contyk@redhat.com> - 1.37-1
+- 1.37 bump
+- Drop command macros
+
+* Wed Feb 22 2012 Petr Pisar <ppisar@redhat.com> - 1.36-1
+- 1.36 bump
 
 * Fri Jan 13 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.35-1
 - bump to 1.35

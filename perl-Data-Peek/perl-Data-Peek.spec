@@ -1,6 +1,6 @@
 Name:           perl-Data-Peek
-Version:        0.33
-Release:        4%{?dist}
+Version:        0.38
+Release:        1%{?dist}
 Summary:        Collection of low-level debug facilities
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -11,14 +11,10 @@ Patch0:         Data-Peek-0.33.patch
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(DynaLoader)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-BuildRequires:  perl(Perl::Tidy)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::NoWarnings)
-BuildRequires:  perl(Test::Pod)
-BuildRequires:  perl(Test::Pod::Coverage)
 BuildRequires:  perl(warnings)
-Requires:       perl(Perl::Tidy)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %{?perl_default_filter}
@@ -45,9 +41,10 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
-
+make test
 
 %files
 %defattr(-,root,root,-)
@@ -58,8 +55,14 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-4
-- 为 Magic 3.0 重建
+* Fri Oct 19 2012 Marcela Mašláňová <mmaslano@redhat.com> 0.38-1
+- Update to 0.38
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Petr Pisar <ppisar@redhat.com> - 0.33-4
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

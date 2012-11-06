@@ -1,27 +1,28 @@
 Name:           perl-BSD-Resource
 Version:        1.29.04
 %define module_version 1.2904
-Release:        10%{?dist}
+Release:        13%{?dist}
 Summary:        BSD process resource limit and priority functions
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/BSD-Resource/
 Source0:        http://www.cpan.org/authors/id/J/JH/JHI/BSD-Resource-%{module_version}.tar.gz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(AutoLoader)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(Exporter)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
 BuildRequires:  perl(Test::Pod::Coverage)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-Provides:       perl(BSD::Resource)
 
+%{?perl_default_filter}
 
 %description
 A module providing an interface for testing and setting process limits
 and priorities.
-
 
 %prep
 %setup -q -n BSD-Resource-%{module_version} 
@@ -31,22 +32,17 @@ and priorities.
 make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} $RPM_BUILD_ROOT/*
+magic_rpm_clean.sh
 
 %check
 make test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %files
-%defattr(-,root,root,-)
 %doc ChangeLog README
 %{perl_vendorarch}/BSD/
 %{perl_vendorarch}/auto/BSD/
@@ -54,8 +50,18 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.29.04-10
-- 为 Magic 3.0 重建
+* Wed Sep 19 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.29.04-13
+- Add perl_default_filter to filter Resource.so from provides. 
+
+* Thu Aug  2 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.29.04-12
+- Update BR, Provides
+- Clean up for modern rpmbuild
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.29.04-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1.29.04-10
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.29.04-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

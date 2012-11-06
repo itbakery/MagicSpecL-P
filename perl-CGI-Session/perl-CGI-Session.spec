@@ -1,17 +1,36 @@
 Name:           perl-CGI-Session
 Version:        4.35
-Release:        12%{?dist}
+Release:        14%{?dist}
 Summary:        Persistent session data in CGI applications
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/CGI-Session/
 Source0:        http://www.cpan.org/modules/by-module/CGI/CGI-Session-%{version}.tar.gz
+# Fix deprecated use of qw//, RHBZ #754689, CPAN RT #69048
+Patch0:         CGI-Session-4.35-qw.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(CGI)
-BuildRequires:	perl(FreezeThaw), perl(ExtUtils::MakeMaker), perl(Test::More), perl(CGI)
+
+BuildRequires:  perl(ExtUtils::MakeMaker)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(CGI)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(DBD::Pg)
+BuildRequires:  perl(DB_File)
+BuildRequires:  perl(DBI)
 BuildRequires:  perl(Digest::MD5)
+BuildRequires:  perl(encoding)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(FreezeThaw)
+BuildRequires:  perl(Safe)
+BuildRequires:  perl(Scalar::Util)
+BuildRequires:  perl(Storable)
+BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Text::Abbrev)
+BuildRequires:  perl(Text::Wrap)
 
 %description
 CGI-Session is a Perl5 library that provides an easy, reliable and modular
@@ -22,6 +41,7 @@ CGI::Session does that and many more.
 
 %prep
 %setup -q -n CGI-Session-%{version}
+%patch0 -p1
 
 %build
 %{__perl} Makefile.PL INSTALLDIRS=vendor
@@ -37,6 +57,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
+magic_rpm_clean.sh
 
 %check
 make test
@@ -51,8 +72,15 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 4.35-12
-- 为 Magic 3.0 重建
+* Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 4.35-14
+- Fix deprecated use of qw// (bug #754689)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.35-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 4.35-12
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Tue Jan 17 2012 Ralf Corsépius <corsepiu@fedoraproject.org> - 4.35-11
 - Add BR: perl(Digest::MD5) (Fix mass rebuild FTBS).

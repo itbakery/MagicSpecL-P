@@ -1,20 +1,24 @@
 Name:           perl-MIME-Lite
-Version:        3.028
-Release:        3%{?dist}
+Version:        3.029
+Release:        1%{?dist}
 Summary:        MIME::Lite - low-calorie MIME generator
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/MIME-Lite/
 Source0:        http://www.cpan.org/authors/id/R/RJ/RJBS/MIME-Lite-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(lib)
 BuildRequires:  perl(Carp)
-BuildRequires:  perl(ExtUtils::MakeMaker) perl(Test::More)
-BuildRequires:  perl(Email::Date::Format) perl(Mail::Address)
+BuildRequires:  perl(Email::Date::Format)
+BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
+BuildRequires:  perl(Mail::Address)
 BuildRequires:  perl(MIME::Types) >= 1.28
-# Tests
+BuildRequires:  perl(Net::SMTP)
 BuildRequires:  perl(Test::More)
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
+BuildRequires:  perl(Test::Pod)
+BuildRequires:  perl(Test::Pod::Coverage)
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 # not detected by automated find-requires:
 Requires:       perl(Email::Date::Format)
 Requires:       perl(MIME::Types) >= 1.28
@@ -28,19 +32,22 @@ not require that you have the Mail:: or MIME:: modules installed.
 %prep
 %setup -q -n MIME-Lite-%{version}
 sed -i 's/\r//' examples/*
-sed -i 's/\r//' contrib/README
+sed -i 's/\r//' contrib/*
+sed -i 's/\r//' COPYING README
+chmod a-x examples/* contrib/*
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
 
 %install
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -empty -exec rmdir ';'
+magic_rpm_clean.sh
 
 %check
-
+make test
 
 %files
 %doc changes.pod README examples contrib COPYING LICENSE
@@ -49,8 +56,16 @@ find %{buildroot} -depth -type d -empty -exec rmdir ';'
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.028-3
-- 为 Magic 3.0 重建
+* Wed Aug 22 2012 Petr Šabata <contyk@redhat.com> - 3.029-1
+- 3.029 bump
+- Fix deps, drop command macros
+- Correct line-endings and file permissions
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.028-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 3.028-3
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.028-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

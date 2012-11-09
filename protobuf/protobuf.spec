@@ -12,13 +12,13 @@
 Summary:        Protocol Buffers - Google's data interchange format
 Name:           protobuf
 Version:        2.4.1
-Release:        3%{?dist}
+Release:        7%{?dist}
 License:        BSD
 Group:          Development/Libraries
 Source:         http://protobuf.googlecode.com/files/%{name}-%{version}.tar.bz2
 Source1:        ftdetect-proto.vim
 Patch1:         protobuf-2.3.0-fedora-gtest.patch
-Patch2:    	    protobuf-2.4.1-java-fixes.patch 
+Patch2:    	    protobuf-2.4.1-java-fixes.patch
 URL:            http://code.google.com/p/protobuf/
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildRequires:  automake autoconf libtool pkgconfig zlib-devel
@@ -84,7 +84,7 @@ Requires: %{name}-devel = %{version}-%{release}
 Requires: %{name}-lite = %{version}-%{release}
 
 %description lite-devel
-This package contains development libraries built with 
+This package contains development libraries built with
 optimize_for = LITE_RUNTIME.
 
 The "optimize_for = LITE_RUNTIME" option causes the compiler to generate code
@@ -97,7 +97,7 @@ Group: Development/Libraries
 Requires: %{name}-devel = %{version}-%{release}
 
 %description lite-static
-This package contains static development libraries built with 
+This package contains static development libraries built with
 optimize_for = LITE_RUNTIME.
 
 The "optimize_for = LITE_RUNTIME" option causes the compiler to generate code
@@ -132,7 +132,7 @@ Summary: Java Protocol Buffers runtime library
 Group:   Development/Languages
 BuildRequires:    java-devel >= 1.6
 BuildRequires:    jpackage-utils
-BuildRequires:    maven2
+BuildRequires:    maven
 BuildRequires:    maven-compiler-plugin
 BuildRequires:    maven-install-plugin
 BuildRequires:    maven-jar-plugin
@@ -144,8 +144,6 @@ BuildRequires:    maven-doxia
 BuildRequires:    maven-doxia-sitetools
 Requires:         java
 Requires:         jpackage-utils
-Requires(post):   jpackage-utils
-Requires(postun): jpackage-utils
 Conflicts:        %{name}-compiler > %{version}
 Conflicts:        %{name}-compiler < %{version}
 
@@ -193,14 +191,12 @@ popd
 
 %if %{with java}
 pushd java
-export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
-mkdir -p $MAVEN_REPO_LOCAL
-mvn-jpp -Dmaven.repo.local=$MAVEN_REPO_LOCAL install javadoc:javadoc
+mvn-rpmbuild install javadoc:javadoc
 popd
 %endif
 
 %check
-make %{?_smp_mflags} check
+#make %{?_smp_mflags} check
 
 %install
 rm -rf %{buildroot}
@@ -225,9 +221,10 @@ cp -rp target/site/apidocs %{buildroot}%{_javadocdir}/%{name}
 
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_to_maven_depmap com.google.protobuf %{name}-java %{version} JPP %{name}
+%add_maven_depmap JPP-%{name}.pom %{name}.jar
 
 %endif
+magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
@@ -237,14 +234,6 @@ install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
 
 %post compiler -p /sbin/ldconfig
 %postun compiler -p /sbin/ldconfig
-
-%if %{with java}
-%post java
-%update_maven_depmap
-
-%postun java
-%update_maven_depmap
-%endif
 
 %clean
 rm -rf %{buildroot}
@@ -294,7 +283,7 @@ rm -rf %{buildroot}
 %{python_sitelib}/google/protobuf/
 %{python_sitelib}/protobuf-%{version}-py2.?.egg-info/
 %{python_sitelib}/protobuf-%{version}-py2.?-nspkg.pth
-%doc python/README.txt 
+%doc python/README.txt
 %doc examples/add_person.py examples/list_people.py examples/addressbook.proto
 %endif
 
@@ -306,9 +295,9 @@ rm -rf %{buildroot}
 %if %{with java}
 %files java
 %defattr(-, root, root, -)
-%{_mavenpomdir}/JPP-protobuf.pom
-%{_mavendepmapfragdir}/protobuf
-%{_javadir}/*
+%{_mavenpomdir}/JPP-%{name}.pom
+%{_mavendepmapfragdir}/%{name}
+%{_javadir}/%{name}.jar
 %doc examples/AddPerson.java examples/ListPeople.java
 
 %files javadoc
@@ -317,8 +306,20 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
-* Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 2.4.1-3
-- 为 Magic 3.0 重建
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Mar 19 2012 Dan Horák <dan[at]danny.cz> - 2.4.1-6
+- disable test-suite until g++ 4.7 issues are resolved
+
+* Mon Mar 19 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.4.1-5
+- Update to latest java packaging guidelines
+
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-4
+- Rebuilt for c++ ABI breakage
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.4.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Sep 27 2011 Pierre-Yves Chibon <pingou@pingoured.fr> - 2.4.1-2
 - Adding zlib-devel as BR (rhbz: #732087)

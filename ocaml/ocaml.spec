@@ -1,40 +1,37 @@
-%global _default_patch_fuzz 2
-
 Name:           ocaml
-Version:        3.12.0
-Release:        6%{?dist}
+Version:        4.00.1
+Release:        1%{?dist}
 
-Summary:        Objective Caml compiler and programming environment
+Summary:        OCaml compiler and programming environment
 
-Group:          Development/Languages
 License:        QPL and (LGPLv2+ with exceptions)
 
 URL:            http://www.ocaml.org
 
-Source0:        http://caml.inria.fr/distrib/ocaml-3.12/ocaml-%{version}.tar.gz
-Source1:        http://caml.inria.fr/distrib/ocaml-3.12/ocaml-3.12-refman.html.tar.gz
-Source2:        http://caml.inria.fr/distrib/ocaml-3.12/ocaml-3.12-refman.pdf
-Source3:        http://caml.inria.fr/distrib/ocaml-3.12/ocaml-3.12-refman.info.tar.gz
+Source0:        http://caml.inria.fr/pub/distrib/ocaml-4.00/ocaml-%{version}.tar.bz2
+Source1:        http://caml.inria.fr/pub/distrib/ocaml-4.00/ocaml-4.00-refman-html.tar.gz
+Source2:        http://caml.inria.fr/pub/distrib/ocaml-4.00/ocaml-4.00-refman.pdf
+Source3:        http://caml.inria.fr/pub/distrib/ocaml-4.00/ocaml-4.00-refman.info.tar.gz
 
-# Useful utilities from Debian, and sent upstream.
-# http://git.debian.org/?p=pkg-ocaml-maint/packages/ocaml.git;a=tree;f=debian/ocamlbyteinfo;hb=HEAD
-Source6:        ocamlbyteinfo.ml
-#Source7:        ocamlplugininfo.ml
-
-Patch0:         ocaml-3.12.0-rpath.patch
-Patch1:         ocaml-user-cflags.patch
-
-# Fix for RHBZ#691896.  This is upstream in 3.12.1.
-Patch2:         0007-Fix-ocamlopt-w.r.t.-binutils-2.21.patch
-
-# Patch from Debian for ARM (sent upstream).
-Patch3:         debian_patches_0013-ocamlopt-arm-add-.type-directive-for-code-symbols.patch
-
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-# Depend on previous version of OCaml so that ocamlobjinfo
-# can run.
-BuildRequires:  ocaml
+# IMPORTANT NOTE:
+#
+# These patches are generated from unpacked sources stored in a
+# fedorahosted git repository.  If you change the patches here, they
+# will be OVERWRITTEN by the next update.  Instead, request commit
+# access to the fedorahosted project:
+#
+# http://git.fedorahosted.org/git/?p=fedora-ocaml.git
+#
+# ALTERNATIVELY add a patch to the end of the list (leaving the
+# existing patches unchanged) adding a comment to note that it should
+# be incorporated into the git repo at a later time.
+#
+Patch0001:      0001-Add-.gitignore-file-to-ignore-generated-files.patch
+Patch0002:      0002-Ensure-empty-compilerlibs-directory-is-created-by-gi.patch
+Patch0003:      0003-ocamlbyteinfo-ocamlplugininfo-Useful-utilities-from-.patch
+Patch0004:      0004-Don-t-add-rpaths-to-libraries.patch
+Patch0005:      0005-configure-Allow-user-defined-C-compiler-flags.patch
+Patch0006:      0006-Add-support-for-ppc64.patch
 
 BuildRequires:  ncurses-devel
 BuildRequires:  gdbm-devel
@@ -43,7 +40,7 @@ BuildRequires:  tk-devel
 BuildRequires:  emacs
 BuildRequires:  gawk
 BuildRequires:  perl
-BuildRequires:  util-linux-ng
+BuildRequires:  util-linux
 BuildRequires:  libICE-devel
 BuildRequires:  libSM-devel
 BuildRequires:  libX11-devel
@@ -56,20 +53,40 @@ BuildRequires:  libXt-devel
 BuildRequires:  mesa-libGL-devel
 BuildRequires:  mesa-libGLU-devel
 BuildRequires:  chrpath
+
+# git is required for patch management.
+BuildRequires:  git
+
 Requires:       gcc
 Requires:       ncurses-devel
 Requires:       gdbm-devel
 Requires:       rpm-build >= 4.8.0
-Provides:       ocaml(compiler) = %{version}
-ExclusiveArch:  alpha %{arm} %{ix86} ia64 x86_64 ppc sparc sparcv9 ppc64
 
-%global __ocaml_requires_opts -c -f %{buildroot}%{_bindir}/ocamlobjinfo
-%global __ocaml_provides_opts -f %{buildroot}%{_bindir}/ocamlobjinfo
+Provides:       ocaml(compiler) = %{version}
+
+# We can compile OCaml on just about anything, but the native code
+# backend is only available on a subset of architectures.
+ExclusiveArch:  alpha %{arm} ia64 %{ix86} x86_64 ppc ppc64 sparc sparcv9
+
+%ifarch %{arm} %{ix86} ppc ppc64 sparc sparcv9 x86_64
+%global native_compiler 1
+%else
+%global native_compiler 0
+%endif
+
+%ifarch %{arm} %{ix86} ppc ppc64 sparc sparcv9 x86_64
+%global natdynlink 1
+%else
+%global natdynlink 0
+%endif
+
+%global __ocaml_requires_opts -c -f '%{buildroot}%{_bindir}/ocamlrun %{buildroot}%{_bindir}/ocamlobjinfo'
+%global __ocaml_provides_opts -f '%{buildroot}%{_bindir}/ocamlrun %{buildroot}%{_bindir}/ocamlobjinfo'
 
 
 %description
-Objective Caml is a high-level, strongly-typed, functional and
-object-oriented programming language from the ML family of languages.
+OCaml is a high-level, strongly-typed, functional and object-oriented
+programming language from the ML family of languages.
 
 This package comprises two batch compilers (a fast bytecode compiler
 and an optimizing native-code compiler), an interactive toplevel system,
@@ -78,52 +95,47 @@ and a comprehensive library.
 
 
 %package runtime
-Group:          System Environment/Libraries
-Summary:        Objective Caml runtime environment
-Requires:       util-linux-ng
+Summary:        OCaml runtime environment
+Requires:       util-linux
 Provides:       ocaml(runtime) = %{version}
 
 %description runtime
-Objective Caml is a high-level, strongly-typed, functional and
-object-oriented programming language from the ML family of languages.
+OCaml is a high-level, strongly-typed, functional and object-oriented
+programming language from the ML family of languages.
 
-This package contains the runtime environment needed to run Objective
-Caml bytecode.
+This package contains the runtime environment needed to run OCaml
+bytecode.
 
 
 %package source
-Group:          Development/Languages
-Summary:        Source code for Objective Caml libraries
+Summary:        Source code for OCaml libraries
 Requires:       ocaml = %{version}-%{release}
 
 %description source
-Source code for Objective Caml libraries.
+Source code for OCaml libraries.
 
 
 %package x11
-Group:          System Environment/Libraries
-Summary:        X11 support for Objective Caml
+Summary:        X11 support for OCaml
 Requires:       ocaml-runtime = %{version}-%{release}
 Requires:       libX11-devel
 
 %description x11
-X11 support for Objective Caml.
+X11 support for OCaml.
 
 
 %package labltk
-Group:          System Environment/Libraries
-Summary:        Tk bindings for Objective Caml
+Summary:        Tk bindings for OCaml
 Requires:       ocaml-runtime = %{version}-%{release}
 
 %description labltk
-Labltk is a library for interfacing Objective Caml with the scripting
-language Tcl/Tk.
+Labltk is a library for interfacing OCaml with the scripting language
+Tcl/Tk.
 
 This package contains the runtime files.
 
 
 %package labltk-devel
-Group:          Development/Libraries
 Summary:        Development files for labltk
 Requires:       ocaml = %{version}-%{release}
 Requires:       %{name}-labltk = %{version}-%{release}
@@ -132,100 +144,127 @@ Requires:       tcl-devel
 Requires:       tk-devel
 
 %description labltk-devel
-Labltk is a library for interfacing Objective Caml with the scripting
-language Tcl/Tk.
+Labltk is a library for interfacing OCaml with the scripting language
+Tcl/Tk.
 
 This package contains the development files.  It includes the ocaml
 browser for code editing and library browsing.
 
 
 %package camlp4
-Group:          Development/Languages
-Summary:        Pre-Processor-Pretty-Printer for Objective Caml
+Summary:        Pre-Processor-Pretty-Printer for OCaml
 Requires:       ocaml-runtime = %{version}-%{release}
 
 %description camlp4
-Camlp4 is a Pre-Processor-Pretty-Printer for Objective Caml, parsing a
-source file and printing some result on standard output.
+Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
+file and printing some result on standard output.
 
 This package contains the runtime files.
 
 
 %package camlp4-devel
-Group:          Development/Languages
-Summary:        Pre-Processor-Pretty-Printer for Objective Caml
+Summary:        Pre-Processor-Pretty-Printer for OCaml
 Requires:       ocaml = %{version}-%{release}
 Requires:       %{name}-camlp4 = %{version}-%{release}
 
 %description camlp4-devel
-Camlp4 is a Pre-Processor-Pretty-Printer for Objective Caml, parsing a
-source file and printing some result on standard output.
+Camlp4 is a Pre-Processor-Pretty-Printer for OCaml, parsing a source
+file and printing some result on standard output.
 
 This package contains the development files.
 
 
 %package ocamldoc
-Group:          Development/Languages
-Summary:        Documentation generator for Objective Caml.
+Summary:        Documentation generator for OCaml.
 Requires:       ocaml = %{version}-%{release}
 Provides:	ocamldoc
 
 %description ocamldoc
-Documentation generator for Objective Caml.
+Documentation generator for OCaml.
 
 
 %package emacs
-Group:          Development/Languages
-Summary:        Emacs mode for Objective Caml
+Summary:        Emacs mode for OCaml
 Requires:       ocaml = %{version}-%{release}
 Requires:       emacs
 
 %description emacs
-Emacs mode for Objective Caml.
+Emacs mode for OCaml.
 
 
 %package docs
-Group:          Development/Languages
-Summary:        Documentation for Objective Caml
+Summary:        Documentation for OCaml
 Requires:       ocaml = %{version}-%{release}
 Requires(post): /sbin/install-info
 Requires(preun): /sbin/install-info
 
 
 %description docs
-Objective Caml is a high-level, strongly-typed, functional and
-object-oriented programming language from the ML family of languages.
+OCaml is a high-level, strongly-typed, functional and object-oriented
+programming language from the ML family of languages.
 
 This package contains documentation in PDF and HTML format as well as
 man pages and info files.
+
+
+%package compiler-libs
+Summary:        Compiler libraries for OCaml
+Requires:       ocaml = %{version}-%{release}
+
+
+%description compiler-libs
+OCaml is a high-level, strongly-typed, functional and object-oriented
+programming language from the ML family of languages.
+
+This package contains some modules used internally by the OCaml
+compilers, useful for the development of some OCaml applications.
+Note that this exposes internal details of the OCaml compiler which
+may not be portable between versions.
 
 
 %prep
 %setup -q -T -b 0 -n %{name}-%{version}
 %setup -q -T -D -a 1 -n %{name}-%{version}
 %setup -q -T -D -a 3 -n %{name}-%{version}
-%patch0 -p1 -b .rpath
-%patch1 -p1 -b .cflags
-%patch2 -p1 -b .rhbz691896
-%patch3 -p1 -b .arm-type-dir
-
 cp %{SOURCE2} refman.pdf
+
+git init
+git config user.email "noone@example.com"
+git config user.name "no one"
+git add .
+git commit -a -q -m "%{version} baseline"
+git am %{patches} </dev/null
 
 
 %build
-CFLAGS="$RPM_OPT_FLAGS" ./configure \
+# make -jN (N > 1) breaks the build.  Therefore we cannot use
+# %{?_smp_mflags} nor MAKEFLAGS.
+unset MAKEFLAGS
+
+# For ppc64 we need a larger stack than default to compile some files
+# because the stages in the OCaml compiler are not mutually tail
+# recursive.
+%ifarch ppc64
+ulimit -a
+ulimit -Hs 65536
+ulimit -Ss 65536
+%endif
+
+CFLAGS="$RPM_OPT_FLAGS" \
+./configure \
     -bindir %{_bindir} \
     -libdir %{_libdir}/ocaml \
     -x11lib %{_libdir} \
     -x11include %{_includedir} \
     -mandir %{_mandir}/man1
-make world opt opt.opt
-# %{?_smp_mflags} breaks the build
+make world
+%if %{native_compiler}
+make opt opt.opt
+%endif
 make -C emacs ocamltags
 
 # Currently these tools are supplied by Debian, but are expected
 # to go upstream at some point.
-cp %{SOURCE6} .
 includes="-nostdlib -I stdlib -I utils -I parsing -I typing -I bytecomp -I asmcomp -I driver -I otherlibs/unix -I otherlibs/str -I otherlibs/dynlink"
 boot/ocamlrun ./ocamlc $includes dynlinkaux.cmo ocamlbyteinfo.ml -o ocamlbyteinfo
 #cp otherlibs/dynlink/natdynlink.ml .
@@ -233,7 +272,6 @@ boot/ocamlrun ./ocamlc $includes dynlinkaux.cmo ocamlbyteinfo.ml -o ocamlbyteinf
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make install \
      BINDIR=$RPM_BUILD_ROOT%{_bindir} \
      LIBDIR=$RPM_BUILD_ROOT%{_libdir}/ocaml \
@@ -262,15 +300,11 @@ chrpath --delete $RPM_BUILD_ROOT%{_libdir}/ocaml/stublibs/*.so
 
 install -m 0755 ocamlbyteinfo $RPM_BUILD_ROOT%{_bindir}
 #install -m 0755 ocamlplugininfo $RPM_BUILD_ROOT%{_bindir}
-
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-
+magic_rpm_clean.sh
 
 %post docs
-/sbin/install-info \
-    --entry="* ocaml: (ocaml).   The Objective Caml compiler and programming environment" \
+/usr/sbin/install-info \
+    --entry="* ocaml: (ocaml).   The OCaml compiler and programming environment" \
     --section="Programming Languages" \
     %{_infodir}/%{name}.info \
     %{_infodir}/dir 2>/dev/null || :
@@ -278,30 +312,40 @@ rm -rf $RPM_BUILD_ROOT
 
 %preun docs
 if [ $1 -eq 0 ]; then
-  /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir 2>/dev/null || :
+  /usr/sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir 2>/dev/null || :
 fi
 
 
 %files
-%defattr(-,root,root,-)
 %{_bindir}/ocaml
 %{_bindir}/ocamlbyteinfo
 %{_bindir}/ocamlbuild
 %{_bindir}/ocamlbuild.byte
+%if %{native_compiler}
 %{_bindir}/ocamlbuild.native
+%endif
 %{_bindir}/ocamlc
+%if %{native_compiler}
 %{_bindir}/ocamlc.opt
+%endif
 %{_bindir}/ocamlcp
 %{_bindir}/ocamldebug
 %{_bindir}/ocamldep
+%if %{native_compiler}
 %{_bindir}/ocamldep.opt
+%endif
 %{_bindir}/ocamllex
+%if %{native_compiler}
 %{_bindir}/ocamllex.opt
+%endif
 %{_bindir}/ocamlmklib
 %{_bindir}/ocamlmktop
 %{_bindir}/ocamlobjinfo
+%if %{native_compiler}
 %{_bindir}/ocamlopt
 %{_bindir}/ocamlopt.opt
+%{_bindir}/ocamloptp
+%endif
 #%{_bindir}/ocamlplugininfo
 %{_bindir}/ocamlprof
 %{_bindir}/ocamlyacc
@@ -314,29 +358,33 @@ fi
 %{_libdir}/ocaml/ld.conf
 %{_libdir}/ocaml/Makefile.config
 %{_libdir}/ocaml/*.a
-%ifnarch %{arm}
+%if %{natdynlink}
 %{_libdir}/ocaml/*.cmxs
 %endif
+%if %{native_compiler}
 %{_libdir}/ocaml/*.cmxa
 %{_libdir}/ocaml/*.cmx
-%{_libdir}/ocaml/*.mli
 %{_libdir}/ocaml/*.o
+%endif
+%{_libdir}/ocaml/*.mli
 %{_libdir}/ocaml/libcamlrun_shared.so
 %{_libdir}/ocaml/objinfo_helper
 %{_libdir}/ocaml/vmthreads/*.mli
 %{_libdir}/ocaml/vmthreads/*.a
+%if %{native_compiler}
 %{_libdir}/ocaml/threads/*.a
 %{_libdir}/ocaml/threads/*.cmxa
 %{_libdir}/ocaml/threads/*.cmx
+%endif
 %{_libdir}/ocaml/caml
 %{_libdir}/ocaml/ocamlbuild
 %exclude %{_libdir}/ocaml/graphicsX11.mli
 
 
 %files runtime
-%defattr(-,root,root,-)
 %{_bindir}/ocamlrun
 %dir %{_libdir}/ocaml
+%{_libdir}/ocaml/VERSION
 %{_libdir}/ocaml/*.cmo
 %{_libdir}/ocaml/*.cmi
 %{_libdir}/ocaml/*.cma
@@ -355,18 +403,15 @@ fi
 
 
 %files source
-%defattr(-,root,root,-)
 %{_libdir}/ocaml/*.ml
 
 
 %files x11
-%defattr(-,root,root,-)
 %{_libdir}/ocaml/graphicsX11.cmi
 %{_libdir}/ocaml/graphicsX11.mli
 
 
 %files labltk
-%defattr(-,root,root,-)
 %{_bindir}/labltk
 %dir %{_libdir}/ocaml/labltk
 %{_libdir}/ocaml/labltk/*.cmi
@@ -377,22 +422,22 @@ fi
 
 
 %files labltk-devel
-%defattr(-,root,root,-)
 %{_bindir}/ocamlbrowser
 %{_libdir}/ocaml/labltk/labltktop
 %{_libdir}/ocaml/labltk/pp
 %{_libdir}/ocaml/labltk/tkcompiler
 %{_libdir}/ocaml/labltk/*.a
+%if %{native_compiler}
 %{_libdir}/ocaml/labltk/*.cmxa
 %{_libdir}/ocaml/labltk/*.cmx
-%{_libdir}/ocaml/labltk/*.mli
 %{_libdir}/ocaml/labltk/*.o
+%endif
+%{_libdir}/ocaml/labltk/*.mli
 %doc otherlibs/labltk/examples_labltk
 %doc otherlibs/labltk/examples_camltk
 
 
 %files camlp4
-%defattr(-,root,root,-)
 %dir %{_libdir}/ocaml/camlp4
 %{_libdir}/ocaml/camlp4/*.cmi
 %{_libdir}/ocaml/camlp4/*.cma
@@ -412,9 +457,9 @@ fi
 
 
 %files camlp4-devel
-%defattr(-,root,root,-)
 %{_bindir}/camlp4*
 %{_bindir}/mkcamlp4
+%if %{native_compiler}
 %{_libdir}/ocaml/camlp4/*.a
 %{_libdir}/ocaml/camlp4/*.cmxa
 %{_libdir}/ocaml/camlp4/*.cmx
@@ -427,31 +472,137 @@ fi
 %{_libdir}/ocaml/camlp4/Camlp4Printers/*.o
 %{_libdir}/ocaml/camlp4/Camlp4Top/*.cmx
 %{_libdir}/ocaml/camlp4/Camlp4Top/*.o
+%endif
 %{_mandir}/man1/*
 
 
 %files ocamldoc
-%defattr(-,root,root,-)
 %{_bindir}/ocamldoc*
 %{_libdir}/ocaml/ocamldoc
 %doc ocamldoc/Changes.txt
 
 
 %files docs
-%defattr(-,root,root,-)
 %doc refman.pdf htmlman
 %{_infodir}/*
+%if %{native_compiler}
 %{_mandir}/man3/*
+%endif
 
 
 %files emacs
-%defattr(-,root,root,-)
 %{_datadir}/emacs/site-lisp/*
 %{_bindir}/ocamltags
 %doc emacs/README
 
 
+%files compiler-libs
+%dir %{_libdir}/ocaml/compiler-libs
+%{_libdir}/ocaml/compiler-libs/*.cmi
+%{_libdir}/ocaml/compiler-libs/*.cmo
+%{_libdir}/ocaml/compiler-libs/*.cma
+%if %{native_compiler}
+%{_libdir}/ocaml/compiler-libs/*.a
+%{_libdir}/ocaml/compiler-libs/*.cmxa
+%{_libdir}/ocaml/compiler-libs/*.cmx
+%{_libdir}/ocaml/compiler-libs/*.o
+%endif
+
+
 %changelog
+* Tue Oct 16 2012 Richard W.M. Jones <rjones@redhat.com> - 4.00.1-1
+- Update to upstream version 4.00.1.
+- Clean up the spec file further.
+
+* Thu Aug 16 2012 Richard W.M. Jones <rjones@redhat.com> - 4.00.0-2
+- ppc supports natdynlink.
+
+* Sat Jul 28 2012 Richard W.M. Jones <rjones@redhat.com> - 4.00.0-1
+- Upgrade to OCaml 4.00.0 official release.
+- Remove one patch (add -lpthread) which went upstream.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.00.0-0.6.beta2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Richard W.M. Jones <rjones@redhat.com> - 4.00.0-0.5.beta2
+- No change, just fix up changelog.
+
+* Thu Jun  7 2012 Richard W.M. Jones <rjones@redhat.com> 4.00.0-0.3.beta2
+- Upgrade to OCaml 4.00.0 beta 2.
+- The language is now officially called OCaml (not Objective Caml, O'Caml etc)
+- Rebase patches on top:
+  . New ARM backend patch no longer required, since upstream.
+  . Replacement config.guess, config.sub no longer required, since upstream
+    versions are newer.
+- PPC64 backend rebased and fixed.
+  . Increase the default size of the stack when compiling.
+- New tool: ocamloptp (ocamlopt profiler).
+- New VERSION file in ocaml-runtime package.
+- New ocaml-compiler-libs subpackage.
+- Rearrange ExclusiveArch alphanumerically.
+- alpha, ia64 native backends have been removed upstream, so they are
+  no longer supported as native compiler targets.
+- Remove defattr.
+- Make OCaml dependency generator self-contained so it doesn't need
+  previous version of OCaml around.
+
+* Wed Jun  6 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-12
+- ppc64: Include fix for minor heap corruption because of unaligned
+  minor heap register (RHBZ#826649).
+- Unset MAKEFLAGS before running build.
+
+* Wed Jun  6 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-11
+- ppc64: Fix position of stack arguments to external C functions
+  when there are more than 8 parameters.
+
+* Tue Jun  5 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-10
+- Include patch to link dllthreads.so with -lpthread explicitly, to
+  fix problem with 'pthread_atfork' symbol missing (statically linked)
+  on ppc64.
+
+* Sun Jun  3 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-9
+- Include svn rev 12548 to fix invalid generation of Thumb-2 branch
+  instruction TBH (upstream PR#5623, RHBZ#821153).
+
+* Wed May 29 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-8
+- Modify the ppc64 patch to reduce the delta between power64 and
+  upstream power backends.
+- Clean up the spec file and bring it up to modern standards.
+  * Remove patch fuzz directive.
+  * Remove buildroot directive.
+  * Rearrange source unpacking.
+  * Remove chmod of GNU config.* files, since git does it.
+  * Don't need to remove buildroot in install section.
+  * Remove clean section.
+  * git am </dev/null to avoid hang (thanks Adam Jackson).
+- Note there is no functional change in the above.
+
+* Tue May 29 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-6
+- Move patches to external git repo:
+  http://git.fedorahosted.org/git/?p=fedora-ocaml.git
+  There should be no change introduced here.
+
+* Tue May 15 2012 Karsten Hopp <karsten@redhat.com> 3.12.1-4
+- ppc64 got broken by the new ARM backend, add a minor patch
+
+* Sat Apr 28 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-3
+- New ARM backend by Benedikt Meurer, backported to OCaml 3.12.1.
+  This has several advantages, including enabling natdynlink on ARM.
+- Provide updated config.guess and config.sub (from OCaml upstream tree).
+
+* Thu Jan 12 2012 Richard W.M. Jones <rjones@redhat.com> 3.12.1-2
+- add back ocaml-ppc64.patch for ppc secondary arch, drop .cmxs files
+  from file list on ppc (cherry picked from F16 - this should have
+  gone into Rawhide originally then been cherry picked back to F16)
+
+* Fri Jan  6 2012 Richard W.M. Jones <rjones@redhat.com> - 3.12.1-1
+- New upstream version 3.12.1.  This is a bugfix update.
+
+* Thu Dec  8 2011 Richard W.M. Jones <rjones@redhat.com> - 3.12.0-7
+- Allow this package to be compiled on platforms without native
+  support and/or natdynlink, specifically ppc64.  This updates (and
+  hopefully does not break) DJ's previous *.cmxs change for arm.
+
 * Fri Sep 23 2011 DJ Delorie <dj@redhat.com> - 3.12.0-6
 - Add arm type directive patch.
 - Allow more arm arches.

@@ -2,20 +2,20 @@
 %define glib2_version   2.26.0
 %define dbus_version    1.4
 %define dbus_glib_version 0.86
-%define nm_version      1:0.9.4-5
-%define obsoletes_ver   1:0.9.3.997-2
+%define nm_version      1:0.9.7.0
+%define obsoletes_ver   1:0.9.7
 
-%define snapshot .git20120521
-%define realversion 0.9.4.1
+%define snapshot .git20121016
+%define realversion 0.9.7.0
 
 Name: network-manager-applet
 Summary: A network control and status applet for NetworkManager
-Version: 0.9.4
+Version: 0.9.7.0
 Release: 4%{snapshot}%{?dist}
 Group: Applications/System
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
-Obsoletes: NetworkManager-gnome <= %{obsoletes_ver}
+Obsoletes: NetworkManager-gnome < %{obsoletes_ver}
 
 Source: http://ftp.gnome.org/pub/GNOME/sources/network-manager-applet/0.9/%{name}-%{realversion}%{snapshot}.tar.bz2
 Patch0: nm-applet-no-notifications.patch
@@ -26,7 +26,7 @@ Requires: NetworkManager >= %{nm_version}
 Requires: NetworkManager-glib >= %{nm_version}
 Requires: libnm-gtk = %{version}-%{release}
 Requires: dbus >= 1.4
-Requires: dbus-glib >= 0.86
+Requires: dbus-glib >= 0.94
 Requires: libnotify >= 0.4.3
 Requires: gnome-keyring
 Requires: gnome-icon-theme
@@ -39,11 +39,7 @@ BuildRequires: dbus-glib-devel >= %{dbus_glib_version}
 BuildRequires: glib2-devel >= %{glib2_version}
 BuildRequires: gtk3-devel >= %{gtk3_version}
 BuildRequires: GConf2-devel
-%if 0%{?fedora} > 16
 BuildRequires: libgnome-keyring-devel
-%else
-BuildRequires: gnome-keyring-devel
-%endif
 BuildRequires: gobject-introspection-devel >= 0.10.3
 BuildRequires: gettext-devel
 BuildRequires: /usr/bin/autopoint
@@ -57,6 +53,7 @@ BuildRequires: desktop-file-utils
 BuildRequires: gnome-bluetooth-libs-devel >= 2.27.7.1-1
 %endif
 BuildRequires: iso-codes-devel
+BuildRequires: libgudev1-devel >= 147
 
 
 %description
@@ -68,7 +65,7 @@ Summary: A network connection configuration editor for NetworkManager
 Requires: NetworkManager-glib >= %{nm_version}
 Requires: libnm-gtk = %{version}-%{release}
 Requires: dbus >= 1.4
-Requires: dbus-glib >= 0.86
+Requires: dbus-glib >= 0.94
 Requires: gnome-keyring
 Requires: gnome-icon-theme
 Requires(post): /usr/bin/gtk-update-icon-cache
@@ -83,7 +80,7 @@ Summary: Private libraries for NetworkManager GUI support
 Group: Development/Libraries
 Requires: gtk3 >= %{gtk3_version}
 Requires: mobile-broadband-provider-info >= 0.20090602
-Obsoletes: NetworkManager-gtk <= %{obsoletes_ver}
+Obsoletes: NetworkManager-gtk < %{obsoletes_ver}
 
 %description -n libnm-gtk
 This package contains private libraries to be used only by nm-applet,
@@ -94,7 +91,7 @@ Summary: Private header files for NetworkManager GUI support
 Group: Development/Libraries
 Requires: NetworkManager-devel >= %{nm_version}
 Requires: NetworkManager-glib-devel >= %{nm_version}
-Obsoletes: NetworkManager-gtk-devel <= %{obsoletes_ver}
+Obsoletes: NetworkManager-gtk-devel < %{obsoletes_ver}
 Requires: libnm-gtk = %{version}-%{release}
 Requires: gtk3-devel
 Requires: pkgconfig
@@ -124,7 +121,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties
-
 magic_rpm_clean.sh
 %find_lang nm-applet
 cat nm-applet.lang >> %{name}.lang
@@ -140,28 +136,8 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/nm-connection-edit
 %post	-n libnm-gtk -p /sbin/ldconfig
 %postun	-n libnm-gtk -p /sbin/ldconfig
 
-%pre
-if [ "$1" -gt 1 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-  fi
-fi
-
-%preun
-if [ "$1" -eq 0 ]; then
-  export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-  if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-    gconftool-2 --makefile-uninstall-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-  fi
-fi
-
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-if [ -f "%{_sysconfdir}/gconf/schemas/nm-applet.schemas" ]; then
-  gconftool-2 --makefile-install-rule %{_sysconfdir}/gconf/schemas/nm-applet.schemas >/dev/null
-fi
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -175,23 +151,27 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %post -n nm-connection-editor
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %postun -n nm-connection-editor
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %posttrans -n nm-connection-editor
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 
 %files
 %defattr(-,root,root,0755)
 %doc COPYING NEWS AUTHORS README CONTRIBUTING
 %dir %{_datadir}/nm-applet
 %{_bindir}/nm-applet
+%{_libexecdir}/nm-applet-migration-tool
 %{_datadir}/applications/nm-applet.desktop
-%{_datadir}/nm-applet/wired-8021x.ui
+%{_datadir}/nm-applet/8021x.ui
 %{_datadir}/nm-applet/info.ui
 %{_datadir}/nm-applet/gsm-unlock.ui
 %{_datadir}/nm-applet/keyring.png
@@ -204,8 +184,8 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/22x22/apps/nm-vpn-active-lock.png
 %{_datadir}/icons/hicolor/22x22/apps/nm-vpn-connecting*.png
 %{_datadir}/icons/hicolor/22x22/apps/nm-wwan-tower.png
+%{_datadir}/GConf/gsettings/nm-applet.convert
 %{_sysconfdir}/xdg/autostart/nm-applet.desktop
-%{_sysconfdir}/gconf/schemas/nm-applet.schemas
 
 # Yes, lang files for the applet go in nm-connection-editor RPM since it
 # is the RPM that everything else depends on
@@ -221,6 +201,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/icons/hicolor/*/apps/nm-device-*.*
 %{_datadir}/icons/hicolor/*/apps/nm-no-connection.*
 %{_datadir}/icons/hicolor/16x16/apps/nm-vpn-standalone-lock.png
+%{_datadir}/glib-2.0/schemas/org.gnome.nm-applet.gschema.xml
 %dir %{_datadir}/gnome-vpn-properties
 %ifnarch s390 s390x
 %{_libdir}/gnome-bluetooth/plugins/*
@@ -231,6 +212,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_libdir}/libnm-gtk.so.*
 %dir %{_datadir}/libnm-gtk
 %{_datadir}/libnm-gtk/*.ui
+%{_libdir}/girepository-1.0/NMGtk-1.0.typelib
 
 %files -n libnm-gtk-devel
 %defattr(-,root,root,0755)
@@ -238,8 +220,50 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_includedir}/libnm-gtk/*.h
 %{_libdir}/pkgconfig/libnm-gtk.pc
 %{_libdir}/libnm-gtk.so
+%{_datadir}/gir-1.0/NMGtk-1.0.gir
 
 %changelog
+* Thu Nov 08 2012 Kalev Lember <kalevlember@gmail.com> - 0.9.7.0-4.git20121016
+- Update the versioned obsoletes for the new F17 NM build
+
+* Tue Oct 16 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-3.git20121016
+- Update to git snapshot (git20121016)
+- editor: fix a crash when no VPN plugins are installed
+
+* Thu Oct  4 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-3.git20121004
+- Update to git snapshot
+
+* Wed Sep 12 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-3.git20120820
+- move GSettings schema XML to nm-connection-editor rpm (rh #852792)
+
+* Thu Aug 30 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-2.git20120820
+- run glib-compile-schemas in %post scriplet (rh #852792)
+
+* Tue Aug 21 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-1.git20120820
+- Update to 0.9.7.0 snapshot
+
+* Tue Aug 14 2012 Daniel Drake <dsd@laptop.org> - 0.9.5.96-2
+- Rebuild for libgnome-bluetooth.so.11
+
+* Mon Jul 23 2012 Dan Williams <dcbw@redhat.com> - 0.9.5.96-1
+- Update to 0.9.6-rc2
+- lib: recognize PKCS#12 files exported from Firefox
+- lib: fix some wireless dialog crashes
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.5.95-3.git20120713
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jul 14 2012 Kalev Lember <kalevlember@gmail.com> - 0.9.5.95-2.git20120713
+- Fix the versioned obsoletes
+
+* Fri Jul 13 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.5.95-1.git20120713
+- update to 0.9.5.95 (0.9.6-rc1)  snapshot
+- editor: fixed UI mnemonics
+- editor: fix defaults for PPP echo values
+- applet: various crash and stability fixes
+- applet: show IPv6 addressing page for VPN plugins that support it
+- applet: port to GSettings and split out 0.8 -> 0.9 migration code into standalone tool
+
 * Mon May 21 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.4-4
 - update to git snapshot
 

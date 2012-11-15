@@ -41,9 +41,11 @@
 %global vv_support              0
 %global libidn_support          0
 %global disable_silc            0
+%global disable_evolution       0
 %global split_evolution         0
 %global use_system_certs        0
 %global use_system_libgadu      0
+%global build_only_libs         0
 
 # RHEL4: Use ALSA aplay to output sounds because it lacks gstreamer
 %if 0%{?fedora} < 5
@@ -93,7 +95,7 @@
 # EL6: Disable SILC protocol
 # (get rid of extra crypto lib for perpetually broken protocol that nobody uses)
 # (the above comment is not necessarily the view held by all maintaners of this package)
-%if 0%{?rhel} == 6
+%if 0%{?rhel} >= 6
 %global disable_silc            1
 %endif
 # F13+ Split Evolution plugin to separate package (#581144)
@@ -104,10 +106,20 @@
 %if 0%{?fedora} >= 16
 %global use_system_libgadu      1
 %endif
+%if 0%{?rhel} >= 7
+%global build_only_libs         1
+%global api_docs                0
+%endif
+# F18+ Disable evolution integration (temporarily?)
+# due to evolution-data-server 3.6 API changes
+%if 0%{?fedora} >= 18
+%global disable_evolution       1
+%global split_evolution         0
+%endif
 
 Name:           pidgin
-Version:        2.10.1
-Release:        3%{?dist}
+Version:        2.10.6
+Release:        4%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -120,6 +132,8 @@ Provides:       gaim = 999:1
 
 %if %{split_evolution}
 Obsoletes:      pidgin <= 2.7.1-1%{?dist}
+%else %if %{disable_evolution}
+Obsoletes:		pidgin-evolution <= 2.10.6%{?dist}
 %endif
 
 ## Fedora pidgin defaults
@@ -142,9 +156,7 @@ Source1:        purple-fedora-prefs.xml
 Patch0:         pidgin-NOT-UPSTREAM-2.5.2-rhel4-sound-migration.patch
 
 ## Patches 100+: To be Included in Future Upstream
-Patch100:       pidgin-2.7.7-msn-disable-msnp16.patch
-Patch101:       nm09-more.patch
-Patch102:       pidgin-2.10.1-fix-msn-ft-crashes.patch
+Patch100:       pidgin-2.10.1-fix-msn-ft-crashes.patch
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
 Summary:        A Gtk+ based multiprotocol instant messaging client
@@ -165,18 +177,28 @@ Requires(preun): GConf2
 # Basic Library Requirements
 BuildRequires:  autoconf
 BuildRequires:  libtool
-BuildRequires:  startup-notification-devel
 BuildRequires:  cyrus-sasl-devel
 %if %{nss_md2_disabled}
 BuildRequires:  nss-devel >= 3.12.3
 %else
 BuildRequires:  nss-devel
 %endif
+
+%if ! %{build_only_libs}
+BuildRequires:  startup-notification-devel
 BuildRequires:  gtk2-devel
-BuildRequires:  gettext
-BuildRequires:  intltool
 BuildRequires:  desktop-file-utils
 BuildRequires:  ncurses-devel
+# gtkspell integration (FC1+)
+BuildRequires:  gtkspell-devel
+# Evolution integration (FC3+, < F18)
+%if ! %{disable_evolution}
+BuildRequires:  evolution-data-server-devel
+%endif
+%endif
+
+BuildRequires:  gettext
+BuildRequires:  intltool
 BuildRequires:  tcl-devel
 BuildRequires:  tk-devel
 BuildRequires:  libxml2-devel
@@ -185,10 +207,6 @@ BuildRequires:  libxml2-devel
 # krb5 needed for Zephyr (FC1+)
 BuildRequires:  krb5-devel
 %endif
-# gtkspell integration (FC1+)
-BuildRequires:  gtkspell-devel
-# Evolution integration (FC3+)
-BuildRequires:  evolution-data-server-devel
 # SILC integration (FC3+)
 %if ! %{disable_silc}
 BuildRequires:  libsilc-devel
@@ -238,7 +256,11 @@ BuildRequires:  perl(ExtUtils::Embed)
 %endif
 # Voice and video support (F11+)
 %if %{vv_support}
+%if 0%{?fedora} >= 17
+BuildRequires:  farstream-devel
+%else
 BuildRequires:  farsight2-devel
+%endif
 Requires:       gstreamer-plugins-good
 %if 0%{?fedora} >= 12
 Requires:       gstreamer-plugins-bad-free
@@ -425,15 +447,9 @@ echo "FEDORA=%{fedora} RHEL=%{rhel}"
 %endif
 
 ## Patches 100+: To be Included in Future Upstream
-# not strictly going to be included upstream, but enabling MSNP16
-# introduces regressions retrieving buddy icons & custom emoticons
-# from the official client (and possibly file transfers)
-%patch100 -p0 -b .msnp16
 
-# http://developer.pidgin.im/ticket/13859
-%patch101 -p1 -b .nm09more
 # http://pidgin.im/pipermail/devel/2011-November/010477.html
-%patch102 -p0 -R -b .ftcrash
+%patch100 -p0 -R -b .ftcrash
 
 # Our preferences
 cp %{SOURCE1} prefs.xml
@@ -456,7 +472,11 @@ SWITCHES="--with-extraversion=%{release}"
     SWITCHES="$SWITCHES --with-krb4"
 %endif
     SWITCHES="$SWITCHES --enable-perl"
+%if ! %{disable_evolution}
     SWITCHES="$SWITCHES --enable-gevolution"
+%else
+    SWITCHES="$SWITCHES --disable-gevolution"
+%endif
 %if %{dbus_integration}
     SWITCHES="$SWITCHES --enable-dbus"
 %else
@@ -485,6 +505,9 @@ SWITCHES="--with-extraversion=%{release}"
 %if %{use_system_certs}
     SWITCHES="$SWITCHES --with-system-ssl-certs=/etc/pki/tls/certs"
 %endif
+%if %{build_only_libs}
+    SWITCHES="$SWITCHES --disable-consoleui --disable-gtkui"
+%endif
 
 # FC5+ automatic -fstack-protector-all switch
 export RPM_OPT_FLAGS=${RPM_OPT_FLAGS//-fstack-protector/-fstack-protector-all}
@@ -499,7 +522,7 @@ make %{?_smp_mflags} LIBTOOL=/usr/bin/libtool
 
 # one_time_password plugin, included upstream but not built by default
 cd libpurple/plugins/
-make one_time_password.so
+make one_time_password.so LIBTOOL=/usr/bin/libtool
 cd -
 
 %if %{api_docs}
@@ -513,10 +536,12 @@ make DESTDIR=$RPM_BUILD_ROOT install LIBTOOL=/usr/bin/libtool
 
 install -m 0755 libpurple/plugins/one_time_password.so $RPM_BUILD_ROOT%{_libdir}/purple-2/
 
+%if ! %{build_only_libs}
 desktop-file-install --vendor pidgin --delete-original              \
                      --add-category X-Red-Hat-Base                  \
                      --dir $RPM_BUILD_ROOT%{_datadir}/applications  \
                      $RPM_BUILD_ROOT%{_datadir}/applications/pidgin.desktop
+%endif
 
 # remove libtool libraries and static libraries
 find $RPM_BUILD_ROOT \( -name "*.la" -o -name "*.a" \) -exec rm -f {} ';'
@@ -540,11 +565,13 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/purple-2/libymsg.so
 # make sure that we can write to all the files we've installed
 # so that they are properly stripped
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 %find_lang pidgin
 
+%if ! %{build_only_libs}
 # symlink /usr/bin/gaim to new pidgin name
 ln -sf pidgin $RPM_BUILD_ROOT%{_bindir}/gaim
+%endif
 
 %if %{api_docs}
 rm -rf html
@@ -555,6 +582,11 @@ ln -sf ../../doc/pidgin-docs-%{version}/html/ \
     $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/pidgin
 %endif
 
+%if %{build_only_libs}
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gconf/schemas/purple.schemas
+%endif
+
+%if ! %{build_only_libs}
 %pre
 if [ "$1" -gt 1 ]; then
     export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
@@ -572,10 +604,12 @@ gconftool-2 --makefile-install-rule \
     %{_sysconfdir}/gconf/schemas/purple.schemas > /dev/null || :
 killall -HUP gconfd-2 &> /dev/null || :
 
+%post -n finch -p /sbin/ldconfig
+%endif
+
 %post -n libpurple -p /sbin/ldconfig
 
-%post -n finch -p /sbin/ldconfig
-
+%if ! %{build_only_libs}
 %preun
 if [ "$1" -eq 0 ]; then
     export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
@@ -589,13 +623,15 @@ touch --no-create %{_datadir}/icons/hicolor || :
 [ -x %{_bindir}/gtk-update-icon-cache ] && \
 %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
 
-%postun -n libpurple -p /sbin/ldconfig
-
 %postun -n finch -p /sbin/ldconfig
+%endif
+
+%postun -n libpurple -p /sbin/ldconfig
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if ! %{build_only_libs}
 %files
 %defattr(-,root,root,-)
 %doc NEWS COPYING AUTHORS README ChangeLog doc/PERL-HOWTO.dox
@@ -627,6 +663,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_includedir}/pidgin/
 %{_libdir}/pkgconfig/pidgin.pc
+%endif
 
 %files -f pidgin.lang -n libpurple
 %defattr(-,root,root,-)
@@ -672,6 +709,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_libdir}/purple-2/tcl.so
 
+%if ! %{build_only_libs}
 %files -n finch
 %defattr(-,root,root,-)
 %{_bindir}/finch
@@ -687,6 +725,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libgnt.so
 %{_libdir}/pkgconfig/gnt.pc
 %{_libdir}/pkgconfig/finch.pc
+%endif
 
 %if %{api_docs}
 %files -n pidgin-docs
@@ -696,11 +735,55 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Sep 26 2012 Jan Synáček <jsynacek@redhat.com> - 2.10.6-4
+- Correctly obsolete pidgin-evolution if evolution integration is disabled,
+  BZ 860285
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Petr Pisar <ppisar@redhat.com> - 2.10.6-2
+- Perl 5.16 rebuild
+
+* Wed Jul 11 2012 Jan Synáček <jsynacek@redhat.com> - 2.10.6-1
+- Update to 2.10.6, BZ 838311
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 2.10.5-3
+- Perl 5.16 rebuild
+
+* Fri Jul 06 2012 Stu Tomlinson <stu@nosnilmot.com> 2.10.5-2
+- Disable evolution integration on F18+ due to API changes in
+  evolution-data-server 3.6
+
+* Thu Jul 05 2012 Stu Tomlinson <stu@nosnilmot.com> 2.10.5-1
+- Update to 2.10.5, CVE-2012-3374
+- Allow building only libraries (#831364)
+- Revive FT crash prevention patch
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.10.4-2
+- Perl 5.16 rebuild
+
+* Wed May 30 2012 Jon Ciesla <limburgher@gmail.com> - 2.10.4-1
+- Update to 2.10.4, CVE-2012-2214, CVE-2012-2318, BZ 806839, 819454.
+- Port to farstream patch upstreamed.
+
+* Wed May 02 2012 Milan Crha <mcrha@redhat.com> - 2.10.2-2
+- Rebuild against newer evolution-data-server
+
+* Fri Mar 23 2012 Jon Ciesla <limburgher@gmail.com> - 2.10.2-1
+- Update to 2.10.2, BZ 803293, 803299.
+- Dropping MSN patches.  Protocol patch not needed, won't connect
+- to 16 by default.  Crash patch was upstreamed.
+- Dropped nm09 patch, upstreamed.
+
+* Fri Mar  9 2012 Tom Callaway <spot@fedoraproject.org> - 2.10.1-4
+- fedora 17+ uses farstream now instead of farsight2
+
 * Wed Jan 18 2012 Matthew Barnes <mbarnes@redhat.com> - 2.10.1-3
 - Map RHEL 7 to Fedora 16 (for now).
 
-* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.1-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+* Wed Jan 18 2012 Matthew Barnes <mbarnes@redhat.com> - 2.10.1-2
+- Map RHEL 7 to Fedora 16 (for now).
 
 * Thu Dec 29 2011 Stu Tomlinson <stu@nosnilmot.com> 2.10.1-1
 - 2.10.1, includes security fixes for CVE-2011-3594, CVE-2011-4601,

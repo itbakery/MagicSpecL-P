@@ -1,21 +1,25 @@
 %define dbus_version 1.1
-%define dbus_glib_version 0.86-4
+%define dbus_glib_version 0.94
 
 %define glib2_version	2.24.0
 %define wireless_tools_version 1:28-0pre9
 %define libnl3_version 3.2.6
 %define ppp_version 2.4.5
 
-%define snapshot .git20120521
-%define realversion 0.9.4.0
+%define snapshot .git20121004
+%define realversion 0.9.7.0
 
+%if 0%{?fedora} && 0%{?fedora} < 17
+%define systemd_dir /lib/systemd/system
+%else
 %define systemd_dir %{_prefix}/lib/systemd/system
+%endif
 
 Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
-Version: 0.9.4
-Release: 5%{snapshot}%{?dist}
+Version: 0.9.7.0
+Release: 7%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -23,8 +27,9 @@ URL: http://www.gnome.org/projects/NetworkManager/
 Source: %{name}-%{realversion}%{snapshot}.tar.bz2
 Source1: NetworkManager.conf
 Patch1: explain-dns1-dns2.patch
-Patch2: nm-polkit-permissive.patch
-Patch3: nss-error.patch
+Patch2: nss-error.patch
+Patch3: finish-connecting.patch
+Patch4: gvaluearray-crash.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): chkconfig
@@ -46,7 +51,6 @@ Requires: ppp = %{ppp_version}
 Requires: avahi-autoipd
 Requires: dnsmasq
 Requires: udev
-Requires: ModemManager >= 0.4
 Obsoletes: dhcdbd
 
 Conflicts: NetworkManager-vpnc < 1:0.7.0.99-1
@@ -81,6 +85,10 @@ BuildRequires: libgudev1-devel >= 143
 BuildRequires: wimax-devel
 %endif
 BuildRequires: systemd systemd-devel
+%if 0%{?fedora} && 0%{?fedora} < 17
+# systemd.pc is in systemd-units for F16 and below
+BuildRequires: systemd-units
+%endif
 
 %description
 NetworkManager is a system network service that manages your network devices
@@ -144,8 +152,9 @@ NetworkManager functionality from applications that use glib.
 %setup -q -n NetworkManager-%{realversion}
 
 %patch1 -p1 -b .explain-dns1-dns2
-%patch2 -p1 -b .polkit-permissive
-%patch3 -p1 -b .nss-error
+%patch2 -p1 -b .nss-error
+%patch3 -p1 -b .finish-connecting
+%patch4 -p1 -b .gvaluearray
 
 %build
 
@@ -166,6 +175,7 @@ intltoolize --force
 	--enable-wimax=yes \
 %endif
 	--enable-polkit=yes \
+	--enable-modify-system=yes \
 	--with-session-tracking=systemd \
 	--with-docs=yes \
 	--with-system-ca-path=/etc/pki/tls/certs \
@@ -192,7 +202,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties
 
 %{__mkdir_p} $RPM_BUILD_ROOT%{_localstatedir}/lib/NetworkManager
-
 magic_rpm_clean.sh
 %find_lang %{name}
 
@@ -206,8 +215,10 @@ install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 %{__cp} ORIG-docs/libnm-glib/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-glib/
 %{__cp} ORIG-docs/libnm-util/html/* $RPM_BUILD_ROOT%{_datadir}/gtk-doc/html/libnm-util/
 
-%{__cp} -rf %{buildroot}/lib/udev %{buildroot}/usr/lib
-%{__rm} -rf %{buildroot}/lib
+mkdir -p $RPM_BUILD_ROOT%{systemd_dir}/remote-fs-pre.target.wants
+ln -s ../NetworkManager-wait-online.service $RPM_BUILD_ROOT%{systemd_dir}/remote-fs-pre.target.wants
+
+mv -f %{buildroot}/lib/* %{buildroot}/usr/lib 
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -223,14 +234,18 @@ fi
 if [ $1 -eq 0 ]; then
     # Package removal, not upgrade
     /usr/bin/systemctl --no-reload disable NetworkManager.service >/dev/null 2>&1 || :
-    /usr/bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
+
+    # Don't kill networking entirely just on package remove
+    #/usr/bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %postun
 /usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
-        # Package upgrade, not uninstall
-        /usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+    # Package upgrade, not uninstall
+    # Don't restart networking to prevent hiccups
+    #/usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+    true
 fi
 
 %triggerun -- NetworkManager < 1:0.8.990
@@ -249,8 +264,8 @@ fi
 /usr/sbin/chkconfig --del NetworkManagerDispatcher
 exit 0
 
-%post	glib -p /sbin/ldconfig
-%postun	glib -p /sbin/ldconfig
+%post	glib -p /usr/sbin/ldconfig
+%postun	glib -p /usr/sbin/ldconfig
 
 
 %files -f %{name}.lang
@@ -289,6 +304,7 @@ exit 0
 # systemd stuff
 %{systemd_dir}/NetworkManager.service
 %{systemd_dir}/NetworkManager-wait-online.service
+%{systemd_dir}/remote-fs-pre.target.wants/NetworkManager-wait-online.service
 %{_datadir}/dbus-1/system-services/org.freedesktop.NetworkManager.service
 
 %ifnarch s390 s390x
@@ -307,6 +323,7 @@ exit 0
 %{_libdir}/pkgconfig/%{name}.pc
 %dir %{_datadir}/gtk-doc/html/NetworkManager
 %{_datadir}/gtk-doc/html/NetworkManager/*
+%{_datadir}/vala/vapi/libnm-util.*
 
 %files glib
 %defattr(-,root,root,0755)
@@ -336,8 +353,51 @@ exit 0
 %{_datadir}/gtk-doc/html/libnm-glib/*
 %dir %{_datadir}/gtk-doc/html/libnm-util
 %{_datadir}/gtk-doc/html/libnm-util/*
+%{_datadir}/vala/vapi/libnm-glib.*
 
 %changelog
+* Thu Nov 15 2012 Liu Di <liudidi@gmail.com> - 1:0.9.7.0-7.git20121004
+- 为 Magic 3.0 重建
+
+* Mon Oct 15 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-6.git20121004
+- Actually apply the patch from the previous commit...
+
+* Mon Oct 15 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-5.git20121004
+- Apply patch from master to fix a crash (rh #865009)
+
+* Sat Oct  6 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-4.git20121004
+- Apply patch from master so connections finish connecting properly (bgo #685581)
+
+* Fri Oct  5 2012 Dan Williams <dcbw@redhat.com> - 0.9.7.0-3.git20121004
+- Forward-port some forgotten fixes from F17
+- Fix networked-filesystem systemd dependencies (rh #787314)
+- Don't restart NM on upgrade, don't stop NM on uninstall (rh #811200)
+
+* Thu Oct  4 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-2.git20121004
+- Update to git snapshot
+
+* Tue Aug 21 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-1.git20120820
+- Update to 0.9.7.0 snapshot
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:0.9.5.96-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 23 2012 Dan Williams <dcbw@redhat.com> - 0.9.5.96-1
+- Update to 0.9.6-rc2
+- core: fix race between parallel DHCP client invocations
+- core: suppress a useless warning (rh #840580)
+- ifcfg-rh: fix segfault with malformed values (rh #841391)
+- ifcfg-rh: ignore IP config on bond slave configurations (rh #838907)
+
+* Fri Jul 13 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.5.95-1.git20120713
+- Update to 0.9.5.95 (0.9.6-rc1) snapshot
+- core: add autoconnect, driver-versioni and firmware-version properties to NMDevice
+- core: various IPv6 improvements
+- core: reduce number of changes made to DNS information during connection setup
+- core: add Vala language bindings
+- vpn: support IPv6 over VPNs
+- wifi: add on-demand WiFi scan support
+
 * Mon May 21 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.4-5.git20120521
 - Update to git snapshot
 

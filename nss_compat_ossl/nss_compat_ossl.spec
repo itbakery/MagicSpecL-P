@@ -1,6 +1,6 @@
 Name:           nss_compat_ossl
 Version:        0.9.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Source-level compatibility library for OpenSSL to NSS porting
 
 Group:          System Environment/Libraries
@@ -44,7 +44,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # We don't want to ship the .la file
 rm $RPM_BUILD_ROOT/%{_libdir}/libnss_compat_ossl.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Thu Nov 15 2012 Liu Di <liudidi@gmail.com> - 0.9.6-3
+- 为 Magic 3.0 重建
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

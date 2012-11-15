@@ -2,12 +2,12 @@
 %{!?python_sitearch: %define python_sitearch %(%{python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           %{python}-twisted-runner
-Version:        11.1.0
-Release:        2%{?dist}
+Version:        12.2.0
+Release:        1%{?dist}
 Summary:        Twisted Runner process management library and inetd replacement
 License:        MIT
 URL:            http://www.twistedmatrix.com/trac/wiki/TwistedRunner
-Source0:        http://twistedmatrix.com/Releases/Runner/11.1/TwistedRunner-%{version}.tar.bz2
+Source0:        http://twistedmatrix.com/Releases/Runner/12.2/TwistedRunner-%{version}.tar.bz2
 BuildRequires:  %{python}-twisted-core >= %{version}
 BuildRequires:  %{python}-devel
 Requires:       %{python}-twisted-core >= %{version}
@@ -46,6 +46,18 @@ fi > egg-info
 %{python_sitearch}/twisted/runner/
 
 %changelog
+* Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
+- Updated to 12.2.0
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.1.0-1
+- Updated to 12.1.0
+
+* Sun Feb 12 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.0.0-1
+- Updated to 12.0.0
+
 * Sat Jan 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 11.1.0-2
 - Rebuilt for gcc-4.7
 

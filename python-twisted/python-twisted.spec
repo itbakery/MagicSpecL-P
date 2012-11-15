@@ -1,8 +1,8 @@
 %{!?python:%define python python}
 
 Name:           %{python}-twisted
-Version:        11.1.0
-Release:        2%{?dist}
+Version:        12.2.0
+Release:        1%{?dist}
 Summary:        Event-based framework for internet applications
 License:        MIT
 URL:            http://twistedmatrix.com/
@@ -44,7 +44,7 @@ install -p -m 0644 %{SOURCE0} README
 %install
 install -d $RPM_BUILD_ROOT%{python_sitelib}
 install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{python_sitelib}/Twisted-%{version}-py2.7.egg-info
-
+magic_rpm_clean.sh
 
 %files
 %doc README
@@ -52,6 +52,18 @@ install -p -m 0644 %{SOURCE1} $RPM_BUILD_ROOT%{python_sitelib}/Twisted-%{version
 
 
 %changelog
+* Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
+- Updated to 12.2.0
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.1.0-1
+- Updated to 12.1.0
+
+* Sun Feb 12 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.0.0-1
+- Updated to 12.0.0
+
 * Sat Jan 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 11.1.0-2
 - Rebuilt for gcc-4.7
 

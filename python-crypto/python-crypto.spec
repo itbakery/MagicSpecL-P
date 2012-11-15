@@ -2,12 +2,12 @@
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)" 2>/dev/null)}
 
 # Python3 introduced in Fedora 13
-%global with_python3 %([ 0%{?fedora} -gt 12 -o 0%{?rhel} -gt 6 ] && echo 1 || echo 0)
+%global with_python3 %([ 0%{?fedora} -gt 12 ] && echo 1 || echo 0)
 
 Summary:	Cryptography library for Python
 Name:		python-crypto
-Version:	2.5
-Release:	1%{?dist}
+Version:	2.6
+Release:	4%{?dist}
 # Mostly Public Domain apart from parts of HMAC.py and setup.py, which are Python
 License:	Public Domain and Python
 Group:		Development/Libraries
@@ -123,6 +123,37 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Aug 03 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-4
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-3
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu May 24 2012 Paul Howarth <paul@city-fan.org> - 2.6-1
+- Update to 2.6
+  - Fix insecure ElGamal key generation (launchpad bug #985164, CVE-2012-2417)
+  - Huge documentation cleanup
+  - Added more tests, including test vectors from NIST 800-38A
+  - Remove broken MODE_PGP, which never actually worked properly
+  - A new mode, MODE_OPENPGP, has been added for people wishing to write
+    OpenPGP implementations (see also launchpad bug #996814)
+  - Fix: getPrime with invalid input causes Python to abort with fatal error
+    (launchpad bug #988431)
+  - Fix: Segfaults within error-handling paths (launchpad bug #934294)
+  - Fix: Block ciphers allow empty string as IV (launchpad bug #997464)
+  - Fix DevURandomRNG to work with Python3's new I/O stack
+  - Remove automagic dependencies on libgmp and libmpir; let the caller
+    disable them using args
+  - Many other minor bug fixes and improvements
+- Drop upstream patches
+
+* Sat Feb 18 2012 Paul Howarth <paul@city-fan.org> - 2.5-2
+- Add upstream fixes for issues found by Dave Malcolm's experimental static
+  analysis tool (#790584)
+
 * Mon Jan 16 2012 Paul Howarth <paul@city-fan.org> - 2.5-1
 - Update to 2.5
   - Added PKCS#1 encryption schemes (v1.5 and OAEP); we now have a decent,

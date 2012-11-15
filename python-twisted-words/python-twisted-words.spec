@@ -2,12 +2,12 @@
 %{!?python_sitearch: %define python_sitearch %(%{python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           %{python}-twisted-words
-Version:        11.1.0
-Release:        2%{?dist}
+Version:        12.2.0
+Release:        1%{?dist}
 Summary:        Twisted Instant Messaging implementations
 License:        MIT
 URL:            http://twistedmatrix.com/trac/wiki/TwistedWords
-Source0:        http://twistedmatrix.com/Releases/Words/11.1/TwistedWords-%{version}.tar.bz2
+Source0:        http://twistedmatrix.com/Releases/Words/12.2/TwistedWords-%{version}.tar.bz2
 BuildRequires:  %{python}-twisted-core >= %{version}
 BuildRequires:  %{python}-devel
 Requires:       %{python}-twisted-core >= %{version}
@@ -67,6 +67,18 @@ fi
 %{python_sitearch}/twisted/plugins/twisted_words.py*
 
 %changelog
+* Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
+- Updated to 12.2.0
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 17 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.1.0-1
+- Updated to 12.1.0
+
+* Sun Feb 12 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.0.0-1
+- Updated to 12.0.0
+
 * Sat Jan 07 2012 Julian Sikorski <belegdol@fedoraproject.org> - 11.1.0-2
 - Rebuilt for gcc-4.7
 

@@ -2,12 +2,12 @@
 %{!?python_sitearch: %define python_sitearch %(%{python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Name:           %{python}-twisted-core
-Version:        12.1.0
+Version:        12.2.0
 Release:        1%{?dist}
 Summary:        Asynchronous networking framework written in Python
 License:        MIT
 URL:            http://twistedmatrix.com/trac/wiki/TwistedCore
-Source0:        http://twistedmatrix.com/Releases/Core/12.1/TwistedCore-%{version}.tar.bz2
+Source0:        http://twistedmatrix.com/Releases/Core/12.2/TwistedCore-%{version}.tar.bz2
 # Available here:
 # https://apestaart.org/thomas/trac/browser/pkg/fedora.extras/python-twisted-core/twisted-dropin-cache?format=raw
 Source1:        twisted-dropin-cache
@@ -102,8 +102,6 @@ if [ -f $RPM_BUILD_ROOT%{python_sitearch}/Twisted*.egg-info ]; then
         sed -e "s|^$RPM_BUILD_ROOT||"
 fi > egg-info
 
-magic_rpm_clean.sh
-
 %check
 # trial twisted
 # can't get this to work within the buildroot yet
@@ -164,6 +162,12 @@ fi
 %doc doc/*
 
 %changelog
+* Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
+- Updated to 12.2.0
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.1.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sun Jun 17 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.1.0-1
 - Updated to 12.1.0
 - Standard epoll bindings are now used (upstream ticket #3114)

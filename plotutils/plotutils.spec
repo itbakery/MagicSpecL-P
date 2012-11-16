@@ -1,14 +1,14 @@
 
 Name:      plotutils
 Version:   2.6
-Release:   1%{?dist}
+Release:   5%{?dist}
 Summary:   GNU vector and raster graphics utilities and libraries
 
 Group:     Applications/Productivity
 License:   GPLv2+
 URL:       http://www.gnu.org/software/plotutils/
 Source0:   ftp://ftp.gnu.org/gnu/plotutils/plotutils-%{version}.tar.gz
-
+Patch0:    plotutils-2.6-png15.patch
 BuildRequires:   flex
 BuildRequires:   libpng-devel
 BuildRequires:   xorg-x11-proto-devel
@@ -17,9 +17,9 @@ BuildRequires:   libXaw-devel
 BuildRequires:   libXt-devel
 BuildRequires:   libXext-devel
 
-Requires(post):  /sbin/install-info
-Requires(post):  /sbin/ldconfig
-Requires(preun): /sbin/install-info
+Requires(post):  /usr/sbin/install-info
+Requires(post):  /usr/sbin/ldconfig
+Requires(preun): /usr/sbin/install-info
 
 %description
 The GNU plotutils package contains software for both programmers and
@@ -43,6 +43,7 @@ applications
 
 %prep
 %setup -q
+%patch0 -p1 -b .png15
 
 
 %build
@@ -65,22 +66,22 @@ mv ${RPM_BUILD_ROOT}%{_datadir}/libplot docs-to-include
 mv ${RPM_BUILD_ROOT}%{_datadir}/tek2plot docs-to-include
 find $RPM_BUILD_ROOT -type f -name "*.la" -exec rm -f {} ';'
 rm -f $RPM_BUILD_ROOT%{_infodir}/dir
-
+magic_rpm_clean.sh
 
 %post
-/sbin/install-info %{_infodir}/libxmi.info %{_infodir}/dir || :
-/sbin/install-info %{_infodir}/plotutils.info %{_infodir}/dir || :
-/sbin/ldconfig
+/usr/sbin/install-info %{_infodir}/libxmi.info %{_infodir}/dir || :
+/usr/sbin/install-info %{_infodir}/plotutils.info %{_infodir}/dir || :
+/usr/sbin/ldconfig
 
 
 %preun
 if [ $1 = 0 ]; then
-    /sbin/install-info --delete %{_infodir}/libxmi.info %{_infodir}/dir || :
-    /sbin/install-info --delete %{_infodir}/plotutils.info %{_infodir}/dir || :
+    /usr/sbin/install-info --delete %{_infodir}/libxmi.info %{_infodir}/dir || :
+    /usr/sbin/install-info --delete %{_infodir}/plotutils.info %{_infodir}/dir || :
 fi
 
 
-%postun -p /sbin/ldconfig
+%postun -p /usr/sbin/ldconfig
 
 
 %files
@@ -109,6 +110,18 @@ fi
 
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Mar 22 2012 Tom Callaway <spot@fedoraproject.org> - 2.6-4
+- fix build against libpng15
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Dec 06 2011 Adam Jackson <ajax@redhat.com> - 2.6-2
+- Rebuild for new libpng
+
 * Wed Mar  2 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 2.6-1
 - Update to 2.6
 

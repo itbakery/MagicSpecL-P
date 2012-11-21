@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-Random
 Version:        0.04
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Perl interface to OpenSSL for Random
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ find %{buildroot} -depth -type d -empty -exec rmdir {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot}
@@ -49,8 +49,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-17
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 08 2012 Petr Pisar <ppisar@redhat.com> - 0.04-17
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

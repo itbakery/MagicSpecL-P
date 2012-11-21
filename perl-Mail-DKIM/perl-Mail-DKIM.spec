@@ -1,6 +1,6 @@
 Name:           perl-Mail-DKIM
 Version:        0.39
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Sign and verify Internet mail with DKIM/DomainKey signatures
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %check
 # Conditionally disable tests that require DNS lookups
 %{?!_with_network_tests: rm t/policy.t t/public_key.t }
-
+make test
 
 
 %clean
@@ -59,8 +59,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.39-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.39-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 0.39-5
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.39-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

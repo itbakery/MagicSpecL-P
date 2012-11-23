@@ -1,24 +1,22 @@
-%global cpanname Font-TTF
-
-Name:    perl-%{cpanname}
-Version: 0.48
-Release: 4%{?dist}
-Summary: Perl library for modifying TTF font files
-
-Group:     Development/Libraries
-License:   Artistic 2.0
-URL:       http://search.cpan.org/dist/%{cpanname}/
-Source0:   http://cpan.org/authors/id/M/MH/MHOSKEN/%{cpanname}-%{version}.tar.gz
-
+Name:          perl-Font-TTF
+Version:       1.02
+Release:       2%{?dist}
+Summary:       Perl library for modifying TTF font files
+Group:         Development/Libraries
+License:       Artistic 2.0
+URL:           http://search.cpan.org/dist/Font-TTF/
+Source0:       http://cpan.org/authors/id/M/MH/MHOSKEN/Font-TTF-%{version}.tar.gz
 BuildArch:     noarch
+BuildRequires: perl(Compress::Zlib)
+BuildRequires: perl(Data::Dumper)
+BuildRequires: perl(Exporter)
 BuildRequires: perl(ExtUtils::MakeMaker)
-BuildRequires: dos2unix
-# Check requirements
+BuildRequires: perl(File::Spec)
+BuildRequires: perl(IO::File)
+BuildRequires: perl(IO::String)
 BuildRequires: perl(Test::Simple)
-
-Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-
-%{?perl_default_filter}
+BuildRequires: perl(XML::Parser::Expat)
+Requires: perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 
 %description
 Perl module for TrueType font hacking. Supports reading, processing and writing
@@ -30,54 +28,56 @@ types.
 In short, you can do almost anything with a standard TrueType font with this
 module.
 
-
 %prep
-%setup -q -n %{cpanname}-%{version}
-dos2unix README.TXT COPYING lib/Font/TTF/Changes
-
+%setup -q -n Font-TTF-%{version}
+#dos2unix README.TXT COPYING lib/Font/TTF/Changes
 
 %build
-%{__perl} Makefile.PL INSTALLDIRS=vendor
+perl Makefile.PL INSTALLDIRS=vendor
 make %{?_smp_mflags}
-
 
 %install
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
-
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} %{buildroot}/*
 
 %check
-
-
+make test
 
 %files
-%defattr(0644,root,root,0755)
-%doc README.TXT COPYING lib/Font/TTF/Changes
-
+%doc README.TXT LICENSE CONTRIBUTORS Changes TODO
 %dir %{perl_vendorlib}/Font
 %dir %{perl_vendorlib}/Font/TTF
-
 %{perl_vendorlib}/ttfmod.pl
 %{perl_vendorlib}/Font/TTF.pm
 %{perl_vendorlib}/Font/TTF/*
-
-%exclude %{perl_vendorlib}/Font/TTF/Changes
-
 %{_mandir}/man3/*.3*
-
 # We really don't want to use this perl package in a Win32 env
 # or poke in the windows registry to resolve fonts
 # (upstream makefile needs to get smarter)
 %exclude %{perl_vendorlib}/Font/TTF/Win32.pm
 
-
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.48-4
-- 为 Magic 3.0 重建
+* Tue Nov 06 2012 Petr Šabata <contyk@redhat.com> - 1.02-2
+- Add missing dependencies
+
+* Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 1.02-1
+- 1.02 bump (a lettercase fix)
+
+* Thu Aug 30 2012 Petr Šabata <contyk@redhat.com> - 1.01-1
+- 1.01 bump (Makefile/META changes only)
+
+* Wed Aug 29 2012 Petr Šabata <contyk@redhat.com> - 1.00-1
+- 1.00 bump
+- Modernize the spec file
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.48-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.48-4
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.48-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

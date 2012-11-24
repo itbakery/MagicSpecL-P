@@ -5,7 +5,7 @@ Summary: Mathematical symbol fonts
 Summary(zh_CN.UTF-8): 数学符号字体
 Name:    mathml-fonts
 Version: 1.0 
-Release: 23%{?dist}
+Release: 25%{?dist}
 
 URL:     http://www.mozilla.org/projects/mathml/fonts/
 # The actual license says "The author of these fonts, Basil K. Malyshev, has 
@@ -132,4 +132,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Nov 24 2012 Liu Di <liudidi@gmail.com> - 1.0-25
+- 为 Magic 3.0 重建
+
+* Sat Nov 24 2012 Liu Di <liudidi@gmail.com> - 1.0-24
+- 为 Magic 3.0 重建
+
 

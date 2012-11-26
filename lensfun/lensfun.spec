@@ -1,104 +1,168 @@
-Name: lensfun
-Version: 0.2.5
-Release: 2%{?dist}
-Summary: A photographic lens database and a library for accessing it
-Summary(zh_CN.UTF-8): 镜头校正库
+
+Name:    lensfun
+Version: 0.2.6
+Summary: Library to rectify defects introduced by photographic lenses
+Release: 3%{?dist}
+
+License: LGPLv3 and CC-BY-SA
 Group: System Environment/Libraries
-Group(zh_CN.UTF-8): 系统环境/库
-License: GPLv2+
-URL: http://lensfun.berlios.de
-Source0: http://download.berlios.de/lensfun/%{name}-%{version}.tar.bz2
+URL: http://lensfun.berlios.de/
+# an odd redirect is going on, spectool doesn't work (for 0.2.6 anyway)
+Source0: http://download.berlios.de/lensfun/lensfun-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+## upstreamable patches
+# add LIB_SUFFIX support (and not hardcode prefix/lib)
+Patch50: lensfun-0.2.6-cmake_LIB_SUFFIX.patch
+# add pkgconfig support
+Patch51: lensfun-0.2.6-cmake_pkgconfig.patch
+
+BuildRequires: cmake
+BuildRequires: doxygen
+BuildRequires: pkgconfig(glib-2.0) 
+BuildRequires: pkgconfig(libpng) 
+BuildRequires: pkgconfig(zlib)
 
 %description
-The goal of the lensfun library is to provide a open source database
-of photographic lenses and their characteristics. In the past there
-was a effort in this direction (see http://www.epaperpress.com/ptlens/),
-but then author decided to take the commercial route and the database
-froze at the last public stage. This database was used as the basement
-on which lensfun database grew, thanks to PTLens author which gave his
-permission for this, while the code was totally rewritten from scratch
-(and the database was converted to a totally new, XML-based format).
-
-The lensfun library not only provides a way to read the database and
-search for specific things in it, but also provides a set of algorithms
-for correcting images based on detailed knowledge of lens properties
-and calibration data. Right now lensfun is designed to correct distortion,
-transversal (also known as lateral) chromatic aberrations, vignetting
-and colour contribution index of the lens.
-
-
-%description -l zh_CN.UTF-8
-%{name} 是用于镜头校正的库。
+The lensfun library provides an open source database of photographic lenses and
+their characteristics. It not only provides a way to read and search the
+database, but also provides a set of algorithms for correcting images based on
+detailed knowledge of lens properties. Right now lensfun is designed to correct
+distortion, transversal (also known as lateral) chromatic aberrations,
+vignetting and color contribution of a lens.
 
 %package devel
-Summary: lensfun development files
-Summary(zh_CN.UTF-8): lensfun 的开发文件
-Group: Development/Libraries
-Group(zh_CN.UTF-8): 开发/库
-Requires: %{name} = %{version}-%{release}
-Requires: pkgconfig
-
+Summary: Development toolkit for %{name}
+Group:   Development/Libraries
+License: LGPLv3
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
-Header and library definition files for developing applications
-that use the lensfun library/database.
+This package contains library and header files needed to build applications
+using lensfun.
 
-%description devel -l zh_CN.UTF-8
-%{name}-devel 软件包包含了使用 %{name} 开发程序所需的库和头文件。
 
 %prep
-%setup -q
+%setup -q 
+
+%patch50 -p1 -b .LIB_SUFFIX
+%patch51 -p1 -b .cmake_pkgconfig
 
 
 %build
-./configure \
-        --cflags="${CFLAGS:-%optflags}" \
-        --cxxflags="${CXXFLAGS:-%optflags}" \
-        --prefix=%{_prefix} \
-        --bindir=%{_bindir} \
-        --sysconfdir=%{_sysconfdir} \
-        --datadir=%{_datadir}/lensfun \
-        --libdir=%{_libdir} \
-        --includedir=%{_includedir} \
-        --libexecdir=%{_libexecdir}
 
-make AUTODEP=0 %{?_smp_mflags} lensfun manual
+mkdir -p %{_target_platform}
+pushd %{_target_platform}
+%{cmake} \
+  -DBUILD_DOC:BOOL=ON \
+  -DBUILD_TESTS:BOOL=OFF \
+  ..
+popd
+
+make %{?_smp_mflags} -C %{_target_platform}
+make doc -C %{_target_platform}
 
 
 %install
-rm -rf %{buildroot}
-make AUTODEP=0 INSTALL_PREFIX=%{?buildroot:%{buildroot}} install
-find %{buildroot} -name '*.la' -exec rm -f {} ';'
+rm -rf $RPM_BUILD_ROOT
+
+make install/fast DESTDIR=$RPM_BUILD_ROOT -C %{_target_platform}
+
 
 %clean
-rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
+rm -rf %{buildroot}
+
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,0755)
-%doc %{_datadir}/doc/%{name}-%{version}/README
-%doc %{_datadir}/doc/%{name}-%{version}/lgpl-3.0.txt
-%doc %{_datadir}/doc/%{name}-%{version}/gpl-3.0.txt
-%doc %{_datadir}/doc/%{name}-%{version}/cc-by-sa-3.0.txt
-%{_libdir}/*.so.*
-%{_datadir}/lensfun/*.xml
+%defattr(-,root,root,-)
+%doc README
+%doc docs/cc-by-sa-3.0.txt docs/lgpl-3.0.txt
+%doc docs/adobe-lens-profile.txt 
+%{_datadir}/lensfun/
+%{_libdir}/liblensfun.so.0*
 
 %files devel
 %defattr(-,root,root,-)
-%doc %{_datadir}/doc/%{name}-%{version}/manual
-%{_includedir}/*.h
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%doc %{_target_platform}/doc_doxygen/*
+%{_includedir}/lensfun/
+%{_libdir}/liblensfun.so
+%{_libdir}/pkgconfig/lensfun.pc
+
 
 %changelog
-* Sun Jan 25 2009 Ni Hui <shuizhuyuanluo@126.com> - 0.2.3-0.1mgc
-- 更新至 0.2.3
-- 戊子  十二月三十
+* Wed Jul 25 2012 Nils Philippsen <nils@redhat.com> - 0.2.6-3
+- pkgconfig: fix cflags so lensfun.h is found
 
-* Thu Jun 12 2008 Ni Hui <shuizhuyuanluo@126.com> - 0.2.2b-0.1mgc
-- 首次生成 rpm 包
-- 戊子  五月初九
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Rex Dieter <rdieter@fedoraproject.org>
+- 0.2.6-1
+- lensfun-0.2.6 (#836156)
+- use cmake
+- use pkgconfig-style deps
+
+* Thu Jun 21 2012 Nils Philippsen <nils@redhat.com> - 0.2.5-8
+- don't modify doxygen configuration anymore as doxygen carries fixes now
+  (#831399)
+
+* Fri Jun 15 2012 Nils Philippsen <nils@redhat.com> - 0.2.5-7
+- multilib: don't embed creation dates in generated docs (#831399)
+
+* Tue Jan 10 2012 Nils Philippsen <nils@redhat.com> - 0.2.5-6
+- rebuild for gcc 4.7
+
+* Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Wed Sep 29 2010 jkeating - 0.2.5-4
+- Rebuilt for gcc bug 634757
+
+* Mon Sep 20 2010 Nils Philippsen <nils@redhat.com> 0.2.5-3
+- backport cpuid fixes (#631674)
+
+* Mon Jul 26 2010 Dan Horák <dan[at]danny.cz> 0.2.5-2
+- disable SSE vectorization on non x86 arches
+
+* Mon Jun 07 2010 Nils Philippsen <nils@redhat.com> 0.2.5-1
+- lensfun-0.2.5
+- add CC-BY-SA to main package license tag for lens data
+- don't ship GPLv3 text as nothing is licensed under it currently
+- mark documentation files as such
+- shorten summaries, expand package descriptions
+
+* Sun Oct 18 2009 Rex Dieter <rdieter@fedoraproject.orG> 0.2.4-1
+- lensfun-0.2.4 (#529506)
+
+* Fri Jul 24 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.3-3
+- rebuild for pkgconfig deps
+
+* Mon Nov 10 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.3-2
+- -devel: Requires: pkgconfig
+
+* Mon Nov 10 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.3-1
+- lensfun-0.2.3
+- fix SOURCE Url
+- configure --target=..generic
+
+* Mon Oct 13 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.2b-3
+- BR: doxygen
+
+* Mon Oct 13 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.2b-2
+- fix subpkg deps
+
+* Sun Sep 28 2008 Rex Dieter <rdieter@fedoraproject.org> 0.2.2b-1
+- adapt for fedora
+
+* Tue Jun 24 2008 Helio Chissini de Castro <helio@mandriva.com> 0.2.2b-1mdv2009.0
++ Revision: 228769
+- Added missing buildrequires
+- import lensfun

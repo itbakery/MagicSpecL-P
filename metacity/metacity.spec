@@ -2,8 +2,8 @@
 
 Summary: Unobtrusive window manager
 Name: metacity
-Version: 2.34.3
-Release: 2%{?dist}
+Version: 2.34.13
+Release: 1%{?dist}
 URL: http://download.gnome.org/sources/metacity/
 Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
@@ -32,8 +32,6 @@ Patch25: metacity-2.28-xioerror-unknown-display.patch
 Patch28: Stop-confusing-GDK-s-grab-tracking.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=622517
 Patch29: Allow-breaking-out-from-maximization-during-mouse.patch
-# https://bugzilla.gnome.org/show_bug.cgi?id=677115
-Patch30: disable-mouse-button-modifiers.patch
 
 Source1: window.png
 Source2: mini-window.png
@@ -57,10 +55,11 @@ BuildRequires: libXcursor-devel
 BuildRequires: libXcomposite-devel, libXdamage-devel
 # for gnome-keybindings.pc
 BuildRequires: control-center 
-BuildRequires: gnome-doc-utils
+BuildRequires: yelp-tools
 BuildRequires: zenity
 BuildRequires: dbus-devel
 BuildRequires: libcanberra-devel
+BuildRequires: itstool
 
 Requires: startup-notification 
 Requires: gsettings-desktop-schemas
@@ -103,7 +102,6 @@ API. This package exists purely for technical reasons.
 %patch25 -p1 -b .xioerror-unknown-display
 %patch28 -p1 -b .grab-tracking
 %patch29 -p1 -b .mouse-unmaximize
-%patch30 -p1 -b .button-modifiers
 
 cp -p %{SOURCE1} %{SOURCE2} src/
 
@@ -143,23 +141,21 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 #desktop-file-install --vendor "" --delete-original \
 #	--dir $RPM_BUILD_ROOT%{_datadir}/applications \
 #	$RPM_BUILD_ROOT%{_datadir}/applications/metacity.desktop
-magic_rpm_clean.sh
-%find_lang %{name}
 
-%post
-/usr/sbin/ldconfig
+%find_lang %{name} --all-name --with-gnome
+
+%post -p /sbin/ldconfig
 
 %posttrans
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %postun
-/usr/sbin/ldconfig
+/sbin/ldconfig
 if [ $1 -eq 0 ]; then
   glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc README AUTHORS COPYING NEWS HACKING doc/theme-format.txt doc/metacity-theme.dtd rationales.txt
 %{_bindir}/metacity
 %{_bindir}/metacity-message
@@ -173,7 +169,6 @@ fi
 %{_mandir}/man1/metacity-message.1.gz
 %{_datadir}/applications/metacity.desktop
 %{_datadir}/gnome/wm-properties/metacity-wm.desktop
-%{_datadir}/gnome/help/creating-metacity-themes
 
 %files devel
 %defattr(-,root,root,-)
@@ -186,6 +181,22 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
+* Mon Oct 15 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-1
+- Update to 2.34.13
+
+* Tue Sep 04 2012 Richard Hughes <hughsient@gmail.com> - 2.34.8-1
+- Update to 2.34.8
+- Add yelp-tools BR
+
+* Mon Aug 06 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.5-1
+- Update to new upstream version, drop upstreamed patch
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.34.3-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Ville Skyttä <ville.skytta@iki.fi> - 2.34.3-3
+- Fix %%post scriptlet dependencies.
+
 * Thu Jun 14 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 2.34.3-2
 - Add options to disable mouse button modifers
 
@@ -193,7 +204,7 @@ fi
 - Update to new upstream version
 
 * Sat Feb 18 2012 Michael Schwendt <mschwendt@fedoraproject.org> - 2.34.2-3
-- Execute %%postun via /bin/sh not /usr/sbin/ldconfig.
+- Execute %%postun via /bin/sh not /sbin/ldconfig.
 
 * Wed Feb 15 2012 Florian Müllner <fmuellner@redhat.com> 2.34.2-2
 - Explicitly require gsettings-desktop-schemas

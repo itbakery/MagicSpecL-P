@@ -1,40 +1,24 @@
-%define	use_nss	1
-%define mailrc	%{_sysconfdir}/mail.rc
+%global use_nss 1
+%global mailrc %{_sysconfdir}/mail.rc
 
 Summary: Enhanced implementation of the mailx command
 Name: mailx
 Version: 12.5
-Release: 4%{?dist}
-Group: 	Applications/Internet
-# mailx-12.4/nsserr.c, mailx-12.4/nss.c  have MPLv1.1 license 
-# other files are BSD 
+Release: 7%{?dist}
+# MPLv1.1 .. nss.c, nsserr.c
 License: BSD with advertising and MPLv1.1
+Group: Applications/Internet
 URL: http://heirloom.sourceforge.net/mailx.html
+# Mailx's upstream provides only the CVS method of downloading source code.
+# Use get-upstream-tarball.sh script to download current version of mailx.
+Source0: mailx-%{version}.tar.xz
+Source1: get-upstream-tarball.sh
 
-#Source0: http://downloads.sourceforge.net/heirloom/mailx-%{version}.tar.bz2
-#
-#   Mailx's upstream now provides only the CVS method of downloading,
-# even for the stable releases.
-#   Use:
-#
-#   $ cvs -d:pserver:anonymous@nail.cvs.sourceforge.net:/cvsroot/nail login
-#   CVS password:<just type return>
-#   $ cvs -d:pserver:anonymous@nail.cvs.sourceforge.net:/cvsroot/nail co nail
-#
-# to download the source, then
-#
-#   $ ver=`( cat nail/version.c; echo V ) | gcc -E - | tail -1`
-#   $ ver=`eval echo $ver`
-#   $ mv nail mailx-$ver
-#   $ tar -cvf - mailx-$ver | bzip2 -9 >mailx-$ver.tar.bz2
-#
-# to provide the source tarball in the usual way.
-#
-Source0: mailx-%{version}.tar.bz2
-
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Patch0: nail-11.25-config.patch
 Patch1: mailx-12.3-pager.patch
+Patch2: mailx-12.5-lzw.patch
+# resolves: #805410
+Patch3: mailx-12.5-fname-null.patch
 
 %if %{use_nss}
 BuildRequires: nss-devel, pkgconfig, krb5-devel
@@ -42,7 +26,7 @@ BuildRequires: nss-devel, pkgconfig, krb5-devel
 BuildRequires: openssl-devel
 %endif
 
-Obsoletes: nail <= %{version}
+Obsoletes: nail < %{version}
 Provides: nail = %{version}
 
 
@@ -53,7 +37,7 @@ of the POSIX mailx command, as well as SysV mail and Berkeley Mail
 
 Additionally to the POSIX features, mailx can work with Maildir/ e-mail
 storage format (as well as mailboxes), supports IMAP, POP3 and SMTP
-procotols (including over SSL) to operate with remote hosts, handles mime
+protocols (including over SSL) to operate with remote hosts, handles mime
 types and different charsets. There are a lot of other useful features,
 see mailx(1).
 
@@ -69,35 +53,34 @@ as well as "nail" (the initial name of this project).
 %setup -q
 %patch0 -p1
 %patch1 -p1
-
+%patch2 -p1
+%patch3 -p1
 sed -i 's,/etc/nail.rc,%{mailrc},g' mailx.1
 
 
 %build
-
 %if %{use_nss}
 INCLUDES="$INCLUDES `pkg-config --cflags-only-I nss`"
 export INCLUDES
 %endif
 
-echo	PREFIX=%{_prefix} \
-	BINDIR=/bin \
-	MANDIR=%{_mandir} \
-	SYSCONFDIR=%{_sysconfdir} \
-	MAILRC=%{mailrc} \
-	MAILSPOOL=%{_localstatedir}/mail \
-	SENDMAIL=%{_sbindir}/sendmail \
-	UCBINSTALL=install \
+echo    PREFIX=%{_prefix} \
+    BINDIR=/bin \
+    MANDIR=%{_mandir} \
+    SYSCONFDIR=%{_sysconfdir} \
+    MAILRC=%{mailrc} \
+    MAILSPOOL=%{_localstatedir}/mail \
+    SENDMAIL=%{_sbindir}/sendmail \
+    UCBINSTALL=install \
 > makeflags
 
 #  %{?_smp_mflags} cannot be used here
 make `cat makeflags` \
-	CFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" \
-	IPv6=-DHAVE_IPv6_FUNCS
+    CFLAGS="$RPM_OPT_FLAGS -D_GNU_SOURCE" \
+    IPv6=-DHAVE_IPv6_FUNCS
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT STRIP=: `cat makeflags` install
 
 ln -s mailx $RPM_BUILD_ROOT/bin/mail
@@ -117,12 +100,8 @@ ln -s mailx.1 nail.1
 popd
 
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
-
 %triggerpostun -- mailx < 12
-[ -f %{mailrc}.rpmnew ] && {
+[[ -f %{mailrc}.rpmnew ]] && {
     # old config was changed. Merge both together.
     ( echo '# The settings above was inherited from the old mailx-8.x config'
       echo
@@ -132,11 +111,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %triggerpostun -- nail <= 12.3
-
-[ -f %{_sysconfdir}/nail.rc.rpmsave ] && {
+[[ -f %{_sysconfdir}/nail.rc.rpmsave ]] && {
     # old config was changed...
     save=%{mailrc}.rpmnew
-    [ -f $save ] && save=%{mailrc}.rpmsave
+    [[ -f $save ]] && save=%{mailrc}.rpmsave
 
     mv -f %{mailrc} $save
     mv -f %{_sysconfdir}/nail.rc.rpmsave %{mailrc}
@@ -144,7 +122,6 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING AUTHORS README
 %config(noreplace) %{mailrc}
 /bin/*
@@ -153,8 +130,20 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Jan 15 2012 Liu Di <liudidi@gmail.com> - 12.5-4
-- 为 Magic 3.0 重建
+* Mon Nov  5 2012 Peter Schiffer <pschiffe@redhat.com> - 12.5-7
+- cleaned .spec file
+- resolves: #805410
+  fixed SIGSEGV crash in which_protocol() function
+- updated get-upstream-tarball.sh script and added it as additional source
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.5-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Wed Aug 17 2011 Dmitry Butskoy <Dmitry@Butskoy.name> - 12.5-4
+- Fix decompress lzw issues (#731342)
 
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 12.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

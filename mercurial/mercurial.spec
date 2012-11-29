@@ -2,12 +2,18 @@
 
 Summary: Mercurial -- a distributed SCM
 Name: mercurial
-Version: 2.0.2
+Version: 2.4
 Release: 1%{?dist}
+#Release: 1.rc1%{?dist}
+
+#%define upstreamversion %{version}-rc
+%define upstreamversion %{version}
+
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.selenic.com/mercurial/
-Source0: http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
+#Source0: http://www.selenic.com/mercurial/release/%{name}-%{version}.tar.gz
+Source0: http://www.selenic.com/mercurial/release/%{name}-%{upstreamversion}.tar.gz
 Source1: mercurial-site-start.el
 Patch0: mercurial-i18n.patch
 #Patch1: docutils-0.8.patch
@@ -76,7 +82,8 @@ http://www.selenic.com/mercurial/wiki/index.cgi/UsingHgk for more
 documentation.
 
 %prep
-%setup -q
+#%setup -q
+%setup -q -n %{name}-%{upstreamversion}
 %patch0 -p0
 #%patch1 -p1
 
@@ -106,7 +113,8 @@ mkdir -p $RPM_BUILD_ROOT%{emacs_lispdir}
 
 pushd contrib
 for file in mercurial.el mq.el; do
-  emacs -batch -l mercurial.el --no-site-file -f batch-byte-compile $file
+  #emacs -batch -l mercurial.el --no-site-file -f batch-byte-compile $file
+  %{_emacs_bytecompile} $file
   install -p -m 644 $file ${file}c $RPM_BUILD_ROOT%{emacs_lispdir}
   rm ${file}c
 done
@@ -127,6 +135,13 @@ hgk=
 path=%{_libexecdir}/mercurial/hgk
 EOF
 install -m 644 hgk.rc $RPM_BUILD_ROOT/%{_sysconfdir}/mercurial/hgrc.d
+
+cat > certs.rc <<EOF
+# see: http://mercurial.selenic.com/wiki/CACertificates
+[web]
+cacerts = /etc/pki/tls/certs/ca-bundle.crt
+EOF
+install -m 644 certs.rc $RPM_BUILD_ROOT/%{_sysconfdir}/mercurial/hgrc.d
 
 install -m 644 contrib/mergetools.hgrc $RPM_BUILD_ROOT%{_sysconfdir}/mercurial/hgrc.d/mergetools.rc
 
@@ -157,6 +172,7 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/mercurial
 %{python_sitearch}/hgext
 %config(noreplace) %{_sysconfdir}/mercurial/hgrc.d/mergetools.rc
+%config(noreplace) %{_sysconfdir}/mercurial/hgrc.d/certs.rc
 
 %files -n emacs-%{pkg}
 %defattr(-,root,root,-)
@@ -176,6 +192,42 @@ rm -rf $RPM_BUILD_ROOT
 ##cd tests && %{__python} run-tests.py
 
 %changelog
+* Sun Nov  4 2012 Neal Becker <ndbecker2@gmail.com> - 2.4-1
+- Update to 2.4
+
+* Wed Sep  5 2012 Neal Becker <ndbecker2@gmail.com> - 2.3.1-1
+- Update to 2.3.1
+
+* Mon Aug 13 2012 Neal Becker <ndbecker2@gmail.com> - 2.3-1
+- Update to 2.3
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.2.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul  9 2012 Neal Becker <ndbecker2@gmail.com> - 2.2.3-1
+- Update to 2.2.3
+
+* Sun Jun  3 2012 Neal Becker <ndbecker2@gmail.com> - 2.2.2-1
+- Update to 2.2.2
+
+* Fri May 25 2012 Neal Becker <ndbecker2@gmail.com> - 2.2.1-2
+- Add certs.rc
+
+* Fri May  4 2012 Neal Becker <ndbecker2@gmail.com> - 2.2.1-1
+- update to 2.2.1
+
+* Wed May  2 2012 Neal Becker <ndbecker2@gmail.com> - 2.2-1
+- Update to 2.2
+
+* Fri Apr  6 2012 Neal Becker <ndbecker2@gmail.com> - 2.1.2-1
+- Update to 2.1.2
+
+* Sat Mar 10 2012 Neal Becker <ndbecker2@gmail.com> - 2.1.1-1
+- Update to 2.1.1
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Sun Jan  1 2012 Neal Becker <ndbecker2@gmail.com> - 2.0.2-1
 - Update to 2.0.2
 

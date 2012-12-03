@@ -1,6 +1,6 @@
 Name:           openal-soft
 Version:        1.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Open Audio Library
 
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/openal.pc
 
 %changelog
+* Mon Dec 03 2012 Liu Di <liudidi@gmail.com> - 1.14-3
+- 为 Magic 3.0 重建
+
 * Thu Apr 12 2012 Dan Horák <dan[at]danny.cz> - 1.14-2
 - the used fpu control bits are x86 specific
 

@@ -119,7 +119,7 @@ Requires: python3-PyKDE4-akonadi%{?_isa} = %{version}-%{release}
 %prep
 %setup -q -n pykde4-%{version}
 
-%patch100 -p1 -b .pyqt495
+#%patch100 -p1 -b .pyqt495
 %patch200 -p1 -b .respect_sip_flags
 %patch201 -p1 -b .kpythonpluginfactory_slots
 

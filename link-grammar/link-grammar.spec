@@ -4,7 +4,7 @@ Summary: A Grammar Checking library
 Summary(zh_CN.UTF-8): 一个语法检查库
 Name: link-grammar
 Version: 4.7.4
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
 License: BSD
@@ -120,6 +120,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.7.4-3
+- 为 Magic 3.0 重建
+
 * Sun Oct 28 2012 Liu Di <liudidi@gmail.com> - 4.7.4-2
 - 为 Magic 3.0 重建
 

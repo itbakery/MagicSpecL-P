@@ -1,7 +1,7 @@
 Name:       m17n-db
 Summary:    Multilingualization datafiles for m17n-lib
 Version:    1.6.3
-Release:    2%{?dist}
+Release:    3%{?dist}
 Group:      System Environment/Libraries
 License:    LGPLv2+
 URL:        http://www.m17n.org/m17n-lib/index.html
@@ -95,6 +95,9 @@ rm $RPM_BUILD_ROOT%{_datadir}/m17n/ispell.mim
 %{_datadir}/pkgconfig/m17n-db.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.6.3-3
+- 为 Magic 3.0 重建
+
 * Wed Dec 21 2011 Parag Nemade <pnemade AT redhat DOT com> - 1.6.3-2
 - Resolves:rh#769239 - altgr change in wijesekara keyboard layout
 

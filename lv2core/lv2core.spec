@@ -2,7 +2,7 @@
 
 Name:           lv2core
 Version:        6.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Audio Plugin Standard
 Group:          System Environment/Libraries
 License:        ISC
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lv2core.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 6.0-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 25 2011 Orcan Ogetbil <oget[DOT]fedora[AT]gmail[DOT]com> - 6.0-1
 - Update to 6.0
 

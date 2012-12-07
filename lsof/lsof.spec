@@ -1,7 +1,7 @@
 Summary: A utility which lists open files on a Linux/UNIX system
 Name: lsof
 Version: 4.85
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: zlib
 Group: Development/Debuggers
 
@@ -48,6 +48,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_mandir}/man*/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.85-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 30 2011 Peter Schiffer <pschiffe@redhat.com> - 4.85-1
 - resolves: #741882
   update to 4.85

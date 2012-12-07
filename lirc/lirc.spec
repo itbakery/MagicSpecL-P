@@ -24,7 +24,7 @@
 Name:           lirc
 Version:        0.9.0
 %if 0%{?released}
-Release:        4%{?dist}
+Release:        5%{?dist}
 %else
 Release:        0.1.%{pre}%{?dist}
 %endif
@@ -305,6 +305,9 @@ fi
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.0-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 0.9.0-4
 - 为 Magic 3.0 重建
 

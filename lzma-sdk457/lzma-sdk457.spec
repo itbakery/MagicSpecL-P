@@ -1,6 +1,6 @@
 Name:		lzma-sdk457
 Version:	4.57
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	SDK for lzma compression
 Group:		Applications/Archiving
 License:	LGPLv2+
@@ -93,6 +93,9 @@ find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}
 %{_libdir}/liblzmasdk457.so
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.57-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.57-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

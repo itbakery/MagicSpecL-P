@@ -2,7 +2,7 @@ Summary: K Desktop Environment - Configuration files
 Summary(zh_CN.UTF-8): K 桌面环境(KDE4) - 配置文件
 Name: magic-kde4-config
 Version: 4.3.x.20090614
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 URL: http://www.magiclinux.org
 Group: User Interface/Desktops
@@ -103,3 +103,6 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /etc/pam.d/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.3.x.20090614-3
+- 为 Magic 3.0 重建
+

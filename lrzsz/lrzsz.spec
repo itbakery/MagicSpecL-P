@@ -1,7 +1,7 @@
 Summary: The lrz and lsz modem communications programs
 Name: lrzsz
 Version: 0.12.20
-Release: 30%{?dist}
+Release: 31%{?dist}
 License: GPLv2+
 Group: Applications/Communications
 Source: http://www.ohse.de/uwe/releases/%{name}-%{version}.tar.gz
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.12.20-31
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Liu Di <liudidi@gmail.com> - 0.12.20-30
 - 为 Magic 3.0 重建
 

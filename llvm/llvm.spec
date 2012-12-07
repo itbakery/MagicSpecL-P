@@ -21,7 +21,7 @@
 
 Name:           llvm
 Version:        3.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
@@ -505,6 +505,9 @@ exit 0
 %endif
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 11 2011 Michel Salim <salimma@fedoraproject.org> - 3.0-1
 - Update to final 3.0 release
 

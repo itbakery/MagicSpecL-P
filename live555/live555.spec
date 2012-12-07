@@ -3,7 +3,7 @@
 
 Name:		live555
 Version:	0
-Release:	0.24.%{date}%{?dist}
+Release:	0.25.%{date}%{?dist}
 Summary:	Live555.com streaming libraries
 
 Group:		System Environment/Libraries
@@ -198,6 +198,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libUsageEnvironment*.a
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0-0.25.2011.06.16
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 0-0.24.2011.06.16
 - 为 Magic 3.0 重建
 

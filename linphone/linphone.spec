@@ -2,7 +2,7 @@
 
 Name:           linphone
 Version:        3.5.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Phone anywhere in the whole world by using the Internet
 
 Group:          Applications/Communications
@@ -176,6 +176,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/mediastreamer.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.5.2-4
+- 为 Magic 3.0 重建
+
 * Mon Mar  5 2012 Alexey Kurov <nucleo@fedoraproject.org> - 3.5.2-3
 - drop regression patch
 

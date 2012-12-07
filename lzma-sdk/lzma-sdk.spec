@@ -1,6 +1,6 @@
 Name:           lzma-sdk
 Version:        4.6.5
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        SDK for lzma compression
 
 Group:          Applications/Archiving
@@ -97,6 +97,9 @@ find -iname '*.h' | xargs -I {} install -m0644 -D {} %{buildroot}/%{_includedir}
 %{_libdir}/liblzmasdk.so
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 4.6.5-8
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.6.5-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -2,7 +2,7 @@ Summary: Networking manager tools
 Summary(zh_CN.UTF-8): 一个网络设置工具
 Name: magic_first_wizard
 Version: 0.0.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL+
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/magic_first_wizard.png
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.0.2-4
+- 为 Magic 3.0 重建
+
 * Fri Apr 30 2010 zy_sunshine <zy.netsec@gmail.com> - 0.0.2
 - 将全局静态变量改为类静态变量
 - 添加了QProcessBar以表示重启网卡的执行状态, 测试阶段

@@ -10,7 +10,7 @@
 Summary: A library for locking devices
 Name: lockdev
 Version: 1.0.4
-Release: 0.3.%{checkout}%{?dist}
+Release: 0.4.%{checkout}%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 URL: https://alioth.debian.org/projects/lockdev/
@@ -92,6 +92,9 @@ exit 0
 %{_includedir}/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.0.4-0.4.20111007git
+- 为 Magic 3.0 重建
+
 * Thu Oct 20 2011 Jiri Popelka <jpopelka@redhat.com> - 1.0.4-0.3.20111007git
 - Define _hardened_build
 

@@ -4,7 +4,7 @@
 
 Name:           lxsession
 Version:        0.4.6.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Lightweight X11 session manager
 Summary(de):    Leichtgewichtiger X11 Sitzungsverwalter
 
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sysconfdir}/xdg/%{name}
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.6.1-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

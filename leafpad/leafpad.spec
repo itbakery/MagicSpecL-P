@@ -1,6 +1,6 @@
 Name:           leafpad
 Version:        0.8.18.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        GTK+ based simple text editor
 Summary(zh_CN.UTF-8): 基于 GTK 的简单文本编辑器
@@ -69,4 +69,7 @@ touch --no-create %{_datadir}/icons/hicolor || :
 %{_datadir}/pixmaps/leafpad.*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.8.18.1-2
+- 为 Magic 3.0 重建
+
 

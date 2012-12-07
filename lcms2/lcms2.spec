@@ -1,6 +1,6 @@
 Name:           lcms2
 Version:        2.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Color Management Engine
 License:        MIT
 URL:            http://www.littlecms.com/
@@ -80,6 +80,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.2-3
+- 为 Magic 3.0 重建
+
 * Fri Jun 10 2011 Richard Hughes <richard@hughsie.com> 2.2-2
 - Actually update the sources...
 

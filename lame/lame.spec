@@ -1,12 +1,12 @@
 # $Id: lame.spec 4387 2006-05-20 08:44:31Z dag $
 # Authority: matthias
 # Upstream: <mp3encoder$minnie,tuhs,org>
-%define realver 3.99.5
+%define realver 3.99.3
 Summary: LAME Ain't an MP3 Encoder... but it's the best of all
 Summary(zh_CN.UTF-8): LAME 不是一个 MP3编码器...它是所有中最好的
 Name: lame
 Version: 3.99.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -113,6 +113,9 @@ execstack -c %{buildroot}%{_libdir}/*.so.*.*.* || :
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.99.3-2
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Liu Di <liudidi@gmail.com> - 3.98.4-3
 - 为 Magic 3.0 重建
 

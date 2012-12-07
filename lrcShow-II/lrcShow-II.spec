@@ -2,7 +2,7 @@ Name: lrcShow-II
 Summary: lrcShow-II amarok script
 Summary(zh_CN.UTF-8): lrcShow-II amarok 动态歌词显示脚本
 Version:	 0.9.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License:	 GPL
 Group: Applications/Multimedia
 Group(zh_CN.UTF-8): 应用程序/多媒体
@@ -45,6 +45,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_datadir}/apps/amarok/scripts/lrcShow-II
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.2-3
+- 为 Magic 3.0 重建
+
 * Sun Sep 7 2008 Ni Hui <shuizhuyuanluo@126.com> - 0.9.0-0.1mgc
 - 更新至 0.9.0
 - 戊子  八月初八  [白露]

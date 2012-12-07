@@ -3,7 +3,7 @@
 
 Name:		linux-firmware
 Version:	20120720
-Release:	0.1.git%{checkout}%{?dist}
+Release:	0.2.git%{checkout}%{?dist}
 Summary:	Firmware files used by the Linux kernel
 
 Group:		System Environment/Kernel
@@ -295,6 +295,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc WHENCE LICENCE.* LICENSE.*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 20120720-0.2.git7560108
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Josh Boyer <jwboyer@redhat.com> 20120720-0.1.git7560108
 - Update to latest upstream.  Adds more realtek firmware and bcm4334
 

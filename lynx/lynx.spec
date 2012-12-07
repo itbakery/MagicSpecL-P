@@ -1,7 +1,7 @@
 Summary: A text-based Web browser
 Name: lynx
 Version: 2.8.7
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2
 Group: Applications/Internet
 Source: http://lynx.isc.org/lynx%{version}/lynx%{version}.tar.bz2
@@ -153,6 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace,missingok) %{_sysconfdir}/lynx-site.cfg
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.8.7-8
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Liu Di <liudidi@gmail.com> - 2.8.7-7
 - 为 Magic 3.0 重建
 

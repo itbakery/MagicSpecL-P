@@ -1,6 +1,6 @@
 Name:           lzo
 Version:        2.06
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Data compression library with very fast (de)compression
 Group:          System Environment/Libraries
 License:        GPLv2+
@@ -103,6 +103,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.06-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 14 2011 Huzaifa Sidhpurwala <huzaifas@redhat.com> - 2.06-1
 - Upgrade to latest upstream
 - Apply patch from Nicolas Chauvet

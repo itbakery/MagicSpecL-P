@@ -2,7 +2,7 @@
 Name:    lensfun
 Version: 0.2.6
 Summary: Library to rectify defects introduced by photographic lenses
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: LGPLv3 and CC-BY-SA
 Group: System Environment/Libraries
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.2.6-4
+- 为 Magic 3.0 重建
+
 * Wed Jul 25 2012 Nils Philippsen <nils@redhat.com> - 0.2.6-3
 - pkgconfig: fix cflags so lensfun.h is found
 

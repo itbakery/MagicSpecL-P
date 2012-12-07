@@ -18,7 +18,7 @@
 
 Name:           lxde-common
 Version:        0.5.5
-Release:        0.3%{?git_version:.%{?git_version}}%{?dist}
+Release:        0.4%{?git_version:.%{?git_version}}%{?dist}
 Summary:        Default configuration files for LXDE
 
 Group:          User Interface/Desktops
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.5.5-0.4.20110328git87c368d7
+- 为 Magic 3.0 重建
+
 * Mon Jul 11 2011 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.5-0.3
 - Drop pulseaudio patch (fixes #713292)
 

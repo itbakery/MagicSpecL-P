@@ -11,7 +11,7 @@
 Summary: System for layout and rendering of internationalized text
 Name: pango
 Version: 1.32.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
@@ -135,6 +135,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.32.1-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 27 2012 Matthias Clasen <mclasen@redhat.com> - 1.32.1-1
 - Update to 1.32.1
 - Move module cache file to /usr/lib64/pango/1.8.0/modules.cache

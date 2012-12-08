@@ -5,7 +5,7 @@
 Name:           pulseaudio
 Summary:        Improved Linux Sound Server
 Version:        2.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Daemons
 URL:            http://www.freedesktop.org/wiki/Software/PulseAudio
@@ -477,6 +477,9 @@ exit 0
 %attr(0600, gdm, gdm) %{_localstatedir}/lib/gdm/.pulse/default.pa
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.1-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 10 2012 Dan Horák <dan[at]danny.cz> 2.1-4
 - fix the with_webrtc condition
 

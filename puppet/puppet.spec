@@ -15,7 +15,7 @@
 
 Name:           puppet
 Version:        2.7.18
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A network tool for managing many disparate systems
 License:        ASL 2.0
 URL:            http://puppetlabs.com
@@ -288,6 +288,9 @@ fi
 rm -rf %{buildroot}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.7.18-2
+- 为 Magic 3.0 重建
+
 * Wed Jul 11 2012 Todd Zullinger <tmz@pobox.com> - 2.7.18-1
 - Update to 2.7.17, fixes CVE-2012-3864, CVE-2012-3865, CVE-2012-3866,
   CVE-2012-3867

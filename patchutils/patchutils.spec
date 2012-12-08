@@ -1,7 +1,7 @@
 Summary: A collection of programs for manipulating patch files
 Name: patchutils
 Version: 0.3.2
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/System
 URL: http://cyberelk.net/tim/patchutils/
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 %{_mandir}/*/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.3.2-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 21 2012 Liu Di <liudidi@gmail.com> - 0.3.2-3
 - 为 Magic 3.0 重建
 

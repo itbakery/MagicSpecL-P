@@ -2,7 +2,7 @@ Summary:        The GNU Portable Threads library
 Summary(zh_CN.UTF-8):	GNU 可移植线程库
 Name:           pth
 Version:        2.0.7
-Release:        8%{?dist}
+Release:        10%{?dist}
 License:        LGPLv2+
 Group:          System Environment/Libraries
 Group(zh_CN.UTF-8):	系统环境/库
@@ -83,7 +83,7 @@ l=$($(pwd)/pth-config --libdir)
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=${RPM_BUILD_ROOT} install
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -111,6 +111,12 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.7-10
+- 为 Magic 3.0 重建
+
+* Wed Oct 10 2012 Liu Di <liudidi@gmail.com> - 2.0.7-9
+- 为 Magic 3.0 重建
+
 * Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 2.0.7-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-AnyData
 Version:        0.10
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Easy access to data in many formats
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

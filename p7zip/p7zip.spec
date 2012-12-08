@@ -1,7 +1,7 @@
 Summary: Very high compression ratio file archiver
 Name: p7zip
 Version: 9.20.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 # Files under C/Compress/Lzma/ are dual LGPL or CPL
 License: LGPLv2 and (LGPLv2+ or CPL)
 Group: Applications/Archiving
@@ -111,6 +111,9 @@ find contrib -type f -exec chmod -x {} \;
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 9.20.1-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 20 2012 Liu Di <liudidi@gmail.com> - 9.20.1-2
 - 为 Magic 3.0 重建
 

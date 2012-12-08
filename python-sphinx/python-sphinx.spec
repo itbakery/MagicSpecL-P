@@ -1,4 +1,4 @@
-%if 0%{?fedora} || 0%{?rhel} > 6
+%if 0%{?fedora}
 %global with_python3 1
 %{!?python3_version: %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")}
 %else
@@ -7,9 +7,11 @@
 
 %global upstream_name Sphinx
 
+%define _with_doc 1
+
 Name:       python-sphinx
-Version:    1.1.2
-Release:    3%{?dist}
+Version:    1.1.3
+Release:    6%{?dist}
 Summary:    Python documentation generator
 
 Group:      Development/Tools
@@ -21,30 +23,34 @@ Group:      Development/Tools
 License:    BSD and Public Domain and Python and (MIT or GPLv2)
 URL:        http://sphinx.pocoo.org/
 Source0:    http://pypi.python.org/packages/source/S/%{upstream_name}/%{upstream_name}-%{version}.tar.gz
+# Sent upstream as a fix to work with the next version of docutils
+Patch0: sphinx-docutils-0.10.patch
 
 BuildArch:     noarch
 BuildRequires: python2-devel >= 2.4
 BuildRequires: python-setuptools
+%if 0%{?_with_doc}
 BuildRequires: python-docutils
 BuildRequires: python-jinja2
 BuildRequires: python-nose
+%endif
 # Test dependencies
 BuildRequires: texlive-latex
-Requires:      python-docutils
-Requires:      python-jinja2
-Requires:      python-pygments
+
 %if 0%{?with_python3}
 BuildRequires: python3-devel
 BuildRequires: python3-setuptools
+%if 0%{?_with_doc}
 BuildRequires: python3-docutils
 BuildRequires: python3-jinja2
 BuildRequires: python3-pygments
 BuildRequires: python3-nose
-Requires:      python3-docutils
-Requires:      python3-jinja2
-Requires:      python3-pygments
+%endif
 %endif # with_python3
 
+Requires:      python-docutils
+Requires:      python-jinja2
+Requires:      python-pygments
 
 %description
 Sphinx is a tool that makes it easy to create intelligent and
@@ -79,6 +85,9 @@ the Python docs:
 %package -n python3-sphinx
 Summary:    Python documentation generator
 Group:      Development/Tools
+Requires:      python3-docutils
+Requires:      python3-jinja2
+Requires:      python3-pygments
 
 %description -n python3-sphinx
 Sphinx is a tool that makes it easy to create intelligent and
@@ -132,6 +141,8 @@ This package contains documentation in reST and HTML formats.
 %setup -q -n %{upstream_name}-%{version}%{?prerel}
 sed '1d' -i sphinx/pycode/pgen2/token.py
 
+%patch0 -p1
+
 %if 0%{?with_python3}
 rm -rf %{py3dir}
 cp -a . %{py3dir}
@@ -146,13 +157,14 @@ pushd %{py3dir}
 popd
 %endif # with_python3
 
+%if 0%{?_with_doc}
 pushd doc
 make html
 make man
 rm -rf _build/html/.buildinfo
 mv _build/html ..
 popd
-
+%endif
 
 %install
 rm -rf %{buildroot}
@@ -172,6 +184,7 @@ popd
 
 %{__python} setup.py install --skip-build --root %{buildroot}
 
+%if 0%{?_with_doc}
 pushd doc
 # Deliver man pages
 install -d %{buildroot}%{_mandir}/man1
@@ -188,6 +201,7 @@ popd
 rm -rf doc/_build
 sed -i 's|python ../sphinx-build.py|/usr/bin/sphinx-build|' doc/Makefile
 mv doc reST
+%endif
 
 # Move language files to /usr/share;
 # patch to support this incorporated in 0.6.6
@@ -204,6 +218,7 @@ do
   rm -rf sphinx/locale/$lang
 done
 popd
+magic_rpm_clean.sh
 %find_lang sphinx
 
 # Language files; Since these are javascript, it's not immediately obvious to
@@ -225,13 +240,16 @@ popd
 %files -f sphinx.lang
 %defattr(-,root,root,-)
 %doc AUTHORS CHANGES EXAMPLES LICENSE README TODO
+%exclude %{_bindir}/sphinx-*-%{python3_version}
 %{_bindir}/sphinx-*
 %{python_sitelib}/*
 %dir %{_datadir}/sphinx/
 %dir %{_datadir}/sphinx/locale
 %dir %{_datadir}/sphinx/locale/*
+%if 0%{?_with_doc}
 %exclude %{_mandir}/man1/sphinx-*-%{python3_version}.1*
 %{_mandir}/man1/*
+%endif
 
 %if 0%{?with_python3}
 %files -n python3-sphinx
@@ -241,15 +259,44 @@ popd
 %dir %{_datadir}/sphinx/
 %dir %{_datadir}/sphinx/locale
 %dir %{_datadir}/sphinx/locale/*
+%if 0%{?_with_doc}
 %{_mandir}/man1/sphinx-*-%{python3_version}.1*
+%endif
 %endif # with_python3
 
+%if 0%{?_with_doc}
 %files doc
 %defattr(-,root,root,-)
 %doc html reST
+%endif
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.3-6
+- 为 Magic 3.0 重建
+
+* Tue Aug 21 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 1.1.3-5
+- Fix for use of sphinx's manpage writer with docutils-0.10
+
+* Mon Aug  6 2012 Michel Salim <salimma@fedoraproject.org> - 1.1.3-4
+- Rebuild for Python 3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 1.1.3-3
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Apr  5 2012 Michel Salim <salimma@fedoraproject.org> - 1.1.3-1
+- Update to 1.1.3
+
+* Sun Feb  5 2012 Michel Salim <salimma@fedoraproject.org> - 1.1.2-5
+- Move python3 runtime dependencies to the right subpackage
+- Properly exclude python3 binaries
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Sat Dec 17 2011 Michel Salim <salimma@fedoraproject.org> - 1.1.2-3
 - BR on texlive-latex for LaTeX tests
 

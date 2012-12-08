@@ -1,7 +1,7 @@
 Name:		netxen-firmware
 Summary:	QLogic Linux Intelligent Ethernet (3000 and 3100 Series) Adapter Firmware
 Version:	4.0.534
-Release:	5%{?dist}
+Release:	6%{?dist}
 License:	Redistributable, no modification permitted
 Group:		System Environment/Kernel
 Source0:	ftp://ftp.qlogic.com/outgoing/linux/firmware/netxen_nic/phanfw.bin
@@ -32,6 +32,9 @@ magic_rpm_clean.sh
 %{_prefix}/lib/firmware/phanfw.bin
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.0.534-6
+- 为 Magic 3.0 重建
+
 * Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 4.0.534-5
 - 为 Magic 3.0 重建
 

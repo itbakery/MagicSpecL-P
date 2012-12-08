@@ -1,6 +1,6 @@
 Name:           perl-App-CLI
 Version:        0.313
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Dispatcher module for command line interface programs
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.313-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.313-2
 - 为 Magic 3.0 重建
 

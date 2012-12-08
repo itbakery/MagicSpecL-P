@@ -5,7 +5,7 @@
 Summary: Proxy system for X11
 Name: nx
 Version: 3.5.0
-Release: 8%{?dist}
+Release: 9%{?dist}
 # MIT on the X11 bits
 License: GPLv2 and MIT
 Group: Applications/Internet
@@ -151,6 +151,9 @@ rm -rf %{buildroot}
 %{_pkglibexecdir}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.0-9
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

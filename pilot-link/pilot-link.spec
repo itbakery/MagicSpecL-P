@@ -2,7 +2,7 @@
 
 Name: pilot-link
 Version: 0.12.5
-Release: 13%{?dist}
+Release: 14%{?dist}
 Epoch: 2
 # libpisock/md5.c       Public Domain
 # libpisock/blob.c      LGPLv2+
@@ -208,6 +208,9 @@ rm -rf %{buildroot}
 /usr/lib/udev/rules.d/69-pilot-link.rules
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:0.12.5-14
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2:0.12.5-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

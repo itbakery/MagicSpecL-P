@@ -6,7 +6,7 @@
 
 Name:           pygtksourceview
 Version:        2.10.1
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Python bindings for gtksourceview
 
 Group:          Development/Languages
@@ -73,6 +73,9 @@ rm $RPM_BUILD_ROOT%{python_sitearch}/gtksourceview2.la
 %{_datadir}/gtk-doc/html/pygtksourceview2
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10.1-6
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

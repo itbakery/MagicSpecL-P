@@ -1,7 +1,7 @@
 Summary: The Point-to-Point Protocol daemon
 Name: ppp
 Version: 2.4.5
-Release: 18%{?dist}
+Release: 19%{?dist}
 License: BSD and LGPLv2+ and GPLv2+ and Public Domain
 Group: System Environment/Daemons
 URL: http://www.samba.org/ppp
@@ -149,6 +149,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc PLUGINS
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.4.5-19
+- 为 Magic 3.0 重建
+
 * Thu Jan 26 2012 Liu Di <liudidi@gmail.com> - 2.4.5-18
 - 为 Magic 3.0 重建
 

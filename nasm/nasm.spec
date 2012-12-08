@@ -2,7 +2,7 @@
 Summary: A portable x86 assembler which uses Intel-like syntax
 Name: nasm
 Version: 2.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: BSD
 Group: Development/Languages
 URL: http://www.nasm.us
@@ -91,6 +91,9 @@ fi
 %{_bindir}/rdf2srec
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 15 2012 Vojtech Vitek (V-Teq) <vvitek@redhat.com> - 2.10-1
 - update to 2.10 (#797858)
 

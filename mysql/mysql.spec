@@ -1,6 +1,6 @@
 Name: mysql
-Version: 5.5.21
-Release: 1%{?dist}
+Version: 5.5.25a
+Release: 3%{?dist}
 
 Summary: MySQL client programs and shared libraries
 Group: Applications/Databases
@@ -49,13 +49,13 @@ Patch8: mysql-dubious-exports.patch
 Patch10: mysql-plugin-bool.patch
 Patch11: mysql-s390-tsc.patch
 Patch12: mysql-openssl-test.patch
-Patch13: mysqld-nowatch.patch
 Patch14: mysql-va-list.patch
 Patch15: mysql-netdevname.patch
 Patch16: mysql-logrotate.patch
 Patch17: mysql-plugin-test.patch
-Patch18: mysql-default-cipher.patch
+Patch18: mysql-cipherspec.patch
 Patch19: mysql-file-contents.patch
+Patch20: mysql-string-overflow.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: perl, readline-devel, openssl-devel
@@ -108,7 +108,7 @@ Requires: sh-utils
 Requires(pre): /usr/sbin/useradd
 Requires(post): chkconfig
 Requires(preun): chkconfig
-# We require this to be present for /etc/tmpfiles.d
+# We require this to be present for %%{_prefix}/lib/tmpfiles.d
 Requires: systemd-units
 # Make sure it's there when scriptlets run, too
 Requires(post): systemd-units
@@ -204,13 +204,13 @@ the MySQL sources.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
-%patch13 -p1
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
 %patch18 -p1
 %patch19 -p1
+%patch20 -p1
 
 # workaround for upstream bug #56342
 rm -f mysql-test/t/ssl_8k_key-master.opt
@@ -380,8 +380,8 @@ install -m 644 %{SOURCE11} ${RPM_BUILD_ROOT}%{_unitdir}/
 install -m 755 %{SOURCE12} ${RPM_BUILD_ROOT}%{_libexecdir}/
 install -m 755 %{SOURCE13} ${RPM_BUILD_ROOT}%{_libexecdir}/
 
-mkdir -p $RPM_BUILD_ROOT/etc/tmpfiles.d
-install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT/etc/tmpfiles.d/mysql.conf
+mkdir -p $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d
+install -m 0644 %{SOURCE10} $RPM_BUILD_ROOT%{_prefix}/lib/tmpfiles.d/mysql.conf
 
 # Fix funny permissions that cmake build scripts apply to config files
 chmod 644 ${RPM_BUILD_ROOT}%{_datadir}/mysql/config.*.ini
@@ -447,6 +447,8 @@ cp %{SOURCE7} README.mysql-license
 # install the list of skipped tests to be available for user runs
 install -m 0644 mysql-test/rh-skipped-tests.list ${RPM_BUILD_ROOT}%{_datadir}/mysql-test
 
+magic_rpm_clean.sh
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -456,15 +458,15 @@ rm -rf $RPM_BUILD_ROOT
 	-c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 
 %post libs
-/sbin/ldconfig
+/usr/sbin/ldconfig
 
 %post server
 if [ $1 = 1 ]; then
     # Initial installation
     /bin/systemctl daemon-reload >/dev/null 2>&1 || :
 fi
-/bin/chmod 0755 /var/lib/mysql
-/bin/touch /var/log/mysqld.log
+/usr/bin/chmod 0755 /var/lib/mysql
+/usr/bin/touch /var/log/mysqld.log
 
 # Handle upgrading from SysV initscript to native systemd unit.
 # We can tell if a SysV version of mysql was previously installed by
@@ -494,7 +496,7 @@ if [ $1 = 0 ] ; then
 fi
 
 %postun server
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ]; then
     # Package upgrade, not uninstall
     /bin/systemctl try-restart mysqld.service >/dev/null 2>&1 || :
@@ -652,7 +654,7 @@ fi
 %{_libexecdir}/mysqld-prepare-db-dir
 %{_libexecdir}/mysqld-wait-ready
 
-/etc/tmpfiles.d/mysql.conf
+%{_prefix}/lib/tmpfiles.d/mysql.conf
 %attr(0755,mysql,mysql) %dir /var/run/mysqld
 %attr(0755,mysql,mysql) %dir /var/lib/mysql
 %attr(0640,mysql,mysql) %config(noreplace) %verify(not md5 size mtime) /var/log/mysqld.log
@@ -691,6 +693,51 @@ fi
 %{_mandir}/man1/mysql_client_test.1*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.5.25a-3
+- 为 Magic 3.0 重建
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 5.5.25a-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul  6 2012 Tom Lane <tgl@redhat.com> 5.5.25a-1
+- Update to MySQL 5.5.25a, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25a.html
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-25.html
+- Don't use systemd's Restart feature; rely on mysqld_safe instead
+Resolves: #832029
+
+* Mon Jun 11 2012 Tom Lane <tgl@redhat.com> 5.5.24-1
+- Update to MySQL 5.5.24, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-24.html
+  including the fix for CVE-2012-2122
+Resolves: #830680
+- Tweak logrotate script to put the right permissions on mysqld.log
+- Minor specfile fixes for recent packaging guidelines changes
+
+* Sat Apr 28 2012 Tom Lane <tgl@redhat.com> 5.5.23-1
+- Update to MySQL 5.5.23, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-23.html
+
+* Sat Mar 24 2012 Tom Lane <tgl@redhat.com> 5.5.22-1
+- Update to MySQL 5.5.22, for various fixes described at
+  http://dev.mysql.com/doc/refman/5.5/en/news-5-5-22.html
+- Turn on PrivateTmp in service file
+Resolves: #782513
+- Comment out the contents of /etc/logrotate.d/mysqld, so that manual
+  action is needed to enable log rotation.  Given the multiple ways in
+  which the rotation script can fail, it seems imprudent to try to make
+  it run by default.
+Resolves: #799735
+
+* Tue Mar 20 2012 Honza Horak <hhorak@redhat.com> 5.5.21-3
+- Revise mysql_plugin test patch so it moves plugin files to
+  a temporary directory (better solution to #789530)
+
+* Tue Mar 13 2012 Honza Horak <hhorak@redhat.com> 5.5.21-2
+- Fix ssl-related tests to specify expected cipher explicitly
+Related: #789600
+- Fix several strcpy calls to check destination size
+
 * Mon Feb 27 2012 Tom Lane <tgl@redhat.com> 5.5.21-1
 - Update to MySQL 5.5.21, for various fixes described at
   http://dev.mysql.com/doc/refman/5.5/en/news-5-5-21.html

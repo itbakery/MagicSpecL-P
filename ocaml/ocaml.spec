@@ -1,6 +1,6 @@
 Name:           ocaml
 Version:        4.00.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 
 Summary:        OCaml compiler and programming environment
 
@@ -510,6 +510,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.00.1-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 16 2012 Richard W.M. Jones <rjones@redhat.com> - 4.00.1-1
 - Update to upstream version 4.00.1.
 - Clean up the spec file further.

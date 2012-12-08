@@ -1,7 +1,7 @@
 Name:           perl-App-Cache
 Summary:        Easy application-level caching
 Version:        0.37
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/L/LB/LBROCARD/App-Cache-%{version}.tar.gz 
@@ -78,6 +78,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.37-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.37-10
 - 为 Magic 3.0 重建
 

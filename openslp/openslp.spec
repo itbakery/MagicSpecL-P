@@ -2,7 +2,7 @@
 Summary: Open implementation of Service Location Protocol V2
 Name:    openslp
 Version: 1.2.1
-Release: 16%{?dist}
+Release: 17%{?dist}
 
 Group:   System Environment/Libraries
 License: BSD
@@ -145,6 +145,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.2.1-17
+- 为 Magic 3.0 重建
+
 * Fri Jan 20 2012 Liu Di <liudidi@gmail.com> - 1.2.1-16
 - 为 Magic 3.0 重建
 

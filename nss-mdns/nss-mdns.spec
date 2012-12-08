@@ -2,7 +2,7 @@ Summary: glibc plugin for .local name resolution
 Summary(zh_CN.UTF-8): .local 名字解析的 glibc 插件
 Name: nss-mdns
 Version: 0.10
-Release: 9%{?dist}
+Release: 10%{?dist}
 License: LGPLv2+
 URL: http://0pointer.de/lennart/projects/nss-mdns/
 Group: System Environment/Libraries
@@ -66,4 +66,7 @@ fi
 /%{_lib}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-10
+- 为 Magic 3.0 重建
+
 

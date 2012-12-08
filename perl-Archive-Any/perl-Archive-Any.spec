@@ -1,6 +1,6 @@
 Name:		perl-Archive-Any
 Version:	0.0932
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Single interface to deal with file archives
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Archive::Any::Plugin::Zip.3pm*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.0932-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0932-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

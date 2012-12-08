@@ -1,6 +1,6 @@
 Name:           perl-Alien-SeleniumRC
 Version:        2.90
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Packages the Selenium Remote Control server
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.90-4
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 2.90-3
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:           %{python}-twisted-mail
 Version:        12.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        SMTP, IMAP and POP protocol implementation together with clients and servers
 License:        MIT
 URL:            http://www.twistedmatrix.com/trac/wiki/TwistedMail
@@ -70,6 +70,9 @@ fi
 %{python_sitearch}/twisted/plugins/twisted_mail.py*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 12.2.0-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
 - Updated to 12.2.0
 

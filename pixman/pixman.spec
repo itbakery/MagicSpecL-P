@@ -3,7 +3,7 @@
 
 Name:           pixman
 Version:        0.24.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Pixel manipulation library
 
 Group:          System Environment/Libraries
@@ -57,6 +57,9 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{_libdir}/pkgconfig/pixman-1.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.24.2-2
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Soren Sandmann <ssp@redhat.com> 0.24.2-1
 - pixman 0.24.2
 

@@ -1,7 +1,7 @@
 Summary: A generic mozilla plug-in
 Name: mozplugger
 Version: 1.14.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/Internet
 Url: http://mozplugger.mozdev.org/
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man7/mozplugger.7*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.14.3-2
+- 为 Magic 3.0 重建
+
 * Wed Nov 09 2011 Than Ngo <than@redhat.com> - 1.14.3-1
 - 1.14.3
 - build with optflags

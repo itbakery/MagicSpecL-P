@@ -1,7 +1,7 @@
 Summary:    Reads and writes data across network connections using TCP or UDP
 Name:       nc
 Version:    1.107
-Release:    1%{?dist}
+Release:    2%{?dist}
 URL:        http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/%{name}/
 License:    BSD and ISC
 Group:      Applications/Internet
@@ -63,6 +63,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/nc.1*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.107-2
+- 为 Magic 3.0 重建
+
 * Tue Apr 03 2012 Petr Šabata <contyk@redhat.com> - 1.107-1
 - 1.107 bump
 - Warn if accept fails implemented upstream, removing the patch

@@ -1,6 +1,6 @@
 Name: plib
 Version: 1.8.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: A Suite of Portable Game Libraries
 Summary(zh_CN.UTF-8): 一套可移植游戏库
 License: GPL
@@ -77,6 +77,9 @@ make DESTDIR=%{buildroot} install
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.8.5-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 26 2012 Liu Di <liudidi@gmail.com> - 1.8.5-2
 - 为 Magic 3.0 重建
 

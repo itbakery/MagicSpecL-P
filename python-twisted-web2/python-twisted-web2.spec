@@ -4,7 +4,7 @@
 Summary: Experimental Twisted Web Server Framework
 Name: %{python}-twisted-web2
 Version: 8.1.0
-Release: 11%{?dist}
+Release: 12%{?dist}
 License: MIT
 Group: Development/Libraries
 URL: http://twistedmatrix.com/trac/wiki/TwistedWeb2
@@ -68,6 +68,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 8.1.0-12
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 8.1.0-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

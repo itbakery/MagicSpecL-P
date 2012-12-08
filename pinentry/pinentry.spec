@@ -17,7 +17,7 @@
 
 Name:    pinentry
 Version: 0.8.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 Summary: Collection of simple PIN or passphrase entry dialogs
 
 Group:   Applications/System
@@ -189,6 +189,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.1-7
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.8.1-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

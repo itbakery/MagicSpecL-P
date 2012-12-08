@@ -12,7 +12,7 @@
 
 Name:    openjpeg
 Version: 1.4
-Release: 9%{?dist}
+Release: 10%{?dist}
 Summary: JPEG 2000 command line tools
 
 Group:   Applications/Multimedia
@@ -185,6 +185,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4-10
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

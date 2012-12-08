@@ -1,7 +1,7 @@
 Summary:         A small text editor
 Name:            nano
 Version:         2.3.1
-Release:         1%{?dist}
+Release:         2%{?dist}
 License:         GPLv3+
 Group:           Applications/Editors
 URL:             http://www.nano-editor.org
@@ -96,6 +96,9 @@ rm -rf %{buildroot}
 %{_datadir}/nano
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.3.1-2
+- 为 Magic 3.0 重建
+
 * Wed May 11 2011 Kamil Dudka <kdudka@redhat.com> - 2.3.1-1
 - new upstream release
 

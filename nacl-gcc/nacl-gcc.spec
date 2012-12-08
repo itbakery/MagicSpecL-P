@@ -5,7 +5,7 @@
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
 Version:	4.4.3
-Release:	5.git%{gitver}%{?dist}
+Release:	6.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
 # (Checkout ID taken from chromium-19.0.1084.56/native_client/tools/REVISIONS)
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.4.3-6.git3937565
+- 为 Magic 3.0 重建
+
 * Tue Aug 28 2012 Tom Callaway <spot@fedoraproject.org> 4.4.3-5.git3937565
 - update for chromium 21
 

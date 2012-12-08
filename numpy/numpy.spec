@@ -9,7 +9,7 @@
 
 Name:           numpy
 Version:        1.7.0
-Release:        0.4.%{relc}%{?dist}
+Release:        0.5.%{relc}%{?dist}
 Epoch:		1
 Summary:        A fast multidimensional array facility for Python
 
@@ -254,6 +254,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:1.7.0-0.5.b2
+- 为 Magic 3.0 重建
+
 * Thu Sep 20 2012 Orion Poplawski <orion@nwra.com> - 1:1.7.0-0.4.b2
 - Update to 1.7.0b2
 - Drop patches applied upstream

@@ -1,7 +1,7 @@
 Summary: A tool for printing multiple pages of text on each printed page
 Name: mpage
 Version: 2.5.6
-Release: 10%{dist}
+Release: 11%{dist}
 License: GPLv2+
 Url: http://www.mesa.nl/pub/mpage/
 Group: Applications/Publishing
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mpage
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.5.6-11
+- 为 Magic 3.0 重建
+
 * Sat Nov 24 2012 Liu Di <liudidi@gmail.com> - 2.5.6-10
 - 为 Magic 3.0 重建
 

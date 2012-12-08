@@ -6,7 +6,7 @@
 Summary: Encoding files 
 Name:    poppler-data
 Version: 0.4.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 # The cMap data files installed by the poppler-data package are
 # under the COPYING.adobe license
 # cidToUnicode, nameToUnicode and unicodeMap data files
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.6-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 17 2012 Rex Dieter <rdieter@fedoraproject.org> 0.4.6-1
 - poppler-data-0.4.6
 

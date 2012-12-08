@@ -3,7 +3,7 @@
 Summary:	A high-performance implementation of MPI
 Name:		mpich2
 Version:	1.4.1p1
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	MIT
 Group:		Development/Libraries
 URL:		http://www.mcs.anl.gov/research/projects/mpich2
@@ -281,6 +281,9 @@ fi
 %exclude %{_datadir}/%{name}/examples*/Makefile-%{_arch}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4.1p1-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 31 2012 Liu Di <liudidi@gmail.com> - 1.4.1p1-6
 - 为 Magic 3.0 重建
 

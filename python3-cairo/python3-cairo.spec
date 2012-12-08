@@ -4,7 +4,7 @@
 
 Name: python3-cairo
 Version: 1.10.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
 Summary: Python 3 bindings for the cairo library
@@ -83,6 +83,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/py3cairo.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.10.0-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 18 2011 John (J5) Palmieri <johnp@redhat.com> - 1.10.0-1
 - update to upstream 1.10.0
 

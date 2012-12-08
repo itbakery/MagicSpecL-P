@@ -2,7 +2,7 @@
 
 Name:           mtpfs
 Version:        1.1
-Release:        0.3.svn%{svndate}%{?dist}
+Release:        0.4.svn%{svndate}%{?dist}
 Summary:        FUSE file system allowing MTP device to be mounted and browsed
 
 License:        GPLv3
@@ -58,6 +58,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1-0.4.svn20120510
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-0.3.svn20120510
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

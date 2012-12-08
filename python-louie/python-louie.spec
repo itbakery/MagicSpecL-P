@@ -3,7 +3,7 @@
 Summary: Dispatches signals between Python objects in a wide variety of contexts
 Name: python-louie
 Version: 1.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: BSD
 Group: Development/Languages
 URL: http://pylouie.org/
@@ -50,4 +50,7 @@ Python Cookbook.
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1-7
+- 为 Magic 3.0 重建
+
 

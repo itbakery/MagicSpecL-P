@@ -1,6 +1,6 @@
 Name:           plpa
 Version:        1.3.2
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Portable Linux Processor Affinity
 
 Group:          Development/System
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libplpa.so
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.3.2-8
+- 为 Magic 3.0 重建
+
 * Thu Jan 26 2012 Liu Di <liudidi@gmail.com> - 1.3.2-7
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary: A library for handling different graphics file formats
 Name: netpbm
 Version: 10.57.04
-Release: 1%{?dist}
+Release: 2%{?dist}
 # See copyright_summary for details
 License: BSD and GPLv2 and IJG and MIT and Public Domain
 Group: System Environment/Libraries
@@ -245,6 +245,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc userguide/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 10.57.04-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 12 2012 Jindrich Novy <jnovy@redhat.com> 10.57.04-1
 - update to 10.57.04
 - fixes ppmquantall

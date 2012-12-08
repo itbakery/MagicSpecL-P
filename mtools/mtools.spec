@@ -1,7 +1,7 @@
 Summary: Programs for accessing MS-DOS disks without mounting the disks
 Name: mtools
 Version: 4.0.17
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv3+
 Group: Applications/System
 Source0: ftp://ftp.gnu.org/gnu/mtools/mtools-%{version}.tar.bz2
@@ -68,6 +68,9 @@ fi
 %{_infodir}/mtools.info*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.0.17-2
+- 为 Magic 3.0 重建
+
 * Wed Jun 29 2011 Adam Tkac <atkac redhat com> 4.0.17-1
 - update to 4.0.17
 

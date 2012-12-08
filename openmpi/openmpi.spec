@@ -19,7 +19,7 @@
 
 Name:			openmpi%{?_cc_name_suffix}
 Version:		1.6.2
-Release:		2%{?dist}
+Release:		3%{?dist}
 Summary:		Open Message Passing Interface
 Group:			Development/Libraries
 License:		BSD, MIT and Romio
@@ -225,6 +225,9 @@ magic_rpm_clean.sh
 %{_sysconfdir}/rpm/macros.%{namearch}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.6.2-3
+- 为 Magic 3.0 重建
+
 * Thu Nov 01 2012 Liu Di <liudidi@gmail.com> - 1.6.2-2
 - 为 Magic 3.0 重建
 

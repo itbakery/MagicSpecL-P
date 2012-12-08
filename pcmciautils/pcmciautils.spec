@@ -2,7 +2,7 @@ Name: pcmciautils
 Summary: PCMCIA utilities and initialization programs
 License: GPLv2
 Version: 018
-Release: 2%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Base
 ExclusiveArch: i386 i586 i686 x86_64 ia64 ppc ppc64 %{?arm}
 URL: http://www.kernel.org/pub/linux/utils/kernel/pcmcia/pcmcia.html
@@ -50,6 +50,9 @@ cp -p src/yacc_config.c y.tab.c # for -debuginfo
 %{_mandir}/man*/pccardctl*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 018-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 21 2012 Liu Di <liudidi@gmail.com> - 018-2
 - 为 Magic 3.0 重建
 

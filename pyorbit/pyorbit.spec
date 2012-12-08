@@ -2,7 +2,7 @@
 
 Name: pyorbit
 Version: 2.24.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Summary: Python bindings for ORBit2
@@ -66,6 +66,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.24.0-11
+- 为 Magic 3.0 重建
+
 * Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 2.24.0-10
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:        Netscape Portable Runtime
 Name:           nspr
 Version:        4.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        MPLv1.1 or GPLv2+ or LGPLv2+
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
@@ -135,6 +135,9 @@ cat %{SOURCE1} | sed -e "s,%%libdir%%,%{_libdir},g" \
 %{_bindir}/nspr-config
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9-2
+- 为 Magic 3.0 重建
+
 * Wed Feb 29 2012 Elio Maldonado <emaldona@redhat.com> - 4.9-1
 - Update to NSPR_4_9_RTM
 

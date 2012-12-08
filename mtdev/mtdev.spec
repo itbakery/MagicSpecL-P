@@ -3,7 +3,7 @@
 
 Name:           mtdev
 Version:        1.1.0
-Release:        3.%{?gitdate}%{?dist}
+Release:        4.%{?gitdate}%{?dist}
 Summary:        Multitouch Protocol Translation Library
 
 Group:          System Environment/Libraries
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_bindir}/mtdev-test
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.0-4.20110105
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.0-3.20110105
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

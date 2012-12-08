@@ -1,6 +1,6 @@
 Name:          mutter
 Version:       3.7.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 Group:         User Interface/Desktops
@@ -132,6 +132,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %doc %{_mandir}/man1/mutter-window-demo.1.gz
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.7.1-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 09 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.1-1
 - Update to 3.7.1
 

@@ -2,10 +2,10 @@
 # Conditionals and other variables controlling the build
 # ======================================================
 
-%global pybasever 3.2
+%global pybasever 3.3
 
 # pybasever without the dot:
-%global pyshortver 32
+%global pyshortver 33
 
 %global pylibdir %{_libdir}/python%{pybasever}
 %global dynload_dir %{pylibdir}/lib-dynload
@@ -14,9 +14,13 @@
 # for PEP 3149:
 #   http://www.python.org/dev/peps/pep-3149/
 
+# ("configure.in" became "configure.ac" in Python 3.3 onwards, and in
+# backports)
+
 # ABIFLAGS, LDVERSION and SOABI are in the upstream Makefile
-%global ABIFLAGS_optimized mu
-%global ABIFLAGS_debug     dmu
+# With Python 3.3, we lose the "u" suffix due to PEP 393
+%global ABIFLAGS_optimized m
+%global ABIFLAGS_debug     dm
 
 %global LDVERSION_optimized %{pybasever}%{ABIFLAGS_optimized}
 %global LDVERSION_debug     %{pybasever}%{ABIFLAGS_debug}
@@ -31,9 +35,9 @@
 # For example,
 #   foo/bar.py
 # now has bytecode at:
-#   foo/__pycache__/bar.cpython-32.pyc
-#   foo/__pycache__/bar.cpython-32.pyo
-%global bytecode_suffixes .cpython-32.py?
+#   foo/__pycache__/bar.cpython-33.pyc
+#   foo/__pycache__/bar.cpython-33.pyo
+%global bytecode_suffixes .cpython-33.py?
 
 # Python's configure script defines SOVERSION, and this is used in the Makefile
 # to determine INSTSONAME, the name of the libpython DSO:
@@ -53,7 +57,7 @@
 %global with_systemtap 1
 
 # some arches don't have valgrind so we need to disable its support on them
-%ifarch %{ix86} x86_64 ppc ppc64 s390x
+%ifarch %{ix86} x86_64 ppc %{power64} s390x
 %global with_valgrind 1
 %else
 %global with_valgrind 0
@@ -121,8 +125,8 @@
 # ==================
 Summary: Version 3 of the Python programming language aka Python 3000
 Name: python3
-Version: %{pybasever}.2
-Release: 10%{?dist}
+Version: %{pybasever}.0
+Release: 2%{?dist}
 License: Python
 Group: Development/Languages
 
@@ -136,8 +140,12 @@ Group: Development/Languages
 BuildRequires: autoconf
 BuildRequires: bzip2
 BuildRequires: bzip2-devel
-BuildRequires: db4-devel >= 4.7
-BuildRequires: expat-devel
+BuildRequires: libdb-devel >= 5.3
+
+# expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
+# it (in pyexpat) in order to enable the fix in Python-3.2.3 for CVE-2012-0876:
+BuildRequires: expat-devel >= 2.1.0
+
 BuildRequires: findutils
 BuildRequires: gcc-c++
 %if %{with_gdbm}
@@ -170,15 +178,15 @@ BuildRequires: tk-devel
 BuildRequires: valgrind-devel
 %endif
 
+BuildRequires: xz-devel
 BuildRequires: zlib-devel
-
 
 
 # =======================
 # Source code and patches
 # =======================
 
-Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.bz2
+Source: http://www.python.org/ftp/python/%{version}/Python-%{version}.tar.xz
 
 # Avoid having various bogus auto-generated Provides lines for the various
 # python c modules' SONAMEs:
@@ -215,43 +223,52 @@ Patch1:         Python-3.1.1-rpath.patch
 
 # The four TestMIMEAudio tests fail due to "audiotest.au" not being packaged.
 # It's simplest to remove them:
-Patch3: python-3.2b2-remove-mimeaudio-tests.patch
+Patch3: 00003-remove-mimeaudio-tests.patch
 
+# 00055 #
 # Systemtap support: add statically-defined probe points
-# Patch based on upstream bug: http://bugs.python.org/issue4111
-# fixed up by mjw and wcohen for 2.6.2, then fixed up by dmalcolm for 2.6.4
-# then rewritten by mjw (attachment 390110 of rhbz 545179); ported to 3.1.1 by
-# dmalcolm
+# Patch sent upstream as http://bugs.python.org/issue14776
+# with some subsequent reworking to cope with LANG=C in an rpmbuild
+# (where sys.getfilesystemencoding() == 'ascii')
 Patch55: 00055-systemtap.patch
 
-Patch102: python-3.2.1-lib64.patch
+Patch102: python-3.3.0b1-lib64.patch
 
+# 00104 #
 # Only used when "%{_lib}" == "lib64"
 # Another lib64 fix, for distutils/tests/test_install.py; not upstream:
 Patch104: 00104-lib64-fix-for-test_install.patch
 
+# 00111 #
 # Patch the Makefile.pre.in so that the generated Makefile doesn't try to build
 # a libpythonMAJOR.MINOR.a (bug 550692):
+# Downstream only: not appropriate for upstream
 Patch111: 00111-no-static-lib.patch
 
+# 00112 #
 # Patch112: python-2.7rc1-debug-build.patch: this is not relevant to Python 3,
 # for 3.2 onwards
 
+# 00113 #
 # Add configure-time support for the COUNT_ALLOCS and CALL_PROFILE options
 # described at http://svn.python.org/projects/python/trunk/Misc/SpecialBuilds.txt
 # so that if they are enabled, they will be in that build's pyconfig.h, so that
 # extension modules will reliably use them
+# Not yet sent upstream
 Patch113: 00113-more-configuration-flags.patch
 
+# 00114 #
 # Add flags for statvfs.f_flag to the constant list in posixmodule (i.e. "os")
 # (rhbz:553020); partially upstream as http://bugs.python.org/issue7647
+# Not yet sent upstream
 Patch114: 00114-statvfs-f_flag-constants.patch
 
+# 00125 #
 # COUNT_ALLOCS is useful for debugging, but the upstream behaviour of always
 # emitting debug info to stdout on exit is too verbose and makes it harder to
 # use the debug build.  Add a "PYTHONDUMPCOUNTS" environment variable which
 # must be set to enable the output on exit
-# Not yet sent upstream:
+# Not yet sent upstream
 Patch125: 00125-less-verbose-COUNT_ALLOCS.patch
 
 # In my koji builds, /root/bin is in the PATH for some reason
@@ -265,16 +282,19 @@ Patch125: 00125-less-verbose-COUNT_ALLOCS.patch
 # Not yet sent upstream
 Patch129: python-3.2.1-fix-test-subprocess-with-nonreadable-path-dir.patch
 
+# 00130 #
 # Python 2's:
 #   Patch130: python-2.7.2-add-extension-suffix-to-python-config.patch
 # is not relevant to Python 3 (for 3.2 onwards)
 
+# 00131 #
 # The four tests in test_io built on top of check_interrupted_write_retry
 # fail when built in Koji, for ppc and ppc64; for some reason, the SIGALRM
 # handlers are never called, and the call to write runs to completion
 # (rhbz#732998)
 Patch131: 00131-disable-tests-in-test_io.patch
 
+# 00132 #
 # Add non-standard hooks to unittest for use in the "check" phase below, when
 # running selftests within the build:
 #   @unittest._skipInRpmBuild(reason)
@@ -288,55 +308,70 @@ Patch131: 00131-disable-tests-in-test_io.patch
 # these unittest hooks in their own "check" phases)
 Patch132: 00132-add-rpmbuild-hooks-to-unittest.patch
 
+# 00133 #
 # 00133-skip-test_dl.patch is not relevant for python3: the "dl" module no
 # longer exists
 
+# 00134 #
 # Fix a failure in test_sys.py when configured with COUNT_ALLOCS enabled
 # Not yet sent upstream
 Patch134: 00134-fix-COUNT_ALLOCS-failure-in-test_sys.patch
 
+# 00135 #
 # test_weakref's test_callback_in_cycle_resurrection doesn't work with
 # COUNT_ALLOCS, as the metrics keep "C" alive.  Work around this for our
 # debug build:
 # Not yet sent upstream
 Patch135: 00135-fix-test-within-test_weakref-in-debug-build.patch
 
+# 00136 #
 # Patch136: 00136-skip-tests-of-seeking-stdin-in-rpmbuild.patch does not seem
 # to be needed by python3
 
+# 00137 #
 # Some tests within distutils fail when run in an rpmbuild:
 Patch137: 00137-skip-distutils-tests-that-fail-in-rpmbuild.patch
 
+# 00138 #
 # Patch138: 00138-fix-distutils-tests-in-debug-build.patch is not relevant for
 # python3
 
+# 00139 #
 # ARM-specific: skip known failure in test_float:
 #  http://bugs.python.org/issue8265 (rhbz#706253)
 Patch139: 00139-skip-test_float-known-failure-on-arm.patch
 
+# 00140 #
 # Patch140: 00140-skip-test_ctypes-known-failure-on-sparc.patch does not appear
 # to be relevant for python3
 
+# 00141 #
 # Fix test_gc's test_newinstance case when configured with COUNT_ALLOCS:
+# Not yet sent upstream
 Patch141: 00141-fix-test_gc_with_COUNT_ALLOCS.patch
 
+# 00142 #
 # Some pty tests fail when run in mock (rhbz#714627):
 Patch142: 00142-skip-failing-pty-tests-in-rpmbuild.patch
 
+# 00143 #
 # Fix the --with-tsc option on ppc64, and rework it on 32-bit ppc to avoid
 # aliasing violations (rhbz#698726)
 # Sent upstream as http://bugs.python.org/issue12872
 Patch143: 00143-tsc-on-ppc.patch
 
+# 00144 #
 # (Optionally) disable the gdbm module:
 # python.spec's
 #   Patch144: 00144-no-gdbm.patch
 # is not needed in python3.spec
 
+# 00145 #
 # python.spec's
 #   Patch145: 00145-force-sys-platform-to-be-linux2.patch
 # is upstream for Python 3 as of 3.2.2
 
+# 00146 #
 # Support OpenSSL FIPS mode (e.g. when OPENSSL_FORCE_FIPS_MODE=1 is set)
 # - handle failures from OpenSSL (e.g. on attempts to use MD5 in a
 #   FIPS-enforcing environment)
@@ -353,19 +388,113 @@ Patch143: 00143-tsc-on-ppc.patch
 # (rhbz#563986)
 Patch146: 00146-hashlib-fips.patch
 
+# 00147 #
 # Add a sys._debugmallocstats() function
-# Based on patch 202 from RHEL 5's python.spec, with updates from rhbz#737198
-#  Not yet sent upstream
-Patch147: 00147-add-debug-malloc-stats.patch
+# Sent upstream as http://bugs.python.org/issue14785
+# Upstream as of Python 3.3.0
+#  Patch147: 00147-add-debug-malloc-stats.patch
 
-# Cherrypick fix for dbm version detection to cope with gdbm-1.9's magic values
-# Taken from upstream http://bugs.python.org/issue13007 (rhbz#742242)
-Patch148: 00148-gdbm-1.9-magic-values.patch
+# 00148 #
+# Upstream as of Python 3.2.3:
+#  Patch148: 00148-gdbm-1.9-magic-values.patch
 
-# Cherrypick fix for distutils not using __pycache__ when byte-compiling files
-# Based on upstream http://bugs.python.org/issue11254 (rhbz#722578)
-# (upstream commits 27a36b05caed and 651e84363001):
-Patch149: 00149-backport-issue11254-pycache-bytecompilation-fix.patch
+# 00149 #
+# Upstream as of Python 3.2.3:
+#  Patch149: 00149-backport-issue11254-pycache-bytecompilation-fix.patch
+
+# 00150 #
+# temporarily disable rAssertAlmostEqual in test_cmath on PPC (bz #750811)
+# caused by a glibc bug. This patch can be removed when we have a glibc with
+# the patch mentioned here:
+#   http://sourceware.org/bugzilla/show_bug.cgi?id=13472
+Patch150: 00150-disable-rAssertAlmostEqual-cmath-on-ppc.patch
+
+# 00151 #
+# python.spec had:
+#  Patch151: 00151-fork-deadlock.patch
+
+# 00152 #
+# Fix a regex in test_gdb so that it doesn't choke when gdb provides a full
+# path to Python/bltinmodule.c:
+# Committed upstream as 77824:abcd29c9a791 as part of fix for
+# http://bugs.python.org/issue12605
+#  Patch152: 00152-fix-test-gdb-regex.patch
+
+# 00153 #
+# Strip out lines of the form "warning: Unable to open ..." from gdb's stderr
+# when running test_gdb.py; also cope with change to gdb in F17 onwards in
+# which values are printed as "v@entry" rather than just "v":
+# Not yet sent upstream
+Patch153: 00153-fix-test_gdb-noise.patch
+
+# 00154 #
+# python3.spec on f15 has:
+#  Patch154: 00154-skip-urllib-test-requiring-working-DNS.patch
+
+# 00155 #
+# Avoid allocating thunks in ctypes unless absolutely necessary, to avoid
+# generating SELinux denials on "import ctypes" and "import uuid" when
+# embedding Python within httpd (rhbz#814391)
+Patch155: 00155-avoid-ctypes-thunks.patch
+
+# 00156 #
+# Recent builds of gdb will only auto-load scripts from certain safe
+# locations.  Turn off this protection when running test_gdb in the selftest
+# suite to ensure that it can load our -gdb.py script (rhbz#817072):
+# Not yet sent upstream
+Patch156: 00156-gdb-autoload-safepath.patch
+
+# 00157 #
+# Update uid/gid handling throughout the standard library: uid_t and gid_t are
+# unsigned 32-bit values, but existing code often passed them through C long
+# values, which are signed 32-bit values on 32-bit architectures, leading to
+# negative int objects for uid/gid values >= 2^31 on 32-bit architectures.
+#
+# Introduce _PyObject_FromUid/Gid to convert uid_t/gid_t values to python
+# objects, using int objects where the value will fit (long objects otherwise),
+# and _PyArg_ParseUid/Gid to convert int/long to uid_t/gid_t, with -1 allowed
+# as a special case (since this is given special meaning by the chown syscall)
+#
+# Update standard library to use this throughout for uid/gid values, so that
+# very large uid/gid values are round-trippable, and -1 remains usable.
+# (rhbz#697470)
+Patch157: 00157-uid-gid-overflows.patch
+
+# 00158 #
+#  Patch158: 00158-fix-hashlib-leak.patch
+# in python.spec
+# TODO: python3 status?
+
+# 00159 #
+#  Patch159: 00159-correct-libdb-include-path.patch
+# in python.spec
+# TODO: python3 status?
+
+# 00160 #
+# Python 3.3 added os.SEEK_DATA and os.SEEK_HOLE, which may be present in the
+# header files in the build chroot, but may not be supported in the running
+# kernel, hence we disable this test in an rpm build.
+# Adding these was upstream issue http://bugs.python.org/issue10142
+# Not yet sent upstream
+Patch160: 00160-disable-test_fs_holes-in-rpm-build.patch
+
+# 00161 #
+# (Was only needed for Python 3.3.0b1)
+
+# 00162 #
+# (Was only needed for Python 3.3.0b1)
+
+# 00163 #
+# Some tests within test_socket fail intermittently when run inside Koji;
+# disable them using unittest._skipInRpmBuild
+# Not yet sent upstream
+Patch163: 00163-disable-parts-of-test_socket-in-rpm-build.patch
+
+# 0164 #
+# some tests in test._io interrupted_write-* fail on PPC (rhbz#846849)
+# testChainingDescriptors  test in test_exceptions fails on PPc, too (rhbz#846849)
+# disable those tests so that rebuilds on PPC can continue
+Patch164: 00164-disable-interrupted_write-tests-on-ppc.patch
 
 # (New patches go here ^^^)
 #
@@ -390,7 +519,7 @@ Patch149: 00149-backport-issue11254-pycache-bytecompilation-fix.patch
 # This is the generated patch to "configure"; see the description of
 #   %{regenerate_autotooling_patch}
 # above:
-Patch300: autotool-intermediates.patch
+Patch5000: 05000-autotool-intermediates.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
 
@@ -415,6 +544,12 @@ considerably, and a lot of deprecated features have finally been removed.
 Summary:        Python 3 runtime libraries
 Group:          Development/Libraries
 #Requires:       %{name} = %{version}-%{release}
+
+# expat 2.1.0 added the symbol XML_SetHashSalt without bumping SONAME.  We use
+# this symbol (in pyexpat), so we must explicitly state this dependency to
+# prevent "import pyexpat" from failing with a linker error if someone hasn't
+# yet upgraded expat:
+Requires: expat >= 2.1.0
 
 %description libs
 This package contains files used to embed Python 3 into applications.
@@ -555,7 +690,7 @@ done
 
 %patch129 -p1
 
-%ifarch ppc ppc64
+%ifarch ppc %{power64}
 %patch131 -p1
 %endif
 
@@ -576,9 +711,28 @@ done
 # 00144: not for python3
 # 00145: not for python3
 %patch146 -p1
-%patch147 -p1
-%patch148 -p1
-%patch149 -p1
+# 00147: upstream as of Python 3.3.0
+# 00148: upstream as of Python 3.2.3
+# 00149: upstream as of Python 3.2.3
+%ifarch ppc %{power64}
+%patch150 -p1
+%endif
+# 00151: not for python3
+# 00152: upstream as of Python 3.3.0b2
+%patch153 -p1
+# 00154: not for this branch
+%patch155 -p1
+%patch156 -p1
+%patch157 -p1
+#00158: FIXME
+#00159: FIXME
+%patch160 -p1
+# 00161: was only needed for Python 3.3.0b1
+# 00162: was only needed for Python 3.3.0b1
+%patch163 -p1
+%ifarch ppc %{power64}
+%patch164 -p1
+%endif
 
 # Currently (2010-01-15), http://docs.python.org/library is for 2.6, and there
 # are many differences between 2.6 and the Python 3 library.
@@ -593,7 +747,7 @@ sed --in-place \
 %if ! 0%{regenerate_autotooling_patch}
 # Normally we apply the patch to "configure"
 # We don't apply the patch if we're working towards regenerating it
-%patch300 -p0 -b .autotool-intermediates
+%patch5000 -p0 -b .autotool-intermediates
 %endif
 
 
@@ -609,7 +763,7 @@ export CPPFLAGS="`pkg-config --cflags-only-I libffi`"
 export OPT="$RPM_OPT_FLAGS -D_GNU_SOURCE -fPIC -fwrapv"
 export LINKCC="gcc"
 export CFLAGS="$CFLAGS `pkg-config --cflags openssl`"
-export LDFLAGS="$LDFLAGS `pkg-config --libs-only-L openssl`"
+export LDFLAGS="$RPM_LD_FLAGS `pkg-config --libs-only-L openssl`"
 
 %if 0%{regenerate_autotooling_patch}
 # If enabled, this code regenerates the patch to "configure", using a
@@ -627,7 +781,7 @@ done
 PATH=~/autoconf-2.65/bin:$PATH autoreconf
 
 # Regenerate the patch:
-gendiff . .autotool-intermediates > %{PATCH300}
+gendiff . .autotool-intermediates > %{PATCH5000}
 
 
 # Exit the build
@@ -655,20 +809,18 @@ BuildPython() {
 
 %configure \
   --enable-ipv6 \
-  --with-wide-unicode \
   --enable-shared \
-%if 0%{?with_systemtap}
-  --with-dtrace \
-  --with-tapset-install-dir=%{tapsetdir} \
-%endif
+  --with-computed-gotos=%{with_computed_gotos} \
+  --with-dbmliborder=gdbm:ndbm:bdb \
+  --with-system-expat \
   --with-system-ffi \
+%if 0%{?with_systemtap}
+  --with-systemtap \
+%endif
 %if 0%{?with_valgrind}
   --with-valgrind \
 %endif
-  --with-system-expat \
-  --with-dbmliborder=gdbm:ndbm:bdb \
   $ExtraConfigArgs \
-  --with-computed-gotos=%{with_computed_gotos} \
   %{nil}
 
   # Set EXTRA_CFLAGS to our CFLAGS (rather than overriding OPT, as we've done
@@ -692,7 +844,7 @@ BuildPython() {
 BuildPython debug \
   python-debug \
   python%{pybasever}-debug \
-%ifarch %{ix86} x86_64 ppc ppc64
+%ifarch %{ix86} x86_64 ppc %{power64}
   "--with-pydebug --with-tsc --with-count-allocs --with-call-profile" \
 %else
   "--with-pydebug --with-count-allocs --with-call-profile" \
@@ -726,6 +878,12 @@ InstallPython() {
   mkdir -p $ConfDir
 
   pushd $ConfDir
+
+  # Workaround for http://bugs.python.org/issue14774 : Lib/_sysconfigdata.py
+  # is in the srcdir but contains per-config data.
+  # Regenerate it each time:
+  rm -f ../../Lib/_sysconfigdata.py
+  make $topdir/Lib/_sysconfigdata.py
 
 make install DESTDIR=%{buildroot} INSTALL="install -p"
 
@@ -807,15 +965,15 @@ install -d -m 0755 %{buildroot}/usr/lib/python%{pybasever}/site-packages/__pycac
 %global _pyconfig32_h pyconfig-32.h
 %global _pyconfig64_h pyconfig-64.h
 
-%ifarch ppc64 s390x x86_64 ia64 alpha sparc64
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64
 %global _pyconfig_h %{_pyconfig64_h}
 %else
 %global _pyconfig_h %{_pyconfig32_h}
 %endif
 
 # ABIFLAGS, LDVERSION and SOABI are in the upstream Makefile
-%global ABIFLAGS_optimized mu
-%global ABIFLAGS_debug     dmu
+%global ABIFLAGS_optimized m
+%global ABIFLAGS_debug     dm
 
 %global LDVERSION_optimized %{pybasever}%{ABIFLAGS_optimized}
 %global LDVERSION_debug     %{pybasever}%{ABIFLAGS_debug}
@@ -906,8 +1064,18 @@ iconv -f iso8859-1 -t utf-8 %{buildroot}/%{pylibdir}/Demo/rpc/README > README.co
 # for the 2to3 tool, and one of the functions of the 2to3 tool is to fixup
 # character encodings within python source code
 
-# Do bytecompilation with the new interpreter.
-LD_LIBRARY_PATH=. /usr/lib/rpm/brp-python-bytecompile ./python
+# Do bytecompilation with the newly installed interpreter.
+# This is similar to the script in macros.pybytecompile
+# compile *.pyo
+find %{buildroot} -type f -a -name "*.py" -print0 | \
+    LD_LIBRARY_PATH="%{buildroot}%{dynload_dir}/:%{buildroot}%{_libdir}" \
+    PYTHONPATH="%{buildroot}%{_libdir}python%{pybasever} %{buildroot}/%{_libdir}python%{pybasever}/site-packages" \
+    xargs -0 %{buildroot}%{_bindir}/python%{pybasever} -O -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("%{buildroot}")[2]) for f in sys.argv[1:]]' || :
+# compile *.pyc
+find %{buildroot} -type f -a -name "*.py" -print0 | \
+    LD_LIBRARY_PATH="%{buildroot}%{dynload_dir}/:%{buildroot}%{_libdir}" \
+    PYTHONPATH="%{buildroot}%{_libdir}python%{pybasever} %{buildroot}/%{_libdir}python%{pybasever}/site-packages" \
+    xargs -0 %{buildroot}%{_bindir}/python%{pybasever} -O -c 'import py_compile, sys; [py_compile.compile(f, dfile=f.partition("%{buildroot}")[2], optimize=0) for f in sys.argv[1:]]' || :
 
 # Fixup permissions for shared libraries from non-standard 555 to standard 755:
 find %{buildroot} \
@@ -956,7 +1124,7 @@ ln -s \
 # Install a tapset for this libpython into tapsetdir, fixing up the path to the
 # library:
 mkdir -p %{buildroot}%{tapsetdir}
-%ifarch ppc64 s390x x86_64 ia64 alpha sparc64
+%ifarch %{power64} s390x x86_64 ia64 alpha sparc64
 %global libpython_stp_optimized libpython%{pybasever}-64.stp
 %global libpython_stp_debug     libpython%{pybasever}-debug-64.stp
 %else
@@ -970,14 +1138,18 @@ sed \
    > %{buildroot}%{tapsetdir}/%{libpython_stp_optimized}
 
 %if 0%{?with_debug_build}
+# In Python 3, python3 and python3-debug don't point to the same binary,
+# so we have to replace "python3" with "python3-debug" to get systemtap
+# working with debug build
 sed \
    -e "s|LIBRARY_PATH|%{_libdir}/%{py_INSTSONAME_debug}|" \
+   -e 's|"python3"|"python3-debug"|' \
    %{_sourcedir}/libpython.stp \
    > %{buildroot}%{tapsetdir}/%{libpython_stp_debug}
 %endif # with_debug_build
 
 %endif # with_systemtap
-
+magic_rpm_clean.sh
 
 # ======================================================
 # Running the upstream test suite
@@ -993,6 +1165,13 @@ CheckPython() {
 
   # Note that we're running the tests using the version of the code in the
   # builddir, not in the buildroot.
+
+  # Workaround for http://bugs.python.org/issue14774, as per the install
+  # stanza (albeit from a different directory):
+  rm -f Lib/_sysconfigdata.py
+  pushd $ConfDir
+  make $topdir/Lib/_sysconfigdata.py
+  popd
 
   # Run the upstream test suite, setting "WITHIN_PYTHON_RPM_BUILD" so that the
   # our non-standard decorators take effect on the relevant tests:
@@ -1015,7 +1194,7 @@ CheckPython debug
 CheckPython optimized
 
 %endif # run_selftest_suite
-
+magic_rpm_clean.sh
 
 # ======================================================
 # Cleaning up
@@ -1041,7 +1220,9 @@ rm -fr %{buildroot}
 %{_bindir}/pydoc*
 %{_bindir}/python3
 %{_bindir}/python%{pybasever}
-%{_bindir}/python%{pybasever}mu
+%{_bindir}/python%{pybasever}m
+%{_bindir}/pyvenv
+%{_bindir}/pyvenv-3.3
 %{_mandir}/*/*
 
 %files libs
@@ -1049,19 +1230,21 @@ rm -fr %{buildroot}
 %doc LICENSE README
 %dir %{pylibdir}
 %dir %{dynload_dir}
-%{dynload_dir}/Python-%{version}-py%{pybasever}.egg-info
 %{dynload_dir}/_bisect.%{SOABI_optimized}.so
+%{dynload_dir}/_bz2.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_cn.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_hk.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_iso2022.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_jp.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_kr.%{SOABI_optimized}.so
 %{dynload_dir}/_codecs_tw.%{SOABI_optimized}.so
+%{dynload_dir}/_crypt.%{SOABI_optimized}.so
 %{dynload_dir}/_csv.%{SOABI_optimized}.so
 %{dynload_dir}/_ctypes.%{SOABI_optimized}.so
 %{dynload_dir}/_curses.%{SOABI_optimized}.so
 %{dynload_dir}/_curses_panel.%{SOABI_optimized}.so
 %{dynload_dir}/_dbm.%{SOABI_optimized}.so
+%{dynload_dir}/_decimal.%{SOABI_optimized}.so
 %{dynload_dir}/_elementtree.%{SOABI_optimized}.so
 %if %{with_gdbm}
 %{dynload_dir}/_gdbm.%{SOABI_optimized}.so
@@ -1070,6 +1253,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_heapq.%{SOABI_optimized}.so
 %{dynload_dir}/_json.%{SOABI_optimized}.so
 %{dynload_dir}/_lsprof.%{SOABI_optimized}.so
+%{dynload_dir}/_lzma.%{SOABI_optimized}.so
 %{dynload_dir}/_multibytecodec.%{SOABI_optimized}.so
 %{dynload_dir}/_multiprocessing.%{SOABI_optimized}.so
 %{dynload_dir}/_pickle.%{SOABI_optimized}.so
@@ -1083,9 +1267,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/atexit.%{SOABI_optimized}.so
 %{dynload_dir}/audioop.%{SOABI_optimized}.so
 %{dynload_dir}/binascii.%{SOABI_optimized}.so
-%{dynload_dir}/bz2.%{SOABI_optimized}.so
 %{dynload_dir}/cmath.%{SOABI_optimized}.so
-%{dynload_dir}/crypt.%{SOABI_optimized}.so
 %{dynload_dir}/_datetime.%{SOABI_optimized}.so
 %{dynload_dir}/fcntl.%{SOABI_optimized}.so
 %{dynload_dir}/grp.%{SOABI_optimized}.so
@@ -1112,7 +1294,11 @@ rm -fr %{buildroot}
 %{pylibdir}/*.py
 %dir %{pylibdir}/__pycache__/
 %{pylibdir}/__pycache__/*%{bytecode_suffixes}
-%{pylibdir}/wsgiref.egg-info
+
+%dir %{pylibdir}/collections/
+%dir %{pylibdir}/collections/__pycache__/
+%{pylibdir}/collections/*.py
+%{pylibdir}/collections/__pycache__/*%{bytecode_suffixes}
 
 %dir %{pylibdir}/concurrent/
 %dir %{pylibdir}/concurrent/__pycache__/
@@ -1149,6 +1335,7 @@ rm -fr %{buildroot}
 %{pylibdir}/email/*.py
 %{pylibdir}/email/__pycache__/*%{bytecode_suffixes}
 %{pylibdir}/email/mime
+%doc %{pylibdir}/email/architecture.rst
 
 %{pylibdir}/encodings
 %{pylibdir}/html
@@ -1169,7 +1356,7 @@ rm -fr %{buildroot}
 %exclude %{pylibdir}/lib2to3/tests
 %{pylibdir}/logging
 %{pylibdir}/multiprocessing
-%{pylibdir}/plat-linux2
+%{pylibdir}/plat-linux
 %{pylibdir}/pydoc_data
 
 %dir %{pylibdir}/sqlite3/
@@ -1193,6 +1380,13 @@ rm -fr %{buildroot}
 %{pylibdir}/unittest/__pycache__/*%{bytecode_suffixes}
 
 %{pylibdir}/urllib
+
+%dir %{pylibdir}/venv/
+%dir %{pylibdir}/venv/__pycache__/
+%{pylibdir}/venv/*.py
+%{pylibdir}/venv/__pycache__/*%{bytecode_suffixes}
+%{pylibdir}/venv/scripts
+
 %{pylibdir}/wsgiref
 %{pylibdir}/xml
 %{pylibdir}/xmlrpc
@@ -1261,11 +1455,10 @@ rm -fr %{buildroot}
 %defattr(-, root, root)
 %{pylibdir}/ctypes/test
 %{pylibdir}/distutils/tests
-%{pylibdir}/email/test
-%{pylibdir}/importlib/test
 %{pylibdir}/sqlite3/test
 %{pylibdir}/test
 %{dynload_dir}/_ctypes_test.%{SOABI_optimized}.so
+%{dynload_dir}/_testbuffer.%{SOABI_optimized}.so
 %{dynload_dir}/_testcapi.%{SOABI_optimized}.so
 %{pylibdir}/lib2to3/tests
 %{pylibdir}/tkinter/test
@@ -1289,17 +1482,20 @@ rm -fr %{buildroot}
 # Analog of the -libs subpackage's files:
 # ...with debug builds of the built-in "extension" modules:
 %{dynload_dir}/_bisect.%{SOABI_debug}.so
+%{dynload_dir}/_bz2.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_cn.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_hk.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_iso2022.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_jp.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_kr.%{SOABI_debug}.so
 %{dynload_dir}/_codecs_tw.%{SOABI_debug}.so
+%{dynload_dir}/_crypt.%{SOABI_debug}.so
 %{dynload_dir}/_csv.%{SOABI_debug}.so
 %{dynload_dir}/_ctypes.%{SOABI_debug}.so
 %{dynload_dir}/_curses.%{SOABI_debug}.so
 %{dynload_dir}/_curses_panel.%{SOABI_debug}.so
 %{dynload_dir}/_dbm.%{SOABI_debug}.so
+%{dynload_dir}/_decimal.%{SOABI_debug}.so
 %{dynload_dir}/_elementtree.%{SOABI_debug}.so
 %if %{with_gdbm}
 %{dynload_dir}/_gdbm.%{SOABI_debug}.so
@@ -1308,6 +1504,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/_heapq.%{SOABI_debug}.so
 %{dynload_dir}/_json.%{SOABI_debug}.so
 %{dynload_dir}/_lsprof.%{SOABI_debug}.so
+%{dynload_dir}/_lzma.%{SOABI_debug}.so
 %{dynload_dir}/_multibytecodec.%{SOABI_debug}.so
 %{dynload_dir}/_multiprocessing.%{SOABI_debug}.so
 %{dynload_dir}/_pickle.%{SOABI_debug}.so
@@ -1321,9 +1518,7 @@ rm -fr %{buildroot}
 %{dynload_dir}/atexit.%{SOABI_debug}.so
 %{dynload_dir}/audioop.%{SOABI_debug}.so
 %{dynload_dir}/binascii.%{SOABI_debug}.so
-%{dynload_dir}/bz2.%{SOABI_debug}.so
 %{dynload_dir}/cmath.%{SOABI_debug}.so
-%{dynload_dir}/crypt.%{SOABI_debug}.so
 %{dynload_dir}/_datetime.%{SOABI_debug}.so
 %{dynload_dir}/fcntl.%{SOABI_debug}.so
 %{dynload_dir}/grp.%{SOABI_debug}.so
@@ -1368,6 +1563,7 @@ rm -fr %{buildroot}
 
 # Analog  of the -test subpackage's files:
 %{dynload_dir}/_ctypes_test.%{SOABI_debug}.so
+%{dynload_dir}/_testbuffer.%{SOABI_debug}.so
 %{dynload_dir}/_testcapi.%{SOABI_debug}.so
 
 %endif # with_debug_build
@@ -1391,11 +1587,101 @@ rm -fr %{buildroot}
 # ======================================================
 
 %changelog
-* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 3.2.2-10
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.0-2
 - 为 Magic 3.0 重建
 
-* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 3.2.2-9
-- 为 Magic 3.0 重建
+* Sat Sep 29 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-1
+- 3.3.0rc3 -> 3.3.0; drop alphatag
+
+* Mon Sep 24 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.6.rc3
+- 3.3.0rc2 -> 3.3.0rc3
+
+* Mon Sep 10 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.5.rc2
+- 3.3.0rc1 -> 3.3.0rc2; refresh patch 55
+
+* Mon Aug 27 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.4.rc1
+- 3.3.0b2 -> 3.3.0rc1; refresh patches 3, 55
+
+* Mon Aug 13 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.3.b2
+- 3.3b1 -> 3.3b2; drop upstreamed patch 152; refresh patches 3, 102, 111,
+134, 153, 160; regenenerate autotools patch; rework systemtap patch to work
+correctly when LANG=C (patch 55); importlib.test was moved to
+test.test_importlib upstream
+
+* Mon Aug 13 2012 Karsten Hopp <karsten@redhat.com> 3.3.0-0.2.b1
+- disable some failing checks on PPC* (rhbz#846849)
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.1.b1
+- 3.2 -> 3.3: https://fedoraproject.org/wiki/Features/Python_3.3
+- 3.3.0b1: refresh patches 3, 55, 102, 111, 113, 114, 134, 157; drop upstream
+patch 147; regenenerate autotools patch; drop "--with-wide-unicode" from
+configure (PEP 393); "plat-linux2" -> "plat-linux" (upstream issue 12326);
+"bz2" -> "_bz2" and "crypt" -> "_crypt"; egg-info files are no longer shipped
+for stdlib (upstream issues 10645 and 12218); email/test moved to
+test/test_email; add /usr/bin/pyvenv[-3.3] and venv module (PEP 405); add
+_decimal and _lzma modules; make collections modules explicit in payload again
+(upstream issue 11085); add _testbuffer module to tests subpackage (added in
+upstream commit 3f9b3b6f7ff0); fix test failures (patches 160 and 161);
+workaround erroneously shared _sysconfigdata.py upstream issue #14774; fix
+distutils.sysconfig traceback (patch 162); add BuildRequires: xz-devel (for
+_lzma module); skip some tests within test_socket (patch 163)
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.2.3-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul 20 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.0-0.1.b1
+
+* Fri Jun 22 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-10
+- use macro for power64 (rhbz#834653)
+
+* Mon Jun 18 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-9
+- fix missing include in uid/gid handling patch (patch 157; rhbz#830405)
+
+* Wed May 30 2012 Bohuslav Kabrda <bkabrda@redhat.com> - 3.2.3-8
+- fix tapset for debug build
+
+* Tue May 15 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-7
+- update uid/gid handling to avoid int overflows seen with uid/gid
+values >= 2^31 on 32-bit architectures (patch 157; rhbz#697470)
+
+* Fri May  4 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-6
+- renumber autotools patch from 300 to 5000
+- specfile cleanups
+
+* Mon Apr 30 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-5
+- fix test_gdb.py (patch 156; rhbz#817072)
+
+* Fri Apr 20 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-4
+- avoid allocating thunks in ctypes unless absolutely necessary, to avoid
+generating SELinux denials on "import ctypes" and "import uuid" when embedding
+Python within httpd (patch 155; rhbz#814391)
+
+* Fri Apr 20 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-3
+- add explicit version requirements on expat to avoid linkage problems with
+XML_SetHashSalt
+
+* Thu Apr 12 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-2
+- fix test_gdb (patch 153)
+
+* Wed Apr 11 2012 David Malcolm <dmalcolm@redhat.com> - 3.2.3-1
+- 3.2.3; refresh patch 102 (lib64); drop upstream patches 148 (gdbm magic
+values), 149 (__pycache__ fix); add patch 152 (test_gdb regex)
+
+* Thu Feb  9 2012 Thomas Spura <tomspur@fedoraproject.org> - 3.2.2-13
+- use newly installed python for byte compiling (now for real)
+
+* Sun Feb  5 2012 Thomas Spura <tomspur@fedoraproject.org> - 3.2.2-12
+- use newly installed python for byte compiling (#787498)
+
+* Wed Jan  4 2012 Ville Skyttä <ville.skytta@iki.fi> - 3.2.2-11
+- Build with $RPM_LD_FLAGS (#756863).
+- Use xz-compressed source tarball.
+
+* Wed Dec 07 2011 Karsten Hopp <karsten@redhat.com> 3.2.2-10
+- disable rAssertAlmostEqual in test_cmath on PPC (#750811)
+
+* Mon Oct 17 2011 Rex Dieter <rdieter@fedoraproject.org> - 3.2.2-9
+- python3-devel missing autogenerated pkgconfig() provides (#746751)
 
 * Mon Oct 10 2011 David Malcolm <dmalcolm@redhat.com> - 3.2.2-8
 - cherrypick fix for distutils not using __pycache__ when byte-compiling

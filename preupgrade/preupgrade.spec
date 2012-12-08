@@ -1,7 +1,7 @@
 Summary: Prepares a system for an upgrade
 Name: preupgrade
 Version: 1.1.10
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Source: https://fedorahosted.org/releases/p/r/preupgrade/%{name}-%{version}.tar.bz2
 Source1: http://mirrors.fedoraproject.org/releases.txt
@@ -55,6 +55,9 @@ install -m 0644 %{SOURCE1} $RPM_BUILD_ROOT/usr/share/preupgrade/releases.list
 %{python_sitelib}/%{name}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.10-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.10-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

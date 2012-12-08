@@ -2,7 +2,7 @@
 
 Name:      perl-AnyEvent-HTTP
 Version:   1.46
-Release:   6%{?dist}
+Release:   7%{?dist}
 Summary:   Simple but non-blocking HTTP/HTTPS client  
 
 Group:     Development/Libraries
@@ -74,6 +74,9 @@ make test
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.46-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.46-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

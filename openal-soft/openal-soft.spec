@@ -1,6 +1,6 @@
 Name:           openal-soft
 Version:        1.14
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Open Audio Library
 
 Group:          System Environment/Libraries
@@ -75,6 +75,9 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/openal.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.14-4
+- 为 Magic 3.0 重建
+
 * Mon Dec 03 2012 Liu Di <liudidi@gmail.com> - 1.14-3
 - 为 Magic 3.0 重建
 

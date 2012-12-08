@@ -2,7 +2,7 @@
 
 Name:           pcsc-lite
 Version:        1.7.4
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        PC/SC Lite smart card framework and applications
 
 Group:          System Environment/Daemons
@@ -170,6 +170,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.7.4-7
+- 为 Magic 3.0 重建
+
 * Mon Oct 10 2011 Kalev Lember <kalevlember@gmail.com> - 1.7.4-6
 - Remove the automatic card power down disabling patch again;
   no longer needed with latest libusb1 1.0.9 rc1 (#737988)

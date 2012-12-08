@@ -3,7 +3,7 @@ Summary: Gstreamer phonon backend
 Name:    phonon-backend-gstreamer
 Epoch:   2
 Version: 4.6.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group:   System Environment/Libraries
 License: LGPLv2+
 URL:     http://phonon.kde.org/
@@ -95,6 +95,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &> /dev/null ||:
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:4.6.2-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 13 2012 Rex Dieter <rdieter@fedoraproject.org> 2:4.6.2-1
 - 4.6.2
 

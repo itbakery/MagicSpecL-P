@@ -1,4 +1,4 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
+%if 0%{?fedora} > 12
 %global with_python3 1
 %else
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
@@ -6,7 +6,7 @@
 
 Name: python-markupsafe
 Version: 0.11
-Release: 4%{?dist}
+Release: 8%{?dist}
 Summary: Implements a XML/HTML/XHTML Markup safe string for Python
 
 Group: Development/Languages
@@ -96,8 +96,20 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 0.11-4
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.11-8
 - 为 Magic 3.0 重建
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 0.11-7
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 0.11-6
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

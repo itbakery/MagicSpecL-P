@@ -2,7 +2,7 @@
 
 Name:           python-sqlite2
 Version:        2.3.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Epoch:          1
 Summary:        DB-API 2.0 interface for SQLite 3.x
 
@@ -96,6 +96,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:2.3.5-5
+- 为 Magic 3.0 重建
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.3.5-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

@@ -5,7 +5,7 @@
 Summary:	Python binding for the ALSA library
 Name:		python-alsa
 Version:	1.0.24
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	LGPLv2+
 Group:		Development/Languages
 Source0:	ftp://ftp.alsa-project.org/pub/pyalsa/pyalsa-%{version}.tar.bz2
@@ -35,6 +35,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.24-3
+- 为 Magic 3.0 重建
+
 * Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 1.0.24-2
 - 为 Magic 3.0 重建
 

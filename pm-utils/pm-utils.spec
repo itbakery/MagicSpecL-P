@@ -3,7 +3,7 @@ Name: pm-utils
 Summary: Power management utilities and scripts for Fedora
 License: GPLv2
 Version: 1.4.1
-Release: 9%{?dist}
+Release: 10%{?dist}
 Group: System Environment/Base
 URL: http://pm-utils.freedesktop.org
 # for chvt
@@ -100,6 +100,9 @@ rm -rf %{_localstatedir}/run/pm-utils/{pm-suspend,pm-powersave}/storage/*
 %{_libdir}/pkgconfig/pm-utils.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4.1-10
+- 为 Magic 3.0 重建
+
 * Thu Jan 26 2012 Liu Di <liudidi@gmail.com> - 1.4.1-9
 - 为 Magic 3.0 重建
 

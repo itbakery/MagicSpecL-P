@@ -2,7 +2,7 @@
 #%%global rcversion RC1
 Name: pcre
 Version: 8.30
-Release: %{?rcversion:0.}2%{?rcversion:.%rcversion}%{?dist}
+Release: %{?rcversion:0.}2%{?rcversion:.%rcversion}%{?dist}.1
 %global myversion %{version}%{?rcversion:-%rcversion}
 Summary: Perl-compatible regular expression library
 Group: System Environment/Libraries
@@ -115,6 +115,9 @@ make check
 %{_mandir}/man1/pcretest.*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 8.30-2.1
+- 为 Magic 3.0 重建
+
 * Tue Feb 28 2012 Petr Pisar <ppisar@redhat.com> - 8.30-2
 - Remove old libpcre.so.0 from distribution
 - Move library to /usr

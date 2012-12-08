@@ -3,7 +3,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 24.%{gitver}%{?dist}
+Release: 25.%{gitver}%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://gitorious.org/procps
@@ -201,6 +201,9 @@ rm -rf %{buildroot}
 %{_libdir}/libproc.so
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.8-25.20110302git
+- 为 Magic 3.0 重建
+
 * Sun Apr 22 2012 Liu Di <liudidi@gmail.com> - 3.2.8-24.20110302git
 - 为 Magic 3.0 重建
 

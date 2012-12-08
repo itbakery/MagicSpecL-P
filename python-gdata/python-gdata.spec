@@ -5,7 +5,7 @@
 
 Name:           python-gdata
 Version:        2.0.14
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A Python module for accessing online Google services
 
 Group:          Development/Languages
@@ -60,6 +60,9 @@ find src -type f -print0 |  xargs -0 sed -i -e '/^#!\//, 1d' *.py
 %{python_sitelib}/gdata-%{version}-py*.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.14-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

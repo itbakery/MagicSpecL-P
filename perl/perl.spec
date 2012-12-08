@@ -26,7 +26,7 @@
 Name:           perl
 Version:        %{perl_version}
 # release number must be even higher, because dual-lived modules will be broken otherwise
-Release:        231%{?dist}
+Release:        232%{?dist}
 Epoch:          %{perl_epoch}
 Summary:        Practical Extraction and Report Language
 Group:          Development/Languages
@@ -2597,6 +2597,9 @@ magic_rpm_clean.sh
 
 # Old changelog entries are preserved in CVS.
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4:5.16.1-232
+- 为 Magic 3.0 重建
+
 * Fri Sep 14 2012 Petr Pisar <ppisar@redhat.com> - 4:5.16.1-231
 - Override the Pod::Simple::parse_file to set output to STDOUT by default
   (bug #826872)

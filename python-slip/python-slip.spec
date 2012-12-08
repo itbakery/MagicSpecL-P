@@ -4,7 +4,7 @@
 
 Name:       python-slip
 Version:    0.2.20
-Release:    2%{?dist}
+Release:    3%{?dist}
 Summary:    Miscellaneous convenience, extension and workaround code for Python
 
 Group:      System Environment/Libraries
@@ -88,6 +88,9 @@ rm -rf %buildroot
 %{python_sitelib}/slip.gtk-%{version}-py%{python_version}.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.2.20-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.20-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

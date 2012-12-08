@@ -7,7 +7,7 @@
 Summary:    Python bindings for lzma
 Name:       pyliblzma
 Version:    0.5.3
-Release:    7%{?dist}
+Release:    8%{?dist}
 License:    LGPLv3+
 URL:        https://launchpad.net/pyliblzma
 Source0:    http://pypi.python.org/packages/source/p/pyliblzma/%{name}-%{version}.tar.bz2
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/%{name}*.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.5.3-8
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.3-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

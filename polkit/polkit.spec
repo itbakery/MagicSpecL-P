@@ -1,7 +1,7 @@
 Summary: polkit Authorization Framework
 Name: polkit
 Version: 0.106
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/polkit
 Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
@@ -125,6 +125,9 @@ exit 0
 %{_datadir}/gtk-doc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.106-2
+- 为 Magic 3.0 重建
+
 * Thu Jun 07 2012 David Zeuthen <davidz@redhat.com> 0.106-1%{?dist}
 - Update to upstream release 0.106
 - Authorizations are no longer controlled by .pkla files - from now

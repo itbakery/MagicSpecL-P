@@ -3,7 +3,7 @@
 Summary: A high-level cross-protocol url-grabber
 Name: python-urlgrabber
 Version: 3.9.1
-Release: 11%{?dist}
+Release: 12%{?dist}
 Source0: urlgrabber-%{version}.tar.gz
 Patch1: urlgrabber-HEAD.patch
 
@@ -43,6 +43,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/urlgrabber
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.9.1-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 22 2012 Liu Di <liudidi@gmail.com> - 3.9.1-11
 - 为 Magic 3.0 重建
 

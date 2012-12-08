@@ -1,7 +1,7 @@
 Summary: An ELF prelinking utility
 Name: prelink
 Version: 0.4.6
-Release: 4%{?dist}
+Release: 5%{?dist}
 %global svnver 195
 License: GPLv2+
 Group: System Environment/Base
@@ -89,6 +89,9 @@ touch /var/lib/prelink/force
 %attr(0644,root,root) %verify(not md5 size mtime) %ghost %config(missingok,noreplace) /var/log/prelink/prelink.log
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.6-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4.6-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

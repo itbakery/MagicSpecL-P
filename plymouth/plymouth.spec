@@ -6,7 +6,7 @@
 Summary: Graphical Boot Animation and Logger
 Name: plymouth
 Version: 0.8.5.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: System Environment/Base
 Source0: http://freedesktop.org/software/plymouth/releases/%{name}-%{version}.tar.bz2
@@ -498,6 +498,9 @@ fi
 %defattr(-, root, root)
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8.5.1-4
+- 为 Magic 3.0 重建
+
 * Mon Jun 25 2012 Adam Jackson <ajax@redhat.com> 0.8.5.1-3
 - Rebuild without libkms
 

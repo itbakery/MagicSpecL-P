@@ -9,7 +9,7 @@
 Summary: Multimedia framework api
 Name:    phonon
 Version: 4.6.0
-Release: 7%{?dist}
+Release: 8%{?dist}
 Group:   System Environment/Libraries
 License: LGPLv2+
 URL:     http://phonon.kde.org/
@@ -182,6 +182,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.6.0-8
+- 为 Magic 3.0 重建
+
 * Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 4.6.0-7
 - 为 Magic 3.0 重建
 

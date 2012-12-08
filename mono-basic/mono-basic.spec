@@ -2,7 +2,7 @@
 
 Name:		mono-basic
 Version:	2.10
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	VisualBasic.NET support for mono
 Group:		Development/Languages
 License:	LGPLv2+
@@ -72,6 +72,9 @@ EOF
 %{_libdir}/pkgconfig/mono-basic.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.10-4
+- 为 Magic 3.0 重建
+
 * Sun Oct 23 2011 Christian Krause <chkr@fedoraproject.org> - 2.10-3
 - Change paths for mono assemblies according to updated packaging
   guidelines (http://fedoraproject.org/wiki/Packaging:Mono)

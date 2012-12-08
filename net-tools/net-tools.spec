@@ -3,7 +3,7 @@
 Summary: Basic networking tools
 Name: net-tools
 Version: 1.60
-Release: 134.%{checkout}%{?dist}
+Release: 135.%{checkout}%{?dist}
 License: GPL+
 Group: System Environment/Base
 URL: http://net-tools.sourceforge.net
@@ -170,6 +170,9 @@ fi
 %attr(0644,root,root)   %{_unitdir}/arp-ethers.service
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.60-135.20120127git
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Jiri Popelka <jpopelka@redhat.com> - 1.60-134.20120127git
 - Do not show interface metric in 'ifconfig', 'ifconfig -s' and 'netstat -i'.
   Spare place is used for interface name so trim_iface.patch is no longer needed.

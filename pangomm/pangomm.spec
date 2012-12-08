@@ -4,7 +4,7 @@
 
 Name:           pangomm
 Version:        2.28.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        C++ interface for Pango
 
 Group:          System Environment/Libraries
@@ -91,6 +91,9 @@ magic_rpm_clean.sh
 %{_datadir}/devhelp/
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.28.4-3
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.28.4-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

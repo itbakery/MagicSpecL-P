@@ -2,7 +2,7 @@ Summary: NFS utilities and supporting clients and daemons for the kernel NFS ser
 Name: nfs-utils
 URL: http://sourceforge.net/projects/nfs
 Version: 1.2.5
-Release: 14%{?dist}
+Release: 15%{?dist}
 Epoch: 1
 
 # group all 32bit related archs
@@ -290,6 +290,9 @@ fi
 %attr(4755,root,root)   /usr/sbin/umount.nfs4
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:1.2.5-15
+- 为 Magic 3.0 重建
+
 * Thu Mar 22 2012 Steve Dickson <steved@redhat.com> 1.2.5-14
 - gssd: Look for user creds in user defined directory (bz 786993)
 - gssd: Don't link with libgssapi_krb5 (bz 784908)

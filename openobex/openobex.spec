@@ -2,7 +2,7 @@ Summary: Library for using OBEX
 Summary(zh_CN.UTF-8): 使用OBEX的库
 Name: openobex
 Version: 1.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPL
 Group: System Environment/Libraries
 Group(zh_CN.UTF-8): 系统环境/库
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.5-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 20 2012 Liu Di <liudidi@gmail.com> - 1.5-2
 - 为 Magic 3.0 重建
 

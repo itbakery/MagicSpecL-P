@@ -7,7 +7,7 @@
 
 Name: pycairo
 Version: 1.8.8
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: MPLv1.1 or LGPLv2
 Group: Development/Languages
 Summary: Python bindings for the cairo library
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/pycairo.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.8.8-4
+- 为 Magic 3.0 重建
+
 * Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 1.8.8-3
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@ Name: netmanager
 Summary: Networking manager tools
 Summary(zh_CN.UTF-8): 一个网络管理工具
 Version: 0.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL v2
 Group: System Environment/Base
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -88,5 +88,8 @@ rm -rf $RPM_BUILD_ROOT
 /usr/share/netmanager/netmanagerzh_CN.UTF-8.qm
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.1.6-3
+- 为 Magic 3.0 重建
+
 * Tue Dec 20 2011 Liu Di <liudidi@gmail.com> - 0.1.6-2mgc
 - 为 Magic 3.0 重建

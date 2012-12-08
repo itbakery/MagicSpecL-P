@@ -6,7 +6,7 @@
 
 Name: privoxy
 Version: 3.0.16
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Privacy enhancing proxy
 License: GPLv2+
 Source0: http://downloads.sourceforge.net/ijbswa/%{name}-%{version}-%{beta_or_stable}-src.tar.gz
@@ -116,6 +116,9 @@ fi
 #doc/source/developer-manual doc/source/faq doc/source/user-manual
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.0.16-4
+- 为 Magic 3.0 重建
+
 * Thu Apr 29 2010 Karsten Hopp <karsten@redhat.com> 3.0.16-3
 - add zlib-devel to build requirements (#509557)
 

@@ -3,7 +3,7 @@
 Name:		nacl-newlib
 Summary:	C library intended for use on embedded systems
 Version:	1.20.0
-Release:	2.git%{gitver}%{?dist}
+Release:	3.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-newlib.git
 # (Checkout ID taken from chromium-17.0.963.46/native_client/tools/REVISIONS)
@@ -87,6 +87,9 @@ magic_rpm_clean.sh
 %{_prefix}/x86_64-nacl/lib/
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.20.0-3.git67e3510
+- 为 Magic 3.0 重建
+
 * Tue Aug 28 2012 Tom Callaway <spot@fedoraproject.org> 1.20.0-2.git67e3510
 - update for chromium 21
 

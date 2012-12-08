@@ -2,7 +2,7 @@
 
 Name:           pyxdg
 Version:        0.19
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python library to access freedesktop.org standards
 Group:          Development/Libraries
 License:        LGPLv2
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/pyxdg-*.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.19-5
+- 为 Magic 3.0 重建
+
 * Wed Oct 10 2012 Liu Di <liudidi@gmail.com> - 0.19-4
 - 为 Magic 3.0 重建
 

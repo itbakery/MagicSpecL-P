@@ -1,7 +1,7 @@
 Summary: POSIX File System Archiver
 Name: pax
 Version: 3.4
-Release: 14%{?dist}
+Release: 15%{?dist}
 License: BSD
 Group: Applications/Archiving
 Source: ftp://ftp.suse.com/pub/people/kukuk/pax/%{name}-%{version}.tar.bz2
@@ -45,6 +45,9 @@ rm -rf %{buildroot}
 %doc %{_mandir}/man1/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.4-15
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.4-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

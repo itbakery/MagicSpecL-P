@@ -3,7 +3,7 @@
 Summary: An extensible library which provides authentication for applications
 Name: pam
 Version: 1.1.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 # The library is BSD licensed with option to relicense as GPLv2+
 # - this option is redundant as the BSD license allows that anyway.
 # pam_timestamp, pam_loginuid, and pam_console modules are GPLv2+.
@@ -378,6 +378,9 @@ fi
 %doc doc/adg/*.txt doc/adg/html
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.6-3
+- 为 Magic 3.0 重建
+
 * Mon Sep  3 2012 Tomas Mraz <tmraz@redhat.com> 1.1.6-2
 - link setuid binaries with full relro (#853158)
 - add rhost and tty to auditing data in modules (#677664)

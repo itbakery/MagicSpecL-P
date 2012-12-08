@@ -8,7 +8,7 @@
 
 Name: openldap
 Version: 2.4.32
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: LDAP support libraries
 Group: System Environment/Daemons
 License: OpenLDAP
@@ -615,6 +615,9 @@ exit 0
 %{evolution_connector_prefix}/
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.4.32-3
+- 为 Magic 3.0 重建
+
 * Mon Aug 20 2012 Jan Vcelak <jvcelak@redhat.com> 2.4.32-2
 - enhancement: TLS, prefer private keys from authenticated slots
 - enhancement: TLS, allow certificate specification including token name

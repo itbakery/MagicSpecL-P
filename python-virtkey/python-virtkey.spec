@@ -3,7 +3,7 @@
 
 Name:           python-virtkey
 Version:        0.50
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Python extension for emulating keypresses and getting current keyboard layout
 
 Group:          Development/Languages
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.50-11
+- 为 Magic 3.0 重建
+
 * Wed Nov 16 2011 Adam Jackson <ajax@redhat.com> 0.50-10
 - Rebuild to break bogus libpng dep
 

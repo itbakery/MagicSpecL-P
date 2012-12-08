@@ -1,6 +1,6 @@
 Name:           p11-kit
 Version:        0.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Library for loading and sharing PKCS#11 modules
 
 License:        BSD
@@ -62,6 +62,9 @@ rm $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/pkcs11.conf.example
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 26 2011 Kalev Lember <kalevlember@gmail.com> - 0.8-1
 - Update to 0.8
 

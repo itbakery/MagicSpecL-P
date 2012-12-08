@@ -2,7 +2,7 @@
 
 Name:       python-reportlab
 Version:    2.5
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    Python PDF generation library
 
 Group:      Development/Libraries
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.5-6
+- 为 Magic 3.0 重建
+
 * Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 2.5-5
 - 为 Magic 3.0 重建
 

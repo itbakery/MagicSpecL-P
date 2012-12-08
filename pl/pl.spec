@@ -3,7 +3,7 @@
 
 Name:       pl
 Version:    6.2.2
-Release:    1%{?dist}
+Release:    2%{?dist}
 
 Summary:    SWI-Prolog - Edinburgh compatible Prolog compiler
 
@@ -320,6 +320,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 6.2.2-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 02 2012 Petr Pisar <ppisar@redhat.com> - 6.2.2-1
 - 6.2.2 bump
 

@@ -7,7 +7,7 @@
 Summary: An utility for setting or changing passwords using PAM
 Name: passwd
 Version: 0.78
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: BSD or GPLv2+
 Group: System Environment/Base
 URL: http://fedorahosted.org/passwd
@@ -73,6 +73,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/passwd.1*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.78-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 21 2012 Liu Di <liudidi@gmail.com> - 0.78-4
 - 为 Magic 3.0 重建
 

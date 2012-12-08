@@ -2,7 +2,7 @@
 
 Name:           %{python}-twisted
 Version:        12.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Event-based framework for internet applications
 License:        MIT
 URL:            http://twistedmatrix.com/
@@ -52,6 +52,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 12.2.0-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
 - Updated to 12.2.0
 

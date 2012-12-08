@@ -1,6 +1,6 @@
 Name:       opencc
 Version:    0.2.0
-Release:    3%{?dist}
+Release:    4%{?dist}
 Summary:    Libraries for Simplified-Traditional Chinese Conversion
 License:    ASL 2.0
 Group:      System Environment/Libraries
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.2.0-4
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 0.2.0-3
 - 为 Magic 3.0 重建
 

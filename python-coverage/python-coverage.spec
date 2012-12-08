@@ -1,8 +1,8 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
+%if 0%{?fedora} > 12
 %global with_python3 1
 %endif
 
-%global betaver b1
+# %%global betaver b1
 
 %{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
@@ -13,12 +13,13 @@
 
 Name:           python-coverage
 Summary:        Code coverage testing module for Python
-Version:        3.5.1
-Release:        0.1.%{betaver}%{?dist}
+Version:        3.5.3
+Release:        3%{?dist}
 License:        BSD and (MIT or GPLv2)
 Group:          System Environment/Libraries
 URL:            http://nedbatchelder.com/code/modules/coverage.html
-Source0:        http://pypi.python.org/packages/source/c/coverage/coverage-%{version}%{betaver}.tar.gz
+Source0:        http://pypi.python.org/packages/source/c/coverage/coverage-%{version}.tar.gz
+Patch0:         python-coverage-3.5.3-pickle.patch
 BuildRequires:  python-setuptools, python-devel
 Requires:       python-setuptools
 %if 0%{?with_python3}
@@ -48,7 +49,9 @@ have been executed.
 %endif # with_python3
 
 %prep
-%setup -q -n coverage-%{version}%{betaver}
+%setup -q -n coverage-%{version}
+
+%patch0 -p1
 
 find . -type f -exec chmod 0644 \{\} \;
 sed -i 's/\r//g' README.txt
@@ -73,12 +76,13 @@ popd
 %install
 %if 0%{?with_python3}
 pushd %{py3dir}
-%{__python3} setup.py install -O1 --skip-build --root %{buildroot}
+%{__python3} setup.py install --skip-build --root %{buildroot}
 mv %{buildroot}/%{_bindir}/coverage %{buildroot}/%{_bindir}/python3-coverage
 popd
 %endif # if with_python3
 
-%{__python} setup.py install -O1 --skip-build --root %{buildroot}
+%{__python} setup.py install --skip-build --root %{buildroot}
+magic_rpm_clean.sh
 
 %files
 %doc README.txt
@@ -95,6 +99,31 @@ popd
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.3-3
+- 为 Magic 3.0 重建
+
+* Wed Oct 10 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 3.5.3-2
+- Patch from upstream for traceback when people use this with python2 and
+  python3 in the same directory
+
+* Mon Oct  1 2012 Tom Callaway <spot@fedoraproject.org> - 3.5.3-1
+- update to 3.5.3
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 3.5.2-0.4.b1
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 3.5.2-0.3.b1
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.2-0.2.b1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed May  2 2012 Tom Callaway <spot@fedoraproject.org> - 3.5.2-0.1.b1
+- update to 3.5.2b1
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.1-0.2.b1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Fri Sep  2 2011 Tom Callaway <spot@fedoraproject.org> - 3.5.1-0.1.b1
 - update to 3.5.1b1
 

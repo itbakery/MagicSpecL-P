@@ -1,6 +1,6 @@
 Name:           perl-Acme-Damn
 Version:        0.04
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Unbless Perl objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.04-10
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.04-9
 - 为 Magic 3.0 重建
 

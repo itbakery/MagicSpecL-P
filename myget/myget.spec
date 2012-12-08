@@ -1,6 +1,6 @@
 %define version  0.1.2
 %define subver   20050921
-%define release  3%{?dist}
+%define release  4%{?dist}
 
 Name: myget
 Summary: A download accelerator for GNU/Linux
@@ -50,6 +50,9 @@ rm -rf %{_builddir}/%{name}-%{version}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.1.2-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 07 2007 Liu Di <liudidi@gmail.com> - 0.1.2-1mgc
 - update to 0.1.2
 

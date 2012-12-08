@@ -7,7 +7,7 @@
 Summary:          Network Security Services
 Name:             nss
 Version:          3.13.3
-Release:          1%{?dist}
+Release:          2%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -582,6 +582,9 @@ rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.13.3-2
+- 为 Magic 3.0 重建
+
 * Thu Mar 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-1
 - Update to NSS_3_13_3_RTM
 

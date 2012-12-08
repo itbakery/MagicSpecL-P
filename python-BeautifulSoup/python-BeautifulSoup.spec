@@ -6,7 +6,7 @@
 Name:           python-BeautifulSoup
 Epoch:          1
 Version:        3.2.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        HTML/XML parser for quick-turnaround applications like screen-scraping
 
 Group:          Development/Languages
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:3.2.0-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

@@ -5,7 +5,7 @@
 Summary:       Python's own image processing library
 Name:          python-imaging
 Version:       1.1.7
-Release:       4%{?dist}
+Release:       5%{?dist}
 
 License:       MIT
 Group:         System Environment/Libraries
@@ -171,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 %files tk -f files.tk
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.1.7-5
+- 为 Magic 3.0 重建
+
 * Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 1.1.7-4
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 
 Name:      plotutils
 Version:   2.6
-Release:   5%{?dist}
+Release:   6%{?dist}
 Summary:   GNU vector and raster graphics utilities and libraries
 
 Group:     Applications/Productivity
@@ -110,6 +110,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6-6
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

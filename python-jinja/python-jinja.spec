@@ -2,7 +2,7 @@
 
 Name:		python-jinja
 Version:	1.2
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Sandboxed template engine
 
 Group:		Development/Languages
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.2-7
+- 为 Magic 3.0 重建
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

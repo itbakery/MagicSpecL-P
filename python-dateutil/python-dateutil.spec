@@ -1,6 +1,6 @@
 Name:           python-dateutil
 Version:        1.5
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Powerful extensions to the standard datetime module
 
 Group:          Development/Languages
@@ -36,6 +36,9 @@ mv NEWS.new NEWS
 %{python_sitelib}/*.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.5-6
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

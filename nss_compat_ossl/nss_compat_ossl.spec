@@ -1,6 +1,6 @@
 Name:           nss_compat_ossl
 Version:        0.9.6
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Source-level compatibility library for OpenSSL to NSS porting
 
 Group:          System Environment/Libraries
@@ -66,6 +66,9 @@ rm -rf $RPM_BUILD_ROOT
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.6-4
+- 为 Magic 3.0 重建
+
 * Thu Nov 15 2012 Liu Di <liudidi@gmail.com> - 0.9.6-3
 - 为 Magic 3.0 重建
 

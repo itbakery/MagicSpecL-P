@@ -1,7 +1,7 @@
 Summary: The GNU disk partition manipulation program
 Name:    parted
 Version: 3.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv3+
 Group:   Applications/System
 URL:     http://www.gnu.org/software/parted
@@ -144,6 +144,9 @@ fi
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.1-3
+- 为 Magic 3.0 重建
+
 * Wed Mar 21 2012 Brian C. Lane <bcl@redhat.com> 3.1-2
 - libparted: check PMBR before GPT partition table (#805272)
 - tests: add a test for the new behavior

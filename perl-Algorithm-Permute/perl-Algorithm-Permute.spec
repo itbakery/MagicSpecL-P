@@ -1,6 +1,6 @@
 Name:           perl-Algorithm-Permute
 Version:        0.12
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Handy and fast permutation with object oriented interface
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.12-11
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.12-10
 - 为 Magic 3.0 重建
 

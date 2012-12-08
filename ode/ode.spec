@@ -1,6 +1,6 @@
 Name:           ode
 Version:        0.11.1
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        High performance library for simulating rigid body dynamics
 Group:          System Environment/Libraries
 License:        BSD or LGPLv2+
@@ -117,6 +117,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.11.1-8
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 0.11.1-7
 - 为 Magic 3.0 重建
 

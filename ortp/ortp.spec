@@ -1,6 +1,6 @@
 Name:           ortp
 Version:        0.20.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A C library implementing the RTP protocol (RFC3550)
 Epoch:          1
 
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/ortp.pc
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:0.20.0-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 23 2012 Alexey Kurov <nucleo@fedoraproject.org> - 1:0.20.0-2
 - ortp-0.20.0
 - BR: libzrtpcpp-devel for F17+

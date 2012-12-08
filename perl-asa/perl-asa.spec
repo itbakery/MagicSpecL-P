@@ -1,6 +1,6 @@
 Name:       perl-asa 
 Version:    1.03
-Release:    4%{?dist}
+Release:    5%{?dist}
 # see lib/asa.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.03-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.03-4
 - 为 Magic 3.0 重建
 

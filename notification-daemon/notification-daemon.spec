@@ -4,7 +4,7 @@
 Summary: Desktop Notification Daemon
 Name: notification-daemon
 Version: 0.7.3
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://live.gnome.org/NotificationDaemon
 License: GPLv2+
 Group: System Environment/Libraries
@@ -50,6 +50,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.7.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.7.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

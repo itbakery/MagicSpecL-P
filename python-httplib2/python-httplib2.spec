@@ -4,7 +4,7 @@
 
 Name:           python-httplib2
 Version:        0.6.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A comprehensive HTTP client library
 Group:          System Environment/Libraries
 License:        MIT
@@ -77,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif # with_python3
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.0-7
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

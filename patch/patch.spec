@@ -2,7 +2,7 @@
 Summary: Utility for modifying/upgrading files
 Name: patch
 Version: 2.6.1
-Release: 10%{?dist}
+Release: 11%{?dist}
 License: GPLv2+
 URL: http://www.gnu.org/software/patch/patch.html
 Group: Development/Tools
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/*/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6.1-11
+- 为 Magic 3.0 重建
+
 * Sat Jan 21 2012 Liu Di <liudidi@gmail.com> - 2.6.1-10
 - 为 Magic 3.0 重建
 

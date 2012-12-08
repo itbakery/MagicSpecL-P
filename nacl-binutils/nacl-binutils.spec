@@ -24,7 +24,7 @@ ExclusiveArch: i686 x86_64
 Summary: A GNU collection of binary utilities
 Name: nacl-binutils%{?_with_debug:-debug}
 Version: 2.20.1
-Release: 4.git%{gitver}%{?dist}
+Release: 5.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
@@ -427,6 +427,9 @@ exit 0
 %endif # %{isnative}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.20.1-5.gitf412ed5
+- 为 Magic 3.0 重建
+
 * Tue Jun 12 2012 Tom Callaway <spot@fedoraproject.org> - 2.20.1-4.gitf412ed5
 - update to chromium 19 nacl-binutils
 

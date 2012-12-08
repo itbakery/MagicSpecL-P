@@ -5,7 +5,7 @@
 
 %{!?python3_version: %global python3_version %(%{__python3} -c "import sys; sys.stdout.write(sys.version[:3])")}
 
-%if 0%{?fedora} || 0%{?rhel} > 6
+%if 0%{?fedora}
 %global with_python3 1
 %endif
 
@@ -16,8 +16,8 @@
 %global with_docs 1
 
 Name:           python-nose
-Version:        1.1.2
-Release:        2%{?dist}
+Version:        1.2.1
+Release:        4%{?dist}
 Summary:        Discovery-based unittest extension for Python
 
 Group:          Development/Languages
@@ -138,18 +138,27 @@ popd
 %endif # with_docs
 cp -a doc reST
 rm -rf reST/.static reST/.templates
-
+magic_rpm_clean.sh
 
 %check
+%if 0%{?run_test}
 %{__python} selftest.py
 
 %if 0%{?with_python3}
 pushd %{py3dir}
 export PYTHONPATH=`pwd`/build/lib
 %{__python3} setup.py build_tests
-%{__python3} selftest.py
+# Various selftests fail with Python 3.3b1; skip them for now using "-e"
+# (reported upstream as https://github.com/nose-devs/nose/issues/538 )
+%{__python3} selftest.py \
+    -e nose.plugins.errorclass \
+    -e nose.plugins.plugintest \
+    -e test_withid_failures.rst \
+    -e test_traverse_namespace \
+    -v
 popd
 %endif # with_python3
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -180,6 +189,26 @@ rm -rf %{buildroot}
 %endif # with_docs
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.2.1-4
+- 为 Magic 3.0 重建
+
+* Wed Sep 12 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 1.2.1-1
+- New upsream 1.2.1 that just bumps the version properly
+
+* Mon Sep 10 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 1.2.0-1
+- Update to nose-1.2.0.
+- Two less python3 test failures than 1.1.2
+
+* Sat Aug  4 2012 David Malcolm <dmalcolm@redhat.com> - 1.1.2-5
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+- disable selftests that fail under 3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 1.1.2-4
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

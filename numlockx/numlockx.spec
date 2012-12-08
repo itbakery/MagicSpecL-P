@@ -1,6 +1,6 @@
 Name:           numlockx
 Version:        1.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Turns on NumLock after starting X
 
 Group:          Applications/System
@@ -38,6 +38,9 @@ install -p -D %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/X11/xinit/xinitrc.d/numlo
 %doc AUTHORS README LICENSE
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.2-3
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 1.2-2
 - 为 Magic 3.0 重建
 

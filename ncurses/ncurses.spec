@@ -1,7 +1,7 @@
 Summary: Ncurses support utilities
 Name: ncurses
 Version: 5.9
-Release: 4.20120204%{?dist}
+Release: 5.20120204%{?dist}
 License: MIT
 Group: System Environment/Base
 URL: http://invisible-island.net/ncurses/ncurses.html
@@ -252,6 +252,9 @@ bzip2 NEWS
 rm -rf ${RPM_BUILD_ROOT}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.9-5.20120204
+- 为 Magic 3.0 重建
+
 * Wed Feb 08 2012 Miroslav Lichvar <mlichvar@redhat.com> 5.9-4.20120204
 - move libs and terms to /usr
 - update to patch 20120204

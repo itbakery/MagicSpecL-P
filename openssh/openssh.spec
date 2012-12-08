@@ -75,14 +75,14 @@
 
 # Do not forget to bump pam_ssh_agent_auth release if you rewind the main package release to 1
 %define openssh_ver 5.9p1
-%define openssh_rel 16
+%define openssh_rel 17
 %define pam_ssh_agent_ver 0.9.2
 %define pam_ssh_agent_rel 32
 
 Summary: An open source implementation of SSH protocol versions 1 and 2
 Name: openssh
 Version: %{openssh_ver}
-Release: %{openssh_rel}%{?dist}%{?rescue_rel}.2
+Release: %{openssh_rel}%{?dist}%{?rescue_rel}.1
 URL: http://www.openssh.com/portable.html
 #URL1: http://pamsshagentauth.sourceforge.net
 #Source0: ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-%{version}.tar.gz
@@ -799,6 +799,9 @@ fi
 %endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.9p1-17.1
+- 为 Magic 3.0 重建
+
 * Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 5.9p1-16.2
 - 为 Magic 3.0 重建
 

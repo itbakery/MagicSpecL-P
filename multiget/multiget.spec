@@ -4,7 +4,7 @@ Summary: Cross platform file downloader
 Summary(zh_CN.UTF-8): 跨平台的文件下载工具
 Name: multiget
 Version: 2.0
-Release: 0.1%{?dist}
+Release: 0.2%{?dist}
 License: GPL
 Group: Applications/Internet
 Group(zh_CN.UTF-8): 应用程序/互联网
@@ -71,6 +71,9 @@ magic_rpm_clean.sh
 #%exclude %{_usrsrc}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0-0.2
+- 为 Magic 3.0 重建
+
 * Mon Dec 10 2007 kde <athena_star {at} 163 {dot} com> - 1.2.0-2mgc
 - standardize the spec file and fix the translation of the spec file
 - add a servicemenu for konqueror

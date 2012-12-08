@@ -1,6 +1,6 @@
 Name:		physfs
 Version:	2.0.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	zlib
 Group:		System Environment/Libraries
 Summary:	Library to provide abstract access to various archives
@@ -94,6 +94,9 @@ rm -rf $RPM_BUILD_ROOT%{_libdir}/*.a
 %{_mandir}/man3/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.2-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

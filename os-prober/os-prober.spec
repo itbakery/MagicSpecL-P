@@ -1,6 +1,6 @@
 Name:           os-prober
 Version:        1.48
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Probes disks on the system for installed operating systems
 
 Group:          System Environment/Base
@@ -69,6 +69,9 @@ fi
 %{_var}/lib/%{name}
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.48-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 21 2012 Hedayat Vatankhah <hedayat.fwd+rpmchlog@gmail.com> - 1.48-3
 - Remove dmraid and lvm2 dependency. bug #770393
 

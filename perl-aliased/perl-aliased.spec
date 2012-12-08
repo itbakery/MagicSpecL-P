@@ -1,6 +1,6 @@
 Name:		perl-aliased
 Version:	0.30
-Release:	10%{?dist}
+Release:	11%{?dist}
 Summary:	Use shorter versions of class names
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/aliased.3pm*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.30-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:		oniguruma
 Version:	5.9.2
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Regular expressions library
 
 Group:		System Environment/Libraries
@@ -102,6 +102,9 @@ find $RPM_BUILD_ROOT -name '*.la' \
 %{_includedir}/onig*.h
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 5.9.2-4
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 5.9.2-3
 - 为 Magic 3.0 重建
 

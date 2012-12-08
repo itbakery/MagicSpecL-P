@@ -1,6 +1,6 @@
 Name:		openbox
 Version:	3.5.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	A highly configurable and standards-compliant X11 window manager
 
 Group:		User Interface/Desktops
@@ -190,6 +190,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.0-5
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

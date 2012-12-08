@@ -10,7 +10,7 @@
 Name:           nautilus
 Summary:        File manager for GNOME
 Version:        3.5.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
 Source:         http://download.gnome.org/sources/%{name}/3.5/%{name}-%{version}.tar.xz
@@ -163,6 +163,9 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %doc %{_datadir}/gtk-doc/html/libnautilus-extension/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.3-2
+- 为 Magic 3.0 重建
+
 * Tue Jun 26 2012 Richard Hughes <hughsient@gmail.com> - 3.5.3-1
 - Update to 3.5.3
 

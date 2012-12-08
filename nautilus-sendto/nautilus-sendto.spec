@@ -1,7 +1,7 @@
 Name:           nautilus-sendto
 Epoch:          1
 Version:        3.6.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Nautilus context menu for sending files
 
 Group:          User Interface/Desktops
@@ -83,6 +83,9 @@ fi
 %{_includedir}/nautilus-sendto/nautilus-sendto-plugin.h
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:3.6.0-3
+- 为 Magic 3.0 重建
+
 * Wed Nov 21 2012 Liu Di <liudidi@gmail.com> - 1:3.6.0-2
 - 为 Magic 3.0 重建
 

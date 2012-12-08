@@ -3,7 +3,7 @@
 Summary: Python framework to participate in digital living networks
 Name: python-Coherence
 Version: 0.6.6.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: MIT
 Group: Development/Languages
 URL: http://coherence.beebits.net/
@@ -78,6 +78,9 @@ find coherence -type f -exec \
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.6.2-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.6.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

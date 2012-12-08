@@ -1,6 +1,6 @@
 Name:           paps
 Version:        0.6.8
-Release:        18%{?dist}
+Release:        19%{?dist}
 
 License:        LGPLv2+
 URL:            http://paps.sourceforge.net/
@@ -111,6 +111,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libpaps.so
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.8-19
+- 为 Magic 3.0 重建
+
 * Wed Jan 11 2012 Akira TAGOH <tagoh@redhat.com> - 0.6.8-18
 - Use %%{_cups_serverbin} instead of the hardcoded path. (#772240)
 

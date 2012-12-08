@@ -6,7 +6,7 @@
 
 Name: pygobject2
 Version: 2.28.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2+
 Group: Development/Languages
 Summary: Python 2 bindings for GObject 
@@ -113,6 +113,9 @@ rm examples/Makefile*
 %{_datadir}/pygobject/xsl
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.28.6-3
+- 为 Magic 3.0 重建
+
 * Thu Aug 18 2011 John (J5) Palmieri <johnp@redhat.com> - 2.28.6-2
 - disable introspection in anticipation of pygobject3
 - https://bugzilla.redhat.com/show_bug.cgi?id=731851

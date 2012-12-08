@@ -2,7 +2,7 @@
 %define real_name sexy-python
 Name:           python-sexy
 Version:        0.1.9
-Release:        4%{?dist}
+Release:        5%{?dist}
 
 Summary:        Python bindings to libsexy
 Summary(zh_CN.UTF-8): libsexy 的 Python 绑定
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.1.9-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 22 2012 Liu Di <liudidi@gmail.com> - 0.1.9-4
 - 为 Magic 3.0 重建
 

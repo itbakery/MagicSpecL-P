@@ -1,6 +1,6 @@
 Name: opensm
 Version: 3.3.13
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: OpenIB InfiniBand Subnet Manager and management utilities
 Group: System Environment/Daemons
 License: GPLv2 or BSD
@@ -115,6 +115,9 @@ fi
 %{_libdir}/lib*.a
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.13-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.3.13-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

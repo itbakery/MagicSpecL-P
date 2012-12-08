@@ -1,6 +1,6 @@
 Name:            polkit-qt
 Version:         0.103.0
-Release:         2%{?dist}
+Release:         3%{?dist}
 Summary:         Qt bindings for PolicyKit
 
 Group:           System Environment/Libraries
@@ -110,6 +110,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.103.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.103.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

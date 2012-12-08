@@ -1,6 +1,6 @@
 Name:		orc
 Version:	0.4.16
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	The Oil Run-time Compiler
 
 Group:		System Environment/Libraries
@@ -122,6 +122,9 @@ make check
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.4.16-6
+- 为 Magic 3.0 重建
+
 * Sat Jan 07 2012 Fabian Deutsch <fabiand@fedoraproject.org> - 0.4.16-5
 - Updated subdir patch.
 

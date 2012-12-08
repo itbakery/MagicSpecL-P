@@ -4,7 +4,7 @@
 
 Name:           pyatspi
 Version:        2.2.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Python bindings for at-spi
 
 Group:          Development/Languages
@@ -53,6 +53,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.2.1-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 18 2011 Matthias Clasen <mclasen@redhat.com> - 2.2.1-1
 - Update to 2.2.1
 

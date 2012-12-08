@@ -6,7 +6,7 @@
 
 Name:           python-decorator
 Version:        3.3.3
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Module to simplify usage of decorators
 
 Group:          Development/Languages
@@ -107,6 +107,9 @@ popd
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.3.3-5
+- 为 Magic 3.0 重建
+
 * Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 3.3.3-4
 - rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
 

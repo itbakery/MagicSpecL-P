@@ -1,6 +1,6 @@
 Name:          opus
 Version:       1.0.1
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       An audio codec for use in low-delay speech and audio communication
 
 Group:         System Environment/Libraries
@@ -63,6 +63,9 @@ make check
 %{_mandir}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.1-2
+- 为 Magic 3.0 重建
+
 * Wed Sep 12 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 1.0.1-1
 - Official 1.0.1 release now rfc6716 is stable
 

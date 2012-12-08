@@ -1,4 +1,4 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
+%if 0%{?fedora} > 12
 %global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
@@ -6,11 +6,11 @@
 
 # Enable building without docs to avoid a circular dependency between this
 # and python-sphinx:
-%global with_docs 1
+%global with_docs 0
 
 Name:		python-jinja2
 Version:	2.6
-Release:	1%{?dist}
+Release:	6%{?dist}
 Summary:	General purpose template engine
 Group:		Development/Languages
 License:	BSD
@@ -111,7 +111,7 @@ pushd %{py3dir}
 	    --root %{buildroot}
 popd
 %endif # with_python3
-
+magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -155,6 +155,21 @@ popd
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.6-6
+- 为 Magic 3.0 重建
+
+* Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-5
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 2.6-4
+- remove rhel logic from with_python3 conditional
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Jul 25 2011 Thomas Moschny <thomas.moschny@gmx.de> - 2.6-1
 - Update to 2.6.
 

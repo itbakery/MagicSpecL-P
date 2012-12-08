@@ -1,7 +1,7 @@
 Summary: Free, cross platform, open-source, audio I/O library
 Name: portaudio
 Version: 19
-Release: 12%{?dist}
+Release: 13%{?dist}
 License: MIT
 Group: System Environment/Libraries
 URL: http://www.portaudio.com/
@@ -82,6 +82,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 19-13
+- 为 Magic 3.0 重建
+
 * Thu May 05 2011 Dan Horák <dan[at]danny.cz> - 19-12
 - fix dependency on alsa-lib-devel
 

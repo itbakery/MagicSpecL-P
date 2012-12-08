@@ -9,7 +9,7 @@
 
 Name:          python-urwid
 Version:       1.0.0
-Release:       3%{?dist}
+Release:       4%{?dist}
 Summary:       Console user interface library
 
 Group:         Development/Libraries
@@ -115,6 +115,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0.0-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

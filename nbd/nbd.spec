@@ -1,6 +1,6 @@
 Name:           nbd
 Version:        2.9.20
-Release:        3%{dist}
+Release:        4%{dist}
 Summary:        Network Block Device user-space tools (TCP version)
 
 Group:          Applications/System
@@ -37,6 +37,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_sbindir}/nbd-client
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.9.20-4
+- 为 Magic 3.0 重建
+
 * Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 2.9.20-3
 - 为 Magic 3.0 重建
 

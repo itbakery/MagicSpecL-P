@@ -4,7 +4,7 @@
 
 Name:		python-zope-interface
 Version:	3.7.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Zope 3 Interface Infrastructure
 Group:		Development/Libraries
 License:	ZPLv2.1
@@ -59,6 +59,9 @@ CFLAGS="%{optflags}" %{__python} setup.py build
 %{python_sitearch}/zope.interface-*-nspkg.pth
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.7.0-2
+- 为 Magic 3.0 重建
+
 * Sat Jan  7 2012 Robin Lee <cheeselee@fedoraproject.org> - 3.7.0-1
 - Update to 3.7.0 (ZTK 1.1.3)
 

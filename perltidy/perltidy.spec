@@ -1,6 +1,6 @@
 Name:           perltidy
 Version:        20120714
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Tool for indenting and reformatting Perl scripts
 
 License:        GPLv2+
@@ -60,6 +60,9 @@ make test
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 20120714-4
+- 为 Magic 3.0 重建
+
 * Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 20120714-3
 - Specify all dependencies.
 

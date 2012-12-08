@@ -2,7 +2,7 @@ Summary: A tool for determining compilation options
 Summary(zh_CN.UTF-8): 决定编译选项的工具
 Name: pkgconfig
 Version: 0.25
-Release: 2%{?dist}
+Release: 3%{?dist}
 Epoch: 1
 License: GPLv2+
 URL: http://pkgconfig.freedesktop.org
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/pkg-config
 %{_datadir}/aclocal/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:0.25-3
+- 为 Magic 3.0 重建
+
 * Fri Nov 23 2007 Liu Di <liudidi@gmail.com> 0 1:0.22-1mgc
 - update to 0.22
 

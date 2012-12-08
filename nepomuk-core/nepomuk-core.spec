@@ -10,7 +10,7 @@
 
 Name:    nepomuk-core
 Version: %{rversion}
-Release: 5%{?dist}
+Release: 6%{?dist}
 Summary: Nepomuk Core utilities and libraries
 
 License: LGPLv2 or LGPLv3
@@ -144,6 +144,9 @@ make -C %{_target_platform}/autotests/test test  ||:
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9.3-6
+- 为 Magic 3.0 重建
+
 * Wed Oct 03 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.2-5
 - respin isEmpty_crash based on 32b44881 upstream commit (#858271)
 

@@ -2,7 +2,7 @@
 
 Name:           python-%{realname}
 Version:        1.20
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Mutagen is a Python module to handle audio metadata
 
 Group:          Development/Languages
@@ -47,6 +47,9 @@ magic_rpm_clean.sh
 %{python_sitelib}/%{realname}-%{version}-*.egg-info
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.20-5
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.20-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

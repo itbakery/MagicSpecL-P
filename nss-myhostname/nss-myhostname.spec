@@ -1,7 +1,7 @@
 Name:           nss-myhostname
 Summary:        glibc plugin for local system host name resolution
 Version:        0.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        LGPLv2+
 URL:            http://0pointer.de/lennart/projects/nss-myhostname/
 Group:          System Environment/Libraries
@@ -71,6 +71,9 @@ fi
 %{_libdir}/libnss*.so*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.3-3
+- 为 Magic 3.0 重建
+
 * Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 0.3-2
 - 为 Magic 3.0 重建
 

@@ -2,7 +2,7 @@
 
 Name:           python-pycurl
 Version:        7.19.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A Python interface to libcurl
 
 Group:          Development/Languages
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{python_sitearch}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 7.19.0-11
+- 为 Magic 3.0 重建
+
 * Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 7.19.0-10
 - 为 Magic 3.0 重建
 

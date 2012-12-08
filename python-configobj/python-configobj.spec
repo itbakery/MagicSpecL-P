@@ -4,7 +4,7 @@
 
 Name:           python-configobj
 Version:        4.7.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Config file reading, writing, and validation
 
 Group:          System Environment/Libraries
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.7.2-4
+- 为 Magic 3.0 重建
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.7.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

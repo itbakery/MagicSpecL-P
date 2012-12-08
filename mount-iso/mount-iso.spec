@@ -1,6 +1,6 @@
 %define name mount-iso
 %define version 1.4
-%define release 1%{?dist}
+%define release 2%{?dist}
 
 Summary: Service Menu for Mount/Unmount Cd-DVD Image
 Summary(zh_CN): 管理 ISO 镜像的右键菜单。
@@ -44,4 +44,7 @@ rm -rf $RPM_BUILD_ROOT
 %{kde4_servicesdir}/ServiceMenus/*.desktop
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.4-2
+- 为 Magic 3.0 重建
+
 

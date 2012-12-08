@@ -1,6 +1,6 @@
 Name:           perl-App-cpanminus
 Version:        1.5007
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Library for get, unpack, build and install CPAN modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ make test
 %{_bindir}/cpanm
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.5007-4
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.5007-3
 - 为 Magic 3.0 重建
 

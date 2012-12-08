@@ -8,7 +8,7 @@
 Name:		ntfs-3g
 Summary:	Linux NTFS userspace driver
 Version:	2012.1.15
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPLv2+
 Group:		System Environment/Base
 Source0:	http://tuxera.com/opensource/%{name}_ntfsprogs-%{version}%{?subver}.tgz
@@ -168,6 +168,9 @@ cp -a %{SOURCE1} %{buildroot}%{_datadir}/hal/fdi/policy/10osvendor/
 %{_mandir}/man8/ntfs[^m][^o]*.8*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2:2012.1.15-2
+- 为 Magic 3.0 重建
+
 * Fri Feb 10 2012 Tom Callaway <spot@fedoraproject.org> 2:2012.1.15-1
 - update to 2012.1.15
 

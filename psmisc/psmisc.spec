@@ -1,7 +1,7 @@
 Summary: Utilities for managing processes on your system
 Name: psmisc
 Version: 22.16
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/System
 Source: http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -56,6 +56,9 @@ magic_rpm_clean.sh
 %doc AUTHORS ChangeLog COPYING README
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 22.16-2
+- 为 Magic 3.0 重建
+
 * Mon Mar 12 2012 Jaromir Capik <jcapik@redhat.com> 22.16-1
 - Update to 22.16
 

@@ -1,7 +1,7 @@
 Name:		nkf
 Epoch:		1
 Version:	2.1.2
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	BSD
 URL:		http://nkf.sourceforge.jp/
 Source0:	http://osdn.dl.sourceforge.jp/nkf/53171/%{name}-%{version}.tar.gz
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/NKF.3pm.gz
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:2.1.2-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:2.1.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

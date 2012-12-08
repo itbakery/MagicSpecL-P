@@ -1,6 +1,6 @@
 Name:		pps-tools
 Version:	0
-Release:	0.5.20120215gitac0aa6%{?dist}
+Release:	0.6.20120215gitac0aa6%{?dist}
 Summary:	LinuxPPS user-space tools
 
 Group:		System Environment/Base
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/sys/timepps.h
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0-0.6.20120215gitac0aa6
+- 为 Magic 3.0 重建
+
 * Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0-0.5.20120215gitac0aa6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

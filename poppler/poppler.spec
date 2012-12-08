@@ -2,7 +2,7 @@ Summary: PDF rendering library
 Summary(zh_CN.UTF-8): PDF 渲染库
 Name: poppler
 Version: 0.20.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2 and Redistributable, no modification permitted
 # the code is GPLv2
 # the charmap data in /usr/share/poppler is redistributable
@@ -294,6 +294,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 %{_mandir}/man1/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.20.5-2
+- 为 Magic 3.0 重建
+
 * Wed Nov 21 2012 Liu Di <liudidi@gmail.com> - 0.20.4-2
 - 为 Magic 3.0 重建
 

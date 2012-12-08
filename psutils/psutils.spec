@@ -2,7 +2,7 @@ Summary: PostScript Utilities
 Summary(zh_CN.UTF-8): 与 PostScript 文档一起使用的工具。
 Name: psutils
 Version: 1.17
-Release: 30%{?dist}
+Release: 31%{?dist}
 License: distributable
 Group: Applications/Publishing
 Group(zh_CN.UTF-8): 应用程序/出版
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/psutils
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.17-31
+- 为 Magic 3.0 重建
+
 * Wed Jan 25 2012 Liu Di <liudidi@gmail.com> - 1.17-30
 - 为 Magic 3.0 重建
 

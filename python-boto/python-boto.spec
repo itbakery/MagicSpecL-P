@@ -4,7 +4,7 @@
 Summary:	A simple lightweight interface to Amazon Web Services
 Name:		python-boto
 Version:	2.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	MIT
 Group:		Development/Languages
 URL:		http://code.google.com/p/%{pkgname}/
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitelib}/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

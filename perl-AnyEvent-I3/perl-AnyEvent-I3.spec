@@ -2,7 +2,7 @@
 
 Name:           perl-AnyEvent-I3
 Version:        0.06
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Communicate with the i3 window manager
 
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.06-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

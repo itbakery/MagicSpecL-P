@@ -3,7 +3,7 @@
 
 Name:           %{python}-twisted-runner
 Version:        12.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Twisted Runner process management library and inetd replacement
 License:        MIT
 URL:            http://www.twistedmatrix.com/trac/wiki/TwistedRunner
@@ -46,6 +46,9 @@ fi > egg-info
 %{python_sitearch}/twisted/runner/
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 12.2.0-2
+- 为 Magic 3.0 重建
+
 * Mon Sep 03 2012 Julian Sikorski <belegdol@fedoraproject.org> - 12.2.0-1
 - Updated to 12.2.0
 

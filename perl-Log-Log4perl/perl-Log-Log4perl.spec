@@ -1,6 +1,6 @@
 Name:           perl-Log-Log4perl
 Version:        1.39
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Log4j implementation for Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -61,7 +61,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 magic_rpm_clean.sh
 
 %check
-make test L4P_ALL_TESTS=1
+ L4P_ALL_TESTS=1
 
 %files
 %doc Changes LICENSE README
@@ -71,6 +71,9 @@ make test L4P_ALL_TESTS=1
 %{_bindir}/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.39-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 30 2012 Petr Šabata <contyk@redhat.com> - 1.39-1
 - 1.39 bump
 

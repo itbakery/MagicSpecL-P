@@ -1,6 +1,6 @@
 Name:           perl-Class-ISA
 Version:        0.36
-Release:        1009%{?dist}
+Release:        1010%{?dist}
 Summary:        Report the search path for a class's ISA tree
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -30,13 +30,16 @@ rm -rf %{buildroot}/%{_mandir}/man3/*
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc ChangeLog README
 %{perl_vendorlib}/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.36-1010
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.36-1009
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Module-ExtractUse
 Version:        0.28
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Find out what modules are used
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::ExtractUse::Grammar.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.28-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Paul Howarth <paul@city-fan.org> - 0.28-1
 - Update to 0.28
   - Whitespace in use base is valid

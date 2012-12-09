@@ -1,6 +1,6 @@
 Name:           perl-Capture-Tiny
 Version:        0.20
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Capture STDOUT and STDERR from Perl, XS or external programs
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -45,7 +45,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes examples LICENSE perlcritic.rc README Todo
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.20-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 04 2012 Petr Šabata <contyk@redhat.com> - 0.20-1
 - 0.20 bump
 

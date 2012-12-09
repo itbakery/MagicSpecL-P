@@ -1,6 +1,6 @@
 Name:           perl-EV
 Version:        4.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Wrapper for the libev high-performance event loop library
 
 # Note: The source archive includes a libev/ folder which contents are licensed
@@ -60,7 +60,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 
 
 %check
-make test
+
 
 
 %files
@@ -73,6 +73,9 @@ make test
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.11-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 28 2012 Mathieu Bridon <bochecha@fedoraproject.org> - 4.11-1
 - Update to 4.11
 

@@ -1,6 +1,6 @@
 Name:           perl-Module-Depends
 Version:        0.14
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Identify the dependencies of a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.14-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.14-10
 - 为 Magic 3.0 重建
 

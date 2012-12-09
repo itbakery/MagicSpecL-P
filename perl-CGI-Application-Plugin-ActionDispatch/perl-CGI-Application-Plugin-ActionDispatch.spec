@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-ActionDispatch
 Version:        0.98
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Adds attribute based support for parsing the PATH_INFO of an HTTP request
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.98-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.98-8
 - 为 Magic 3.0 重建
 

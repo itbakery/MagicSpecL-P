@@ -3,7 +3,7 @@
 
 Name: OpenGTL
 Version: 0.9.15.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Graphics Transformation Languages
 License: LGPLv2
 Group: Development/Languages
@@ -153,6 +153,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.9.15.2-2
+- 为 Magic 3.0 重建
+
 * Tue Jan 10 2012 Tom Callaway <spot@fedoraproject.org> - 0.9.15.2-1
 - update to 0.9.15.2
 - apply patches to sync with tip, fix llvm3 compile

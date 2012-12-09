@@ -1,6 +1,6 @@
 Name:           perl-forks
 Version:        0.34
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A drop-in replacement for Perl threads using fork()
 
 Group:          Development/Libraries
@@ -76,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.34-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.34-6
 - 为 Magic 3.0 重建
 

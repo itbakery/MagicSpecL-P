@@ -1,7 +1,7 @@
 Summary:        ASN.1 Encode/Decode library
 Name:           perl-Convert-ASN1
 Version:        0.22
-Release:        8%{?dist}
+Release:        9%{?dist}
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,7 +40,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.22-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.22-8
 - 为 Magic 3.0 重建
 

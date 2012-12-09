@@ -1,6 +1,6 @@
 Name:       perl-Catalyst-View-PDF-Reuse 
 Version:    0.04
-Release:    5%{?dist}
+Release:    6%{?dist}
 # lib/Catalyst/Helper/View/PDF/Reuse.pm -> GPL+ or Artistic
 # lib/Catalyst/View/PDF/Reuse.pm -> GPL+ or Artistic
 # lib/Template/Plugin/Catalyst/View/PDF/Reuse.pm -> GPL+ or Artistic
@@ -56,6 +56,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-5
 - 为 Magic 3.0 重建
 

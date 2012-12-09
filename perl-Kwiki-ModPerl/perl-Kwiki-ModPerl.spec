@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-ModPerl
 Version:        0.09
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Enable Kwiki to work under mod_perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-17
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09-16
 - 为 Magic 3.0 重建
 

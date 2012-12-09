@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Engine-PSGI
 Summary:        PSGI engine for Catalyst
 Version:        0.13
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Catalyst-Engine-PSGI-%{version}.tar.gz 
@@ -84,6 +84,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-7
 - 为 Magic 3.0 重建
 

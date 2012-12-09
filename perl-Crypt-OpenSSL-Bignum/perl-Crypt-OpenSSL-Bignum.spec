@@ -1,6 +1,6 @@
 Name:           perl-Crypt-OpenSSL-Bignum
 Version:        0.04
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Perl interface to OpenSSL for Bignum
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
@@ -33,7 +33,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -3,7 +3,7 @@
 Name:           perl-%{real_name}
 Summary:        Perl module for parsing HTML
 Version:        3.69
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/G/GA/GAAS/HTML-Parser-%{version}.tar.gz 
@@ -51,7 +51,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README TODO eg/
@@ -61,6 +61,9 @@ make test
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.69-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.69-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

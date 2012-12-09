@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Format-XSD
 Version:        0.2
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Format DateTime according to xsd:dateTime
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.2-3
 - 为 Magic 3.0 重建
 

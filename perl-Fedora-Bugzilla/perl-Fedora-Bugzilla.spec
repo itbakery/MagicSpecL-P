@@ -1,6 +1,6 @@
 Name:           perl-Fedora-Bugzilla
 Version:        0.13
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Access Fedora's Bugzilla
 
 Group:          Development/Libraries
@@ -95,6 +95,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-10
 - 为 Magic 3.0 重建
 

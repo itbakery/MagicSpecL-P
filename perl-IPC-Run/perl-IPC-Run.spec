@@ -1,6 +1,6 @@
 Name:           perl-IPC-Run
 Version:        0.89
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl module for interacting with child processes
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,7 +45,7 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 
 %check
 # test doesn't work in this mock with tty
-#make test
+#
 
 %files
 %defattr(-,root,root,-)
@@ -55,6 +55,9 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.89-10
+- 为 Magic 3.0 重建
+
 * Thu Sep 13 2012 Petr Pisar <ppisar@redhat.com> - 0.89-9
 - IO::Pty is required when passing ">pty>" argument (bug #857030)
 
@@ -91,7 +94,7 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 
 * Wed Sep 02 2009 Steven Pritchard <steve@kspei.com> 0.84-1
 - Update to 0.84.
-- Drop IPCRUNDEBUG from "make test" (bug fixed long ago).
+- Drop IPCRUNDEBUG from "" (bug fixed long ago).
 
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.82-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild

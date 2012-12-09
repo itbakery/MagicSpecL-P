@@ -1,6 +1,6 @@
 Name:		perl-DateTime-Calendar-Mayan 
 Version:	0.0601 
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Mayan Long Count Calendar 
@@ -35,7 +35,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot} 
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/DateTime::Calendar::Mayan.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.0601-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0601-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

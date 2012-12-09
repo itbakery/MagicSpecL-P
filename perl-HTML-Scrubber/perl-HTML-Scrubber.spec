@@ -1,6 +1,6 @@
 Name:           perl-HTML-Scrubber
 Version:        0.08
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Library for scrubbing/sanitizing html
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.08-14
 - 为 Magic 3.0 重建
 

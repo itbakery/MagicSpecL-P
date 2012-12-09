@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-OcsDeploy
 Version:        1.1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        OCS Inventory NG Software deployment support for FusionInventory Agent
 Summary(fr):    Gestion du déploiement logiciel OCS Inventory NG avec FusionInventory
 License:        GPLv2+
@@ -97,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.1.0-5
 - 为 Magic 3.0 重建
 

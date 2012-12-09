@@ -1,6 +1,6 @@
 Name:           perl-CGI-Ex
 Version:        2.32
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        CGI utility suite - makes powerful application writing fun and easy
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.32-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.32-7
 - 为 Magic 3.0 重建
 

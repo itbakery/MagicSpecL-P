@@ -1,6 +1,6 @@
 Name:		perl-Module-Find
 Version:	0.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Find and use installed modules in a (sub)category
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -40,7 +40,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Find.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-IO-Socket-IP
 Version:        0.17
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Drop-in replacement for IO::Socket::INET supporting both IPv4 and IPv6
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -f t/21nonblocking-connect-internet.t
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.17-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 22 2012 Petr Šabata <contyk@redhat.com> - 0.17-1
 - 0.17 bump
 

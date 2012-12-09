@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Precise
 Version:        1.05
-Release:        16%{?dist}
+Release:        17%{?dist}
 
 Summary:        Perform common time and date operations with additional GPS operations
 
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.05-17
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.05-16
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-File-Remove
 Version:	1.52
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Convenience module for removing files and directories
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README LICENSE
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.52-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.52-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

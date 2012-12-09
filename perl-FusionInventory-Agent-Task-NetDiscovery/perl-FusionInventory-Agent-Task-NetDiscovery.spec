@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-NetDiscovery
 Version:        1.5
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Network discovery support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.5-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.5-4
 - 为 Magic 3.0 重建
 

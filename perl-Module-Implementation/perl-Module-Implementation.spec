@@ -9,7 +9,7 @@
 
 Name:		perl-Module-Implementation
 Version:	0.06
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Loads one of several alternate underlying implementations for a module
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -90,7 +90,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -101,6 +101,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Implementation.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.06-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

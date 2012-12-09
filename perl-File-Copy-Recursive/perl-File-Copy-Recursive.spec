@@ -1,6 +1,6 @@
 Name: 		perl-File-Copy-Recursive
 Version: 	0.38
-Release: 	13%{?dist}
+Release: 	14%{?dist}
 Summary: 	Extension for recursively copying files and directories 
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -32,7 +32,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.38-14
+- 为 Magic 3.0 重建
+
 * Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 0.38-13
 - Modernize spec, drop command macros, and fix dependencies
 

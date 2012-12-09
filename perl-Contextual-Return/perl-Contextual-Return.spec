@@ -1,6 +1,6 @@
 Name:           perl-Contextual-Return
 Version:        0.003002
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Create context-sensitive return values
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -48,6 +48,9 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.003002-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.003002-3
 - 为 Magic 3.0 重建
 

@@ -1,12 +1,12 @@
 Name:           perl-HTML-Tree
-Version:        4.2
-Release:        4%{?dist}
 Epoch:          1
+Version:        5.02
+Release:        7%{?dist}
 Summary:        HTML tree handling modules for Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/HTML-Tree/
-Source0:        http://www.cpan.org/authors/id/J/JF/JFEARN/HTML-Tree-%{version}.tar.gz
+Source0:        http://search.cpan.org/CPAN/authors/id/C/CJ/CJM/HTML-Tree-%{version}.tar.gz
 BuildArch:      noarch
 BuildRequires:  perl(HTML::Parser) >= 3.46
 BuildRequires:  perl(HTML::Tagset) >= 3.02
@@ -15,12 +15,18 @@ BuildRequires:  perl(Module::Build)
 BuildRequires:  perl(Test::Exception)
 BuildRequires:  perl(Test::Pod) >= 1.00
 BuildRequires:  perl(Test::More)
-
+BuildRequires:  perl(Test::Fatal)
+%if !%{defined perl_bootstrap}
+# HTML::FormatText (perl-HTML-Format) has BR: perl(HTML::TreeBuilder) from this package
+BuildRequires:  perl(HTML::FormatText)
+%if ! (0%{?rhel} >= 7)
+# perl-Test-LeakTrace -> perl-Test-Valgrind -> perl-XML-Twig -> perl-HTML-Tree
+BuildRequires:  perl(Test::LeakTrace)
+%endif
+%endif
+Requires:       perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
 Requires:       perl(HTML::Parser) >= 3.46
 Requires:       perl(HTML::Tagset) >= 3.02
-Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
-# add because of possible problems with not mathing cpan,rpm version
-Provides:       perl(HTML::Tree) = %{version}
 
 %description
 This distribution contains a suite of modules for representing,
@@ -33,29 +39,52 @@ a separate development track.
 %setup -q -n HTML-Tree-%{version}
 
 %build
-%{__perl} Build.PL installdirs=vendor
+perl Build.PL installdirs=vendor
 ./Build
 
 %install
 ./Build install destdir=$RPM_BUILD_ROOT create_packlist=0
-find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
-
-%{_fixperms} $RPM_BUILD_ROOT/*
+%{_fixperms} $RPM_BUILD_ROOT
 
 %check
 ./Build test
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README TODO
 %{_bindir}/htmltree
 %{perl_vendorlib}/HTML
 %{_mandir}/man3/HTML::*3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:5.02-7
+- 为 Magic 3.0 重建
+
+* Tue Oct 16 2012 Petr Pisar <ppisar@redhat.com> - 1:5.02-6
+- Do not build-require Test::LeakTrace on RHEL >= 7
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:5.02-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Paul Howarth <paul@city-fan.org> - 1:5.02-4
+- Don't BR: perl(Test::LeakTrace) when bootstrapping
+- Don't use macros for commands
+- Don't need to remove empty directories from the buildroot
+- Drop explicit provides for perl(HTML::Tree) now that CPAN and RPM versions
+  are back in sync
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 1:5.02-3
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Mon Jul 09 2012 Petr Pisar <ppisar@redhat.com> - 1:5.02-2
+- Perl 5.16 rebuild
+- Break dependency cycle with perl-HTML-FormatText during bootstrap
+
+* Mon Jul  2 2012 Tom Callaway <spot@fedoraproject.org> - 1:5.02-1
+- update to 5.02
+
+* Wed Jun 13 2012 Petr Pisar <ppisar@redhat.com> - 1:4.2-5
+- Perl 5.16 rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:4.2-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

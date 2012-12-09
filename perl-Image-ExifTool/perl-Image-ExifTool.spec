@@ -1,6 +1,6 @@
 Name:		perl-Image-ExifTool
 Version:	8.75
-Release:	2%{?dist}
+Release:	3%{?dist}
 License:	GPL+ or Artistic
 Group:		Applications/Multimedia
 Summary:	Utility for reading and writing image meta info
@@ -51,6 +51,9 @@ rm -rf %{buildroot}%{perl_vendorlib}/*-linux-thread-multi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 8.75-3
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 8.75-2
 - 为 Magic 3.0 重建
 

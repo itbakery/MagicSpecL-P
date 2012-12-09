@@ -1,6 +1,6 @@
 Name:           perl-Class-ErrorHandler
 Version:        0.01
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Class::ErrorHandler Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -36,7 +36,7 @@ perldoc -t perlgpl > COPYING
 perldoc -t perlartistic > Artistic
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-Convert-BinHex
 Version:	1.119
-Release:	18%{?dist}
+Release:	19%{?dist}
 Summary:	Convert to/from RFC1741 HQX7 (Mac BinHex)
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -34,7 +34,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Convert::BinHex.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.119-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.119-18
 - 为 Magic 3.0 重建
 

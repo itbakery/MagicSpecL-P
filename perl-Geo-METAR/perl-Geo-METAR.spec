@@ -1,6 +1,6 @@
 Name:           perl-Geo-METAR
 Version:        1.15
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Perl module for accessing aviation weather information
 
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.15-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.15-11
 - 为 Magic 3.0 重建
 

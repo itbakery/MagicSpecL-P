@@ -1,6 +1,6 @@
 Name:		perl-File-Find-Rule-Perl
 Version:	1.12
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Common rules for searching for Perl things
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -48,7 +48,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %check
 %if !%{defined perl_bootstrap}
 cd File-Find-Rule-Perl-%{version}
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 cd ..
 %endif
 
@@ -59,6 +59,9 @@ cd ..
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.12-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

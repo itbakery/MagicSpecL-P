@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-DebugScreen
 Version:        1.00
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Add Debug support to CGI::Application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.00-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.00-6
 - 为 Magic 3.0 重建
 

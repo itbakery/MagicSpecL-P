@@ -1,7 +1,7 @@
 Summary:	High speed arbitrary size integer math
 Name:		perl-Math-GMP
 Version:	2.06
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	LGPLv2+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Math-GMP/
@@ -98,6 +98,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Math::GMP.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.06-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.06-10
 - 为 Magic 3.0 重建
 

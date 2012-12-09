@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Server-HTTP
 Version:        0.09
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Foundation of a POE HTTP Daemon
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,7 +59,7 @@ rm t/30_error.t
 
 # I'm unsure as to wrapping this with _with_network_tests logic.  Should be
 # kosher, it's only doing tests on localhost.
-make test
+
 
 
 %clean
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.09-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

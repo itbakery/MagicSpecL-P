@@ -1,6 +1,6 @@
 Name:           perl-CGI-Untaint-email
 Version:        0.03
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Validate an email address
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.03-15
 - 为 Magic 3.0 重建
 

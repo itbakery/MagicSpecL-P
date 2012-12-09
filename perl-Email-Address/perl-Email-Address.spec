@@ -1,6 +1,6 @@
 Name:           perl-Email-Address
 Version:        1.896
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        RFC 2822 Address Parsing and Creation
 
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.896-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 18 2012 Marcela Mašláňová <mmaslano@redhat.com> 1.896-1
 - update to 1.896
 

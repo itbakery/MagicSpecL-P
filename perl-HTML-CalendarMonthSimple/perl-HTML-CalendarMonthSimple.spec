@@ -1,6 +1,6 @@
 Name:           perl-HTML-CalendarMonthSimple
 Version:        1.25
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl Module for Generating HTML Calendars
 License:        Public Domain
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.25-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.25-12
 - 为 Magic 3.0 重建
 

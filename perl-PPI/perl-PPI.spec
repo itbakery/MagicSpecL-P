@@ -7,7 +7,7 @@
 
 Name:           perl-PPI
 Version:        1.215
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Parse, Analyze and Manipulate Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -91,9 +91,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 %if 0%{!?perl_bootstrap:1}
-make test TEST_FILES="xt/*.t" RELEASE_TESTING=1
+ TEST_FILES="xt/*.t" RELEASE_TESTING=1
 %endif
 
 %files
@@ -103,6 +103,9 @@ make test TEST_FILES="xt/*.t" RELEASE_TESTING=1
 %{_mandir}/man3/PPI*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.215-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 25 2012 Paul Howarth <paul@city-fan.org> - 1.215-9
 - classify buildreqs by usage
 - BR: perl(Time::HiRes) for the test suite

@@ -1,6 +1,6 @@
 Name:           perl-Devel-Trace
 Version:        0.11
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Print out each line before it is executed (like sh -x)
 License:        Public Domain
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.11-4
 - 为 Magic 3.0 重建
 

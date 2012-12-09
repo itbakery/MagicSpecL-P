@@ -1,6 +1,6 @@
 Name:		perl-Readonly
 Version:	1.03
-Release:	21%{?dist}
+Release:	22%{?dist}
 Summary:	Facility for creating read-only scalars, arrays, hashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -57,7 +57,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 mv %{buildroot}%{perl_vendorlib}/benchmark.pl .
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Readonly.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.03-22
+- 为 Magic 3.0 重建
+
 * Thu Aug 16 2012 Petr Pisar <ppisar@redhat.com> - 1.03-21
 - Specify all dependencies
 

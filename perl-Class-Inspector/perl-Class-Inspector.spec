@@ -1,6 +1,6 @@
 Name: 		perl-Class-Inspector
 Version: 	1.27
-Release: 	4%{?dist}
+Release: 	5%{?dist}
 Summary: 	Get information about a class and its structure
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 %if !%{defined perl_bootstrap}
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 %endif
 
 %files
@@ -51,6 +51,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.27-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.27-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 Name:           perl-DateTime
 Epoch:          2
 Version:        0.77
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Date and time object
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2:0.77-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 23 2012 Liu Di <liudidi@gmail.com> - 2:0.77-2
 - 为 Magic 3.0 重建
 

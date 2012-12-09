@@ -1,7 +1,7 @@
 Summary:	I/O on in-core objects like strings and arrays for Perl
 Name:		perl-IO-stringy
 Version:	2.110
-Release:	20%{?dist}
+Release:	21%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/IO-stringy/
@@ -45,7 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::WrapTie.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.110-21
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.110-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -146,7 +149,7 @@ rm -rf %{buildroot}
 
 * Fri Jul 11 2003 Dams <anvil[AT]livna.org> 2.108-0.fdr.2
 - changed Group tag value
-- "make test" in build section
+- "" in build section
 - added missing directory
 
 * Sun Jun 15 2003 Dams <anvil[AT]livna.org> 2.108-0.fdr.1

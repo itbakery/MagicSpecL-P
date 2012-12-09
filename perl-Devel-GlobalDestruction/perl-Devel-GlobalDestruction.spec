@@ -3,7 +3,7 @@
 
 Name:		perl-Devel-GlobalDestruction
 Version:	0.09
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Expose PL_dirty, the flag that marks global destruction
@@ -54,7 +54,7 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -70,6 +70,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Devel::GlobalDestruction.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-2
+- 为 Magic 3.0 重建
+
 * Thu Aug  9 2012 Paul Howarth <paul@city-fan.org> - 0.09-1
 - Update to 0.09
   - Rewrite completely broken pure-perl GD detection under threads

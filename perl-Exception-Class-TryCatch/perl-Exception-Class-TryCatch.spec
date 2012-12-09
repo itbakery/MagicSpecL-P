@@ -1,6 +1,6 @@
 Name:           perl-Exception-Class-TryCatch
 Version:        1.12
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Syntactic try/catch sugar for use with Exception::Class
 License:        ASL 2.0
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.12-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.12-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

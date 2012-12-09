@@ -1,6 +1,6 @@
 Name:           perl-Config-Record
 Version:        1.1.2
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl module for Configuration file access
 
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1.2-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.1.2-10
 - 为 Magic 3.0 重建
 

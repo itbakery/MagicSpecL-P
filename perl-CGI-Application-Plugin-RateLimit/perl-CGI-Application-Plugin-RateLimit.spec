@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Plugin-RateLimit
 Version:        1.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Limits runmode call rate per user
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 
 %files
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.0-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.0-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Email-Date
 Version:        1.103
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Find and format date headers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.103-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.103-14
 - 为 Magic 3.0 重建
 

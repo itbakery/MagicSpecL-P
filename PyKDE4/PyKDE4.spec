@@ -6,7 +6,7 @@
 
 Name: PyKDE4 
 Version: %{rversion}
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Python bindings for KDE4 
 
 # http://techbase.kde.org/Policies/Licensing_Policy
@@ -227,6 +227,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.9.3-3
+- 为 Magic 3.0 重建
+
 * Thu Oct 18 2012 Liu Di <liudidi@gmail.com> - 4.9.2-2
 - 为 Magic 3.0 重建
 

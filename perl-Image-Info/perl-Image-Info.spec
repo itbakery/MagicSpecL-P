@@ -2,7 +2,7 @@
 
 Name:           perl-Image-Info
 Version:        1.28
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Image meta information extraction module for Perl
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.28-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.28-13
 - 为 Magic 3.0 重建
 

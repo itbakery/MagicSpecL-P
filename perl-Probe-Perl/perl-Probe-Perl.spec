@@ -1,6 +1,6 @@
 Name:           perl-Probe-Perl
 Version:        0.01
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Information about the currently running perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

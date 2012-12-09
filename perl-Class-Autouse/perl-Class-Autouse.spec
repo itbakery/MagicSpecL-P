@@ -1,6 +1,6 @@
 Name:		perl-Class-Autouse
 Version:	2.01
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Run-time class loading on first method call
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 %if %{with xt_tests}
 # Manually invoke xt-tests
 AUTOMATED_TESTING=1 PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-e" "test_harness(0, 'inc', 'blib/lib', 'blib/arch')" xt/*.t
@@ -62,6 +62,9 @@ AUTOMATED_TESTING=1 PERL_DL_NONLAZY=1 /usr/bin/perl "-MExtUtils::Command::MM" "-
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.01-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.01-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

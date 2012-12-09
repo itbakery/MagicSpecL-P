@@ -1,6 +1,6 @@
 Name:           perl-FusionInventory-Agent-Task-SNMPQuery
 Version:        1.3
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        SNMP Query support for FusionInventory Agent
 License:        GPLv2+
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.3-3
 - 为 Magic 3.0 重建
 

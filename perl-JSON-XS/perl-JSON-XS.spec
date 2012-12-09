@@ -2,7 +2,7 @@ Name:           perl-JSON-XS
 Summary:        JSON serialising/deserialising, done correctly and fast
 Epoch:          1
 Version:        2.33
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/JSON-XS/
@@ -49,7 +49,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes COPYING README eg/
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man[13]/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:2.33-2
+- 为 Magic 3.0 重建
+
 * Thu Aug 02 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1:2.33-1
 - Update to 2.33
 

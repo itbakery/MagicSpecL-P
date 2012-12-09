@@ -1,7 +1,7 @@
 Summary: Encrypt Data with Cipher Block Chaining Mode
 Name: perl-Crypt-CBC
 Version: 2.29
-Release: 14%{?dist}
+Release: 15%{?dist}
 # Upstream confirms that they're under the same license as perl.
 # Wording in CBC.pm is less than clear, but still.
 License: GPL+ or Artistic
@@ -51,7 +51,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.29-15
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.29-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

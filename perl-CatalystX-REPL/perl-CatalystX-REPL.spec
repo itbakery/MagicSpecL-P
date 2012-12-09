@@ -1,6 +1,6 @@
 Name:           perl-CatalystX-REPL
 Version:        0.04
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Read-eval-print-loop for debugging your Catalyst application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,7 +52,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %if ! %{with expect_tests}
 grep -lZ 'Test::Expect' t/*.t |xargs -0 rm -f
 %endif
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-4
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name: 		perl-Module-Refresh
 Version: 	0.17
-Release: 	5%{?dist}
+Release: 	6%{?dist}
 Summary: 	Refresh %INC files when updated on disk
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -36,7 +36,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.17-6
+- 为 Magic 3.0 重建
+
 * Thu Aug 09 2012 Petr Pisar <ppisar@redhat.com> - 0.17-5
 - Specify all dependencies
 

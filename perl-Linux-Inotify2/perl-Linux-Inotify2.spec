@@ -1,7 +1,7 @@
 Name:           perl-Linux-Inotify2 
 Summary:        Scalable directory/file change notification 
 Version:        1.22
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN/Linux-Inotify2-%{version}.tar.gz 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.22-3
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.22-2
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Flickr-API
 Version:        1.04
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl interface to the Flickr API
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-5
 - 为 Magic 3.0 重建
 

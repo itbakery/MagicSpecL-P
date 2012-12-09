@@ -1,6 +1,6 @@
 Name:           perl-POE-Filter-Zlib
 Version:        2.02
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        POE filter wrapped around Compress::Zlib
 # note license definition in Makefile.PL
 License:        GPL+ or Artistic
@@ -45,7 +45,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc README LICENSE*
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.02-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.02-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Loader-Relationship
 Version:        1.3
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Easier relationship specification in CDBI::L
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.3-18
 - 为 Magic 3.0 重建
 

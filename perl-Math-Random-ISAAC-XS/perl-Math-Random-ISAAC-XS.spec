@@ -1,6 +1,6 @@
 Name:           perl-Math-Random-ISAAC-XS
 Version:        1.004
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        C implementation of the ISAAC PRNG algorithm
 License:        MIT or GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.004-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.004-5
 - 为 Magic 3.0 重建
 

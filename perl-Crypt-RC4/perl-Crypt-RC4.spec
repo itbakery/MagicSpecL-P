@@ -1,6 +1,6 @@
 Name:           perl-Crypt-RC4
 Version:        2.02
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Perl implementation of the RC4 encryption algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.02-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.02-4
 - 为 Magic 3.0 重建
 

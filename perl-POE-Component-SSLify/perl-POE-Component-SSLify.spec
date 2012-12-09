@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-SSLify
 Version:        1.008
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Makes using SSL in the world of POE easy!
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,7 +58,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %check
-make test
+
 
 %files
 %doc LICENSE README Changes t/
@@ -66,6 +66,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.008-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.008-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

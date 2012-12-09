@@ -1,6 +1,6 @@
 Name:           perl-CGI-Untaint-date
 Version:        1.00
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Validate a date
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,7 +39,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 # These tests fail on koji for some odd reason, but they work fine locally.
-# make test
+# 
 
 %files
 %doc Changes COPYING Artistic
@@ -47,6 +47,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.00-18
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.00-17
 - 为 Magic 3.0 重建
 

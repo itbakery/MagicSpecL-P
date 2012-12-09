@@ -1,6 +1,6 @@
 Name:		perl-Devel-EnforceEncapsulation
 Version:	0.50
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Find access violations to blessed objects
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -57,7 +57,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
+ AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
 
 %files
 %defattr(-,root,root,-)
@@ -66,6 +66,9 @@ make test AUTHOR_TEST=1 AUTHOR_TEST_CDOLAN=1
 %{_mandir}/man3/Devel::EnforceEncapsulation.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.50-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.50-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

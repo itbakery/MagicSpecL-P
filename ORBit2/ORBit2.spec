@@ -4,7 +4,7 @@
 Summary: A high-performance CORBA Object Request Broker
 Name: ORBit2
 Version: 2.14.19
-Release: 6%{?dist}
+Release: 7%{?dist}
 #VCS: git:git://git.gnome.org/ORBit2
 Source: http://download.gnome.org/sources/ORBit2/2.14/%{name}-%{version}.tar.bz2
 Group: System Environment/Daemons
@@ -135,6 +135,9 @@ EOF
 %{_datadir}/gtk-doc
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.14.19-7
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14.19-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

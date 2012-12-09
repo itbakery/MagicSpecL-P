@@ -3,7 +3,7 @@
 Summary:   Package management service
 Name:      PackageKit
 Version:   0.8.1
-Release:   5%{?dist}
+Release:   6%{?dist}
 License:   GPLv2+ and LGPLv2+
 URL:       http://www.packagekit.org
 Source0:   http://www.packagekit.org/releases/%{name}-%{version}.tar.xz
@@ -464,6 +464,9 @@ update-mime-database %{_datadir}/mime &> /dev/null || :
 %{_libdir}/pkgconfig/packagekit-plugin.pc
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.8.1-6
+- 为 Magic 3.0 重建
+
 * Thu Jul 05 2012 Richard Hughes  <rhughes@redhat.com> - 0.8.1-5
 - Correctly write the /var/lib/PackageKit/prepared-update file.
 

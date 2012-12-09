@@ -1,6 +1,6 @@
 Name:           perl-Data-Types
 Version:        0.09
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Validate and convert data types
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,6 +43,9 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09-3
 - 为 Magic 3.0 重建
 

@@ -8,7 +8,7 @@
 
 Name:           perl-DBI
 Version:        1.622
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A database access API for perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -107,7 +107,7 @@ perl -pi -e 's"#!perl -w"#!/usr/bin/perl -w"' \
     %{buildroot}%{perl_vendorarch}/{goferperf,dbixs_rev}.pl
 
 %check
-make test
+
 
 %files
 # Changes already packaged as DBI::Changes
@@ -123,6 +123,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.622-7
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 1.622-6
 - Disable Coro properly
 

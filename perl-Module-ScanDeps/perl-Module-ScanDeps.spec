@@ -1,7 +1,7 @@
 Name:           perl-Module-ScanDeps
 Summary:        Recursively scan Perl code for dependencies
 Version:        1.08
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RS/RSCHUPP/Module-ScanDeps-%{version}.tar.gz 
@@ -62,7 +62,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc AUTHORS Changes README
@@ -72,6 +72,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.08-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.08-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 Name:           perl-DateTime-Format-SQLite 
 Summary:        Parse and format SQLite dates and times 
 Version:        0.11
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        GPL+ or Artistic 
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/C/CF/CFAERBER/DateTime-Format-SQLite-%{version}.tar.gz 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.11-8
 - 为 Magic 3.0 重建
 

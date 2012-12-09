@@ -1,6 +1,6 @@
 Name:           perl-Feed-Find
 Version:        0.07
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Syndication feed auto-discovery
 
 Group:          Development/Libraries
@@ -67,6 +67,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-6
 - 为 Magic 3.0 重建
 

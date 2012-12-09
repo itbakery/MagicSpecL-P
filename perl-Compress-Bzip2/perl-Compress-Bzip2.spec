@@ -1,6 +1,6 @@
 Name:           perl-Compress-Bzip2
 Version:        2.09
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Interface to Bzip2 compression library
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.09-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.09-15
 - 为 Magic 3.0 重建
 

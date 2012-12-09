@@ -6,7 +6,7 @@
 
 Name:		perl-Package-DeprecationManager
 Version:	0.13
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Manage deprecation warnings for your distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -71,7 +71,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::DeprecationManager.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

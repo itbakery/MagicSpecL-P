@@ -1,6 +1,6 @@
 Name:           perl-Getopt-ArgvFile
 Version:        1.11
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Interpolates script options from files into @ARGV or another array
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.11-10
 - 为 Magic 3.0 重建
 

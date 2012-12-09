@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatch
 Version:        2.29
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Dispatches messages to one or more outputs
 Group:          Development/Libraries
 License:        Artistic 2.0
@@ -54,7 +54,7 @@ magic_rpm_clean.sh
 
 %check
 RELEASE_TESTING=1 LOG_DISPATCH_TEST_EMAIL="root@localhost.localdomain" \
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.29-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.29-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

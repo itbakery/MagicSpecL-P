@@ -1,6 +1,6 @@
 Name:           perl-Lingua-Stem
 Version:        0.84
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Stemming of words
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ TEST_POD_COVERAGE=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.84-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.84-6
 - 为 Magic 3.0 重建
 

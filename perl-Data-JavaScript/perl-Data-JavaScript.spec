@@ -1,6 +1,6 @@
 Name:           perl-Data-JavaScript
 Version:        1.13
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Dump perl data structures into JavaScript code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.13-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.13-7
 - 为 Magic 3.0 重建
 

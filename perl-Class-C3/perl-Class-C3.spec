@@ -3,7 +3,7 @@
 
 Name:		perl-Class-C3
 Version:	0.23
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Pragma to use the C3 method resolution order algorithm
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -76,7 +76,7 @@ cp -p opt/c3.pm %{buildroot}%{perl_vendorlib}/
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -90,6 +90,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::C3::next.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.23-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.23-6
 - 为 Magic 3.0 重建
 

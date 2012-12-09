@@ -1,7 +1,7 @@
 Summary:	Perl extension to create simple calendars
 Name:		perl-Calendar-Simple
 Version:	1.21
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Calendar-Simple/
@@ -42,7 +42,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %check
 # switch off until Class::ISA will be in buildroot
-#make test
+#
 
 %files
 %defattr(-,root,root,-)
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.21-8
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.21-7
 - 为 Magic 3.0 重建
 

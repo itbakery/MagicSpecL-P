@@ -1,6 +1,6 @@
 Name:           perl-DBD-SQLite2
 Version:        0.33
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Self Contained RDBMS in a DBI Driver (sqlite 2.x)
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -34,7 +34,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 # Doesn't work right at all.
-# make test
+# 
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.33-21
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

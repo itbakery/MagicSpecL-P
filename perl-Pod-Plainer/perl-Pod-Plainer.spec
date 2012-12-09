@@ -1,6 +1,6 @@
 Name: perl-Pod-Plainer
 Version: 1.03
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Perl extension for converting Pod to old-style Pod
 
 License: GPL+ or Artistic
@@ -39,7 +39,7 @@ ls -lZ $RPM_BUILD_ROOT/*
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc README Changes
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/Pod::Plainer.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.03-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

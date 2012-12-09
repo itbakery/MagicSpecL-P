@@ -1,6 +1,6 @@
 Name:           perl-Log-Any
 Version:        0.11
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Bringing loggers and listeners together
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.11-7
 - 为 Magic 3.0 重建
 

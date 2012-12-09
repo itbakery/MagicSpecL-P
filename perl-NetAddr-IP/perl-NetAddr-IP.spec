@@ -1,6 +1,6 @@
 Name:           perl-NetAddr-IP
 Version:        4.066
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Manages IPv4 and IPv6 addresses and subnets
 License:        GPLv2+
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %files
 %doc Artistic Changes Copying TODO docs/rfc1884.txt
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/NetAddr::IP::UtilPP.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.066-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 30 2012 Paul Howarth <paul@city-fan.org> - 4.066-1
 - Update to 4.066
   - Support bracketed IPv6 URI notation as described in RFC-3986

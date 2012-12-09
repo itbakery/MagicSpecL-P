@@ -7,7 +7,7 @@ Name: perl-Ogg-Vorbis-Header
 Summary: Ogg-Vorbis-Header - An object-oriented interface to Ogg Vorbis
 Summary(zh_CN): Ogg Vorbis 面向对象的接口
 Version: 0.03
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Artistic
 Group: Applications/CPAN
 Group(zh_CN): 应用程序/CPAN
@@ -60,5 +60,8 @@ add comments.
 %{perl_vendorarch}/auto/Ogg/Vorbis/Header/*.so
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.03-0.1mgc
 - Initial build

@@ -1,6 +1,6 @@
 Name:           perl-Chatbot-Eliza
 Version:        1.04
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Implementation of the Eliza algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc simple.cgi doctor.txt README simple twobots debug.cgi
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-14
 - 为 Magic 3.0 重建
 

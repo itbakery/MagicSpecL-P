@@ -1,7 +1,7 @@
 Name:           perl-Config-Any
 Summary:        Load configuration from different file formats, transparently
 Version:        0.23
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BR/BRICAS/Config-Any-%{version}.tar.gz 
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.23-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.23-3
 - 为 Magic 3.0 重建
 

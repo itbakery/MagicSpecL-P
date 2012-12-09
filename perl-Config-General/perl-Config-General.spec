@@ -1,6 +1,6 @@
 Name:           perl-Config-General
 Version:        2.50
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Generic configuration module for Perl
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -71,6 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.50-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.50-7
 - 为 Magic 3.0 重建
 

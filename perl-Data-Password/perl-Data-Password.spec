@@ -1,6 +1,6 @@
 Name:           perl-Data-Password
 Version:        1.07
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl extension for assesing password quality
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.07-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.07-12
 - 为 Magic 3.0 重建
 

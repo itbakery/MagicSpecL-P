@@ -1,6 +1,6 @@
 Name:           perl-Locale-PO
 Version:        0.21
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl module for manipulating .po entries from GNU gettext
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.21-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.21-9
 - 为 Magic 3.0 重建
 

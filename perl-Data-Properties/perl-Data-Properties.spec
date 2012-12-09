@@ -1,6 +1,6 @@
 Name:           perl-Data-Properties
 Version:        0.02
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Persistent properties
 
 # The upstream source itself does not specify a license.
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE
@@ -51,6 +51,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.02-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

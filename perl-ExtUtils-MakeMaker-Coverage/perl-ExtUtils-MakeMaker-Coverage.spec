@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-MakeMaker-Coverage
 Version:        0.05
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Allows perl modules to check test coverage with Devel::Cover
 
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/testcover
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.05-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.05-15
 - 为 Magic 3.0 重建
 

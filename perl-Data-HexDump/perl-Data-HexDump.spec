@@ -1,6 +1,6 @@
 Name:           perl-Data-HexDump
 Version:        0.02
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Hexadecial Dumper
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-13
 - 为 Magic 3.0 重建
 

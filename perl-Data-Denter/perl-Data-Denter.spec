@@ -1,6 +1,6 @@
 Name:       perl-Data-Denter 
 Version:    0.15 
-Release:    9%{?dist}
+Release:    10%{?dist}
 # Denter.pod -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.15-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.15-9
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-MD5
 Version:        2.03
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl interface to the MD5 Message-Digest Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ magic_rpm_clean.sh
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.03-15
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.03-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

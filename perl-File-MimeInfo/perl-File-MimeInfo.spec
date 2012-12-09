@@ -1,6 +1,6 @@
 Name:           perl-File-MimeInfo
 Version:        0.16
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Determine file type and open application
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.16-3
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.16-2
 - 为 Magic 3.0 重建
 

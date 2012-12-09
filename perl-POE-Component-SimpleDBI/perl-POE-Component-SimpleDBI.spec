@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-SimpleDBI
 Version:        1.30
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Asynchronous non-blocking DBI calls in POE made simple
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc README examples/
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.30-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.30-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Directory-Queue
 Version:        1.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Object oriented interface to a directory based queue
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.4-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.4-3
 - 为 Magic 3.0 重建
 

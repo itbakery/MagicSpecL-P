@@ -1,6 +1,6 @@
 Name:           perl-Data-ObjectDriver
 Version:        0.09
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple, transparent data interface, with caching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09-5
 - 为 Magic 3.0 重建
 

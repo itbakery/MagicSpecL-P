@@ -1,7 +1,7 @@
 Summary: Internationalization library for Perl, compatible with gettext
 Name: perl-libintl
 Version: 1.20
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: LGPLv2+
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/libintl-perl/
@@ -55,6 +55,9 @@ chmod -R u+w %{buildroot}/*
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.20-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.20-7
 - 为 Magic 3.0 重建
 

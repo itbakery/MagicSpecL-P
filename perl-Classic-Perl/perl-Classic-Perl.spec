@@ -1,6 +1,6 @@
 Name:           perl-Classic-Perl
 Version:        0.04
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Selectively reinstate deleted Perl features
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -42,6 +42,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-3
 - 为 Magic 3.0 重建
 

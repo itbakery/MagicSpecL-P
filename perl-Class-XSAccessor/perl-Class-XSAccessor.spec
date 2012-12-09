@@ -1,6 +1,6 @@
 Name:           perl-Class-XSAccessor
 Version:        1.14
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Generate fast XS accessors without run-time compilation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/Class::*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.14-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 1.14-1
 - 1.14 bump (no changes for Fedora)
 - Drop command macros

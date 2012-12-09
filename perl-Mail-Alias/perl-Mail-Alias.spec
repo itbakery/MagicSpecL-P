@@ -1,6 +1,6 @@
 Name:           perl-Mail-Alias
 Version:        1.12
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Module for manipulating e-mail alias files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.12-20
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.12-19
 - 为 Magic 3.0 重建
 

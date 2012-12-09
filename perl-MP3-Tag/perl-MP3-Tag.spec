@@ -7,7 +7,7 @@ Summary: Module for reading tags of mp3 files
 Summary(zh_CN): 读取 mp3 文件标记的模块
 Name: perl-MP3-Tag
 Version: 1.13
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -57,5 +57,8 @@ Tag 是一个用于读取 mp3 文件的不同标记的包装化模块。
 %{perl_vendorlib}
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.13-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.9709-0.1mgc
 - Initial package

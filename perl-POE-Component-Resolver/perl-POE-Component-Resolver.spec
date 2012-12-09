@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Resolver
 Version:        0.917
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Non-blocking getaddrinfo() resolver
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,7 +54,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %check
 # Remove resolver test which doesn't work in koji
 rm -f t/01-basic.t
-make test
+
 
 %files
 %doc CHANGES LICENSE README
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.917-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.917-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:		perl-Digest-Perl-MD5
 Version:	1.8
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Perl implementation of Ron Rivest's MD5 Algorithm
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::Perl::MD5.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.8-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.8-4
 - 为 Magic 3.0 重建
 

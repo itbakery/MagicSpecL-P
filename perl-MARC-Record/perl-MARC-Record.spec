@@ -1,6 +1,6 @@
 Name:           perl-MARC-Record
 Version:        2.0.0
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Object-oriented abstraction of MARC record handling
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0.0-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.0.0-12
 - 为 Magic 3.0 重建
 

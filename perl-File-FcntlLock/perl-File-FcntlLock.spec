@@ -1,6 +1,6 @@
 Name:		perl-File-FcntlLock
 Version:	0.12
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Perl module for file locking with fcntl
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -41,6 +41,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.12-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.12-6
 - 为 Magic 3.0 重建
 

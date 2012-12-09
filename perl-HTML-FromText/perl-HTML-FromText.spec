@@ -1,6 +1,6 @@
 Name:           perl-HTML-FromText
 Version:        2.05
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Convert plain text to HTML
 
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.05-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.05-12
 - 为 Magic 3.0 重建
 

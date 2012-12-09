@@ -19,7 +19,7 @@ Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
 Version: 0.9.7.0
-Release: 7%{snapshot}%{?dist}
+Release: 8%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -356,6 +356,9 @@ exit 0
 %{_datadir}/vala/vapi/libnm-glib.*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:0.9.7.0-8.git20121004
+- 为 Magic 3.0 重建
+
 * Thu Nov 15 2012 Liu Di <liudidi@gmail.com> - 1:0.9.7.0-7.git20121004
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary:	Provable prime number generator for cryptographic applications
 Name:		perl-Crypt-Primes
 Version:	0.50
-Release:	14%{?dist}
+Release:	15%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-Primes/
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Crypt::Primes.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.50-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.50-14
 - 为 Magic 3.0 重建
 

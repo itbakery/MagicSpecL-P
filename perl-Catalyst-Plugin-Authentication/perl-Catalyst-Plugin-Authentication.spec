@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Plugin-Authentication
 Summary:        Infrastructure plugin for the Catalyst authentication framework
 Version:        0.10018
-Release:        6%{?dist}
+Release:        7%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-Authentication-%{version}.tar.gz
@@ -67,6 +67,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.10018-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10018-6
 - 为 Magic 3.0 重建
 

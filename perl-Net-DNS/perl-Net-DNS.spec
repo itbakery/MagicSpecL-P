@@ -1,6 +1,6 @@
 Name:          perl-Net-DNS
 Version:       0.68
-Release:       5%{?dist}
+Release:       6%{?dist}
 Summary:       DNS resolver modules for Perl
 License:       GPL+ or Artistic
 Group:         Development/Libraries
@@ -81,7 +81,7 @@ for i in Changes; do
 done
 
 %check
-make test
+
 
 %files
 %doc README Changes TODO demo
@@ -101,6 +101,9 @@ make test
 %{_mandir}/man3/Net::DNS::Nameserver*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.68-6
+- 为 Magic 3.0 重建
+
 * Fri Aug 10 2012 Petr Pisar <ppisar@redhat.com> - 0.68-5
 - Digest::BubbleBabble is not available in RHEL >= 7
 

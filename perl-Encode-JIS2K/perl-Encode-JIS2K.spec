@@ -1,6 +1,6 @@
 Name:           perl-Encode-JIS2K
 Version:        0.02
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        JIS X 0212 (aka JIS 2000) Encodings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %dir %{perl_vendorarch}/auto/
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-4
 - 为 Magic 3.0 重建
 

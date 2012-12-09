@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Loader
 Version:        0.34
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Dynamic definition of Class::DBI sub classes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ TEST_POD=1
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.34-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.34-14
 - 为 Magic 3.0 重建
 

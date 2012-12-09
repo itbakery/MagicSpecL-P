@@ -1,6 +1,6 @@
 Name:           perl-Class-MethodMaker
 Version:        2.18
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl module for creating generic object-oriented methods
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 cd Class-MethodMaker-%{version}
-make test
+
 cd ..
 
 %files
@@ -52,6 +52,9 @@ cd ..
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.18-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.18-5
 - 为 Magic 3.0 重建
 

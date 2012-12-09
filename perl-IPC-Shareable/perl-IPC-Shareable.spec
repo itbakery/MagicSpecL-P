@@ -1,6 +1,6 @@
 Name:           perl-IPC-Shareable
 Version:        0.60
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Share Perl variables between processes
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.60-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.60-18
 - 为 Magic 3.0 重建
 

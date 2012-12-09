@@ -4,7 +4,7 @@
 Summary:	Recognizes file formats and extracts format-specific comments
 Name:		perl-File-Comments
 Version:	0.08
-Release:	6%{?dist}
+Release:	7%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/File-Comments/
@@ -87,6 +87,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/File::Comments::Plugin::Shell.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.08-6
 - 为 Magic 3.0 重建
 

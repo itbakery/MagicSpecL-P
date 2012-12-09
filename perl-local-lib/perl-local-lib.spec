@@ -1,6 +1,6 @@
 Name:       perl-local-lib
 Version:    1.008004
-Release:    4%{?dist}
+Release:    5%{?dist}
 # lib/local/lib.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -94,6 +94,9 @@ cp %{SOURCE11} %{buildroot}%{_sysconfdir}/profile.d/
 %{_sysconfdir}/profile.d/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.008004-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.008004-4
 - 为 Magic 3.0 重建
 

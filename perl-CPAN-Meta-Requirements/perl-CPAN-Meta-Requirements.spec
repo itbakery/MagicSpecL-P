@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Meta-Requirements
 Version:        2.122
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Set of version requirements for a CPAN dist
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,7 +66,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %if %{defined perl_bootstrap}
 rm -rf xt
 %endif
-make test TEST_FILES="t/*.t xt/*/*.t"
+ TEST_FILES="t/*.t xt/*/*.t"
 
 %files
 %doc Changes LICENSE perlcritic.rc README README.PATCHING
@@ -74,6 +74,9 @@ make test TEST_FILES="t/*.t xt/*/*.t"
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.122-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.122-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

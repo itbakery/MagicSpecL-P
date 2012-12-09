@@ -1,6 +1,6 @@
 Name:           perl-Dist-Zilla
 Version:        4.300006
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Distribution builder; installer not included!
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -138,6 +138,9 @@ install -D -m 0644 misc/dzil-bash_completion %{buildroot}%{_sysconfdir}/bash_com
 %{_sysconfdir}/bash_completion.d
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.300006-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 4.300006-3
 - 为 Magic 3.0 重建
 

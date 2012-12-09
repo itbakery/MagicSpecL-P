@@ -1,6 +1,6 @@
 Name:           perl-LDAP
 Version:        0.40
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          1
 Summary:        LDAP Perl module
 
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:0.40-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1:0.40-7
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Summary: A virtual browser that retries errors
 Name: perl-LWP-UserAgent-Determined
 Version: 1.05
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPL+ or Artistic
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/%{pkg_name}/
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.05-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.05-4
 - 为 Magic 3.0 重建
 

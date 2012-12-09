@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Model-LDAP
 Version:        0.16
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        LDAP model class for Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -74,6 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.16-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.16-15
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Module-Signature
 Version:        0.68
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        CPAN signature management utilities and modules
 Group:          Development/Libraries
 License:        CC0
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Module::Signature.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.68-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.68-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

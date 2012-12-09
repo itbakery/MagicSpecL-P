@@ -1,6 +1,6 @@
 Name:		perl-IO-Socket-SSL
 Version:	1.77
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Perl library for transparent SSL
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -50,7 +50,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -61,6 +61,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Socket::SSL.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.77-2
+- 为 Magic 3.0 重建
+
 * Fri Oct  5 2012 Paul Howarth <paul@city-fan.org> - 1.77-1
 - Update to 1.77
   - support _update_peer for IPv6 too (CPAN RT#79916)
@@ -93,7 +96,7 @@ rm -rf %{buildroot}
 * Fri May 11 2012 Paul Howarth <paul@city-fan.org> - 1.73-1
 - Update to 1.73
   - set DEFAULT_CIPHER_LIST to ALL:!LOW instead of HIGH:!LOW
-  - make test t/dhe.t hopefully work with more versions of openssl
+  -  t/dhe.t hopefully work with more versions of openssl
 
 * Wed May  9 2012 Paul Howarth <paul@city-fan.org> - 1.71-1
 - Update to 1.71
@@ -124,7 +127,7 @@ rm -rf %{buildroot}
 
 * Sat Apr  7 2012 Paul Howarth <paul@city-fan.org> - 1.64-1
 - Update to 1.64
-  - ignore die from within eval to make tests more stable on Win32
+  - ignore die from within eval to s more stable on Win32
     (CPAN RT#76147)
   - clarify some behavior regarding hostname verification
 - Drop patch for t/dhe.t, no longer needed

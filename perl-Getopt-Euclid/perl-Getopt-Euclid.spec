@@ -1,6 +1,6 @@
 Name:           perl-Getopt-Euclid
 Version:        0.2.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Executable Uniform Command-Line Interface Descriptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2.3-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.2.3-5
 - 为 Magic 3.0 重建
 

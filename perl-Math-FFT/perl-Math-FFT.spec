@@ -1,6 +1,6 @@
 Name:           perl-Math-FFT
 Version:        1.28
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl module to calculate Fast Fourier Transforms
 # Perl module code is GPL+ or same as Perl itself
 # arrays.c has same licence as Perl itself
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.28-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.28-10
 - 为 Magic 3.0 重建
 

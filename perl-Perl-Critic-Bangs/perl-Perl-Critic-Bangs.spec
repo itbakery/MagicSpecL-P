@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Bangs
 Version:        1.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Collection of handy Perl::Critic policies
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -57,7 +57,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes perlcriticrc README TODO
@@ -65,6 +65,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 1.10-1
 - 1.10 bump
 

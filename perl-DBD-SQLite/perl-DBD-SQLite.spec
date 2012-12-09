@@ -1,6 +1,6 @@
 Name:           perl-DBD-SQLite
 Version:        1.37
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        SQLite DBI Driver
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,7 +51,7 @@ find %{buildroot} -depth -type d -empty -exec rmdir {} ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -60,6 +60,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.37-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.37-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

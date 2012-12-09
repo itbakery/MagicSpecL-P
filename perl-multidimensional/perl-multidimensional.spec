@@ -1,6 +1,6 @@
 Name:           perl-multidimensional
 Version:        0.010
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Disables multidimensional array emulation
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-RELEASE_TESTING=1 make test
+RELEASE_TESTING=1 
 
 %files
 %doc Changes LICENSE README
@@ -55,6 +55,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.010-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.010-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

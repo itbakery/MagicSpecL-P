@@ -1,6 +1,6 @@
 Name:           perl-Devel-PartialDump
 Version:        0.15
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Partial dumping of data structures, optimized for argument printing
 # from PartialDump.pm
 License:        GPL+ or Artistic
@@ -45,7 +45,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 %if 0%{!?perl_bootstrap:1}
-make test
+
 %endif
 
 %files
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.15-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

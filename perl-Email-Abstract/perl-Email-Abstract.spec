@@ -1,6 +1,6 @@
 Name:           perl-Email-Abstract
 Version:        3.002
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Unified interface to mail representations
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.002-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.002-6
 - 为 Magic 3.0 重建
 

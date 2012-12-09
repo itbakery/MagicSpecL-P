@@ -1,6 +1,6 @@
 Name:       perl-CSS-Minifier 
 Version:    0.01 
-Release:    10%{?dist}
+Release:    11%{?dist}
 # lib/CSS/Minifier.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-10
 - 为 Magic 3.0 重建
 

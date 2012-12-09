@@ -1,6 +1,6 @@
 Name:           perl-HTML-WikiConverter-Markdown
 Version:        0.05
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Convert HTML to Markdown markup
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.05-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.05-9
 - 为 Magic 3.0 重建
 

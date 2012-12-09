@@ -1,6 +1,6 @@
 Name:           perl-POE-Filter-IRCD
 Version:        2.42
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A POE-based parser for the IRC protocol
 
 Group:          Development/Libraries
@@ -52,7 +52,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 cp %{SOURCE100} .
 
 %check
-make test
+
 
 
 %clean
@@ -67,6 +67,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.42-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.42-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

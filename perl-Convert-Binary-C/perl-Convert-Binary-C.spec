@@ -1,6 +1,6 @@
 Name:           perl-Convert-Binary-C
 Version:        0.76
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Binary data conversion using C types
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -36,7 +36,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README TODO
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.76-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.76-3
 - 为 Magic 3.0 重建
 

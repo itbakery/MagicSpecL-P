@@ -7,7 +7,7 @@ Summary:	Perl interface to the uulib library
 Name:		perl-Convert-UUlib
 Epoch:		2
 Version:	1.4
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/%{pkgname}/
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man?/Convert::UUlib*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2:1.4-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2:1.4-3
 - 为 Magic 3.0 重建
 
@@ -134,7 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 - 1.051-2%{?dist}
 - add dist tags for ease of syncing with FC-3 & FC-4
 - remove redundant perl buildreq
-- remove redundant "make test" from %%build (it's in %%check)
+- remove redundant "" from %%build (it's in %%check)
 - remove MANIFEST from %%doc
 
 * Sat May 21 2005 Nicolas Mailhot <Nicolas.Mailhot at laPoste.net>

@@ -1,6 +1,6 @@
 Name:           perl-Mail-Transport-Dbx
 Version:        0.07
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Parse Outlook Express mailboxes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-15
 - 为 Magic 3.0 重建
 

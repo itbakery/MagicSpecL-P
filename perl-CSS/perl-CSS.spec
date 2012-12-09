@@ -1,6 +1,6 @@
 Name:           perl-CSS
 Version:        1.08
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Object oriented access to Cascading Style Sheets (CSS)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/CSS::*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.08-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.08-13
 - 为 Magic 3.0 重建
 

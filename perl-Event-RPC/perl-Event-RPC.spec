@@ -1,6 +1,6 @@
 Name:           perl-Event-RPC
 Version:        1.01
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Event based transparent Client/Server RPC framework
 
 Group:          Development/Libraries
@@ -55,7 +55,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.01-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

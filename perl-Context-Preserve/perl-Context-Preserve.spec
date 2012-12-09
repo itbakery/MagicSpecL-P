@@ -1,7 +1,7 @@
 Name:           perl-Context-Preserve
 Summary:        Run code after a subroutine call, preserving context
 Version:        0.01
-Release:        7%{?dist}
+Release:        8%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/J/JR/JROCKWAY/Context-Preserve-%{version}.tar.gz 
@@ -52,7 +52,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.01-7
 - 为 Magic 3.0 重建
 

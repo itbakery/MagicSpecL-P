@@ -1,6 +1,6 @@
 Name:      perl-POE
 Version:   1.354
-Release:   4%{?dist}
+Release:   5%{?dist}
 Summary:   POE - portable multitasking and networking framework for Perl
 
 Group:     Development/Libraries
@@ -111,7 +111,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 # not fail nor cause the build/suite to fail.  For now just please be aware
 # that there will be some noisy output as the tests are run.
 # Reported upstream at http://rt.cpan.org/Public/Bug/Display.html?id=19878
-make test
+
 
 %files
 %doc CHANGES HISTORY README examples/ TODO t/
@@ -119,6 +119,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.354-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.354-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

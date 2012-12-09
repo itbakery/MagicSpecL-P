@@ -1,6 +1,6 @@
 Name:           perl-Expect-Simple
 Version:        0.04
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Wrapper around the Expect module
 
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-HTML-Encoding
 Version:        0.61
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Determine the encoding of HTML/XML/XHTML documents
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.61-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.61-6
 - 为 Magic 3.0 重建
 

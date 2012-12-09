@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI-Plugin
 Version:        0.03
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Abstract base class for Class::DBI plugins
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -32,7 +32,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes COPYING Artistic
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.03-18
 - 为 Magic 3.0 重建
 

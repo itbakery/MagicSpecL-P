@@ -1,6 +1,6 @@
 Name: 		perl-Cache-Simple-TimedExpiry
 Version: 	0.27
-Release: 	13%{?dist}
+Release: 	14%{?dist}
 Summary: 	A lightweight cache with timed expiration
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -34,7 +34,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 rm -rf $RPM_BUILD_ROOT
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.27-14
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.27-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Net-IP
 Version:        1.25
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Perl module for manipulation of IPv4 and IPv6 addresses
 
 Group:          Development/Libraries
@@ -48,7 +48,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 # These tests fail on ppc builders because of:
 # http://rt.perl.org/rt3//Public/Bug/Display.html?id=50114
 # Re-enable this when the upstream bug is resolved.
-# make test
+# 
 
 
 %clean
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.25-21
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.25-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Devel
 Summary:        Catalyst Development Tools
 Version:        1.36
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Devel-%{version}.tar.gz
@@ -87,6 +87,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %exclude %{perl_vendorlib}/Catalyst/Restarter/Win32.pm
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.36-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.36-5
 - 为 Magic 3.0 重建
 

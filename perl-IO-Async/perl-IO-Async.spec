@@ -1,6 +1,6 @@
 Name:           perl-IO-Async
 Version:        0.29
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A collection of modules that implement asynchronous filehandle IO
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.29-10
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.29-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

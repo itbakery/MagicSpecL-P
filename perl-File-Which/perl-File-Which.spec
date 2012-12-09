@@ -1,6 +1,6 @@
 Name:           perl-File-Which
 Version:        1.09
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Portable implementation of the 'which' utility
 
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 %if !%{defined perl_bootstrap}
-make test
+
 %endif
 
 %clean
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.09-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

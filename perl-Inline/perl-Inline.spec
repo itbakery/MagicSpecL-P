@@ -1,6 +1,6 @@
 Name:           perl-Inline
 Version:        0.51
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Inline Perl module
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -70,7 +70,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -79,6 +79,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.51-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 15 2012 Petr Šabata <contyk@redhat.com> - 0.51-1
 - 0.51 bump
 

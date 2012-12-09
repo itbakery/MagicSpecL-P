@@ -1,6 +1,6 @@
 Name:       perl-Directory-Scratch 
 Version:    0.14 
-Release:    12%{?dist}
+Release:    13%{?dist}
 # see lib/Directory/Scratch.pm (perl)
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.14-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.14-12
 - 为 Magic 3.0 重建
 

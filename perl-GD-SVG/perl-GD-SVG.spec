@@ -1,6 +1,6 @@
 Name:           perl-GD-SVG
 Version:        0.33
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        GD::SVG enables SVG output from scripts written using GD
 
 Group:          Development/Libraries
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-7
 - 为 Magic 3.0 重建
 

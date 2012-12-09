@@ -1,7 +1,7 @@
 Name:		perl-CPAN-Changes
 Summary:	Read and write Changes files
 Version:	0.19
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/CPAN-Changes/
@@ -41,8 +41,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
+
+ TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 
 %files
 %doc Changes README
@@ -54,6 +54,9 @@ make test TEST_FILES="$(echo $(find xt/ -name '*.t'))"
 %{_mandir}/man3/Test::CPAN::Changes.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.19-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

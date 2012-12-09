@@ -1,6 +1,6 @@
 Name:           perl-Linux-Pid
 Version:        0.04
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Get the native PID and the PPID on Linux 
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 
 %clean
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

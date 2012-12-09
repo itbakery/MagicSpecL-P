@@ -1,7 +1,7 @@
 Name:           perl-DBD-Pg
 Summary:        A PostgreSQL interface for perl
 Version:        2.19.3
-Release:        2%{?dist}
+Release:        3%{?dist}
 License:        GPLv2+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/T/TU/TURNSTEP/DBD-Pg-%{version}.tar.gz 
@@ -77,7 +77,7 @@ magic_rpm_clean.sh
 #export DBI_USER=<username>
 #export DBI_PASS=<password>
 # If variables undefined, package test will create it's own database.
-make test
+
 
 %files
 %doc Changes README README.dev TODO
@@ -88,6 +88,9 @@ make test
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.19.3-3
+- 为 Magic 3.0 重建
+
 * Wed Aug 22 2012 Petr Pisar <ppisar@redhat.com> - 2.19.3-2
 - Specify all dependencies
 - Move testme.tmp.pl to tests sub-package

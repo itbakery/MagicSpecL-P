@@ -1,6 +1,6 @@
 Name:           perl-CSS-DOM
 Version:        0.14
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Document Object Model for Cascading Style Sheets
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.14-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.14-8
 - 为 Magic 3.0 重建
 

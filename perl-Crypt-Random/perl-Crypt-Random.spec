@@ -1,7 +1,7 @@
 Summary:	Cryptographically Secure, True Random Number Generator
 Name:		perl-Crypt-Random
 Version:	1.25
-Release:	14%{?dist}
+Release:	15%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-Random/
@@ -53,6 +53,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Crypt::Random.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.25-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.25-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Lax
 Version:        0.009
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Policies that let you slide on common exceptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.009-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 13 2012 Petr Pisar <ppisar@redhat.com> - 0.009-1
 - 0.009 bump
 

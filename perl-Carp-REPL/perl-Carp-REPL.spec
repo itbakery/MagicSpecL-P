@@ -1,6 +1,6 @@
 Name:           perl-Carp-REPL
 Version:        0.15
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Read-eval-print-loop on die and/or warn
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ grep -lZ 'Test::Expect' t/*.t |xargs -0 rm -f
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.15-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.15-6
 - 为 Magic 3.0 重建
 

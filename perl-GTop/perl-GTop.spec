@@ -1,6 +1,6 @@
 Name:           perl-GTop
 Version:        0.18
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl interface to libgtop
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README TODO examples/ t/
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.18-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.18-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

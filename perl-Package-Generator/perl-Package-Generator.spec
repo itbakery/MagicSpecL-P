@@ -1,6 +1,6 @@
 Name:		perl-Package-Generator
 Version:	0.103
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:	Generate new packages quickly and easily
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -45,7 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test %{!?perl_bootstrap:PERL_TEST_CRITIC=1}
+ %{!?perl_bootstrap:PERL_TEST_CRITIC=1}
 
 %clean
 rm -rf %{buildroot}
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Reaper.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.103-15
+- 为 Magic 3.0 重建
+
 * Fri Aug 24 2012 Paul Howarth <paul@city-fan.org> - 0.103-14
 - Drop EPEL-4 support
 - Drop %%defattr, redundant since rpm 4.4

@@ -1,6 +1,6 @@
 Name:           perl-JSON-Path
 Version:        0.101
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Search nested hashref/arrayref structures using JSONPath
 
 License:        MIT
@@ -51,7 +51,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %check
-make test
+
 
 
 %files
@@ -62,6 +62,9 @@ make test
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.101-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.101-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

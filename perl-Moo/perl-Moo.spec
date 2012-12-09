@@ -1,6 +1,6 @@
 Name:           perl-Moo
 Version:        1.000004
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Minimalist Object Orientation (with Moose compatibility)
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.000004-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 19 2012 Iain Arnell <iarnell@gmail.com> 1.000004-1
 - update to latest upstream version
 

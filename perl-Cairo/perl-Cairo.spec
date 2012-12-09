@@ -6,7 +6,7 @@
 
 Name:           perl-Cairo
 Version:        1.060
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl interface to the cairo library
 
 Group:          Development/Libraries
@@ -47,7 +47,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-%{?_with_testsuite:make test}
+%{?_with_testsuite:}
 
 
 %clean
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.060-10
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.060-9
 - 为 Magic 3.0 重建
 

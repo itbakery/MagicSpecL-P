@@ -1,7 +1,7 @@
 Name:		perl-Env-Sanctify
 Summary:	Lexically scoped sanctification of %%ENV
 Version:	1.06
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Env-Sanctify/
@@ -41,7 +41,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Env::Sanctify.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.06-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

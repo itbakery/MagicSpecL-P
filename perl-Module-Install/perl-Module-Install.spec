@@ -1,6 +1,6 @@
 Name:           perl-Module-Install
 Version:        1.06
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Standalone, extensible Perl module installer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT/blib/lib/auto/share/dist/Module-Install/dist_file.txt
 find $RPM_BUILD_ROOT%{perl_vendorlib} -type f -perm +100 -exec chmod a-x {} \;
 
 %check
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %files
 %doc Changes LICENSE README
@@ -74,6 +74,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.06-2
+- 为 Magic 3.0 重建
+
 * Fri Oct 05 2012 Petr Šabata <contyk@redhat.com> - 1.06-1
 - 1.06 bump
 

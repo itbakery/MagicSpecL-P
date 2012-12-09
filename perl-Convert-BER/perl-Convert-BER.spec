@@ -1,6 +1,6 @@
 Name:           perl-Convert-BER
 Version:        1.3101
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        ASN.1 Basic Encoding Rules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %check
-make test
+
 
 
 %clean
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3101-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.3101-11
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-DBI
 Version:        3.0.17
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Simple Database Abstraction
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -36,7 +36,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %check
 # This test fails because no postgresql and mysql servers are running
 # in the build environment.
-# make test
+# 
 
 %files
 %doc Changes COPYING Artistic
@@ -44,6 +44,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0.17-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 3.0.17-13
 - 为 Magic 3.0 重建
 
@@ -99,7 +102,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 - bump to 3.0.13
 
 * Wed Aug 31 2005 Tom "spot" Callaway <tcallawa@redhat.com> 0.96-6
-- comment out make test, since it fails.
+- comment out , since it fails.
 
 * Sun Aug 28 2005 Tom "spot" Callaway <tcallawa@redhat.com> 0.96-4
 - BR: perl(Time::Piece::MySQL)

@@ -1,6 +1,6 @@
 Name:           perl-Env-Path
 Version:        0.18
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Advanced operations on path variables
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_bindir}/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.18-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.18-3
 - 为 Magic 3.0 重建
 

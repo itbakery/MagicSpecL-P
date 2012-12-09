@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Rijndael
 Version:        1.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Crypt::CBC compliant Rijndael encryption module
 License:        LGPLv3
 Group:          Development/Libraries
@@ -36,7 +36,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes COPYING LICENSE NEWS README
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-2
+- 为 Magic 3.0 重建
+
 * Fri Aug 03 2012 Iain Arnell <iarnell@gmail.com> 1.11-1
 - update to latest upstream version
 - license change from LGPLv2+ to LGPLv3

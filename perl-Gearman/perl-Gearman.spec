@@ -1,6 +1,6 @@
 Name:           perl-Gearman
 Version:        1.11
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Distributed job system
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Gearman::*.*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.11-6
 - 为 Magic 3.0 重建
 

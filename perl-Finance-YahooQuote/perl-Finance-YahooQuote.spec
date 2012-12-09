@@ -1,6 +1,6 @@
 Name:           perl-Finance-YahooQuote
 Version:        0.24
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Perl interface to get stock quotes from Yahoo! Finance
 
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.24-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.24-7
 - 为 Magic 3.0 重建
 

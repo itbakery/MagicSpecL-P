@@ -1,6 +1,6 @@
 Name:           perl-DBD-CSV
 Version:        0.36
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        DBI driver for CSV files
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -53,7 +53,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc ChangeLog README
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.36-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Petr Šabata <contyk@redhat.com> - 0.36-1
 - 0.36 bump, debugging enhancements
 

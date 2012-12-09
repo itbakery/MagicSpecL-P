@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-View-JSON
 Version:        0.30
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        JSON view for your data
 License:        GPL+ or Artistic 2.0
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.30-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.30-7
 - 为 Magic 3.0 重建
 

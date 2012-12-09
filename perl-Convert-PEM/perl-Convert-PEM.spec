@@ -1,6 +1,6 @@
 Name:           perl-Convert-PEM
 Version:        0.08
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Read/write encrypted ASN.1 PEM files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.08-8
 - 为 Magic 3.0 重建
 

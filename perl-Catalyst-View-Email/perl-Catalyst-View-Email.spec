@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-View-Email
 Version:        0.31
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Send Email from Catalyst
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ TEST_POD=yep
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.31-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.31-7
 - 为 Magic 3.0 重建
 

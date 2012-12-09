@@ -1,6 +1,6 @@
 Name:           perl-Config-JFDI
 Version:        0.065
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Just * Do it: A Catalyst::Plugin::ConfigLoader-style layer over Config::Any
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.065-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.065-6
 - 为 Magic 3.0 重建
 

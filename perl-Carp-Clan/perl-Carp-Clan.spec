@@ -1,6 +1,6 @@
 Name:           perl-Carp-Clan
 Version:        6.04
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Perl module to print improved warning messages
 
 Group:          Development/Libraries
@@ -45,7 +45,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 %if !%{defined perl_bootstrap}
-make test
+
 %endif
 
 %clean
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.04-10
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.04-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

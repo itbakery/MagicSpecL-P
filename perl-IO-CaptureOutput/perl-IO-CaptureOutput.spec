@@ -1,6 +1,6 @@
 Name:           perl-IO-CaptureOutput
 Version:        1.1102
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Capture STDOUT/STDERR from sub-processes and XS/C modules
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -40,7 +40,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.1102-9
+- 为 Magic 3.0 重建
+
 * Tue Oct 16 2012 Petr Pisar <ppisar@redhat.com> - 1.1102-8
 - Specify all dependencies
 

@@ -1,6 +1,6 @@
 Name:           perl-File-ReadBackwards
 Version:        1.04
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        File::ReadBackwards Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-14
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Hook-LexWrap
 Version:        0.24
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Lexically scoped subroutine wrappers
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -38,7 +38,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Hook::LexWrap.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.24-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.24-1
 - Update to 0.24
   - Add Build.PL

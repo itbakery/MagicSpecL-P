@@ -1,6 +1,6 @@
 Name:       perl-File-RsyncP
 Version:    0.70
-Release:    5%{?dist}
+Release:    6%{?dist}
 Summary:    A perl implementation of an Rsync client
 License:    GPLv2
 Group:      Development/Libraries
@@ -42,6 +42,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.70-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.70-5
 - 为 Magic 3.0 重建
 

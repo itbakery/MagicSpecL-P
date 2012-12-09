@@ -1,6 +1,6 @@
 Name:       perl-Module-Install-GithubMeta 
 Version:    0.16
-Release:    3%{?dist}
+Release:    4%{?dist}
 # lib/Module/Install/GithubMeta.pm -> GPL+ or Artistic
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
@@ -48,7 +48,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README 
@@ -56,6 +56,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.16-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.16-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

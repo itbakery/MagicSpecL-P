@@ -1,7 +1,7 @@
 %bcond_with tests # Tests require network access
 Name:           perl-LWP-Protocol-https
 Version:        6.02
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Provide HTTPS support for LWP::UserAgent
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.02-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.02-6
 - 为 Magic 3.0 重建
 

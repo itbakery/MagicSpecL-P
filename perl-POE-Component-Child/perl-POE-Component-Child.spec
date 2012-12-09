@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Child
 Version:        1.39        
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Child management component for POE 
 
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ chmod -R u+w %{buildroot}/*
 
 %check
 # hangs after last test, switch off
-##make test
+##
 
 
 %clean
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.39-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.39-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

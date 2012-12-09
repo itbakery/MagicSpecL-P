@@ -1,6 +1,6 @@
 Name:           perl-Perl-Critic-Itch
 Version:        0.07
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Collection of Perl::Critic policies to solve some itches
 License:        GPLv3+ or Artistic 2.0
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

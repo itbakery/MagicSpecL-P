@@ -1,6 +1,6 @@
 Name:           perl-Class-Throwable
 Version:        0.10
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A minimal lightweight exception class
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.10-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-11
 - 为 Magic 3.0 重建
 

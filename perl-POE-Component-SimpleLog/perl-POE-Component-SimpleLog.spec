@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-SimpleLog
 Version:        1.05
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        A simple logging system for POE 
 
 Group:          Development/Libraries
@@ -50,7 +50,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.05-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.05-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

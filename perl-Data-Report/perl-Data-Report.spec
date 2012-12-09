@@ -1,6 +1,6 @@
 Name:		perl-Data-Report
 Version:	0.10
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	A flexible plugin-driven reporting framework
 
 Group:		Development/Libraries
@@ -54,6 +54,9 @@ style sheets.
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.10-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-11
 - 为 Magic 3.0 重建
 

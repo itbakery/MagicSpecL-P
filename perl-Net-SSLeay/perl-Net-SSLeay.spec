@@ -1,6 +1,6 @@
 Name:		perl-Net-SSLeay
 Version:	1.49
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Perl extension for using OpenSSL
 Group:		Development/Libraries
 License:	OpenSSL
@@ -76,7 +76,7 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 rm -f %{buildroot}%{perl_vendorarch}/Net/ptrtstrun.pl
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -92,6 +92,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Net::SSLeay::Handle.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.49-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 25 2012 Paul Howarth <paul@city-fan.org> - 1.49-1
 - update to 1.49
   - fixed problem where on some platforms test t/local/07_tcpecho.t would bail

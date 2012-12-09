@@ -1,6 +1,6 @@
 Name:           perl-POE-Component-Client-SMTP
 Version:        0.22
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Asynchronous mail sending with POE
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.22-10
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.22-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

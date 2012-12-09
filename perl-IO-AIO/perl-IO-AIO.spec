@@ -1,6 +1,6 @@
 Name:		perl-IO-AIO
 Version:	4.15
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Asynchronous Input/Output
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -41,7 +41,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 rm %{buildroot}%{_bindir}/treescan
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::AIO.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.15-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.15-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Mail-Sendmail
 Version:        0.79
-Release:        20%{?dist}
+Release:        21%{?dist}
 Summary:        Simple platform independent mailer for Perl
 
 License:        Copyright only
@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-# We don't want to send the test mail -> no make test
+# We don't want to send the test mail -> no 
 
 
 %clean
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.79-21
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.79-20
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

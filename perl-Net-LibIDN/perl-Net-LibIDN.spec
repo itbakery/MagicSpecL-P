@@ -6,7 +6,7 @@
 Summary: 	Perl bindings for GNU LibIDN
 Name: 		perl-Net-LibIDN
 Version: 	0.12
-Release: 	12%{?dist}
+Release: 	13%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/%{pkgname}/
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -62,6 +62,9 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorarch}/auto/Net
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.12-13
+- 为 Magic 3.0 重建
+
 * Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 0.12-12
 - Build-require Carp
 

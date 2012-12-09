@@ -1,6 +1,6 @@
 Name:           perl-Class-Data-Inheritable
 Version:        0.08
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Inheritable, overridable class data
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -36,7 +36,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -46,6 +46,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::Data::Inheritable.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-13
+- 为 Magic 3.0 重建
+
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.08-12
 - BR:/R: perl(Carp)
 - BR: perl(base)

@@ -1,6 +1,6 @@
 Name:           perl-Hash-Flatten
 Version:        1.19
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Flatten/unflatten complex data hashes
 License:        GPLv2
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.19-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.19-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-Prototyped
 Version:        1.11
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Fast prototype-based OO programming in Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.11-13
 - 为 Magic 3.0 重建
 

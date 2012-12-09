@@ -12,7 +12,7 @@
 
 Name:           perl-DateTime-Format-MySQL
 Version:        0.04        
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Parse and format MySQL dates and times 
 
 Group:          Development/Libraries
@@ -64,7 +64,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -79,6 +79,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-18
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-17
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

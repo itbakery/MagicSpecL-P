@@ -1,6 +1,6 @@
 Name:           perl-File-chmod
 Version:        0.32
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Implements symbolic and ls chmod modes
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -30,7 +30,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes
@@ -38,6 +38,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.32-16
+- 为 Magic 3.0 重建
+
 * Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 0.32-15
 - Modernize spec, specify all dependencies, and drop command macros
 

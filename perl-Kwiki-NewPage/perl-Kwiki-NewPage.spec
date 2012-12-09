@@ -1,6 +1,6 @@
 Name:           perl-Kwiki-NewPage
 Version:        0.12
-Release:        21%{?dist}
+Release:        22%{?dist}
 Summary:        Kwiki New Page Plugin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.12-22
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.12-21
 - 为 Magic 3.0 重建
 

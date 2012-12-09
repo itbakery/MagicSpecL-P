@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-InferConfig
 Version:        1.04
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Infer Perl Configuration for non-running interpreters
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-6
 - 为 Magic 3.0 重建
 

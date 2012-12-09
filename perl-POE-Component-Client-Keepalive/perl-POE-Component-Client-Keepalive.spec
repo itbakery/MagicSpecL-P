@@ -3,7 +3,7 @@ Name:           perl-POE-Component-Client-Keepalive
 # Keep four digits to stay above the unfortunate 0.0901,
 # so that epoch need not be changed.
 Version:        %{real_ver}0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Manages and keeps alive client connections
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -68,7 +68,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 # which is _supposed_ to timeout against google.com.  This may or may not
 # work inside the buildsys; if it doesn't the cure should be as easy as nixing
 # this one test.
-make test
+
 
 %files
 %doc CHANGES README mylib/ t/
@@ -76,6 +76,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.2710-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2710-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

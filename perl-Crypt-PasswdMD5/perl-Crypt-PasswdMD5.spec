@@ -1,6 +1,6 @@
 Name: 		perl-Crypt-PasswdMD5
 Version:	1.3
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Provides interoperable MD5-based crypt() functions 
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -39,6 +39,9 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.3-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.3-13
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatchouli
 Version:        2.005
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Simple wrapper around Log::Dispatch
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.005-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.005-4
 - 为 Magic 3.0 重建
 

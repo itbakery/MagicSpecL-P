@@ -1,6 +1,6 @@
 Name: 		perl-Pod-Tests
 Version: 	1.19
-Release: 	11%{?dist}
+Release: 	12%{?dist}
 Summary: 	Extract embedded tests and code examples from POD
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %check
 # remove test until Perl-MinimumVersion will be fixed
 rm -rf t/99_pmv.t
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %files
 %defattr(-,root,root,-)
@@ -58,6 +58,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.19-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.19-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

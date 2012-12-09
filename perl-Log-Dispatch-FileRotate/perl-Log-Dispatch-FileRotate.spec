@@ -1,6 +1,6 @@
 Name:           perl-Log-Dispatch-FileRotate
 Version:        1.19
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Log to files that archive/rotate themselves
 
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ magic_rpm_clean.sh
 
 %check
 # Test suite disabled: circular dependencies with Log::Log4perl
-%{?_with_tests:make test}
+%{?_with_tests:}
 
 
 %clean
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.19-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.19-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

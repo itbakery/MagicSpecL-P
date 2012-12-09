@@ -1,6 +1,6 @@
 Name:           perl-HTML-Template-Expr
 Version:        0.07
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Expression support extension for HTML::Template
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/HTML::Template::Expr.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-15
 - 为 Magic 3.0 重建
 

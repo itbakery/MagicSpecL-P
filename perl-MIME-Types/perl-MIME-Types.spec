@@ -1,6 +1,6 @@
 Name:           perl-MIME-Types
 Version:        1.35
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MIME types module for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,8 +42,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t"
+
+ TEST_FILES="xt/*.t"
 
 %clean
 rm -rf %{buildroot}
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MIME::Types.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.35-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 1.35-1
 - Update to 1.35:
   - Explain how to use MIME::Types in mod_perl; when you do not read the

@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-View-Component-SubInclude
 Version:        0.10
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Use subincludes in your Catalyst views
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -66,6 +66,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.10-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-6
 - 为 Magic 3.0 重建
 

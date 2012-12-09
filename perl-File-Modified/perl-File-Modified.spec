@@ -1,6 +1,6 @@
 Name:           perl-File-Modified
 Version:        0.07
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Checks intelligently if files have changed
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-14
 - 为 Magic 3.0 重建
 

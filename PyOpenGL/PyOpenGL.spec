@@ -1,6 +1,6 @@
 Name:           PyOpenGL
 Version:        3.0.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Python bindings for OpenGL
 License:        BSD
 Group:          System Environment/Libraries
@@ -66,6 +66,9 @@ chmod -x %{buildroot}%{python_sitelib}/%{name}-%{version}-py?.?.egg-info
 %{python_sitelib}/OpenGL/Tk
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.0.1-5
+- 为 Magic 3.0 重建
+
 * Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.0.1-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

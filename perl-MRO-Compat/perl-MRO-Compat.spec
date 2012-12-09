@@ -3,7 +3,7 @@
 
 Name:		perl-MRO-Compat
 Version:	0.11
-Release:	11%{?dist}
+Release:	12%{?dist}
 Summary:	Mro::* interface compatibility for Perls < 5.9.5
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -61,7 +61,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -73,6 +73,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/MRO::Compat.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

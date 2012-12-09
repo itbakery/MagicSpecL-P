@@ -1,6 +1,6 @@
 Name:           perl-File-DesktopEntry
 Version:        0.04
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Object to handle .desktop files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-17
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-16
 - 为 Magic 3.0 重建
 

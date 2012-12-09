@@ -1,6 +1,6 @@
 Name:           perl-Callback
 Version:        1.07
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Object interface for function callbacks
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.07-12
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.07-11
 - 为 Magic 3.0 重建
 

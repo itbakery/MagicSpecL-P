@@ -1,6 +1,6 @@
 Name:           perl-File-ShareDir
 Version:        1.03
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Locate per-dist and per-module shared files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,7 +45,7 @@ rm -rf $RPM_BUILD_ROOT/blib/lib/auto/share/dist/File-ShareDir/
 rm -rf $RPM_BUILD_ROOT/blib/lib/auto/share/module/File-ShareDir/test_file.txt
 
 %check
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.03-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

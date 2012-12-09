@@ -4,7 +4,7 @@
 Summary: Mobile broadband modem management service
 Name: ModemManager
 Version: 0.5.2.0
-Release: 1%{snapshot}%{?dist}
+Release: 2%{snapshot}%{?dist}
 #
 # Source from git://anongit.freedesktop.org/ModemManager/ModemManager
 # tarball built with:
@@ -94,6 +94,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 %{_datadir}/dbus-1/interfaces/*.xml
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.5.2.0-2
+- 为 Magic 3.0 重建
+
 * Wed Mar 14 2012 Dan Williams <dcbw@redhat.com> - 0.5.2.0-1
 - Update to 0.5.2
 - core: retry sending SMS in PDU mode if text fails

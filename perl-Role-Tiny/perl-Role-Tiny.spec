@@ -1,6 +1,6 @@
 Name:           perl-Role-Tiny
 Version:        1.002000
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A nouvelle cuisine portion size slice of Moose
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.002000-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 20 2012 Iain Arnell <iarnell@gmail.com> 1.002000-1
 - update to latest upstream version
 

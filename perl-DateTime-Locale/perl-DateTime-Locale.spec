@@ -1,6 +1,6 @@
 Name:           perl-DateTime-Locale
 Version:        0.45
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Localization support for DateTime.pm
 # package itself is 'same terms as Perl'
 # modules under DateTime/Locale/ are generated from data provided by the CLDR project
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.45-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.45-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

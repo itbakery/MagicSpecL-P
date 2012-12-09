@@ -1,6 +1,6 @@
 Name:           perl-Convert-TNEF
 Version:        0.17
-Release:        19%{?dist}
+Release:        20%{?dist}
 Summary:        Perl module to read TNEF files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -48,6 +48,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Convert::TNEF.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.17-20
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.17-19
 - 为 Magic 3.0 重建
 

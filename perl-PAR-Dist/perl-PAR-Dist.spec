@@ -1,6 +1,6 @@
 Name:           perl-PAR-Dist
 Version:        0.47
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Toolkit for creating and manipulating Perl PAR distributions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test PERL_TEST_POD=1
+ PERL_TEST_POD=1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.47-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.47-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

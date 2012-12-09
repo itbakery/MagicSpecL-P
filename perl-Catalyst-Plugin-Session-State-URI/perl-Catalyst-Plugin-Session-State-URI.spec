@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Plugin-Session-State-URI
 Version:        0.15
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Saves session IDs by rewriting URIs delivered to the client
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ TEST_POD=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.15-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.15-8
 - 为 Magic 3.0 重建
 

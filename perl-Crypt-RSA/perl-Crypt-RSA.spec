@@ -1,7 +1,7 @@
 Summary:	RSA public-key cryptosystem
 Name:		perl-Crypt-RSA
 Version:	1.99
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-RSA/
@@ -88,6 +88,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/crypt-rsa-interoperablity-template.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.99-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.99-9
 - 为 Magic 3.0 重建
 

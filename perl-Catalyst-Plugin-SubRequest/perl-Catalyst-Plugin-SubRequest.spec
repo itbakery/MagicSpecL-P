@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Plugin-SubRequest
 Summary:        Make subrequests to actions in Catalyst
 Version:        0.17
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/B/BO/BOBTFISH/Catalyst-Plugin-SubRequest-%{version}.tar.gz 
@@ -54,6 +54,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.17-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.17-5
 - 为 Magic 3.0 重建
 

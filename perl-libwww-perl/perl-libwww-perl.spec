@@ -1,6 +1,6 @@
 Name:           perl-libwww-perl
 Version:        6.04
-Release:        4%{?dist}
+Release:        6%{?dist}
 Summary:        A Perl interface to the World-Wide Web
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -97,7 +97,7 @@ magic_rpm_clean.sh
 
 %check
 # Some optional tests require resolvable hostname
-make test
+
 
 %files
 %doc AUTHORS Changes README*
@@ -109,6 +109,12 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.04-6
+- 为 Magic 3.0 重建
+
+* Fri Oct 19 2012 Liu Di <liudidi@gmail.com> - 6.04-5
+- 为 Magic 3.0 重建
+
 * Mon Feb 20 2012 Petr Pisar <ppisar@redhat.com> - 6.04-1
 - 6.04 bump
 
@@ -235,7 +241,7 @@ make test
 - rebuilt for new gcj
 
 * Sat Apr 02 2005 Warren Togami <wtogami@redhat.com> - 5.803-2
-- skip make test (#150363)
+- skip  (#150363)
 
 * Sat Apr 02 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 5.803-1
 - Update to 5.803.

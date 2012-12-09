@@ -1,6 +1,6 @@
 Name:           perl-File-Type-WebImages
 Version:        1.01
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Determine web image file types using magic
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.01-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.01-6
 - 为 Magic 3.0 重建
 

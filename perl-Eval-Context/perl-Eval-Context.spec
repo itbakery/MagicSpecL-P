@@ -1,6 +1,6 @@
 Name:       perl-Eval-Context 
 Version:    0.07 
-Release:    12%{?dist}
+Release:    13%{?dist}
 # see lib/Eval/Context.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -81,6 +81,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-12
 - 为 Magic 3.0 重建
 

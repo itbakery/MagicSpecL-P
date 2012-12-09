@@ -1,6 +1,6 @@
 Name: 		perl-HTTP-Server-Simple-Mason
 Version: 	0.14
-Release: 	6%{?dist}
+Release: 	7%{?dist}
 Summary:	HTTP::Server::Simple::Mason Perl module
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.14-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.14-6
 - 为 Magic 3.0 重建
 

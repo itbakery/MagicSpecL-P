@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Daemon-SSL
 Version:        1.04
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Simple http server class with SSL support
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/HTTP::Daemon::SSL.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-10
+- 为 Magic 3.0 重建
+
 * Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 1.04-9
 - Perl 5.16 rebuild
 

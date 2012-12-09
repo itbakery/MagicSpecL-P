@@ -1,6 +1,6 @@
 Name:           perl-Locale-US
 Version:        2.112150
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Two letter codes for state identification in the United States and vice versa
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README kruft2codes.pl
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.112150-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.112150-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

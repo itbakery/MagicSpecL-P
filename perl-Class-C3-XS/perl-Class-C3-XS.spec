@@ -1,6 +1,6 @@
 Name:		perl-Class-C3-XS
 Version:	0.13
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	XS speedups for Class::C3
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -45,7 +45,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::C3::XS.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.13-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-9
 - 为 Magic 3.0 重建
 

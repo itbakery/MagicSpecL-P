@@ -1,6 +1,6 @@
 Name:		perl-Class-Load
-Version:	0.13
-Release:	4%{?dist}
+Version:	0.20
+Release:	3%{?dist}
 Summary:	A working (require "Class::Name") and more
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -14,13 +14,23 @@ BuildRequires:	perl(ExtUtils::MakeMaker)
 # ===================================================================
 # Module requirements
 # ===================================================================
+BuildRequires:	perl(base)
+BuildRequires:	perl(Carp)
 BuildRequires:	perl(Data::OptList)
-BuildRequires:	perl(Module::Runtime) >= 0.011
-BuildRequires:	perl(Package::Stash) >= 0.32
+BuildRequires:	perl(Exporter)
+BuildRequires:	perl(Module::Implementation) >= 0.04
+BuildRequires:	perl(Module::Runtime) >= 0.012
+BuildRequires:	perl(Package::Stash) >= 0.14
+BuildRequires:	perl(Scalar::Util)
 BuildRequires:	perl(Try::Tiny)
 # ===================================================================
 # Regular test suite requirements
 # ===================================================================
+# Class::Load::XS -> Class::Load
+%if 0%{!?perl_bootstrap:1}
+BuildRequires:	perl(Class::Load::XS)
+%endif
+BuildRequires:	perl(lib)
 BuildRequires:	perl(Test::Fatal)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(Test::Without::Module)
@@ -28,20 +38,27 @@ BuildRequires:	perl(version)
 # ===================================================================
 # Author/Release test requirements
 # ===================================================================
+# Can't use aspell-en from EPEL-7 as BR: for RHEL-7 package so skip the spell
+# check test there; test would fail rather than skip without Test::Spelling so
+# we need to keep that as a buildreq
+%if 0%{?rhel} < 7
+BuildRequires:	aspell-en
+%endif
+# Pod::Coverage::Moose -> Moose -> Class::Load
+%if 0%{!?perl_bootstrap:1} && 0%{?rhel} < 7
+BuildRequires:	perl(Pod::Coverage::Moose)
+%endif
+BuildRequires:	perl(Test::CPAN::Changes)
 BuildRequires:	perl(Test::EOL)
 BuildRequires:	perl(Test::NoTabs)
 BuildRequires:	perl(Test::Pod)
 BuildRequires:	perl(Test::Pod::Coverage)
-BuildRequires:	perl(Test::Spelling), aspell-en
 BuildRequires:	perl(Test::Requires)
-BuildRequires:	perl(Pod::Coverage::Moose)
-BuildRequires:	perl(Test::CPAN::Changes)
+BuildRequires:	perl(Test::Spelling)
 # ===================================================================
 # Runtime requirements
 # ===================================================================
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
-Requires:	perl(Module::Runtime) >= 0.011
-Requires:	perl(Package::Stash) >= 0.32
 # Also requires core module perl(Exporter) via a "use base" construct
 
 %description
@@ -67,11 +84,14 @@ make %{?_smp_mflags}
 %install
 make pure_install DESTDIR=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
-find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
+%if 0%{!?perl_bootstrap:1} && 0%{?rhel} < 7
  RELEASE_TESTING=1
+%else
+
+%endif
 
 %files
 %doc Changes LICENSE README
@@ -79,11 +99,85 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_mandir}/man3/Class::Load.3pm*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-4
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.20-3
 - 为 Magic 3.0 重建
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.13-3
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.20-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jul 15 2012 Paul Howarth <paul@city-fan.org> - 0.20-1
+- Update to 0.20
+  - Same as the most recent 0.19, but with a new version (CPAN RT#78389)
+
+* Sun Jul 15 2012 Paul Howarth <paul@city-fan.org> - 0.19-7
+- New upstream re-release of 0.19 by DROLSKY
+  - The load_class() subroutine now returns the class name on success
+    (CPAN RT#76931)
+  - Exceptions and errors from Class::Load no longer contain references to line
+    numbers in Class::Load or Module::Runtime; this applies to exceptions
+    thrown by load_class, load_first_existing_class, and load_optional_class,
+    as well as the error returned by try_load_class
+  - Exceptions are now croaked properly so they appear to come from the calling
+    code, not from an internal subroutine; this makes the exceptions look more
+    like the ones thrown by Perl's require (CPAN RT#68663)
+- This release by DROLSKY -> update source URL
+- BR: perl(Scalar::Util) for the module
+- BR: perl(lib) for the test suite
+- Drop buildreqs perl(strict) and perl(warnings) - not dual-lived
+
+* Tue Jul 10 2012 Petr Pisar <ppisar@redhat.com> - 0.19-6
+- Perl 5.16 re-rebuild of bootstrapped packages
+
+* Tue Jun 26 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.19-5
+- Conditionalize Pod::Coverage::Moose
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 0.19-4
+- Perl 5.16 rebuild
+
+* Thu Jun  7 2012 Paul Howarth <paul@city-fan.org> - 0.19-3
+- Add commentary regarding conditionalized buildreqs
+
+* Thu Jun  7 2012 Marcela Mašláňová <mmaslano@redhat.com> - 0.19-2
+- Conditionalize aspell-en dependency
+
+* Tue Apr  3 2012 Paul Howarth <paul@city-fan.org> - 0.19-1
+- Update to 0.19 (no functional changes)
+- This release by DOY -> update source URL
+- BR: perl(Exporter)
+- Don't need to remove empty directories from buildroot
+
+* Sat Feb 18 2012 Paul Howarth <paul@city-fan.org> - 0.18-1
+- Update to 0.18:
+  - Require Package::Stash ≥ 0.14 (CPAN RT#75095)
+
+* Sun Feb 12 2012 Paul Howarth <paul@city-fan.org> - 0.17-1
+- Update to 0.17:
+  - Require Module::Runtime 0.012, which has a number of useful bug fixes
+  - A bug in Class::Load caused test failures when Module::Runtime 0.012 was
+    used with Perl 5.8.x (CPAN RT#74897)
+
+* Thu Feb  9 2012 Paul Howarth <paul@city-fan.org> - 0.15-1
+- Update to 0.15:
+  - Small test changes to accomodate latest version of Module::Implementation
+- BR: at least version 0.04 of perl(Module::Implementation)
+
+* Tue Feb  7 2012 Paul Howarth <paul@city-fan.org> - 0.14-1
+- Update to 0.14:
+  - Use Module::Implementation to handle loading the XS or PP versions of the
+    code; using this module fixes a few bugs
+  - Under taint mode, setting an implementation in the
+    CLASS_LOAD_IMPLEMENTATION env var caused a taint error
+  - An invalid value in the CLASS_LOAD_IMPLEMENTATION env var is now detected
+    and reported immediately; no attempt is made to load an invalid
+    implementation
+- BR: perl(Module::Implementation)
+- BR: perl(base), perl(Carp), perl(strict) and perl(warnings) for completeness
+- Drop version requirement for perl(Package::Stash), no longer present upstream
+- Drop explicit runtime dependencies, no longer needed
+- Don't BR: perl(Class::Load::XS) or perl(Pod::Coverage::Moose) if we're
+  bootstrapping
+- Don't run the release tests when bootstrapping as the Pod coverage test will
+  fail in the absence of Pod::Coverage::Moose
 
 * Tue Jan 10 2012 Paul Howarth <paul@city-fan.org> - 0.13-2
 - Fedora 17 mass rebuild

@@ -1,6 +1,6 @@
 Name: 		perl-Number-Compare
 Version: 	0.03
-Release: 	5%{?dist}
+Release: 	6%{?dist}
 Summary: 	Perl module for numeric comparisons
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -32,7 +32,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -41,6 +41,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-6
+- 为 Magic 3.0 重建
+
 * Tue Aug 14 2012 Petr Pisar <ppisar@redhat.com> - 0.03-5
 - Specify all dependencies
 

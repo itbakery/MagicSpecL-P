@@ -3,7 +3,7 @@
 
 Name:		perl-Class-Load-XS
 Version:	0.06
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	XS implementation of parts of Class::Load
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -68,6 +68,9 @@ RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/Class::Load::XS.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.06-2
+- 为 Magic 3.0 重建
+
 * Mon Oct  8 2012 Paul Howarth <paul@city-fan.org> - 0.06-1
 - Update to 0.06:
   - Require Class::Load 0.20 in the code, not just the distro metadata

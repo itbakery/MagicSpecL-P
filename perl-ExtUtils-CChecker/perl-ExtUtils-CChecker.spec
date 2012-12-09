@@ -1,6 +1,6 @@
 Name:           perl-ExtUtils-CChecker
 Version:        0.08
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Configure-time utilities for using C headers, libraries, or OS features
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 20 2012 Marcela Mašláňová <mmaslano@redhat.com> 0.08-1
 - update to 0.08
 

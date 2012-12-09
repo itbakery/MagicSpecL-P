@@ -2,7 +2,7 @@
 
 Name:           perl-%{shortname}
 Version:        0.02
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Simple file-name and pathname matching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-13
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Crypt-SMIME
 Version:        0.09
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        S/MIME message signing, verification, encryption and decryption
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09-10
 - 为 Magic 3.0 重建
 

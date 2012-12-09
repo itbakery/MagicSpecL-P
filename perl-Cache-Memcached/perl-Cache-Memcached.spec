@@ -1,6 +1,6 @@
 Name:           perl-Cache-Memcached
 Version:        1.29
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Perl client for memcached
 
 Group:          Development/Libraries
@@ -36,7 +36,7 @@ chmod -R u+w %{buildroot}/*
 #%check
 # This requires a running memcached on the local host, which isn't very
 # convenient or suitable. YMMV. BR's are there if we REALLY want this.
-#make test
+#
 
 
 %clean
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.29-7
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.29-6
 - 为 Magic 3.0 重建
 

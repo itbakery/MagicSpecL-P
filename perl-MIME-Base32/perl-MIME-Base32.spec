@@ -1,6 +1,6 @@
 Name:           perl-MIME-Base32
 Version:        1.02a
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Base32 encoder / decoder
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.02a-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.02a-7
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Mail-POP3Client
 Version:        2.18
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Perl 5 module to talk to a POP3 (RFC1939) server
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.18-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.18-10
 - 为 Magic 3.0 重建
 

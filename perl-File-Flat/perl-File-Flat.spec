@@ -1,6 +1,6 @@
 Name: 		perl-File-Flat
 Version: 	1.04
-Release: 	12%{?dist}
+Release: 	13%{?dist}
 Summary: 	Implements a flat filesystem
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -54,7 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 # remove until fix of Perl::MinimalVersion and version.pm
 rm -rf t/99_pmv.t
 
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %files
 %defattr(-,root,root,-)
@@ -63,6 +63,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.04-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.04-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

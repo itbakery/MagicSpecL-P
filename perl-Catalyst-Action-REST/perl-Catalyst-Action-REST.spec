@@ -1,6 +1,6 @@
 Name:           perl-Catalyst-Action-REST
 Version:        0.95
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Automated REST Method Dispatching
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -78,6 +78,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.95-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.95-4
 - 为 Magic 3.0 重建
 

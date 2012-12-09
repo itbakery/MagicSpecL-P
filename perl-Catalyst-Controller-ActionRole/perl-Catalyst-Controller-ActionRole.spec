@@ -1,7 +1,7 @@
 Name:           perl-Catalyst-Controller-ActionRole
 Summary:        Apply roles to action instances
 Version:        0.15
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/F/FL/FLORA/Catalyst-Controller-ActionRole-%{version}.tar.gz 
@@ -72,6 +72,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.15-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.15-8
 - 为 Magic 3.0 重建
 

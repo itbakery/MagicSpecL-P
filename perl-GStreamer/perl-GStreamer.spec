@@ -1,6 +1,6 @@
 Name:           perl-GStreamer
 Version:        0.16
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Perl bindings to the GStreamer framework
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.16-3
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.16-2
 - 为 Magic 3.0 重建
 

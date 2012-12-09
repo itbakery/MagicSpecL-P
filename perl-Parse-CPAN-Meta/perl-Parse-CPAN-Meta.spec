@@ -2,7 +2,7 @@ Name:           perl-Parse-CPAN-Meta
 # dual-lifed module needs to match the epoch in perl.spec
 Epoch:          1
 Version:        1.4404
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Parse META.yml and META.json CPAN meta-data files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes
@@ -52,6 +52,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:1.4404-5
+- 为 Magic 3.0 重建
+
 * Wed Aug 15 2012 Petr Pisar <ppisar@redhat.com> - 1:1.4404-4
 - Specify all dependencies
 

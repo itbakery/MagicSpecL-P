@@ -1,6 +1,6 @@
 Name:           perl-Module-CPANTS-Analyse
 Version:        0.86
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Generate Kwalitee ratings for a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -86,8 +86,8 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 %check
 export GNUPGHOME=$(pwd)/gpghome
-make test
-make test AUTHOR_TEST=1 TEST_FILES="xt/*.t"
+
+ AUTHOR_TEST=1 TEST_FILES="xt/*.t"
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,6 +122,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::CPANTS::Kwalitee::Version.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.86-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.86-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

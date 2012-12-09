@@ -1,6 +1,6 @@
 Name:           perl-GDTextUtil
 Version:        0.86
-Release:        22%{?dist}
+Release:        23%{?dist}
 Summary:        Text utilities for use with GD
 
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.86-23
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.86-22
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Structured
 Version:        0.007
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Medium-weight, MVC, DB web framework
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -65,6 +65,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.007-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.007-6
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-JSON-RPC
 Version:        1.01
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl implementation of JSON-RPC 1.1 protocol
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -87,6 +87,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{perl_vendorlib}/JSON/RPC/Legacy/Server.pm
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.01-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.01-3
 - 为 Magic 3.0 重建
 

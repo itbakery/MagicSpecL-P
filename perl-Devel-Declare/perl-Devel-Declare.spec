@@ -1,6 +1,6 @@
 Name:           perl-Devel-Declare
 Version:        0.006008
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Adding keywords to perl, in perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -51,6 +51,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.006008-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.006008-3
 - 为 Magic 3.0 重建
 

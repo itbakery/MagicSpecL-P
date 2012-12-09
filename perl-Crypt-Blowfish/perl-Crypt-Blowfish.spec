@@ -1,7 +1,7 @@
 Summary: XS Blowfish implementation for Perl
 Name: perl-Crypt-Blowfish
 Version: 2.10
-Release: 16%{?dist}
+Release: 17%{?dist}
 License: Copyright only
 Group: Development/Libraries
 URL: http://search.cpan.org/dist/Crypt-Blowfish/
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.10-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-IO-Socket-INET6
 Version:        2.69
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl Object interface for AF_INET|AF_INET6 domain sockets
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -35,7 +35,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/IO::Socket::INET6.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.69-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.69-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

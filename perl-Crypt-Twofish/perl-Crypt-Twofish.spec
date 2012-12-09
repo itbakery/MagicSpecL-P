@@ -1,6 +1,6 @@
 Name:           perl-Crypt-Twofish
 Version:        2.14
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Twofish Encryption Algorithm
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.14-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.14-8
 - 为 Magic 3.0 重建
 

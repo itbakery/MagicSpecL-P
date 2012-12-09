@@ -1,6 +1,6 @@
 Name:           perl-GD
 Version:        2.44
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl interface to the GD graphics library
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %ifarch ppc
 # testsuite fails on ppc
 %else
-make test
+
 %endif
 %ifarch %{ix86}
 perl t/GD.t --write
@@ -76,6 +76,9 @@ base64 t/test.out.3.png_new
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.44-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.44-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-Class-Accessor-Chained
 Version:        0.01
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Make chained accessors
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -32,7 +32,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README.txt Artistic COPYING
@@ -40,6 +40,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-19
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

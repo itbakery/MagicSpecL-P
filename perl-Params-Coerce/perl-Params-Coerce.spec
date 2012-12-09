@@ -1,6 +1,6 @@
 Name:		perl-Params-Coerce
 Version:	0.14
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Allows your classes to do coercion of parameters
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -36,7 +36,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Params::Coerce.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.14-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

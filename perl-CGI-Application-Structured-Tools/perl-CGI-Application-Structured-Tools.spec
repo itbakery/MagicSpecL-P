@@ -1,6 +1,6 @@
 Name:           perl-CGI-Application-Structured-Tools
 Version:        0.013
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Tools to generate and maintain CGI::Application::Structured based web apps
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -86,6 +86,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/cas-starter.pl
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.013-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.013-6
 - 为 Magic 3.0 重建
 

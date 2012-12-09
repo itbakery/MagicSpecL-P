@@ -1,6 +1,6 @@
 Name:           perl-Email-Date-Format
 Version:        1.002
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Produce RFC 2822 date strings
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -32,7 +32,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -44,6 +44,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.002-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.002-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

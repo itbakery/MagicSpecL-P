@@ -1,6 +1,6 @@
 Name:           perl-Devel-Cover
 Version:        0.78
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Code coverage metrics for Perl
 
 Group:          Development/Libraries
@@ -62,6 +62,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.78-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.78-4
 - 为 Magic 3.0 重建
 

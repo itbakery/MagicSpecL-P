@@ -1,6 +1,6 @@
 Name:       perl-Data-TreeDumper-Renderer-GTK 
 Version:    0.02
-Release:    15%{?dist}
+Release:    16%{?dist}
 # see GTK.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-15
 - 为 Magic 3.0 重建
 

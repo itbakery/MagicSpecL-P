@@ -1,6 +1,6 @@
 Name:		perl-List-MoreUtils
 Version:	0.33
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Provide the stuff missing in List::Util
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -56,8 +56,8 @@ find %{buildroot} -type f -name '*.bs' -empty -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
+
+ TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/List::MoreUtils.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
 * Wed Oct 17 2012 Paul Howarth <paul@city-fan.org> - 0.33-7
 - BR:/R: perl(Carp)
 - BR: perl(constant), perl(Exporter) and perl(ExtUtils::CBuilder)

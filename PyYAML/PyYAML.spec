@@ -6,7 +6,7 @@
 
 Name:           PyYAML
 Version:        3.10
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        YAML parser and emitter for Python
 
 Group:          Development/Libraries
@@ -104,6 +104,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 3.10-7
+- 为 Magic 3.0 重建
+
 * Sat Aug 04 2012 David Malcolm <dmalcolm@redhat.com> - 3.10-6
 - rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
 

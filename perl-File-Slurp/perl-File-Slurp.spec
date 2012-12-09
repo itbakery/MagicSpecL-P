@@ -1,6 +1,6 @@
 Name: 		perl-File-Slurp
 Version: 	9999.19
-Release: 	5%{?dist}
+Release: 	6%{?dist}
 Summary: 	Efficient Reading/Writing of Complete Files
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -53,7 +53,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 9999.19-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 9999.19-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

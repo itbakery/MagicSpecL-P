@@ -1,6 +1,6 @@
 Name:           perl-Geo-Constants
 Version:        0.06
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Standard Geo:: constants
 
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.06-12
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-11
 - 为 Magic 3.0 重建
 

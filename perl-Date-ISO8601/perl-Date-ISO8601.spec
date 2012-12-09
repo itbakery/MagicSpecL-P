@@ -1,6 +1,6 @@
 Name:           perl-Date-ISO8601
 Version:        0.004
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Three ISO 8601 numerical calendars
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -58,6 +58,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.004-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.004-4
 - 为 Magic 3.0 重建
 

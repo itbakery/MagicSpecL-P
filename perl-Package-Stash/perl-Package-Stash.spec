@@ -3,7 +3,7 @@
 
 Name:		perl-Package-Stash
 Version:	0.33
-Release:	7%{?dist}
+Release:	8%{?dist}
 Summary:	Routines for manipulating stashes
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -66,9 +66,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 
 %check
 %if ! (0%{?rhel} >= 7)
-make test AUTHOR_TESTING=1 RELEASE_TESTING=1
+ AUTHOR_TESTING=1 RELEASE_TESTING=1
 %else
-make test
+
 %endif
 
 %clean
@@ -82,6 +82,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Stash::PP.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.33-8
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 0.33-7
 - Disable author tests on RHEL >= 7
 

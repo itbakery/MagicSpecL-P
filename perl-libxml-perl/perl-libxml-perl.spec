@@ -1,6 +1,6 @@
 Name:           perl-libxml-perl
 Version:        0.08
-Release:        15%{?dist}
+Release:        18%{?dist}
 Summary:        A collection of Perl modules for working with XML
 
 Group:          Development/Libraries
@@ -47,10 +47,10 @@ make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
 find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
-
+magic_rpm_clean.sh
 
 %check
-make test
+
 
 
 %clean 
@@ -66,6 +66,15 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.08-18
+- 为 Magic 3.0 重建
+
+* Fri Oct 19 2012 Liu Di <liudidi@gmail.com> - 0.08-17
+- 为 Magic 3.0 重建
+
+* Fri Oct 19 2012 Liu Di <liudidi@gmail.com> - 0.08-16
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.08-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
@@ -147,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 * Sun Jun 17 2001 Geoffrey Lee <snailtalk@mandrakesoft.com> 0.07-4mdk
 - Rebuild for the latest perl.
 - Remove Distribution and Vendor tag.
-- Don't run make test for now.
+- Don't run  for now.
 
 * Tue Mar 13 2001 Jeff Garzik <jgarzik@mandrakesoft.com> 0.07-3mdk
 - BuildArch: noarch

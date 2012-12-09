@@ -1,6 +1,6 @@
 Name:           perl-Makefile-Parser
 Version:        0.211
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Simple parser for Makefiles
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/plmake
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.211-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.211-8
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:		perl-JSON-PP
 Version:	2.27200
-Release:	241%{?dist}
+Release:	242%{?dist}
 Summary:	JSON::XS compatible pure-Perl module
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -42,7 +42,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/JSON::PP::Boolean.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.27200-242
+- 为 Magic 3.0 重建
+
 * Tue Aug 28 2012 Paul Howarth <paul@city-fan.org> - 2.27200-241
 - BR: perl(base), perl(constant) and perl(lib)
 - Install to vendor directories

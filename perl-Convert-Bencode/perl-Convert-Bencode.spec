@@ -1,6 +1,6 @@
 Name:           perl-Convert-Bencode
 Version:        1.03
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Functions for converting to/from bencoded strings
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -43,6 +43,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.03-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.03-5
 - 为 Magic 3.0 重建
 

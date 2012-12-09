@@ -1,6 +1,6 @@
 Name:           perl-Glib
 Version:        1.260
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl interface to GLib
 Group:          Development/Libraries
 License:        LGPLv2+
@@ -70,7 +70,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
 %ifnarch ppc ppc64
-make test
+
 %endif
 
 %files
@@ -96,6 +96,9 @@ make test
 %{_mandir}/man3/Glib::xsapi.3pm.gz
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.260-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.260-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

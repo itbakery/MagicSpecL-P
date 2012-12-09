@@ -1,6 +1,6 @@
 Name:           perl-Curses
 Version:        1.28
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Perl bindings for ncurses
 
 Group:          Development/Libraries
@@ -53,7 +53,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 chmod -x demo*
 
 %check
-make test
+
 
 
 %clean
@@ -69,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.28-9
+- 为 Magic 3.0 重建
+
 * Fri Aug 10 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.28-8
 - fix license field to correct value
 

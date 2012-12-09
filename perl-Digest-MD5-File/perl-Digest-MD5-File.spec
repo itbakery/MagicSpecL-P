@@ -1,6 +1,6 @@
 Name:		perl-Digest-MD5-File
 Version:	0.07
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Perl extension for getting MD5 sums for files and URLs
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::MD5::File.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.07-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.07-5
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 # This file is lincensed under the terms of GPLv2+.
 Name:           perl-Fedora-Rebuild
 Version:        0.8.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Rebuilds Fedora packages from scratch
 License:        GPLv3+
 Group:          Development/Libraries
@@ -73,6 +73,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.8.0-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.8.0-6
 - 为 Magic 3.0 重建
 

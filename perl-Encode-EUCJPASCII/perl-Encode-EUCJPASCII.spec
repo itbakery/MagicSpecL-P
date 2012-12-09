@@ -1,6 +1,6 @@
 Name:           perl-Encode-EUCJPASCII
 Version:        0.03
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        EucJP-ascii - An eucJP-open mapping
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %dir %{perl_vendorarch}/auto/
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.03-3
 - 为 Magic 3.0 重建
 

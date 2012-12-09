@@ -1,7 +1,7 @@
 Summary:	Various mail-related perl modules
 Name:		perl-MailTools
 Version:	2.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/MailTools/
@@ -54,8 +54,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t"
+
+ TEST_FILES="xt/*.t"
 
 %clean
 rm -rf %{buildroot}
@@ -109,6 +109,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Mail::Util.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.11-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 29 2012 Paul Howarth <paul@city-fan.org> 2.11-1
 - Update to 2.11
   - Fix typo in Mail::Mailer::smtp, which only shows up in Perl > 5.14

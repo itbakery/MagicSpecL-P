@@ -1,6 +1,6 @@
 Name:           perl-File-ShareDir-Install
 Version:        0.04
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Install shared files
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-3
 - 为 Magic 3.0 重建
 

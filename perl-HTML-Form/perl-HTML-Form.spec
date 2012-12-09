@@ -1,6 +1,6 @@
 Name:           perl-HTML-Form
 Version:        6.00
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Class that represents an HTML form element
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -52,6 +52,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 6.00-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.00-7
 - 为 Magic 3.0 重建
 

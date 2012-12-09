@@ -1,6 +1,6 @@
 Name:           perl-Exporter-Lite
 Version:        0.02
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Lightweight exporting of variables
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -42,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-14
 - 为 Magic 3.0 重建
 

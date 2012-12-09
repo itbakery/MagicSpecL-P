@@ -1,6 +1,6 @@
 Name:           perl-MIME-Lite-HTML
 Version:        1.24
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Provide routine to transform a HTML page in a MIME-Lite mail
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.24-4
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.24-3
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Data-Flow
 Version:        1.02
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl extension for simple-minded recipe-controlled build of data
 # Author declared license there:
 # <https://rt.cpan.org/Public/Bug/Display.html?id=18068#txn-175743>
@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 %files
 %doc Changes
@@ -41,6 +41,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.02-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

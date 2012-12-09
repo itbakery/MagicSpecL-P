@@ -1,6 +1,6 @@
 Name:           perl-Gearman-Server
 Version:        1.11
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Function call "router" and load balancer
 License:        GPL+ or Artistic
 Group:          System Environment/Daemons
@@ -46,6 +46,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Gearman::*.*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.11-6
 - 为 Magic 3.0 重建
 

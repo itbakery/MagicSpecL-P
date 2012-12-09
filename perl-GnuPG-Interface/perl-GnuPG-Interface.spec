@@ -1,6 +1,6 @@
 Name:           perl-GnuPG-Interface
 Version:        0.44
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Perl interface to GnuPG
 Group:          Development/Libraries
 License:        GPLv2+ or Artistic
@@ -50,6 +50,9 @@ chmod 0700 test
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.44-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.44-5
 - 为 Magic 3.0 重建
 

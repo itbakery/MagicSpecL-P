@@ -4,7 +4,7 @@
 Summary:	Perl module implementing the Diffie-Hellman key exchange system
 Name:		perl-Crypt-DH
 Version:	0.06
-Release:	18%{?dist}
+Release:	19%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Crypt-DH/
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Crypt::DH.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.06-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-18
 - 为 Magic 3.0 重建
 

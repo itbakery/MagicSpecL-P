@@ -1,6 +1,6 @@
 Name:           perl-Class-CSV
 Version:        1.03
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Class based CSV parser/writer
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.03-14
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.03-13
 - 为 Magic 3.0 重建
 

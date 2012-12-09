@@ -1,6 +1,6 @@
 Name:           perl-POE-Wheel-Null
 Version:        0.01        
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        POE Wheel that does puts data nowhere, and sends nothing
 
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ chmod -R u+w %{buildroot}/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -58,6 +58,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.01-15
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.01-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

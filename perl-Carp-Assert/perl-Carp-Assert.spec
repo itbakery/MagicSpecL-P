@@ -1,6 +1,6 @@
 Name:           perl-Carp-Assert
 Version:        0.20
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Executable comments
 
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.20-12
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.20-11
 - 为 Magic 3.0 重建
 

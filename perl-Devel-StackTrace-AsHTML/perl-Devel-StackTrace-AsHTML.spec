@@ -1,19 +1,24 @@
 Name:           perl-Devel-StackTrace-AsHTML
 Summary:        Displays a stack trace in HTML
 Version:        0.11
-Release:        5%{?dist}
+Release:        7%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/M/MI/MIYAGAWA/Devel-StackTrace-AsHTML-%{version}.tar.gz 
 URL:            http://search.cpan.org/dist/Devel-StackTrace-AsHTML
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:      noarch
 
+BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(Devel::StackTrace)
 BuildRequires:  perl(ExtUtils::MakeMaker) >= 6.42
 BuildRequires:  perl(Filter::Util::Call)
+BuildRequires:  perl(Scalar::Util)
 BuildRequires:  perl(Test::More)
+BuildRequires:  perl(Test::Perl::Critic)
+BuildRequires:  perl(Test::Pod) >= 1.00
+BuildRequires:  perl(Test::Spelling)
+BuildRequires:  perl(Test::Synopsis)
 
 
 %{?perl_default_filter}
@@ -48,19 +53,21 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %check
 
 
-
-%clean
-rm -rf %{buildroot}
-
 %files
-%defattr(-,root,root,-)
 %doc Changes README eg/
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.11-5
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.11-7
 - 为 Magic 3.0 重建
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.11-5
+- Perl 5.16 rebuild
+- Specify all dependencies
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

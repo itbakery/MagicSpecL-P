@@ -1,6 +1,6 @@
 Name:           perl-MLDBM
 Version:        2.04
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Store multi-level hash structure in single level tied hash
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.04-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.04-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

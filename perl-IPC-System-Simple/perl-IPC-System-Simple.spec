@@ -1,6 +1,6 @@
 Name:		perl-IPC-System-Simple 
 Version:	1.21
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic 
 Group:		Development/Libraries
 Summary:	Run commands simply, with detailed diagnostics 
@@ -64,6 +64,9 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/IPC::System::Simple.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.21-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.21-4
 - 为 Magic 3.0 重建
 

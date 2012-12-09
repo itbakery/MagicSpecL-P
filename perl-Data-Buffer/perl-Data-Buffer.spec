@@ -1,7 +1,7 @@
 Summary:	Read/write buffer class for perl
 Name:		perl-Data-Buffer
 Version:	0.04
-Release:	15%{?dist}
+Release:	16%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Data-Buffer/
@@ -44,6 +44,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Data::Buffer.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-15
 - 为 Magic 3.0 重建
 

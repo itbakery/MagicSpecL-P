@@ -1,6 +1,6 @@
 Name:           perl-File-Sync
 Version:        0.09
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Perl access to fsync() and sync() function calls
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.09-15
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.09-14
 - 为 Magic 3.0 重建
 

@@ -3,7 +3,7 @@
 
 Name:           perl-Software-License
 Version:        0.103004
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Package that provides templated software licenses
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Software::LicenseUtils.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.103004-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.103004-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

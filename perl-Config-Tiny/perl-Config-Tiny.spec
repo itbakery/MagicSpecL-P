@@ -1,6 +1,6 @@
 Name:		perl-Config-Tiny
 Version:	2.14
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Perl module for reading and writing .ini style configuration files
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -41,8 +41,8 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
+
+ TEST_FILES="xt/*.t" AUTOMATED_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Config::Tiny.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.14-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.14-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

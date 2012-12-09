@@ -4,7 +4,7 @@
 Summary:	A FileHandle that supports ungetting of multiple bytes
 Name:		perl-FileHandle-Unget
 Version:	0.1623
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPL+
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/FileHandle-Unget/
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/FileHandle::Unget.3pm*
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.1623-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.1623-10
 - 为 Magic 3.0 重建
 

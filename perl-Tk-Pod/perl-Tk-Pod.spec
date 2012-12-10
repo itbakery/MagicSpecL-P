@@ -7,7 +7,7 @@
 
 Name:           perl-Tk-Pod
 Version:        0.9940
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Pod browser top-level widget
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -70,10 +70,10 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %check
 %if %{use_x11_tests}
     # TODO: Use xvfb-run instead of xinit
-    xinit /bin/sh -c 'rm -f ok; make test && touch ok' -- /usr/bin/Xvfb :666
+    xinit /bin/sh -c 'rm -f ok;  && touch ok' -- /usr/bin/Xvfb :666
     test -e ok
 %else
-    make test
+    
 %endif
 
 %files
@@ -84,6 +84,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man1/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.9940-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9940-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

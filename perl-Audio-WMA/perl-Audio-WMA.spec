@@ -7,7 +7,7 @@ Summary: Perl extension for reading WMA/ASF Metadata
 Summary(zh_CN): 读取 WMA/ASF 元数据的 Perl 扩展模块
 Name: perl-Audio-WMA
 Version: 1.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Group: Development/Libraries
 Group(zh_CN): 开发/库
 License: Artistic
@@ -51,5 +51,8 @@ This module implements access to metadata contained in WMA files.
 %{perl_vendorlib}
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.3-2
+- 为 Magic 3.0 重建
+
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 1.1-0.1mgc
 - Initial package

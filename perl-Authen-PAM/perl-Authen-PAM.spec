@@ -1,6 +1,6 @@
 Name:           perl-Authen-PAM
 Version:        0.16
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Authen::PAM Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -34,7 +34,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 # Tests are interactive.
 %check
-%{?_with_check:make test}
+%{?_with_check:}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -47,6 +47,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.16-15
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.16-14
 - 为 Magic 3.0 重建
 

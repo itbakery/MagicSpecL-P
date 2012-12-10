@@ -1,7 +1,7 @@
 Name:           perl-BSD-Resource
 Version:        1.29.04
 %define module_version 1.2904
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        BSD process resource limit and priority functions
 
 Group:          Development/Libraries
@@ -40,7 +40,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 %files
 %doc ChangeLog README
@@ -50,6 +50,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.29.04-14
+- 为 Magic 3.0 重建
+
 * Wed Sep 19 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.29.04-13
 - Add perl_default_filter to filter Resource.so from provides. 
 
@@ -146,7 +149,7 @@ make test
 - rebuilt for new gcj
 
 * Sat Apr  2 2005 Warren Togami <wtogami@redhat.com> - 1.24-3
-- skip make test #153178
+- skip  #153178
 
 * Sat Apr  2 2005 Jose Pedro Oliveira <jpo at di.uminho.pt> - 1.24-2
 - spec cleanup

@@ -1,6 +1,6 @@
 Name:		perl-Test-NoTabs
 Version:	1.3
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Check the presence of tabs in your project
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -36,7 +36,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -47,6 +47,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::NoTabs.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.3-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

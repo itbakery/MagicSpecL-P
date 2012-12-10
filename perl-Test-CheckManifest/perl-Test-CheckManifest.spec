@@ -1,6 +1,6 @@
 Name:           perl-Test-CheckManifest
 Version:        1.26
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Check if your Manifest matches your distro
 License:        Artistic 2.0
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ cd ..
 
 %check
 cd Test-CheckManifest-%{version}
-make test
+
 cd ..
 
 %files
@@ -52,6 +52,9 @@ cd ..
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.26-2
+- 为 Magic 3.0 重建
+
 * Sun Aug 05 2012 Ralf Corsépius <corsepiu@fedoraproject.org> 1.26-1
 - Upstream update.
 

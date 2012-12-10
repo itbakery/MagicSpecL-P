@@ -73,7 +73,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 4.11-2
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 4.11-2
 - 为 Magic 3.0 重建
 
 * Fri Sep 28 2012 Mathieu Bridon <bochecha@fedoraproject.org> - 4.11-1

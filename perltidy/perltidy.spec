@@ -48,7 +48,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null ';'
 magic_rpm_clean.sh
 
 %check
-make test
+
 
 
 %files
@@ -60,7 +60,7 @@ make test
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 20120714-4
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 20120714-4
 - 为 Magic 3.0 重建
 
 * Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 20120714-3

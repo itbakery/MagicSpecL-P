@@ -60,7 +60,7 @@ grep -lZ 'Test::Expect' t/*.t |xargs -0 rm -f
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.04-5
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.04-5
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.04-4

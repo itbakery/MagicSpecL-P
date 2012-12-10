@@ -1,6 +1,6 @@
 Name:		perl-Test-EOL
 Version:	1.5
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Check the correct line endings in your project
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -39,7 +39,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -50,6 +50,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::EOL.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.5-2
+- 为 Magic 3.0 重建
+
 * Sun Sep  9 2012 Paul Howarth <paul@city-fan.org> - 1.5-1
 - Update to 1.5
   - Properly fix Win32 (CPAN RT#76037)

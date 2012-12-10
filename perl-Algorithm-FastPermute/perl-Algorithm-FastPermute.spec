@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -58,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 %exclude %{perl_vendorarch}/Algorithm/perms.pl
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.999-12
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.999-12
 - 为 Magic 3.0 重建
 
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.999-11

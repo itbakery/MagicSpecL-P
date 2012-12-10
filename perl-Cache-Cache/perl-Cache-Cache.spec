@@ -1,6 +1,6 @@
 Name:           perl-Cache-Cache
 Version:        1.06
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Generic cache interface and implementations
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,6 +53,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.06-11
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.06-10
 - 为 Magic 3.0 重建
 

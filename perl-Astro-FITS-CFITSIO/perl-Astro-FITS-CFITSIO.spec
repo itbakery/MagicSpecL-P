@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 #works locally
-#make test
+#
 
 %files
 %doc ChangeLog NOTES README TODO examples
@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.07-3
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.07-3
 - 为 Magic 3.0 重建
 
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.07-2

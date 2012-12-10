@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -51,7 +51,7 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.90-4
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.90-4
 - 为 Magic 3.0 重建
 
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 2.90-3

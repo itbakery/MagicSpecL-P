@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 
 %check
-make test
+
 
 
 %clean
@@ -53,7 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.5-6
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.5-6
 - 为 Magic 3.0 重建
 
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.5-5

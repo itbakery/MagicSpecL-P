@@ -1,6 +1,6 @@
 Name:           perl-Test-Refcount
 Version:        0.07
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Assert reference counts on objects
 
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -53,6 +53,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.07-8
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.07-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -85,7 +88,7 @@ make test
 
 * Sun Dec 27 2009 Nicolas Chauvet <kwizart@fedoraproject.org> - 0.06-1
 - Update to 0.06
-- Remove workaround at make test for perl with debug - rhbz#514942
+- Remove workaround at  for perl with debug - rhbz#514942
 
 * Fri Dec  4 2009 Stepan Kasal <skasal@redhat.com> - 0.05-3
 - rebuild against perl 5.10.1

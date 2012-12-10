@@ -1,7 +1,7 @@
 Name:           perl-Test-Simple
 Summary:        Basic utilities for writing tests
 Version:        0.98
-Release:        241%{?dist}
+Release:        242%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Simple
@@ -48,7 +48,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 #cd %{_libexecdir}/perl5-tests/perl-tests/
 #prove -I %{buildroot}/blib -r t/
@@ -71,6 +71,9 @@ make test
 %{_mandir}/man3/Test::Tutorial.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.98-242
+- 为 Magic 3.0 重建
+
 * Thu Aug 23 2012 Paul Howarth <paul@city-fan.org> - 0.98-241
 - Merge tests sub-package back into main package
 - Don't need to remove empty directories from the buildroot

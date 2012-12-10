@@ -3,7 +3,7 @@
 
 Name:		perl-Sub-Exporter-Progressive
 Version:	0.001006
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Only use Sub::Exporter if you need it
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -58,7 +58,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -69,6 +69,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Exporter::Progressive.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.001006-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Paul Howarth <paul@city-fan.org> - 0.001006-1
 - Update to 0.001006
   - Handle ':all' correctly

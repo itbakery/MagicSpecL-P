@@ -1,6 +1,6 @@
 Name:		perl-Test-use-ok
 Version:	0.11
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Alternative to Test::More::use_ok
 License:	CC0 
 Group:		Development/Libraries
@@ -43,7 +43,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/ok.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.11-2
+- 为 Magic 3.0 重建
+
 * Tue Sep 11 2012 Paul Howarth <paul@city-fan.org> - 0.11-1
 - Update to 0.11
   - LICENSING CHANGE: this compilation and all individual files in it are now

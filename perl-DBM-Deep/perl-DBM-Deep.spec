@@ -65,7 +65,7 @@ LONG_TESTS=1 TEST_SQLITE=1 ./Build test
 %{_mandir}/man3/DBM::Deep*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.0008-4
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.0008-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0008-3

@@ -55,7 +55,7 @@ rm -rf ./debugfiles.list ./debuglinks.list ./debugsources.list
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.08-5
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.08-5
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.08-4

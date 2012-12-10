@@ -1,6 +1,6 @@
 Name:           perl-Tie-IxHash
 Version:        1.22
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Ordered associative arrays for Perl
 
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.22-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

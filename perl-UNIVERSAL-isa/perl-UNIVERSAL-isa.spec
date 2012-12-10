@@ -1,6 +1,6 @@
 Name:           perl-UNIVERSAL-isa
 Version:        1.03
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Hack around module authors using UNIVERSAL::isa as a function
 
 Group:          Development/Libraries
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.03-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

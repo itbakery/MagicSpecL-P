@@ -1,6 +1,6 @@
 Name:           perl-Test-Compile
 Version:        0.21
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Check whether Perl module files compile correctly
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.21-2
+- 为 Magic 3.0 重建
+
 * Thu Sep 13 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.21-1
 - 0.21 bump
 - Remove the filter of ::Internal module. It is no longer 'beta' and could

@@ -1,6 +1,6 @@
 Name:           perl-WWW-Curl
 Version:        4.15
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Perl extension interface for libcurl
 License:        MPLv1.1 or MIT
 Group:          Development/Libraries
@@ -54,7 +54,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{?!_with_network_tests: rm t/18twinhandles.t }
 %{?!_with_network_tests: rm t/19multi.t }
 %{?!_with_network_tests: rm t/21write-to-scalar.t }
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -63,6 +63,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 4.15-9
+- 为 Magic 3.0 重建
+
 * Thu Aug 16 2012 Jitka Plesnikova <jplesnik@redhat.com> - 4.15-8
 - Specify all dependencies
 - Modernize spec file

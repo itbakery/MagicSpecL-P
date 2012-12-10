@@ -1,6 +1,6 @@
 Name:           perl-SQL-Statement
 Version:        1.33
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        SQL parsing and processing engine
 
 Group:          Development/Libraries
@@ -63,7 +63,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.33-10
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.33-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

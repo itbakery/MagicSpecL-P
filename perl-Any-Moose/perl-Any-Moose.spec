@@ -1,7 +1,7 @@
 Name:           perl-Any-Moose
 Summary:        Use Moose or Mouse automagically
 Version:        0.18
-Release:        5%{?dist}
+Release:        6%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/S/SA/SARTAK/Any-Moose-%{version}.tar.gz 
@@ -50,7 +50,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README t/
@@ -58,6 +58,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.18-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.18-5
 - 为 Magic 3.0 重建
 

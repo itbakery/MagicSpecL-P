@@ -69,7 +69,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.28-9
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.28-9
 - 为 Magic 3.0 重建
 
 * Fri Aug 10 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.28-8

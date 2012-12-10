@@ -1,6 +1,6 @@
 Name:		perl-Test-Synopsis
 Version:	0.06
-Release:	14%{?dist}
+Release:	15%{?dist}
 Summary:	Test your SYNOPSIS code
 Group:		Development/Libraries
 License:	GPL+ or Artistic
@@ -48,8 +48,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t"
+
+ TEST_FILES="xt/*.t"
 
 %clean
 rm -rf %{buildroot}
@@ -60,6 +60,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Synopsis.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-15
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.06-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

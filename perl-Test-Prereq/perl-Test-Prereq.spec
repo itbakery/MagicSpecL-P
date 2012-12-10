@@ -1,6 +1,6 @@
 Name:           perl-Test-Prereq
 Version:        1.037
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Check if Makefile.PL has the right pre-requisites
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,7 +47,7 @@ find $RPM_BUILD_ROOT -depth -type d -empty -exec rmdir {} \;
 # t/get_from_prereqs.t requires interactive CPAN module configuration and
 # network access.
 rm t/get_from_prereqs.t
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.037-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.037-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

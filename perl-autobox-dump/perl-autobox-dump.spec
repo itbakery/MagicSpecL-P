@@ -1,6 +1,6 @@
 Name:           perl-autobox-dump
 Version:        20090426.1746
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Human/perl readable strings from the results of an EXPR
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,6 +41,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 20090426.1746-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 20090426.1746-5
 - 为 Magic 3.0 重建
 

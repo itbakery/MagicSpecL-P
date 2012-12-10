@@ -1,6 +1,6 @@
 Name:           perl-Test-YAML-Meta
 Version:        0.19
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Validation of the META.yml file in a distribution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.19-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.19-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

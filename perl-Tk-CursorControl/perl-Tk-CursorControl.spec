@@ -1,6 +1,6 @@
 Name:           perl-Tk-CursorControl
 Version:        0.4
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Manipulate the mouse cursor programmatically
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README demos/cursor.pl
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.4-5
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

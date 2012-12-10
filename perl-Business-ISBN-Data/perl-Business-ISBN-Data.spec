@@ -1,6 +1,6 @@
 Name:           perl-Business-ISBN-Data
 Version:        20120719.001
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        The data pack for Business::ISBN
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -45,7 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %files
 %doc Changes README LICENSE examples/ t/
@@ -53,6 +53,9 @@ make test
 %{_mandir}/man3/Business::ISBN::Data.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 20120719.001-2
+- 为 Magic 3.0 重建
+
 * Thu Jul 26 2012 Paul Howarth <paul@city-fan.org> - 20120719.001-1
 - Update to 20120719.001:
   - Require Test::More ≥ 0.95 for subtest support

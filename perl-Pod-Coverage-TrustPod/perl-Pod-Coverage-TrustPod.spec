@@ -47,7 +47,7 @@ RELEASE_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.100002-4
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.100002-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.100002-3

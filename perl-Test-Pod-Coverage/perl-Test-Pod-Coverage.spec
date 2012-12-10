@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod-Coverage
 Version:        1.08
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        Check for pod coverage in your distribution
 
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.08-18
+- 为 Magic 3.0 重建
+
 * Wed Aug 08 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.08-17
 - Update BRs
 

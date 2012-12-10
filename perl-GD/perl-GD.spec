@@ -76,7 +76,7 @@ base64 t/test.out.3.png_new
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.44-13
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.44-13
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.44-12

@@ -1,6 +1,6 @@
 Name:           perl-Beanstalk-Client
 Version:        1.06
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        Client class to talk to a beanstalkd server
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,6 +44,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Beanstalk::*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.06-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.06-9
 - 为 Magic 3.0 重建
 

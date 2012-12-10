@@ -1,7 +1,7 @@
 Summary:        XML-SAX Perl module
 Name:           perl-XML-SAX
 Version:        0.99
-Release:        6%{?dist}
+Release:        7%{?dist}
 
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -58,7 +58,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 touch $RPM_BUILD_ROOT%{perl_vendorlib}/XML/SAX/ParserDetails.ini
 
 %check
-make test
+
 
 # See http://rhn.redhat.com/errata/RHBA-2010-0008.html regarding these scriptlets
 # perl-XML-LibXML-1.58-6 is in EL 5.8 and possibly later EL-5 releases
@@ -97,6 +97,9 @@ rm -rf "%{perl_vendorlib}/XML/SAX/ParserDetails.ini.backup" || :
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.99-7
+- 为 Magic 3.0 重建
+
 * Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.99-6
 - Fixed incorrect parsing of comments (RT#20126).
 - Specify all dependencies.

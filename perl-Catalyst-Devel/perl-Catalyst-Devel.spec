@@ -87,7 +87,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %exclude %{perl_vendorlib}/Catalyst/Restarter/Win32.pm
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.36-6
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.36-6
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.36-5

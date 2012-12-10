@@ -1,6 +1,6 @@
 Name:           perl-XML-Twig
 Version:        3.41
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Perl module for processing huge XML documents in tree mode
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -97,7 +97,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README 
@@ -107,6 +107,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 3.41-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 14 2012 Petr Šabata <contyk@redhat.com> - 3.41-1
 - 3.41 bump
 

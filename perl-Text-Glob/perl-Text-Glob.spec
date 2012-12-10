@@ -1,6 +1,6 @@
 Name: 		perl-Text-Glob
 Version: 	0.09
-Release: 	6%{?dist}
+Release: 	7%{?dist}
 Summary: 	Perl module to match globbing patterns against text
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -33,7 +33,7 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes
@@ -41,6 +41,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.09-7
+- 为 Magic 3.0 重建
+
 * Fri Aug 10 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.09-6
 - Update BRs and remove %%defattr.
 

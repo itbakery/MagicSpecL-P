@@ -1,6 +1,6 @@
 Name:           perl-Tk-TableMatrix
 Version:        1.23
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Perl module for creating and manipulating tables
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ chmod -x demos/*
 
 %check
 # disabled by default because it needs an x screen
-%{?_with_tests:make test}
+%{?_with_tests:}
 
 
 %clean
@@ -75,6 +75,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.23-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.23-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name:           perl-XML-SAX-Base
 Version:        1.08
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Base class SAX Drivers and Filters
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ mkdir -p $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}
 mv $RPM_BUILD_ROOT/%{perl_vendorlib}/XML/SAX/BuildSAXBase.pl $RPM_BUILD_ROOT/%{_docdir}/%{name}-%{version}
 
 %check
-make test
+
 
 %files
 %doc Changes dist.ini META.json README BuildSAXBase.pl
@@ -50,6 +50,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.08-6
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.08-5
 - Specify all dependencies.
 

@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Crypt::GPG.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.63-15
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.63-15
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.63-14

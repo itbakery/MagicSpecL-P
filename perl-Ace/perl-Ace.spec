@@ -1,6 +1,6 @@
 Name:           perl-Ace
 Version:        1.92
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl module for interfacing with ACE bioinformatics databases
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,7 +53,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 ## disable tests because they require network access
 %check
-%{?_with_check:make test || :}
+%{?_with_check: || :}
 
 %files
 %defattr(-,root,root,-)
@@ -65,6 +65,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.92-13
+- 为 Magic 3.0 重建
+
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.92-12
 - 为 Magic 3.0 重建
 

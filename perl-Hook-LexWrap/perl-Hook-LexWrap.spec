@@ -49,7 +49,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Hook::LexWrap.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.24-2
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.24-2
 - 为 Magic 3.0 重建
 
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.24-1

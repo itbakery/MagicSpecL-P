@@ -1,6 +1,6 @@
 Name: 		perl-Test-ClassAPI
 Version: 	1.06
-Release: 	13%{?dist}
+Release: 	14%{?dist}
 Summary: 	Provides basic first-pass API testing for large class trees
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
@@ -58,7 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 %if !%{defined perl_bootstrap}
 # remove until fix of Perl::MinimalVersion and version.pm
 rm -rf t/99_pmv.t
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 %endif
 
 %files
@@ -68,6 +68,9 @@ make test AUTOMATED_TESTING=1
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.06-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.06-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

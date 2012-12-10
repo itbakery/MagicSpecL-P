@@ -1,6 +1,6 @@
 Name:           perl-Tk-Stderr
 Version:        1.2
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Capture standard error output, display in separate window for Perl::Tk
 
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ chmod -R u+w %{buildroot}/*
 
 %check
 # disabled by default because it needs an x screen
-%{?_with_tests:make test}
+%{?_with_tests:}
 
 %clean
 rm -rf %{buildroot}
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.2-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.2-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -88,7 +91,7 @@ rm -rf %{buildroot}
 
 * Tue May 19 2009 David Hannequin <david.hannequin@gmail.com> 1.2-4
 - Fix build require
-- Fix make test ( need X screen )
+- Fix  ( need X screen )
 
 * Sun May 17 2009 David Hannequin <david.hannequin@gmail.com> 1.2-2
 - First release.

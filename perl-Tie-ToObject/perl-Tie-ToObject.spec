@@ -1,7 +1,7 @@
 
 Name:       perl-Tie-ToObject 
 Version:    0.03 
-Release:    14%{?dist}
+Release:    15%{?dist}
 License:    GPL+ or Artistic 
 Group:      Development/Libraries
 Summary:    Tie to an existing object 
@@ -47,7 +47,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot} 
@@ -59,6 +59,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.03-15
+- 为 Magic 3.0 重建
+
 * Tue Aug 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.03-14
 - Add BR perl(Carp).
 

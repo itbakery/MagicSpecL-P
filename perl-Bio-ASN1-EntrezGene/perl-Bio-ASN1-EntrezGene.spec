@@ -1,6 +1,6 @@
 Name:           perl-Bio-ASN1-EntrezGene
 Version:        1.091
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        Regular expression-based Perl Parser for NCBI Entrez Gene
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 ## disable tests because of circular BuildRequires with bioperl
 %check
-%{?_with_check:make test || :}
+%{?_with_check: || :}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.091-16
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.091-15
 - 为 Magic 3.0 重建
 

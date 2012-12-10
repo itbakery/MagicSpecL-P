@@ -52,7 +52,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Multiplex.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.13-5
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.13-5
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.13-4

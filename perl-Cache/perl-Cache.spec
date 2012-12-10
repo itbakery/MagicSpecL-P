@@ -1,6 +1,6 @@
 Name:           perl-Cache
 Version:        2.04
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        The Cache interface
 
 Group:          Development/Libraries
@@ -71,6 +71,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.04-16
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.04-15
 - 为 Magic 3.0 重建
 

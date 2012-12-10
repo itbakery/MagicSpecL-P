@@ -1,6 +1,6 @@
 Name:           perl-Test-Output
 Version:        1.01
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Utilities to test STDOUT and STDERR messages
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README TODO
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.01-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.01-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

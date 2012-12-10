@@ -1,7 +1,7 @@
 Name:		perl-Test-Valgrind
 Summary:	Generate suppressions, analyze and test any command with valgrind
 Version:	1.13
-Release:	6%{?dist}
+Release:	7%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-Valgrind/
@@ -100,7 +100,7 @@ if perl -MExtUtils::Install -e 'exit (($ExtUtils::Install::VERSION < 1.3702) ? 0
 fi
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -131,6 +131,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Valgrind::Tool::memcheck.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.13-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

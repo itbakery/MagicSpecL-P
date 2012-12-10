@@ -46,7 +46,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -61,7 +61,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.53-7
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.53-7
 - 为 Magic 3.0 重建
 
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.53-6

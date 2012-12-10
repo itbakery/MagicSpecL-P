@@ -7,7 +7,7 @@
 %global parallel_tests 1
 %global tapsetdir   %{_datadir}/systemtap/tapset
 
-%global dual_life 0
+%global dual_life 1
 %global rebuild_from_scratch 0
 
 # This overrides filters from build root (/etc/rpm/macros.perl)
@@ -24,7 +24,7 @@
 # We can bootstrap without gdbm
 %bcond_without gdbm
 # We can skip %%check phase
-%bcond_without test
+%bcond_with test
 
 Name:           perl
 Version:        %{perl_version}

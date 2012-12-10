@@ -88,7 +88,7 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.19.3-3
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.19.3-3
 - 为 Magic 3.0 重建
 
 * Wed Aug 22 2012 Petr Pisar <ppisar@redhat.com> - 2.19.3-2

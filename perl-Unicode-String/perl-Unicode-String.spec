@@ -1,6 +1,6 @@
 Name:           perl-Unicode-String
 Version:        2.09
-Release:        26%{?dist}
+Release:        27%{?dist}
 
 Summary:        Perl modules to handle various Unicode issues
 
@@ -53,7 +53,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %files
@@ -64,6 +64,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.09-27
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.09-26
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

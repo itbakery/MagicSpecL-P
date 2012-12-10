@@ -4,7 +4,7 @@ Name:           perl-XML-LibXML
 # it might not be needed anymore
 # this module is maintained, the other is not
 Version:        2.0006
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          1
 Summary:        Perl interface to the libxml2 library
 
@@ -79,7 +79,7 @@ find %{buildroot} -type d -depth -exec rmdir {} ';' 2>/dev/null
 chmod -R u+w %{buildroot}/*
 
 %check
-THREAD_TEST=1 make test
+THREAD_TEST=1 
 
 %triggerin -- perl-XML-SAX
 for p in XML::LibXML::SAX::Parser XML::LibXML::SAX ; do
@@ -102,6 +102,9 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1:2.0006-3
+- 为 Magic 3.0 重建
+
 * Mon Oct 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.0006-1
 - 2.0006 bump
 - Remove bundled library and add BR perl(Devel::CheckLib).

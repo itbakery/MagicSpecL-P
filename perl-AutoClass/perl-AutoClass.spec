@@ -1,6 +1,6 @@
 Name:           perl-AutoClass
 Version:        1_01
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Automatically define classes and objects for Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -49,6 +49,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1_01-19
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1_01-18
 - 为 Magic 3.0 重建
 

@@ -13,7 +13,7 @@
 Name:		perl-Test-LeakTrace
 Summary:	Trace memory leaks
 Version:	0.14
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-LeakTrace/
@@ -73,16 +73,16 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 # Run the release tests
 # Don't spell-check JA.pod as it can generate false positives
 mv lib/Test/LeakTrace/JA.pod ./
 touch lib/Test/LeakTrace/JA.pod
 %if 0%{?with_valgrind}
-DICTIONARY=en_US make test TEST_FILES="xt/*.t"
+DICTIONARY=en_US  TEST_FILES="xt/*.t"
 %else
-DICTIONARY=en_US make test TEST_FILES="$(echo xt/*.t | sed 's|xt/05_valgrind.t||')"
+DICTIONARY=en_US  TEST_FILES="$(echo xt/*.t | sed 's|xt/05_valgrind.t||')"
 %endif
 rm lib/Test/LeakTrace/JA.pod
 mv ./JA.pod lib/Test/LeakTrace/
@@ -99,6 +99,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::LeakTrace::Script.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.14-5
+- 为 Magic 3.0 重建
+
 * Wed Jul 18 2012 Dan Horák <dan[at]danny.cz> - 0.14-4
 - valgrind is available only on selected arches and perl(Test::Valgrind) is noarch
 

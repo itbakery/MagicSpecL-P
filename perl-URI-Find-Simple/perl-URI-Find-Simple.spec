@@ -1,6 +1,6 @@
 Name:           perl-URI-Find-Simple
 Version:        1.03
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Simple interface to URI::Find
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,7 +37,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.03-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

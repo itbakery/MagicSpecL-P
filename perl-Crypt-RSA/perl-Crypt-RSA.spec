@@ -88,7 +88,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/crypt-rsa-interoperablity-template.3*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.99-10
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.99-10
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.99-9

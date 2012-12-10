@@ -1,6 +1,6 @@
 Name:           perl-Sub-Exporter-ForMethods
 Version:        0.100050
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Helper routines for using Sub::Exporter to build methods
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -43,7 +43,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-RELEASE_TESTING=1 make test
+RELEASE_TESTING=1 
 
 %files
 %doc LICENSE README
@@ -51,6 +51,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.100050-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.100050-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

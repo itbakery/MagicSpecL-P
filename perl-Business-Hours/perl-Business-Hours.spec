@@ -1,7 +1,7 @@
 Summary: 	Calculate business hours in a time period
 Name: 		perl-Business-Hours
 Version: 	0.10
-Release: 	5%{?dist}
+Release: 	6%{?dist}
 License: 	GPL+ or Artistic
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/Business-Hours/
@@ -47,6 +47,9 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.10-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.10-5
 - 为 Magic 3.0 重建
 

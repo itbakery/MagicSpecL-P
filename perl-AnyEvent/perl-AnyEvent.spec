@@ -5,7 +5,7 @@
 
 Name:           perl-AnyEvent
 Version:        7.02
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for multiple event loops
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -108,7 +108,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 # PERL_ANYEVENT_NET_TESTS shouldn't be set to avoid network tests
 # on our builder.
 export PERL_ANYEVENT_LOOP_TESTS=1
-make test
+
 
 
 %files
@@ -147,6 +147,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 7.02-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Paul Howarth <paul@city-fan.org> - 7.02-1
 - Update to 7.02:
   - AnyEvent::Util::run_cmd could block indefinitely

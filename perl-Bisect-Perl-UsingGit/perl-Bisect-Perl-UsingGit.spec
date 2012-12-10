@@ -1,6 +1,6 @@
 Name:           perl-Bisect-Perl-UsingGit
 Version:        0.33
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Help you to bisect Perl
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc CHANGES
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.33-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.33-3
 - 为 Magic 3.0 重建
 

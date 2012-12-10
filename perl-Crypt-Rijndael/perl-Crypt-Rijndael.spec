@@ -45,7 +45,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.11-2
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.11-2
 - 为 Magic 3.0 重建
 
 * Fri Aug 03 2012 Iain Arnell <iarnell@gmail.com> 1.11-1

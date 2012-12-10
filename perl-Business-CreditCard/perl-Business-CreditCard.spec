@@ -1,6 +1,6 @@
 Name:           perl-Business-CreditCard
 Version:        0.31
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Validate/generate credit card check-sums/names
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc BINS Changes README
@@ -45,6 +45,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.31-4
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.31-3
 - 为 Magic 3.0 重建
 

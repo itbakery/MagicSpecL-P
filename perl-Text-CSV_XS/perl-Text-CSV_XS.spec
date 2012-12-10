@@ -1,6 +1,6 @@
 Name:           perl-Text-CSV_XS
 Version:        0.91
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Comma-separated values manipulation routines
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -48,7 +48,7 @@ chmod -R u+w %{buildroot}/*
 
 %check
 # TODO: Parallel testing supported since 0.73
-make test
+
 
 %files
 %doc ChangeLog README examples/
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.91-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 22 2012 Petr Šabata <contyk@redhat.com> - 0.91-1
 - 0.91 bump (mostly test-cases updates)
 

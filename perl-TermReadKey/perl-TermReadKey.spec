@@ -1,6 +1,6 @@
 Name:           perl-TermReadKey
 Version:        2.30
-Release:        17%{?dist}
+Release:        18%{?dist}
 Summary:        A perl module for simple terminal control
 Group:          Development/Libraries
 License:        (Copyright only) and (Artistic or GPL+)
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc README
@@ -48,6 +48,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.30-18
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 2.30-17
 - Modernize spec file
 - Specify all dependencies
@@ -142,7 +145,7 @@ make test
 - rebuild
 
 * Tue Sep 10 2002 Chip Turner <cturner@redhat.com>
-- remove 'make test' as it seems to open a tty and hang
+- remove '' as it seems to open a tty and hang
 
 * Tue Aug  6 2002 Chip Turner <cturner@redhat.com>
 - automated release bump and build

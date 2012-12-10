@@ -1,6 +1,6 @@
 Name:           perl-Test-Script
 Version:        1.07
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Cross-platform basic tests for scripts
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 %if !%{defined perl_bootstrap}
-make test AUTOMATED_TESTING=1 RELEASE_TESTING=1
+ AUTOMATED_TESTING=1 RELEASE_TESTING=1
 %endif
 
 %clean
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.07-11
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.07-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

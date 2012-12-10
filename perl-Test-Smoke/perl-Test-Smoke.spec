@@ -1,6 +1,6 @@
 Name:           perl-Test-Smoke
 Version:        1.53
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl core test smoke suite
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -55,7 +55,7 @@ rm -rf %{buildroot}/%{_mandir}/man1/W32Configure*
 rm -rf %{buildroot}/%{perl_vendorlib}/inc/Mail/Sendmail.pm
 
 %check
-make test
+
 
 %files
 %doc Changes README ReleaseNotes
@@ -74,6 +74,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.53-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.53-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

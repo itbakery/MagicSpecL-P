@@ -1,6 +1,6 @@
 Name:		perl-Test-LongString
 Version:	0.15
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	Perl module to test long strings
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -45,7 +45,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 rm -rf $RPM_BUILD_ROOT
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -54,6 +54,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.15-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

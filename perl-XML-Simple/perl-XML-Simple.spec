@@ -1,6 +1,6 @@
 Name:           perl-XML-Simple
 Version:        2.20
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Easy API to maintain XML in Perl
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -51,7 +51,7 @@ find %{buildroot} -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -59,6 +59,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.20-5
+- 为 Magic 3.0 重建
+
 * Fri Aug 24 2012 Jitka Plesnikova <jplesnik@redhat.com> - 2.20-4
 - Add test BR perl(XML::SAX::Base)
 - Add R perl(IO::Handle), remove duplicate R perl(File::Spec).
@@ -125,7 +128,7 @@ make test
 - Upgrade to latest CPAN version: 2.16
 
 * Wed Jun  7 2006 Jason Vas Dias <jvdias@redhat.com> - 2.14-4
-- fix bug 191911: make test fails when default Parser is XML::SAX::PurePerl -
+- fix bug 191911:  fails when default Parser is XML::SAX::PurePerl -
                   succeeds when default Parser is XML::LibXML::SAX -
                   +BuildRequires: perl(XML::LibXML) perl(XML::LibXML::Common)
 

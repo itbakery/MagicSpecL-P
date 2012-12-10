@@ -1,6 +1,6 @@
 Name:           perl-Authen-Radius
 Version:        0.13
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Perl Authen::Radius modules
 # See LICENSING.txt
 License:        Artistic 2.0
@@ -40,7 +40,7 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 
 %check
 # Disabled check, as a running Radius-server is needed
-#make test
+#
 
 %clean
 rm -rf %{buildroot}
@@ -52,6 +52,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.13-13
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.13-12
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Text-Diff
 Version:        1.41
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perform diffs on files and record sets
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.41-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.41-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

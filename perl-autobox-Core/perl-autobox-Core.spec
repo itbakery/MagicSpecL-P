@@ -1,6 +1,6 @@
 Name:           perl-autobox-Core
 Version:        1.2
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Core functions exposed as methods in primitive types
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,6 +42,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.2-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.2-6
 - 为 Magic 3.0 重建
 

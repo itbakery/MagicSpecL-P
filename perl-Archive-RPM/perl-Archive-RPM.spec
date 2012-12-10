@@ -1,6 +1,6 @@
 Name:       perl-Archive-RPM
 Version:    0.06
-Release:    9%{?dist}
+Release:    10%{?dist}
 Summary:    Work with a RPM
 # lib/Archive/RPM.pm -> LGPLv2+
 # lib/Archive/RPM/ChangeLogEntry.pm -> LGPLv2+
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-10
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-9
 - 为 Magic 3.0 重建
 

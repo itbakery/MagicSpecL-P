@@ -1,6 +1,6 @@
 Name:           perl-Tk-Text-SuperText
 Version:        0.9.4
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Improved text widget for perl/tk
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -68,6 +68,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.9.4-9
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.4-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

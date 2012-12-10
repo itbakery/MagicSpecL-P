@@ -1,6 +1,6 @@
 Name:           perl-Browser-Open
 Version:        0.03
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Open a browser in a given URL
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -44,7 +44,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-RELEASE_TESTING=1 make test
+RELEASE_TESTING=1 
 
 %files
 %defattr(-,root,root,-)
@@ -53,6 +53,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.03-6
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.03-5
 - 为 Magic 3.0 重建
 

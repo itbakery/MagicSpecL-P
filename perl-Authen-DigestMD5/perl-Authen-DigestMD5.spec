@@ -1,7 +1,7 @@
 Summary:	SASL DIGEST-MD5 authentication (RFC2831)
 Name:		perl-Authen-DigestMD5
 Version:	0.04
-Release:	14%{?dist}
+Release:	15%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Authen-DigestMD5/
@@ -43,7 +43,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 rm -f %{buildroot}%{perl_vendorlib}/Authen/digest-md5-auth.pl
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Authen::DigestMD5.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.04-15
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.04-14
 - 为 Magic 3.0 重建
 

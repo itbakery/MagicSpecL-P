@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.06-12
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-12
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.06-11

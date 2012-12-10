@@ -1,6 +1,6 @@
 Name:           perl-Test-MockObject
 Version:        1.09
-Release:        13%{?dist}
+Release:        14%{?dist}
 Summary:        Perl extension for emulating troublesome interfaces
 
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.09-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.09-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
@@ -139,7 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 - Update to 0.14.
 - Require perl >= 1:5.6.1 for vendor install dir support.
 - Use pure_install to avoid perllocal.pod workarounds.
-- Moved make test to section %%check.
+- Moved  to section %%check.
 
 * Wed Nov 19 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:0.12-0.fdr.1
 - First build.

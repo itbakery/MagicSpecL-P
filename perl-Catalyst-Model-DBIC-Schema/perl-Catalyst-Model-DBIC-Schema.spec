@@ -84,7 +84,7 @@ TEST_POD=1 C_M_DBIC_SCHEMA_TESTAPP=1
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.59-6
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.59-6
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.59-5

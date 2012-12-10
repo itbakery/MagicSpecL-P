@@ -1,6 +1,6 @@
 Name:           perl-Bio-Graphics
 Version:        2.25
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Generate GD images of Bio::Seq objects
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -61,6 +61,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.25-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 2.25-4
 - 为 Magic 3.0 重建
 

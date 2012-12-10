@@ -1,6 +1,6 @@
 Name:           perl-Sub-Exporter-GlobExporter
 Version:        0.002
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Export shared globs with Sub::Exporter collectors
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -44,6 +44,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.002-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.002-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

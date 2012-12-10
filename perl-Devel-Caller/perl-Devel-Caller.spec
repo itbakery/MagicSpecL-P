@@ -56,7 +56,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Devel::Caller.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.05-10
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.05-10
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.05-9

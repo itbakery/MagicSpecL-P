@@ -1,7 +1,7 @@
 Summary: 	Params-Validate Perl module
 Name: 		perl-Params-Validate
 Version: 	1.06
-Release: 	5%{?dist}
+Release: 	6%{?dist}
 License: 	Artistic2.0
 Group: 		Development/Libraries
 URL: 		http://search.cpan.org/dist/Params-Validate/
@@ -85,6 +85,9 @@ RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.06-6
+- 为 Magic 3.0 重建
+
 * Tue Aug 14 2012 Petr Pisar <ppisar@redhat.com> - 1.06-5
 - Specify all dependencies
 

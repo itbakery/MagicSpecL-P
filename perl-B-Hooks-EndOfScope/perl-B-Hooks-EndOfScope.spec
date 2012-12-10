@@ -1,6 +1,6 @@
 Name:		perl-B-Hooks-EndOfScope
 Version:	0.11
-Release:	3%{?dist}
+Release:	4%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Summary:	Execute code after scope compilation finishes
@@ -44,7 +44,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %files
 %doc Changes LICENSE README t/
@@ -52,6 +52,9 @@ make test RELEASE_TESTING=1
 %{_mandir}/man3/B::Hooks::EndOfScope.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.11-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

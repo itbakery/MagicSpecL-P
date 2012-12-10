@@ -1,6 +1,6 @@
 Name:           perl-Test-ConsistentVersion
 Version:        0.2.3
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Ensures a CPAN distribution has consistent versioning
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ TEST_AUTHOR=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.2.3-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.2.3-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

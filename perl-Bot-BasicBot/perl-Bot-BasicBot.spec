@@ -1,6 +1,6 @@
 Name:           perl-Bot-BasicBot
 Version:        0.87
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Simple irc bot baseclass
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.87-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.87-5
 - 为 Magic 3.0 重建
 

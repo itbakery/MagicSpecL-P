@@ -1,6 +1,6 @@
 name:           perl-Barcode-Code128
 Version:        2.01
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Generate CODE 128 bar codes
 License:        Public Domain
 Group:          Development/Libraries
@@ -45,6 +45,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.01-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.01-8
 - 为 Magic 3.0 重建
 

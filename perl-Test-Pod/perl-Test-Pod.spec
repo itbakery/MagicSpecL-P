@@ -1,6 +1,6 @@
 Name:           perl-Test-Pod
 Version:        1.45
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Test POD files for correctness
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -50,6 +50,9 @@ LC_ALL=C ./Build test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.45-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.45-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

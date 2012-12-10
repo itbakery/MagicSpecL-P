@@ -1,6 +1,6 @@
 Name:		perl-Test-CPAN-Meta-JSON
 Version:	0.14
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Validate a META.json file within a CPAN distribution
 Group:		Development/Libraries
 License:	Artistic 2.0
@@ -45,7 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test AUTOMATED_TESTING=1
+ AUTOMATED_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::CPAN::Meta::JSON::Version.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.14-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 21 2012 Paul Howarth <paul@city-fan.org> - 0.14-1
 - Update to 0.14
   - Added minimum perl version (5.006)

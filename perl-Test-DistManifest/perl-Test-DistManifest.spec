@@ -1,6 +1,6 @@
 Name:           perl-Test-DistManifest
 Version:        1.012
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Author test that validates a package MANIFEST
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -53,7 +53,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %check
 # post-install rpmbuild scripts contaminates RPM_BUILD_ROOT (bug #672538).
 rm debug*.list
-make test
+
 
 %files
 %doc Changes examples LICENSE README
@@ -61,6 +61,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.012-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.012-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

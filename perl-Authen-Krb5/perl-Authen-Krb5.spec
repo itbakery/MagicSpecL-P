@@ -1,6 +1,6 @@
 Name:           perl-Authen-Krb5
 Version:        1.9
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Krb5 Perl module
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -50,7 +50,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 chmod 644 sample_client sample_server simple_client simple_server
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,6 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.9-6
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.9-5
 - 为 Magic 3.0 重建
 

@@ -1,6 +1,6 @@
 Name:           perl-Carp
-Version:        1.22
-Release:        3%{?dist}
+Version:        1.26
+Release:        240%{?dist}
 Summary:        Alternative warn and die for modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,8 +47,23 @@ make test
 %{_mandir}/man3/*
 
 %changelog
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.22-3
-- 为 Magic 3.0 重建
+* Mon Aug 13 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.26-240
+- Bump release to override sub-package from perl.spec
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.26-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 28 2012 Petr Pisar <ppisar@redhat.com> - 1.26-2
+- Perl 5.16 rebuild
+
+* Tue Jun 19 2012 Petr Pisar <ppisar@redhat.com> - 1.26-1
+- 1.26 bump
+
+* Wed Jun 06 2012 Petr Pisar <ppisar@redhat.com> - 1.25-2
+- Perl 5.16 rebuild
+
+* Thu Mar 15 2012 Petr Pisar <ppisar@redhat.com> - 1.25-1
+- 1.25 bump
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.22-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

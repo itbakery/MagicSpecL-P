@@ -1,7 +1,7 @@
 Name:           perl-Business-ISBN
 Version:        2.05.03
 %define module_version 2.05_03
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Perl module to work with International Standard Book Numbers
 
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.05.03-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 09 2012 Jitka Plesnikova <jplesnik@redhat.com> - 2.05.03-1
 - 2.05_03 bump. Fix failing tests (RT#78671, RT#75686)
 

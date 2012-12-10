@@ -1,7 +1,7 @@
 Name:		perl-Try-Tiny
 Summary:	Minimal try/catch with proper localization of $@
 Version:	0.11
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	MIT
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Try-Tiny
@@ -45,7 +45,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -56,6 +56,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Try::Tiny.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.11-8
+- 为 Magic 3.0 重建
+
 * Tue Aug 28 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.11-7
 - Add BR/R perl(Exporter).
 

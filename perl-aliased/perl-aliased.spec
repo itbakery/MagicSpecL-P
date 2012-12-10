@@ -47,7 +47,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/aliased.3pm*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.30-11
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.30-11
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.30-10

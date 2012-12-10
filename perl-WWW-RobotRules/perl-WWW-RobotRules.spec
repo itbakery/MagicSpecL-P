@@ -1,6 +1,6 @@
 Name:           perl-WWW-RobotRules
 Version:        6.02
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Database of robots.txt-derived permissions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -41,7 +41,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 6.02-6
+- 为 Magic 3.0 重建
+
 * Mon Sep 03 2012 Petr Pisar <ppisar@redhat.com> - 6.02-5
 - Drop useless build-requires LWP::RobotUA and URI::URL (bug #853147)
 

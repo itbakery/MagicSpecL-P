@@ -76,7 +76,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/CPAN::Meta::YAML.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.008-13
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.008-13
 - 为 Magic 3.0 重建
 
 * Thu Oct 11 2012 Paul Howarth <paul@city-fan.org> - 0.008-12

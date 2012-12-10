@@ -1,6 +1,6 @@
 Name:           perl-Test-Warn
 Version:        0.24
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Perl extension to test methods for warnings
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} $RPM_BUILD_ROOT
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -47,6 +47,9 @@ make test
 %{_mandir}/man3/Test::Warn.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.24-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.24-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

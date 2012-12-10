@@ -1,7 +1,7 @@
 
 Name:       perl-URI-FromHash 
 Version:    0.03 
-Release:        13%{?dist}
+Release:        14%{?dist}
 # see lib/URI/FromHash.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -51,7 +51,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot} 
@@ -63,6 +63,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.03-14
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

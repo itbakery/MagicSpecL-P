@@ -1,6 +1,6 @@
 Name:           perl-Test-AutoLoader
 Version:        0.03
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Testing utility for autosplit/autoloaded modules
 License:        GPL+
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 # Tests expect non-localized messages (RT#62839)
-LC_ALL=C make test
+LC_ALL=C 
 
 %files
 %doc Changes README
@@ -57,6 +57,9 @@ LC_ALL=C make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.03-4
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

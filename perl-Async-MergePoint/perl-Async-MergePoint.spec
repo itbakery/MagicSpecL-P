@@ -37,7 +37,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} ';'
 
 
 %check
-make test
+
 
 
 %clean
@@ -51,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.03-10
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.03-10
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.03-9

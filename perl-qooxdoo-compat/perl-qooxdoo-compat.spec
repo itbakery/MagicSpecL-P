@@ -39,7 +39,7 @@ Qooxdoo 0.7.
 %{perl_vendorlib}/Qooxdoo
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.7.3-14
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.7.3-14
 - 为 Magic 3.0 重建
 
 * Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 0.7.3-13

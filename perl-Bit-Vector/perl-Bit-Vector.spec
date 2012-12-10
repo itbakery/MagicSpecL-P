@@ -1,6 +1,6 @@
 Name:           perl-Bit-Vector
 Version:        7.2
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Efficient bit vector, set of integers and "big int" math library
 
 Group:          Development/Libraries
@@ -47,7 +47,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Artistic.txt GNU_GPL.txt GNU_LGPL.txt
@@ -58,6 +58,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 7.2-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 19 2012 Jitka Plesnikova <jplesnik@redhat.com> - 7.2-4
 - Use latest version of Bit-Vector-7.2.tar.gz from CPAN
 

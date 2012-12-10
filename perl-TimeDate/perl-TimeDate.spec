@@ -1,7 +1,7 @@
 Name:           perl-TimeDate
 Version:        1.20
 Epoch:          1
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        A Perl module for time and date manipulation
 
 Group:          Development/Libraries
@@ -46,7 +46,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files 
 %{perl_vendorlib}/Date/
@@ -55,6 +55,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1:1.20-10
+- 为 Magic 3.0 重建
+
 * Thu Aug 16 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:1.20-9
 - Specify all dependencies.
 

@@ -1,6 +1,6 @@
 Name:           perl-Test-Moose-More
 Version:        0.011
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        More tools for testing Moose packages
 License:        LGPLv2+
 Group:          Development/Libraries
@@ -48,7 +48,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 # README is the same as main POD
@@ -57,6 +57,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.011-2
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 0.011-1
 - 0.011 bump
 

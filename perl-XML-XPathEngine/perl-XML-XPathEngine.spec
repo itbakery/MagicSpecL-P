@@ -1,6 +1,6 @@
 Name:           perl-XML-XPathEngine
 Version:        0.12
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Re-usable XPath engine for DOM-like trees
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -38,7 +38,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -50,6 +50,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.12-12
+- 为 Magic 3.0 重建
+
 * Fri Aug 17 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.12-11
 - Specify all dependencies.
 

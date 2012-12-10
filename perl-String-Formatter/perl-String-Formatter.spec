@@ -1,6 +1,6 @@
 Name:           perl-String-Formatter
 Version:        0.102082
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Build sprintf-like functions of your own
 License:        GPLv2
 Group:          Development/Libraries
@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-RELEASE_TESTING=1 make test
+RELEASE_TESTING=1 
 
 %files
 %defattr(-,root,root,-)
@@ -58,6 +58,9 @@ RELEASE_TESTING=1 make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.102082-7
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.102082-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

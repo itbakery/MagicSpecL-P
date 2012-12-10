@@ -1,6 +1,6 @@
 Name:       perl-Best 
 Version:    0.14
-Release:    2%{?dist}
+Release:    3%{?dist}
 License:    MIT 
 Group:      Development/Libraries
 Summary:    Fallbackable module loader 
@@ -40,7 +40,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README LICENSE
@@ -48,6 +48,9 @@ make test
 %{_mandir}/man3/*.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.14-3
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.14-2
 - 为 Magic 3.0 重建
 

@@ -4,7 +4,7 @@
 Name:           perl-Tk
 # devel version fix for perl 5.14: 
 Version:        804.030
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Perl Graphical User Interface ToolKit
 
 Group:          Development/Libraries
@@ -81,7 +81,7 @@ make %{?_smp_mflags}
 
 # disable because they need an x screen
 %check
-# make test
+# 
 
 %install
 make pure_install PERL_INSTALL_ROOT=$RPM_BUILD_ROOT
@@ -119,6 +119,9 @@ find __demos/ -type f -exec chmod -x {} \;
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 804.030-2
+- 为 Magic 3.0 重建
+
 * Wed Aug 29 2012 Jitka Plesnikova <jplesnik@redhat.com> - 804.030-1
 - 804.030 bump, update source link
 

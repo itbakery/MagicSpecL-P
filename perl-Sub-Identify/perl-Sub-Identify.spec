@@ -1,6 +1,6 @@
 Name:		perl-Sub-Identify
 Version:	0.04
-Release:	15%{?dist}
+Release:	16%{?dist}
 Summary:	Retrieve names of code references
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -38,7 +38,7 @@ find %{buildroot} -type f -name '*.bs' -a -size 0 -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -51,6 +51,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Identify.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.04-16
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.04-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

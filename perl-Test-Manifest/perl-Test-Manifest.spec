@@ -1,7 +1,7 @@
 Summary:        Test case module for Perl
 Name:           perl-Test-Manifest
 Version:        1.23
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/Test-Manifest/
@@ -25,7 +25,7 @@ Requires:       perl(Test::Harness)
 
 %description
 MakeMaker assumes that you want to run all of the .t files in the t/ directory
-in ascii-betical order during make test unless you say otherwise. This leads to
+in ascii-betical order during  unless you say otherwise. This leads to
 some interesting naming schemes for test files to get them in the desired
 order.
 
@@ -53,7 +53,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -64,6 +64,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Manifest.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.23-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 1.23-1
 - Update to 0.23
   - Fix bug for missing file (should warn and skip, not pass to run_t_files)

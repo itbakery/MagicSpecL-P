@@ -51,7 +51,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-AUTOMATED_TESTING=1 make test
+AUTOMATED_TESTING=1 
 
 
 %clean
@@ -66,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.66-17
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.66-17
 - 为 Magic 3.0 重建
 
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.66-16
@@ -143,7 +143,7 @@ rm -rf $RPM_BUILD_ROOT
 - Update to 1.56.
 - License corrected.
 - Require perl >= 1:5.6.1 for vendor install dir support.
-- Moved make test to section %check.
+- Moved  to section %check.
 - Use pure_install to avoid perllocal.pod workarounds.
 
 * Sun Oct 12 2003 Ville Skyttä <ville.skytta at iki.fi> - 0:1.55-0.fdr.1

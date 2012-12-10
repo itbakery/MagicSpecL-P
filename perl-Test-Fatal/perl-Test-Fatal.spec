@@ -1,7 +1,7 @@
 Summary:	Incredibly simple helpers for testing code with exceptions 
 Name:		perl-Test-Fatal
 Version:	0.010
-Release:	4%{?dist}
+Release:	5%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 Url:		http://search.cpan.org/dist/Test-Fatal/
@@ -45,7 +45,7 @@ find %{buildroot} -depth -type d -exec rmdir {} ';' 2>/dev/null
 %{_fixperms} %{buildroot}
 
 %check
-make test RELEASE_TESTING=1
+ RELEASE_TESTING=1
 
 %clean
 rm -rf %{buildroot}
@@ -57,6 +57,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Fatal.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.010-5
+- 为 Magic 3.0 重建
+
 * Thu Oct 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.010-4
 - Specify all dependencies
 

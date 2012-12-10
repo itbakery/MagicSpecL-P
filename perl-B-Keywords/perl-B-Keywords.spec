@@ -1,6 +1,6 @@
 Name:           perl-B-Keywords
 Version:        1.12
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Lists of reserved barewords and symbol names
 Group:          Development/Libraries
 License:        GPL+ or Artistic
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} ';' 2>/dev/null
 
 
 %check
-make test
+
 
 
 %files
@@ -49,6 +49,9 @@ make test
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.12-5
+- 为 Magic 3.0 重建
+
 * Wed Aug  1 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.12-4
 - Add BR: perl(File::Spec), perl(lib), perl(Test), perl(Exporter)
 - Clean up for modern rpmbuild

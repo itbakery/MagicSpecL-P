@@ -4,7 +4,7 @@
 Name:		perl-Test-Requires
 Summary:	Checks to see if a given module can be loaded
 Version:	0.06
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPL+ or Artistic
 Group:		Development/Libraries
 URL:		http://search.cpan.org/dist/Test-Requires
@@ -60,8 +60,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 
 %check
 # note the "skipped" warnings indicate success :)
-make test
-make test TEST_FILES="xt/*.t"
+
+ TEST_FILES="xt/*.t"
 
 %clean
 rm -rf %{buildroot}
@@ -72,6 +72,9 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::Requires.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-10
+- 为 Magic 3.0 重建
+
 * Sat Aug 25 2012 Paul Howarth <paul@city-fan.org> - 0.06-9
 - BR: perl(base), perl(Cwd), perl(Data::Dumper)
 - RHEL builds don't use Test::Spelling so they don't need dictionaries either

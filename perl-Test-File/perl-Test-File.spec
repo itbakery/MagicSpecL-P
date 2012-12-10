@@ -1,7 +1,7 @@
 Summary:	Test file attributes through Test::Builder
 Name:		perl-Test-File
 Version:	1.34
-Release:	1%{?dist}
+Release:	2%{?dist}
 Group:		Development/Libraries
 License:	GPL+ or Artistic
 URL:		http://search.cpan.org/dist/Test-File/
@@ -38,7 +38,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_fixperms} %{buildroot}
 
 %check
-make test
+
 
 %files
 %doc Changes LICENSE README
@@ -46,6 +46,9 @@ make test
 %{_mandir}/man3/Test::File.3*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.34-2
+- 为 Magic 3.0 重建
+
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 1.34-1
 - Update to 1.34
   - Added dir_exists_ok and dir_contains_ok

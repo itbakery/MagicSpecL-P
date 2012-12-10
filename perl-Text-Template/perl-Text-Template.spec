@@ -1,6 +1,6 @@
 Name:           perl-Text-Template
 Version:        1.45
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Expand template text with embedded Perl
 
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-make test
+
 
 
 %clean
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.45-12
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.45-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

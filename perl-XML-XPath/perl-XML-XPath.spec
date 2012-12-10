@@ -1,6 +1,6 @@
 Name:           perl-XML-XPath
 Version:        1.13
-Release:        21%{?dist}
+Release:        22%{?dist}
 
 Summary:        XPath parser and evaluator for Perl
 
@@ -47,7 +47,7 @@ cat >> $RPM_BUILD_ROOT/%{_mandir}/man1/xpath.1 << EOF
 EOF
 
 %check
-make test
+
 
 
 %clean
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.13-22
+- 为 Magic 3.0 重建
+
 * Tue Oct 16 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.13-21
 - revert the patch. It breaks backward compatibility for some apps. 
 - the xpath has still man page installed.

@@ -58,7 +58,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Crypt::RC4::XS.3pm.gz
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.02-5
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.02-5
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.02-4

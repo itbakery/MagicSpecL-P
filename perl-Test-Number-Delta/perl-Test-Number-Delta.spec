@@ -1,6 +1,6 @@
 Name:           perl-Test-Number-Delta
 Version:        1.03
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Compare the difference between numbers against a given tolerance
 
 Group:          Development/Libraries
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.03-13
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

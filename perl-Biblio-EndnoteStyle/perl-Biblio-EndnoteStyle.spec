@@ -1,6 +1,6 @@
 Name:           perl-Biblio-EndnoteStyle
 Version:        0.05
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Reference formatting using Endnote-like templates
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -35,7 +35,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %doc Changes README
@@ -44,6 +44,9 @@ make test
 %{_bindir}/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.05-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.05-4
 - 为 Magic 3.0 重建
 

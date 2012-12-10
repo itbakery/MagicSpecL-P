@@ -10,7 +10,7 @@
 
 Name:           perl-BerkeleyDB
 Version:        0.49
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Interface to Berkeley DB
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -20,7 +20,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  %{db_pkg}-devel
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(ExtUtils::MakeMaker)
-# For "make test".
+# For "".
 BuildRequires:  perl(MLDBM)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Pod)
@@ -64,7 +64,7 @@ rm $RPM_BUILD_ROOT%{perl_vendorarch}/{mkconsts,scan}.pl
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -80,6 +80,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/BerkeleyDB.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.49-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.49-4
 - 为 Magic 3.0 重建
 

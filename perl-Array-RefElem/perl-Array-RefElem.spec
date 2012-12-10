@@ -34,7 +34,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %clean
 rm -rf %{buildroot}
@@ -47,7 +47,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.00-12
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.00-12
 - 为 Magic 3.0 重建
 
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.00-11

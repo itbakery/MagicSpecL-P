@@ -1,6 +1,6 @@
 Name:		perl-Test-Vars
 Version:	0.002
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Detects unused variables
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -38,8 +38,8 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-make test
-make test TEST_FILES="xt/*.t"
+
+ TEST_FILES="xt/*.t"
 
 %files
 %doc Changes README example/
@@ -47,6 +47,9 @@ make test TEST_FILES="xt/*.t"
 %{_mandir}/man3/Test::Vars.3pm*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.002-2
+- 为 Magic 3.0 重建
+
 * Wed Oct 10 2012 Paul Howarth <paul@city-fan.org> - 0.002-1
 - Update to 0.002
   - Fix compatibility with Perl 5.16 (CPAN RT#72133)

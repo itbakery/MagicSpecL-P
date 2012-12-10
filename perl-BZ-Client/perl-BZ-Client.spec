@@ -1,6 +1,6 @@
 Name:           perl-BZ-Client
 Version:        1.04
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        A client for the Bugzilla web services API
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -46,6 +46,9 @@ find $RPM_BUILD_ROOT -type f -name '*.pm' -exec chmod -x {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.04-6
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.04-5
 - 为 Magic 3.0 重建
 

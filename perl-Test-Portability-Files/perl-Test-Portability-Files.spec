@@ -1,6 +1,6 @@
 Name:           perl-Test-Portability-Files
 Version:        0.05
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Check file names portability
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %check
 #./Build test
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -54,6 +54,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.05-17
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.05-16
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

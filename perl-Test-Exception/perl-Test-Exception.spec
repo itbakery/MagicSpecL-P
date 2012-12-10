@@ -1,6 +1,6 @@
 Name:           perl-Test-Exception
 Version:        0.31
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Library of test functions for exception based Perl code
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -59,6 +59,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.31-9
+- 为 Magic 3.0 重建
+
 * Thu Oct 18 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.31-8
 - Specify all dependencies.
 

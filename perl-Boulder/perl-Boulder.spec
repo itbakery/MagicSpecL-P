@@ -1,6 +1,6 @@
 Name:           perl-Boulder
 Version:        1.30
-Release:        15%{?dist}
+Release:        16%{?dist}
 Summary:        An API for hierarchical tag/value structures
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -42,7 +42,7 @@ perldoc -t perlgpl > COPYING
 perldoc -t perlartistic > Artistic
 
 %check
-make test
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -56,6 +56,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.30-16
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 1.30-15
 - 为 Magic 3.0 重建
 

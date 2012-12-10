@@ -1,6 +1,6 @@
 Name:           perl-Tk-ToolBar
 Version:        0.10
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Toolbar widget for Perl/Tk
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -54,7 +54,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} %{buildroot}/*
 
 %check
-make test
+
 
 %files
 %doc Changes README toolbar.pl
@@ -62,6 +62,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.10-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

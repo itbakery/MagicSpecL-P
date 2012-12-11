@@ -4,7 +4,7 @@
 
 Name:           miredo
 Version:        1.1.7
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Tunneling of IPv6 over UDP through NATs
 Summary(zh_CN):	通过基于 UDP 协议的 IPv6 隧道
 
@@ -225,6 +225,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.7-5
+- 为 Magic 3.0 重建
+
 * Thu Jul 30 2009 Jens Kuehnel <fedora-package@jens.kuehnel.org> 1.1.7-4
 - Fix Obsoletes for smooth upgrade
 

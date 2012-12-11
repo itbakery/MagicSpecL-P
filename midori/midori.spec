@@ -1,6 +1,6 @@
 Name:		midori
 Version:	0.4.3
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	A lightweight GTK+ web browser 
 
 Group:		Applications/Internet
@@ -140,6 +140,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.4.3-2
+- 为 Magic 3.0 重建
+
 * Sun Dec 18 2011 Christoph Wickert <wickert@kolabsys.com> - 0.4.3-1
 - Update to 0.4.3
 

@@ -49,7 +49,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 6.02-6
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.02-6
 - 为 Magic 3.0 重建
 
 * Mon Sep 03 2012 Petr Pisar <ppisar@redhat.com> - 6.02-5

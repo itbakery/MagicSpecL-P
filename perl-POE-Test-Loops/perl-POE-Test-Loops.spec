@@ -92,7 +92,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 %{_mandir}/man1/poe-gen-tests.1.gz
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.351-4
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.351-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.351-3

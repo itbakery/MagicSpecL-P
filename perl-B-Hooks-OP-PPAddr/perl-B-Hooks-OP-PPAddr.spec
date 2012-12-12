@@ -1,6 +1,6 @@
 Name:           perl-B-Hooks-OP-PPAddr
 Version:        0.03
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Hook into opcode execution
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -39,7 +39,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-make test
+
 
 %files
 %defattr(-,root,root,-)
@@ -49,6 +49,9 @@ make test
 %{_mandir}/man3/*
 
 %changelog
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.03-4
 - 为 Magic 3.0 重建
 

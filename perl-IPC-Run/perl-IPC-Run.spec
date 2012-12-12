@@ -55,7 +55,7 @@ rm -f $RPM_BUILD_ROOT%{_mandir}/man3/IPC::Run::Win32*.3*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.89-10
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.89-10
 - 为 Magic 3.0 重建
 
 * Thu Sep 13 2012 Petr Pisar <ppisar@redhat.com> - 0.89-9

@@ -55,7 +55,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/Module::ExtractUse::Grammar.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.28-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.28-2
 - 为 Magic 3.0 重建
 
 * Tue Aug 21 2012 Paul Howarth <paul@city-fan.org> - 0.28-1

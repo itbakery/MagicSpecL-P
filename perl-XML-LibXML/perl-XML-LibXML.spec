@@ -102,7 +102,7 @@ fi
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1:2.0006-3
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:2.0006-3
 - 为 Magic 3.0 重建
 
 * Mon Oct 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1:2.0006-1

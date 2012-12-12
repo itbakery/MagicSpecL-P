@@ -50,7 +50,7 @@ magic_rpm_clean.sh
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.29.04-14
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.29.04-14
 - 为 Magic 3.0 重建
 
 * Wed Sep 19 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.29.04-13

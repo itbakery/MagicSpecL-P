@@ -1,6 +1,6 @@
 Name:           perl-HTTP-Exception
 Version:        0.03001
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Throw HTTP-Errors as (Exception::Class-) Exceptions
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -47,6 +47,9 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03001-5
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.03001-4
 - 为 Magic 3.0 重建
 

@@ -56,7 +56,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/JSON::PP::Boolean.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.27200-242
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.27200-242
 - 为 Magic 3.0 重建
 
 * Tue Aug 28 2012 Paul Howarth <paul@city-fan.org> - 2.27200-241

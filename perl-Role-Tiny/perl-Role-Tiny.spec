@@ -50,7 +50,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.002000-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.002000-2
 - 为 Magic 3.0 重建
 
 * Sat Oct 20 2012 Iain Arnell <iarnell@gmail.com> 1.002000-1

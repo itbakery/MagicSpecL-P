@@ -1,6 +1,6 @@
 Name:           perl-Event-Lib
 Version:        1.03
-Release:        18%{?dist}
+Release:        19%{?dist}
 Summary:        Perl wrapper around libevent
 
 Group:          Development/Libraries
@@ -48,7 +48,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 # t/20_signal.t
 # t/51_cleanup_persistent.t
 # t/90_leak.t
-make test || :
+ || :
 
 
 %clean
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.03-19
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.03-18
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

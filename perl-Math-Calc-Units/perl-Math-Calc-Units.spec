@@ -57,7 +57,7 @@ rm -vf %{buildroot}%{perl_vendorlib}/Math/Calc/Units/Grammar.y
 %{_bindir}/ucalc
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.07-7
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.07-7
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.07-6

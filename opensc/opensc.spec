@@ -1,6 +1,6 @@
 Name:           opensc
 Version:        0.12.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Smart card library and applications
 
 Group:          System Environment/Libraries
@@ -112,6 +112,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.12.2-3
+- 为 Magic 3.0 重建
+
 * Wed Aug 17 2011 Tomas Mraz <tmraz@redhat.com> - 0.12.2-2
 - Rebuilt to fix trailing slashes in filelist from rpmbuild bug
 

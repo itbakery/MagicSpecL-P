@@ -148,7 +148,7 @@ LC_ALL=en_US ./Build %{!?perl_bootstrap:author}test
 %{_mandir}/man3/Test::Perl::Critic::Policy.3pm*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.118-3
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.118-3
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.118-2

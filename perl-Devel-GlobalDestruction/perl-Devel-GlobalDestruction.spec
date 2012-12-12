@@ -70,7 +70,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Devel::GlobalDestruction.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.09-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.09-2
 - 为 Magic 3.0 重建
 
 * Thu Aug  9 2012 Paul Howarth <paul@city-fan.org> - 0.09-1

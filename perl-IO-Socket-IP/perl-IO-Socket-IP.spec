@@ -48,7 +48,7 @@ rm -f t/21nonblocking-connect-internet.t
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.17-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.17-2
 - 为 Magic 3.0 重建
 
 * Wed Aug 22 2012 Petr Šabata <contyk@redhat.com> - 0.17-1

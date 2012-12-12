@@ -64,7 +64,7 @@ find %{buildroot} -depth -type d -exec rmdir {} \; 2>/dev/null
 %{_mandir}/man3/IPC::System::Simple.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.21-5
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.21-5
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.21-4

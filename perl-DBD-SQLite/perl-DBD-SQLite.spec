@@ -60,7 +60,7 @@ find %{buildroot} -depth -type d -empty -exec rmdir {} ';'
 %{_mandir}/man3/*.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.37-4
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.37-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.37-3

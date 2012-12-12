@@ -68,7 +68,7 @@ RELEASE_TESTING=1 ./Build test
 %{_mandir}/man3/Class::Load::XS.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.06-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.06-2
 - 为 Magic 3.0 重建
 
 * Mon Oct  8 2012 Paul Howarth <paul@city-fan.org> - 0.06-1

@@ -1,6 +1,6 @@
 Name:           mate-control-center
 Version:        1.4.0
-Release:        9%{?dist}
+Release:        10%{?dist}
 Summary:        MATE Desktop control-center
 License:        LGPLv2+ and GPLv2+
 URL:            http://mate-desktop.org
@@ -174,6 +174,9 @@ fi
 %{_datadir}/pkgconfig/mate-keybindings.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-10
+- 为 Magic 3.0 重建
+
 * Tue Oct 16 2012 Leigh Scott <leigh123linux@googlemail.com> - 1.4.0-9
 - move unversioned .so back to main package
 - fix directory ownership

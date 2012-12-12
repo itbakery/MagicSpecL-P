@@ -59,7 +59,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Archive::Any::Plugin::Zip.3pm*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.0932-12
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.0932-12
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.0932-11

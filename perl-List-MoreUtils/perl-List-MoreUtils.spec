@@ -69,7 +69,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/List::MoreUtils.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.33-8
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.33-8
 - 为 Magic 3.0 重建
 
 * Wed Oct 17 2012 Paul Howarth <paul@city-fan.org> - 0.33-7

@@ -50,7 +50,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/Class::*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.14-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.14-2
 - 为 Magic 3.0 重建
 
 * Fri Aug 31 2012 Petr Šabata <contyk@redhat.com> - 1.14-1

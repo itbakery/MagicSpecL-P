@@ -46,7 +46,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 6.02-4
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.02-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.02-3

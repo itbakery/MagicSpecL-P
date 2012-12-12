@@ -92,7 +92,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Net::SSLeay::Handle.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.49-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.49-2
 - 为 Magic 3.0 重建
 
 * Tue Sep 25 2012 Paul Howarth <paul@city-fan.org> - 1.49-1

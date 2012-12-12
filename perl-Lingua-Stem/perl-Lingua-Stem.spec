@@ -55,7 +55,7 @@ TEST_POD_COVERAGE=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.84-7
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.84-7
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.84-6

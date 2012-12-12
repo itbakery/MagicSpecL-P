@@ -55,7 +55,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Digest::MD2.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.03-20
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.03-20
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.03-19

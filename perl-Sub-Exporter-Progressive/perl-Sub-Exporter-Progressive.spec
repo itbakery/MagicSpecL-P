@@ -69,7 +69,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Sub::Exporter::Progressive.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.001006-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.001006-2
 - 为 Magic 3.0 重建
 
 * Mon Aug 27 2012 Paul Howarth <paul@city-fan.org> - 0.001006-1

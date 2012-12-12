@@ -42,7 +42,7 @@ TEST_POD=1
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.34-15
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.34-15
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.34-14

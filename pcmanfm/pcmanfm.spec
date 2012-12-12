@@ -19,7 +19,7 @@
 
 Name:		pcmanfm
 Version:	0.9.10
-Release:	%{fedorarel}%{?dist}
+Release:	%{fedorarel}%{?dist}.1
 Summary:	Extremly fast and lightweight file manager
 
 Group:		User Interface/Desktops
@@ -125,6 +125,9 @@ exit 0
 %endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.10-2.1
+- 为 Magic 3.0 重建
+
 * Thu Jan  5 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 0.9.10-2
 - F-17: rebuild against gcc47
 

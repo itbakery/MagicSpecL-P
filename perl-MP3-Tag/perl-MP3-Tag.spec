@@ -57,7 +57,7 @@ Tag 是一个用于读取 mp3 文件的不同标记的包装化模块。
 %{perl_vendorlib}
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.13-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.13-2
 - 为 Magic 3.0 重建
 
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.9709-0.1mgc

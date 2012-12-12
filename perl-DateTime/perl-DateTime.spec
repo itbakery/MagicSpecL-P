@@ -65,7 +65,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2:0.77-3
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2:0.77-3
 - 为 Magic 3.0 重建
 
 * Tue Oct 23 2012 Liu Di <liudidi@gmail.com> - 2:0.77-2

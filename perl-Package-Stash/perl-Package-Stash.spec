@@ -82,7 +82,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Stash::PP.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.33-8
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.33-8
 - 为 Magic 3.0 重建
 
 * Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 0.33-7

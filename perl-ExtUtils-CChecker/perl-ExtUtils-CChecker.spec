@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.08-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.08-2
 - 为 Magic 3.0 重建
 
 * Thu Sep 20 2012 Marcela Mašláňová <mmaslano@redhat.com> 0.08-1

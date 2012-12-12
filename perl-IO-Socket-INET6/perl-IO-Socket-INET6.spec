@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man3/IO::Socket::INET6.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.69-4
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.69-4
 - 为 Magic 3.0 重建
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.69-3

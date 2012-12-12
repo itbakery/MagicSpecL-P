@@ -1,4 +1,4 @@
-%if 0%{?fedora} > 12 || 0%{?rhel} > 6
+%if 0%{?fedora} > 12
 %global with_python3 1
 %else
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print (get_python_lib())")}
@@ -7,8 +7,8 @@
 %global srcname distribute
 
 Name:           python-setuptools
-Version:        0.6.24
-Release:        1%{?dist}
+Version:        0.6.28
+Release:        4%{?dist}
 Summary:        Easily build and distribute Python packages
 
 Group:          Applications/System
@@ -17,6 +17,12 @@ URL:            http://pypi.python.org/pypi/%{srcname}
 Source0:        http://pypi.python.org/packages/source/d/%{srcname}/%{srcname}-%{version}.tar.gz
 Source1:        psfl.txt
 Source2:        zpl.txt
+# https://bitbucket.org/tarek/distribute/issue/300/invalid-urls-can-fail-with-other-error
+Patch0: distribute-different-exception-message.patch
+# Sometimes this times out in the build system.  Hanging onto the patch in git
+# for a bit in case that behavior returns
+#Patch1: distribute-timeout-exception.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
@@ -61,16 +67,25 @@ This package contains the distribute fork of setuptools.
 %prep
 %setup -q -n %{srcname}-%{version}
 
+%patch0 -p1 -b .excmsg
+#patch1 -p1 -b .exctype
+
 find -name '*.txt' | xargs chmod -x
 find . -name '*.orig' -exec rm \{\} \;
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
 cp -a . %{py3dir}
-find %{py3dir} -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python3}|'
+pushd %{py3dir}
+for file in setuptools/command/easy_install.py distribute_setup.py ; do
+    sed -i '1s|^#!python|#!%{__python3}|' $file
+done
+popd
 %endif # with_python3
 
-find -name '*.py' | xargs sed -i '1s|^#!python|#!%{__python}|'
+for file in setuptools/command/easy_install.py distribute_setup.py ; do
+    sed -i '1s|^#!python|#!%{__python}|' $file
+done
 
 %build
 
@@ -108,7 +123,16 @@ install -p -m 0644 %{SOURCE1} %{SOURCE2} .
 find %{buildroot}%{python_sitelib} -name '*.exe' | xargs rm -f
 chmod +x %{buildroot}%{python_sitelib}/setuptools/command/easy_install.py
 
+magic_rpm_clean.sh
+
 %check
+%{__python} setup.py test
+
+%if 0%{?with_python3}
+pushd %{py3dir}
+%{__python3} setup.py test
+popd
+%endif # with_python3
 
 %clean
 rm -rf %{buildroot}
@@ -130,6 +154,35 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.28-4
+- 为 Magic 3.0 重建
+
+* Fri Aug 03 2012 David Malcolm <dmalcolm@redhat.com> - 0.6.28-3
+- rebuild for https://fedoraproject.org/wiki/Features/Python_3.3
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 0.6.28-2
+- remove rhel logic from with_python3 conditional
+
+* Mon Jul 23 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.28-1
+- New upstream release:
+  - python-3.3 fixes
+  - honor umask when setuptools is used to install other modules
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.27-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.27-2
+- Fix easy_install.py having a python3 shebang in the python2 package
+
+* Thu Jun  7 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.27-1
+- Upstream bugfix
+
+* Tue May 15 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.24-2
+- Upstream bugfix
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6.24-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Oct 17 2011 Toshio Kuratomi <toshio@fedoraproject.org> - 0.6.24-1
 - Upstream bugfix
 - Compile the win32 launcher binary using mingw
@@ -242,36 +295,3 @@ rm -rf %{buildroot}
 
 * Thu Feb 26 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.6c9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
-
-* Fri Nov 28 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.6c9-2
-- Rebuild for Python 2.6
-
-* Sun Nov 23 2008 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c9-1
-- Update to 0.6c9
-- Small fixes to URL, summary and description
-
-* Sat Jun 21 2008 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c8-1
-- Update to 0.6c8
-- Accept small tweaks from Gareth Armstrong
-
-* Mon Sep 24 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c7-2
-- Move pretty much everything back into runtime in order to avoid more
-  brokenness than we're trying to address with these fixes.
-
-* Fri Sep 14 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c7-1
-- Upstream 0.6c7
-- Move some things from devel into runtime, in order to not break other
-  projects.
-
-* Sat Aug 18 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c6-2
-- Make license tag conform to the new Licensing Guidelines
-- Move everything except pkg_resources.py into a separate -devel package
-  so we avoid bundling python-devel when it's not required (#251645)
-- Do not package tests
-
-* Sun Jun 10 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c6-1
-- Upstream 0.6c6
-- Require python-devel (#240707)
-
-* Sun Jan 28 2007 Konstantin Ryabitsev <icon@fedoraproject.org> - 0.6c5-1
-- Upstream 0.6c5 (known bugs, but the promised 0.6c6 is taking too long)

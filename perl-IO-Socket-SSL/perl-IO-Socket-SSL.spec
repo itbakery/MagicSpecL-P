@@ -61,7 +61,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/IO::Socket::SSL.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.77-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.77-2
 - 为 Magic 3.0 重建
 
 * Fri Oct  5 2012 Paul Howarth <paul@city-fan.org> - 1.77-1

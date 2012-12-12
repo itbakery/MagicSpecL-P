@@ -11,7 +11,7 @@
 Summary: A collection of SNMP protocol tools and libraries
 Name: net-snmp
 Version: 5.7.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 Epoch: 1
 
 License: BSD
@@ -486,6 +486,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_initrddir}/snmptrapd
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:5.7.2-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 18 2012 Jan Safranek <jsafrane@redhat.com> - 1:5.7.2-1
 - Updated to 5.7.2
 

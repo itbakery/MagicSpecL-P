@@ -39,7 +39,7 @@ chmod -R u+w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.3-14
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.3-14
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.3-13

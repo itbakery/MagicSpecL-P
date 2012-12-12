@@ -3,30 +3,43 @@
 %{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
 %endif
 
-%if 0%{?fedora} || 0%{?rhel} > 6
+%if 0%{?fedora}
 %global with_python3 1
 %endif
 
 %global srcname docutils
 
 Name:           python-%{srcname}
-Version:        0.8.1
-Release:        1%{?dist}
+Version:        0.10
+Release:        0.7.20120824svn7502%{?dist}
 Summary:        System for processing plaintext documentation
 
 Group:          Development/Languages
 # See COPYING.txt for information
 License:        Public Domain and BSD and Python and GPLv3+
 URL:            http://docutils.sourceforge.net
-Source0:        http://downloads.sourceforge.net/docutils/%{srcname}-%{version}.tar.gz
+#Source0:        http://downloads.sourceforge.net/docutils/%{srcname}-%{version}.tar.gz
 # Sometimes we need snapshots.  Instructions below:
-# svn co -r $REV svn://svn.berlios.de/docutils/trunk/docutils
+# svn co -r 7502 https://docutils.svn.sourceforge.net/svnroot/docutils/trunk/docutils
 # cd docutils
 # python setup.py sdist
 # The tarball is in dist/docutils-VERSION.tar.gz
-#Source0:        %{srcname}-%{version}.tar.gz
-# Applied upstream.  Fixes a traceback when invalid input is given on the cli
-Patch0: docutils-missing-import.patch
+Source0:        %{srcname}-%{version}.tar.gz
+# Submitted upstream: https://sourceforge.net/tracker/index.php?func=detail&aid=3560841&group_id=38414&atid=422030
+Patch0: docutils-__import__-tests.patch
+Patch1: docutils-__import__-fixes2.patch
+
+# Disable some tests known to fail with Python 3.3
+# Bug reports filed upstream as:
+#   https://sourceforge.net/tracker/?func=detail&aid=3555164&group_id=38414&atid=422030
+# and:
+#   http://sourceforge.net/tracker/?func=detail&aid=3561133&group_id=38414&atid=422030
+# Unicode test is failing because of a python3.3b2 bug:
+# ImportError(b'str').__str__() returns bytes rather than str
+# http://bugs.python.org/issue15778
+Patch100: disable-failing-tests.patch
+
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:       noarch
 
@@ -75,10 +88,12 @@ This package contains the module, ported to run under python3.
 
 %prep
 %setup -q -n %{srcname}-%{version}
+%patch0 -p0
+%patch1 -p0
+%patch100 -p1 -b .disable-failing-tests
 
-%patch0 -p0 -b .exc
 # Remove shebang from library files
-for file in docutils/_string_template_compat.py docutils/math/{__init__.py,latex2mathml.py}; do
+for file in docutils/utils/{code_analyzer.py,punctuation_chars.py,error_reporting.py} docutils/utils/math/{latex2mathml.py,math2html.py} docutils/writers/xetex/__init__.py; do
 sed -i -e '/#! *\/usr\/bin\/.*/{1D}' $file
 done
 
@@ -95,16 +110,8 @@ CFLAGS="$RPM_OPT_FLAGS" %{__python} setup.py build
 
 %if 0%{?with_python3}
 pushd %{py3dir}
-# For roman.py
-2to3 --write extras
 
 CFLAGS="$RPM_OPT_FLAGS" %{__python3} setup.py build
-# Docutils setup.py does this on build but only to the built copy, not to the
-# original source.  For running the tests afterwards we need to have access to everything
-for dir in docutils test tools ; do
-rm -rf $dir
-cp -pr build/lib/$dir .
-done
 popd
 %endif # with_python3
 
@@ -122,27 +129,12 @@ pushd %{py3dir}
 # docutils setup.py runs 2to3 on a copy of the tests and puts it in sitelib.
 rm -rf %{buildroot}%{python3_sitelib}/test
 
-# docutils only installs this if its not already on the system.  Due to the
-# possibility that a previous version of docutils may be installed, we install
-# it manually here.
-file=roman.py
-extradest=%{python3_sitelib}
-fullextradest=%{buildroot}/$extradest
-install -D -m 0644 extras/$file $fullextradest/$file
 popd
 
 rm -rf %{buildroot}%{_bindir}/*
 %endif # with_python3
 
 %{__python} setup.py install --skip-build --root %{buildroot}
-
-# docutils only installs this if its not already on the system.  Due to the
-# possibility that a previous version of docutils may be installed, we install
-# it manually here.
-file=roman.py
-extradest=%{python_sitelib}
-fullextradest=%{buildroot}/$extradest
-install -D -m 0644 extras/$file $fullextradest/$file
 
 for file in %{buildroot}/%{_bindir}/*.py; do
     mv $file `dirname $file`/`basename $file .py`
@@ -156,7 +148,7 @@ python test/alltests.py
 
 %if 0%{?with_python3}
 pushd %{py3dir}
-python3 test/alltests.py
+python3 test3/alltests.py
 popd
 %endif
 
@@ -170,13 +162,52 @@ rm -rf %{buildroot}
 %{_bindir}/*
 %{python_sitelib}/*
 
+%if 0%{?with_python3}
 %files -n python3-%{srcname}
 %defattr(-,root,root,-)
 %doc BUGS.txt COPYING.txt FAQ.txt HISTORY.txt README.txt RELEASE-NOTES.txt 
 %doc THANKS.txt licenses docs tools/editors
 %{python3_sitelib}/*
+%endif
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.10-0.7.20120824svn7502
+- 为 Magic 3.0 重建
+
+* Sat Aug 25 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.6.20120824svn7502
+- Further fix of places in the code that use__import__
+
+* Fri Aug 24 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.5.20120824svn7502
+- Rebase to new snapshot with some fixes integrated
+- Reenable one test that I can't replicate the failure with.
+
+* Fri Aug 24 2012 David Malcolm <dmalcolm@redhat.com> - 0.10-0.4.20120730svn7490
+- fix/disable failing tests with python 3.3
+
+* Tue Aug 14 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.3.20120730svn7490
+- PyXML patch from upstream
+- Fix ability to disable python3 builds
+
+* Fri Aug  3 2012 David Malcolm <dmalcolm@redhat.com> - 0.10-0.2.20120730svn7490
+- remove rhel logic from with_python3 conditional
+
+* Mon Jul 30 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.10-0.1.20120730svn7490
+- Update to snapshot that's supposed to take care of the date directive unicode
+  problem in a different way
+- Patch to fix PyXML conflict without using rpm conflicts
+
+* Fri Jul 20 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.9.1-1
+- New update from upstream
+- Fixes for previous patches incorporated there
+- roman.py has been moved into a docutils submodule
+- docutils doesn't work with PyXML.  before I poke around for the bug in PyXML,
+  seeing if we're going to go through with deprecating it or if we can sanitize
+  our python stdlib's handling of it.
+- Fix for traceback in https://bugzilla.redhat.com/show_bug.cgi?id=786867
+
+* Mon Jan 30 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.8.1-2
+- Fix a unicode traceback https://bugzilla.redhat.com/show_bug.cgi?id=785622
+
 * Thu Jan 5 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 0.8.1-1
 - Update to new upstream that has properly licensed files and a few bugfixes
 - Add a patch to fix tracebacks when wrong values are given to CLI apps

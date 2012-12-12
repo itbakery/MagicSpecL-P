@@ -60,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 2.2.6-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.2.6-2
 - 为 Magic 3.0 重建
 
 * Tue Feb 22 2011 Hans de Goede <hdegoede@redhat.com> - 2.2.6-1

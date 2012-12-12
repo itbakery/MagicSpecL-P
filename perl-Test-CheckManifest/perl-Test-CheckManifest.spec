@@ -52,7 +52,7 @@ cd ..
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.26-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.26-2
 - 为 Magic 3.0 重建
 
 * Sun Aug 05 2012 Ralf Corsépius <corsepiu@fedoraproject.org> 1.26-1

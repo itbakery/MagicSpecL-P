@@ -59,7 +59,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man[13]/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1:2.33-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:2.33-2
 - 为 Magic 3.0 重建
 
 * Thu Aug 02 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr> - 1:2.33-1

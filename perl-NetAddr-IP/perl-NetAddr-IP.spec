@@ -59,7 +59,7 @@ find %{buildroot} -type f -name '*.bs' -size 0 -exec rm -f {} \;
 %{_mandir}/man3/NetAddr::IP::UtilPP.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 4.066-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 4.066-2
 - 为 Magic 3.0 重建
 
 * Tue Oct 30 2012 Paul Howarth <paul@city-fan.org> - 4.066-1

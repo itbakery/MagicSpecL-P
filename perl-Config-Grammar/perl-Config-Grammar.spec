@@ -48,7 +48,7 @@ find %{buildroot} -type f -name .packlist -delete
 %{_mandir}/man3//Config::Grammar*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.10-11
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.10-11
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.10-10

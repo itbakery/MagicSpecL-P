@@ -53,7 +53,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.01-17
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.01-17
 - 为 Magic 3.0 重建
 
 * Fri Aug 17 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.01-16

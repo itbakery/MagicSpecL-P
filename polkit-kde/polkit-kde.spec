@@ -1,6 +1,6 @@
 Name:           polkit-kde
 Version:        0.99.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        PolicyKit integration for KDE Desktop
 
 Group:          Applications/System
@@ -71,6 +71,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.99.0-5
+- 为 Magic 3.0 重建
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.99.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

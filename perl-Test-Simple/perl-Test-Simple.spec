@@ -71,7 +71,7 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 %{_mandir}/man3/Test::Tutorial.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.98-242
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.98-242
 - 为 Magic 3.0 重建
 
 * Thu Aug 23 2012 Paul Howarth <paul@city-fan.org> - 0.98-241

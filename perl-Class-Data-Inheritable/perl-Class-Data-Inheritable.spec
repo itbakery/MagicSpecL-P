@@ -46,7 +46,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Class::Data::Inheritable.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.08-13
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.08-13
 - 为 Magic 3.0 重建
 
 * Tue Jul 24 2012 Paul Howarth <paul@city-fan.org> - 0.08-12

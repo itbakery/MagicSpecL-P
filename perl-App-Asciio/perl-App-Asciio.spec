@@ -152,7 +152,7 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.02.71-12
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02.71-12
 - 为 Magic 3.0 重建
 
 * Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.02.71-11

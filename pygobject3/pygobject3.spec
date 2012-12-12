@@ -12,7 +12,7 @@
 
 Name: pygobject3
 Version: 3.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: LGPLv2+ and MIT
 Group: Development/Languages
 Summary: Python 2 bindings for GObject Introspection
@@ -151,6 +151,9 @@ find $RPM_BUILD_ROOT -name '*.a' -delete
 %endif # with_python3
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.0.2-2
+- 为 Magic 3.0 重建
+
 * Sat Oct 22 2011 Ignacio Casal Quinteiro <icq@gnome.org> - 3.0.2-1
 - udpate to 3.0.2
 

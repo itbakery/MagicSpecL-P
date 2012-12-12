@@ -123,7 +123,7 @@ perl -pi -e 's"#!perl -w"#!/usr/bin/perl -w"' \
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.622-7
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.622-7
 - 为 Magic 3.0 重建
 
 * Mon Aug 27 2012 Petr Pisar <ppisar@redhat.com> - 1.622-6

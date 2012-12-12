@@ -1,6 +1,6 @@
 Name:	mate-session-manager
 Version:	1.4.0
-Release:	9%{?dist}
+Release:	10%{?dist}
 Summary:	MATE Desktop session manager
 License:	GPLv2+
 URL:		http://mate-desktop.org
@@ -73,6 +73,9 @@ fi
 %{_datadir}/xsessions/mate.desktop
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-10
+- 为 Magic 3.0 重建
+
 * Wed Oct 17 2012 Dan Mashal <dan.mashal@fedoraproject.org> - 1.4.0-9
 - Add mate.desktop to desktop-file-install
 

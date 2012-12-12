@@ -1,6 +1,6 @@
 Name:		obconf
 Version:	2.0.3
-Release:	9.20100212gitb04658%{?dist}
+Release:	10.20100212gitb04658%{?dist}
 Summary:	A graphical configuration editor for the Openbox window manager
 
 Group:		User Interface/X
@@ -77,6 +77,9 @@ update-desktop-database %{_datadir}/applications &> /dev/null
 
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.0.3-10.20100212gitb04658
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.0.3-9.20100212gitb04658
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

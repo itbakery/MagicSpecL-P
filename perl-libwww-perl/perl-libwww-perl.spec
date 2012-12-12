@@ -109,7 +109,7 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 6.04-6
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.04-6
 - 为 Magic 3.0 重建
 
 * Fri Oct 19 2012 Liu Di <liudidi@gmail.com> - 6.04-5

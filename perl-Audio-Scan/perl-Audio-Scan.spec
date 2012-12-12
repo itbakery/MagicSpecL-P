@@ -47,7 +47,7 @@ Fast C metadata and tag reader for all common audio file formats
 %{perl_vendorarch}
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.93-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.93-2
 - 为 Magic 3.0 重建
 
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.7-0.1mgc

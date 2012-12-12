@@ -45,7 +45,7 @@ mkdir -p $RPM_BUILD_ROOT%{_mandir}/man3/
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.14.11-12
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.14.11-12
 - 为 Magic 3.0 重建
 
 * Mon Jan 30 2012 Liu Di <liudidi@gmail.com> - 1.14.11-11

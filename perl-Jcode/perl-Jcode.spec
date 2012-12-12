@@ -53,7 +53,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Jcode::Nihongo.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.07-9
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.07-9
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.07-8

@@ -43,7 +43,7 @@ make %{?_smp_mflags} test
 %{_mandir}/man3/Net::SMTP::SSL.3*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1.01-13
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.01-13
 - 为 Magic 3.0 重建
 
 * Mon Aug 13 2012 Petr Pisar <ppisar@redhat.com> - 1.01-12

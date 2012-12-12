@@ -60,7 +60,7 @@ find $RPM_BUILD_ROOT -type f -name .packlist -exec rm -f {} \;
 %{_mandir}/man3/*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.18-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.18-2
 - 为 Magic 3.0 重建
 
 * Fri Jun 22 2012 Jitka Plesnikova <jplesnik@redhat.com> 0.18-1

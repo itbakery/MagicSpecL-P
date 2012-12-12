@@ -45,7 +45,7 @@ chmod -R u+rwX,go+rX,go-w %{buildroot}/*
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.1007-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.1007-2
 - 为 Magic 3.0 重建
 
 * Wed Sep 19 2012 Petr Pisar <ppisar@redhat.com> - 0.1007-1

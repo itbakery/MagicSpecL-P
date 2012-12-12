@@ -49,7 +49,7 @@ See Audio::APETags for more information about the tags.
 %{perl_vendorlib}
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.0.1-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.0.1-2
 - 为 Magic 3.0 重建
 
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.7-0.1mgc

@@ -46,7 +46,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.0012-6
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.0012-6
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.0012-5

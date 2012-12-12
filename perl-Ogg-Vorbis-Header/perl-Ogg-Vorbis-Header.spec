@@ -60,7 +60,7 @@ add comments.
 %{perl_vendorarch}/auto/Ogg/Vorbis/Header/*.so
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.03-2
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.03-2
 - 为 Magic 3.0 重建
 
 * Sun Oct 14 2007 Ni Hui <shuizhuyuanluo@126.com> - 0.03-0.1mgc

@@ -48,7 +48,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.30-18
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.30-18
 - 为 Magic 3.0 重建
 
 * Tue Aug 21 2012 Petr Pisar <ppisar@redhat.com> - 2.30-17

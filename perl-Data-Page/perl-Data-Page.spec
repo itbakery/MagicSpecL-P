@@ -41,7 +41,7 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 %{_mandir}/man3/*.3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 2.02-8
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.02-8
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.02-7

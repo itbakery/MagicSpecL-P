@@ -1,6 +1,6 @@
 Name:           perl-File-Map
 Version:        0.31
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Memory mapping made simple and safe
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -64,6 +64,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.31-9
+- 为 Magic 3.0 重建
+
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.31-8
 - 为 Magic 3.0 重建
 

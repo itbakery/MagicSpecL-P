@@ -57,7 +57,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Package::Reaper.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.103-15
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.103-15
 - 为 Magic 3.0 重建
 
 * Fri Aug 24 2012 Paul Howarth <paul@city-fan.org> - 0.103-14

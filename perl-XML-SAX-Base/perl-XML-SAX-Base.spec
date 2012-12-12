@@ -50,7 +50,7 @@ mv $RPM_BUILD_ROOT/%{perl_vendorlib}/XML/SAX/BuildSAXBase.pl $RPM_BUILD_ROOT/%{_
 %{_mandir}/man3/*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.08-6
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.08-6
 - 为 Magic 3.0 重建
 
 * Mon Aug 27 2012 Jitka Plesnikova <jplesnik@redhat.com> - 1.08-5

@@ -1,6 +1,6 @@
 Name:		obexd
 Version:	0.43
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	D-Bus service for Obex Client access
 
 Group:		System Environment/Daemons
@@ -45,6 +45,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/dbus-1/services/obex-client.service
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.43-3
+- 为 Magic 3.0 重建
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.43-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

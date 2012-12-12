@@ -99,7 +99,7 @@ rm -rf %{buildroot}
 %{_mandir}/man3/Test::LeakTrace::Script.3pm*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.14-5
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.14-5
 - 为 Magic 3.0 重建
 
 * Wed Jul 18 2012 Dan Horák <dan[at]danny.cz> - 0.14-4

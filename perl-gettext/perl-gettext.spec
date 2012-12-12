@@ -57,7 +57,7 @@ esac
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.05-26
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.05-26
 - 为 Magic 3.0 重建
 
 * Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 1.05-25

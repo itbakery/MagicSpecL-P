@@ -56,7 +56,7 @@ perl Build.PL installdirs=vendor
 %{_mandir}/man3/HTML::*3*
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1:5.02-7
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1:5.02-7
 - 为 Magic 3.0 重建
 
 * Tue Oct 16 2012 Petr Pisar <ppisar@redhat.com> - 1:5.02-6

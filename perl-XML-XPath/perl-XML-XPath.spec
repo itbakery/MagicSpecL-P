@@ -64,7 +64,7 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 1.13-22
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.13-22
 - 为 Magic 3.0 重建
 
 * Tue Oct 16 2012 Marcela Mašláňová <mmaslano@redhat.com> - 1.13-21

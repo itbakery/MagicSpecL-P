@@ -97,7 +97,7 @@ rm -rf "%{perl_vendorlib}/XML/SAX/ParserDetails.ini.backup" || :
 
 
 %changelog
-* Mon Dec 10 2012 Liu Di <liudidi@gmail.com> - 0.99-7
+* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.99-7
 - 为 Magic 3.0 重建
 
 * Wed Aug 15 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.99-6

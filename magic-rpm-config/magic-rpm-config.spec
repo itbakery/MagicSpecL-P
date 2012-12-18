@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: magic-rpm-config
 Version: 3.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -14,6 +14,7 @@ Source: redhat-rpm-config-9.1.0.tar.bz2
 # exposed.  If anything goes wrong, blame ajax@
 Source1: redhat-hardened-cc1
 Source2: redhat-hardened-ld
+Source3: magic_rpm_clean.sh
 
 Patch0: redhat-rpm-config-9.1.0-strict-python-bytecompile.patch
 Patch1: redhat-rpm-config-9.1.0-fix-requires.patch
@@ -83,6 +84,8 @@ Red Hat specific rpm configuration files.
 make DESTDIR=${RPM_BUILD_ROOT} install
 cp -p %{_datadir}/libtool/config/config.{guess,sub} ${RPM_BUILD_ROOT}/usr/lib/rpm/redhat/
 install -m 0444 %{SOURCE1} %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/rpm/redhat
+mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}/
+install -m 0755 %{SOURCE3} ${RPM_BUILD_ROOT}%{_sbindir}/
 find ${RPM_BUILD_ROOT} -name \*.orig -delete
 # buggy makefile in 9.1.0 leaves changelog in wrong place
 find ${RPM_BUILD_ROOT} -name ChangeLog -delete
@@ -95,8 +98,12 @@ rm -rf ${RPM_BUILD_ROOT}
 %doc ChangeLog
 %{_prefix}/lib/rpm/redhat
 %{_sysconfdir}/rpm/*
+%{_sbindir}/*
 
 %changelog
+* Tue Dec 18 2012 Liu Di <liudidi@gmail.com> - 3.0-5
+- 为 Magic 3.0 重建
+
 * Sat Nov 17 2012 Jens Petersen <petersen@redhat.com> - 9.1.0-38
 - add ARM to ghc_arches_with_ghci for ghc-7.4.2 ghci support
   (NB this change should not be backported before ghc-7.4.2)

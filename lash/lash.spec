@@ -3,7 +3,7 @@
 Summary:      LASH Audio Session Handler
 Name:         lash
 Version:      0.5.4
-Release:      13%{?dist}
+Release:      17%{?dist}
 License:      GPLv2+
 Group:        System Environment/Libraries
 URL:          http://www.nongnu.org/lash/
@@ -13,7 +13,8 @@ Patch0:       lash-0.5.3-no-static-lib.patch
 # Fix DSO-linking failure
 # Upstream bugtracker is closed for some reason. Sent via email:
 Patch1:       lash-linking.patch
-BuildRoot:    %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Fix build against gcc-4.7
+Patch2:       lash-gcc47.patch
 
 BuildRequires: alsa-lib-devel
 BuildRequires: desktop-file-utils
@@ -25,11 +26,8 @@ BuildRequires: readline-devel
 BuildRequires: swig
 BuildRequires: texi2html
 
-%if 0%{?fedora} < 12
-BuildRequires: e2fsprogs-devel
-%else
 BuildRequires: libuuid-devel
-%endif
+
 
 %description
 LASH is a session management system for JACK and ALSA audio applications on
@@ -40,16 +38,10 @@ patches) and the connections between them.
 %package devel
 Summary:      Development files for LASH
 Group:        Development/Libraries
-Requires:     %{name} = %{version}-%{release}
+Requires:     %{name}%{?_isa} = %{version}-%{release}
 Requires:     alsa-lib-devel
 Requires:     jack-audio-connection-kit-devel
-Requires:     pkgconfig
-
-%if 0%{?fedora} < 12
-Requires:     e2fsprogs-devel
-%else
 Requires:     libuuid-devel
-%endif
 
 %description devel
 Development files for the LASH library.
@@ -57,7 +49,7 @@ Development files for the LASH library.
 %package -n python-lash
 Summary:      Python wrapper for LASH
 Group:        System Environment/Libraries
-Requires:     %{name} = %{version}-%{release}
+Requires:     %{name}%{?_isa} = %{version}-%{release}
 
 %description -n python-lash
 Contains Python language bindings for developing Python applications that use
@@ -67,11 +59,10 @@ LASH.
 %setup -q
 %patch0 -p0
 %patch1 -p1 -b .linking
+%patch2 -p1 -b .gcc47
 
 # Hack to build against newer swig
-%if 0%{?fedora} > 13
 sed -i 's|1.3.31|2.0.0|g' configure*
-%endif
 
 %build
 export am_cv_python_pythondir=%{python_sitearch}
@@ -82,7 +73,6 @@ sed -i.rpath 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_sysconfdir}
 make DESTDIR=%{buildroot} install
 rm -f %{buildroot}%{_infodir}/dir
@@ -123,9 +113,6 @@ if [ ! -d docs/lash-manual-html-split/lash-manual/ ]; then
   cp -p docs/lash-manual-html-split/*.html docs/lash-manual-html-split/lash-manual/
 fi
 
-%clean
-rm -rf %{buildroot}
-
 %post
 /sbin/ldconfig
 # update icon themes
@@ -144,7 +131,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README docs/lash-manual-html-split/lash-manual icons/lash.xcf
 %{_bindir}/lash*
 %{_libdir}/liblash.so.1
@@ -158,17 +144,27 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_datadir}/applications/*lash-panel.desktop
 
 %files devel
-%defattr(-,root,root,-)
 %{_libdir}/liblash.so
 %{_includedir}/lash-1.0
 %{_libdir}/pkgconfig/lash*
 
 %files -n python-lash
-%defattr(-,root,root,-)
 %{python_sitearch}/_lash.so
 %{python_sitearch}/lash.py*
 
 %changelog
+* Sun Jul 22 2012 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> - 0.5.4-17
+- Fix build against gcc-4.7
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-16
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Dec 06 2011 Adam Jackson <ajax@redhat.com> - 0.5.4-14
+- Rebuild for new libpng
+
 * Mon Feb 07 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.4-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

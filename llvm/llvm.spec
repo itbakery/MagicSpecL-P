@@ -2,6 +2,11 @@
 #
 # --with doxygen
 #   The doxygen docs are HUGE, so they are not built by default.
+%bcond_with doxygen
+
+# clang header paths are hard-coded at compile time
+# and need adjustment whenever there's a new GCC version
+%global gcc_version 4.7.2
 
 %ifarch s390 s390x sparc64
   # No ocaml on these arches
@@ -11,36 +16,54 @@
 %endif
 
 %if 0%{?rhel} >= 7
-%global with_clang 0
+%bcond_with clang
+ExcludeArch: s390 s390x ppc ppc64
 %else
-%global with_clang 1
+%bcond_without clang
 %endif
 
 #global prerel rcX
 %global downloadurl http://llvm.org/%{?prerel:pre-}releases/%{version}%{?prerel:/%{prerel}}
 
+# gold linker support
+# arch list from binutils spec
+%global gold_arches %ix86 x86_64
+%ifarch %gold_arches
+%bcond_without gold
+%else
+%bcond_with gold
+%endif
+
 Name:           llvm
-Version:        3.0
-Release:        2%{?dist}
+Version:        3.1
+Release:        12%{?dist}
 Summary:        The Low Level Virtual Machine
 
 Group:          Development/Languages
 License:        NCSA
 URL:            http://llvm.org/
-Source0:        %{downloadurl}/llvm-%{version}%{?prerel:%{prerel}.src}.tar.gz
-Source1:        %{downloadurl}/clang-%{version}%{?prerel:%{prerel}.src}.tar.gz
+Source0:        %{downloadurl}/llvm-%{version}%{?prerel:%{prerel}}.src.tar.gz
+Source1:        %{downloadurl}/clang-%{version}%{?prerel:%{prerel}}.src.tar.gz
 # multilib fixes
 Source2:        llvm-Config-config.h
 Source3:        llvm-Config-llvm-config.h
 
+
 # Data files should be installed with timestamps preserved
 Patch0:         llvm-2.6-timestamp.patch
-# clang link failure if system GCC version is unknown
-# http://llvm.org/bugs/show_bug.cgi?id=8897
-Patch1:         clang-2.9-add_gcc_vers.patch
-# Operator.h incompatibility with GCC 4.6 in C++0x mode
-# http://llvm.org/bugs/show_bug.cgi?id=9869
-#Patch2:         llvm-2.9-PR9869_operator_destructor.patch
+
+# r600 llvm and clang patches
+Patch600: 0001-r600-Add-some-intrinsic-definitions.patch
+Patch601: 0002-r600-Add-get_global_size-and-get_local_size-intrinsi.patch
+
+Patch610: 0001-Add-r600-TargetInfo.patch
+Patch611: 0002-r600-Add-some-target-builtins.patch
+Patch612: 0003-r600-Add-read_global_size-and-read_local_size-builti.patch
+
+Patch800: clang-magic.patch
+
+# ocaml
+Patch700: llvm-fix-ghc.patch
 
 BuildRequires:  bison
 BuildRequires:  chrpath
@@ -49,16 +72,20 @@ BuildRequires:  gcc-c++ >= 3.4
 BuildRequires:  groff
 BuildRequires:  libffi-devel
 BuildRequires:  libtool-ltdl-devel
+%if %{with gold}
+BuildRequires:  binutils-devel
+%endif
 %if %{with ocaml}
 BuildRequires:  ocaml-ocamldoc
 %endif
+BuildRequires:  zip
 # for DejaGNU test suite
 BuildRequires:  dejagnu tcl-devel python
 # for doxygen documentation
-%if 0%{?_with_doxygen}
+%if %{with doxygen}
 BuildRequires:  doxygen graphviz
 %endif
-Requires:       llvm-libs = %{version}-%{release}
+Requires:       llvm-libs%{?_isa} = %{version}-%{release}
 
 %description
 LLVM is a compiler infrastructure designed for compile-time,
@@ -71,7 +98,7 @@ functionality.
 %package devel
 Summary:        Libraries and header files for LLVM
 Group:          Development/Languages
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       libffi-devel
 Requires:       libstdc++-devel >= 3.4
 Provides:       llvm-static = %{version}-%{release}
@@ -105,14 +132,15 @@ Group:          System Environment/Libraries
 Shared libraries for the LLVM compiler infrastructure.
 
 
-%if %{with_clang}
+%if %{with clang}
 %package -n clang
 Summary:        A C language family front-end for LLVM
 License:        NCSA
 Group:          Development/Languages
-Requires:       llvm = %{version}-%{release}
-# clang requires gcc; clang++ gcc-c++
-Requires:       gcc-c++
+Requires:       llvm%{?_isa} = %{version}-%{release}
+# clang requires gcc, clang++ requires libstdc++-devel
+Requires:       gcc
+Requires:       libstdc++-devel = %{gcc_version}
 
 %description -n clang
 clang: noun
@@ -128,7 +156,7 @@ as libraries and designed to be loosely-coupled and extensible.
 %package -n clang-devel
 Summary:        Header files for clang
 Group:          Development/Languages
-Requires:       clang = %{version}-%{release}
+Requires:       clang%{?_isa} = %{version}-%{release}
 
 %description -n clang-devel
 This package contains header files for the Clang compiler.
@@ -138,7 +166,7 @@ This package contains header files for the Clang compiler.
 Summary:        A source code analysis framework
 License:        NCSA
 Group:          Development/Languages
-Requires:       clang = %{version}-%{release}
+Requires:       clang%{?_isa} = %{version}-%{release}
 # not picked up automatically since files are currently not instaled
 # in standard Python hierarchies yet
 Requires:       python
@@ -161,7 +189,7 @@ Documentation for the Clang compiler front-end.
 %endif
 
 
-%if 0%{?_with_doxygen}
+%if %{with doxygen}
 %package apidoc
 Summary:        API documentation for LLVM
 Group:          Development/Languages
@@ -173,7 +201,7 @@ Requires:       %{name}-doc = %{version}-%{release}
 API documentation for the LLVM compiler infrastructure.
 
 
-%if %{with_clang}
+%if %{with clang}
 %package -n clang-apidoc
 Summary:        API documentation for Clang
 Group:          Development/Languages
@@ -191,7 +219,7 @@ API documentation for the Clang compiler.
 %package        ocaml
 Summary:        OCaml binding for LLVM
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 Requires:       ocaml-runtime
 
 %description    ocaml
@@ -201,8 +229,8 @@ OCaml binding for LLVM.
 %package        ocaml-devel
 Summary:        Development files for %{name}-ocaml
 Group:          Development/Libraries
-Requires:       %{name}-devel = %{version}-%{release}
-Requires:       %{name}-ocaml = %{version}-%{release}
+Requires:       %{name}-devel%{?_isa} = %{version}-%{release}
+Requires:       %{name}-ocaml%{?_isa} = %{version}-%{release}
 Requires:       ocaml
 
 %description    ocaml-devel
@@ -222,67 +250,86 @@ HTML documentation for LLVM's OCaml binding.
 
 
 %prep
-%setup -q -n llvm-%{version}%{?prerel}.src %{?with_clang:-a1} %{?_with_gcc:-a2}
+%setup -q -n llvm-%{version}%{?prerel}.src %{?with_clang:-a1}
 rm -r -f tools/clang
-%if %{with_clang}
+%if %{with clang}
 mv clang-%{version}%{?prerel}.src tools/clang
 %endif
 
 # llvm patches
 %patch0 -p1 -b .timestamp
-#patch2 -p1 -b .pr9869_operator_destructor
+#patch1 -p1 -b .link_llvmgold_to_lto
+
+# r600 llvm patch
+%patch600 -p1 -b .r600
+%patch601 -p1 -b .r601
 
 # clang patches
-#pushd tools/clang
-#patch1 -p1 -b .add_gcc_ver
-#popd
+%if %{with clang}
+pushd tools/clang
+%patch610 -p1 -b .r610
+%patch611 -p1 -b .r611
+%patch612 -p1 -b .r612
+%patch800 -p1
+popd
+%endif
 
-# Encoding fix
-#(cd tools/clang/docs && \
-#    iconv -f ISO88591 -t UTF8 BlockImplementation.txt \
-#    -o BlockImplementation.txt)
+%patch700 -p0 -b .ghc
+
+# fix ld search path
+sed -i 's|/lib /usr/lib $lt_ld_extra|%{_libdir} $lt_ld_extra|' \
+    ./configure
 
 
 %build
+# Build without -ftree-pre as a workaround for clang segfaulting on x86_64.
+# https://bugzilla.redhat.com/show_bug.cgi?id=791365
+%global optflags %(echo %{optflags} | sed 's/-O2 /-O2 -fno-tree-pre /')
+
 # Disabling assertions now, rec. by pure and needed for OpenGTL
-# TESTFIX no PIC on ix86: http://llvm.org/bugs/show_bug.cgi?id=3801
 %configure \
   --prefix=%{_prefix} \
   --libdir=%{_libdir}/%{name} \
-  --datadir=%{_libdir}/%{name} \
-%if 0%{?_with_doxygen}
+%if %{with doxygen}
   --enable-doxygen \
+%endif
+%if %{with gold}
+  --with-binutils-include=%{_includedir} \
 %endif
 %if 0%{?rhel} >= 7
   --enable-targets=host \
+%endif
+%ifarch armv7hl armv7l
+  --with-cpu=cortex-a8 \
+  --with-tune=cortex-a8 \
+  --with-arch=armv7-a \
+  --with-float=hard \
+  --with-fpu=vfpv3-d16 \
+  --with-abi=aapcs-linux \
 %endif
   --disable-assertions \
   --enable-debug-runtime \
   --enable-jit \
   --enable-libffi \
   --enable-shared
-#  --with-c-include-dirs=%{_includedir}:$(find %{_prefix}/lib/gcc/*/* \
-#      -maxdepth 0 -type d)/include \
-#%if %{__isa_bits} == 64
-#  --with-cxx-include-32bit-dir=32 \
-#%endif
-#  --with-cxx-include-root=$(find %{_includedir}/c++/* -maxdepth 0 -type d) \
-#  --with-cxx-include-arch=%{_target_cpu}-%{_vendor}-%{_os} \
 
 # FIXME file this
 # configure does not properly specify libdir
 sed -i 's|(PROJ_prefix)/lib|(PROJ_prefix)/%{_lib}/%{name}|g' Makefile.config
 
-make %{_smp_mflags} REQUIRES_RTTI=1 \
+# FIXME upstream need to fix this
+# llvm-config.cpp hardcodes lib in it
+sed -i 's|ActiveLibDir = ActivePrefix + "/lib"|ActiveLibDir = ActivePrefix + "/%{_lib}/%{name}"|g' tools/llvm-config/llvm-config.cpp
+
+make %{_smp_mflags} REQUIRES_RTTI=1 VERBOSE=1 \
 %ifarch ppc
-  OPTIMIZE_OPTION="%{optflags} -fno-var-tracking-assignments"
+  OPTIMIZE_OPTION="%{optflags} -fno-var-tracking-assignments -UPPC"
 %else
   OPTIMIZE_OPTION="%{optflags}"
 %endif
 
 
 %install
-rm -rf %{buildroot}
 # workaround for http://llvm.org/bugs/show_bug.cgi?id=11177
 %if %{with ocaml}
 cp -p bindings/ocaml/llvm/META.llvm bindings/ocaml/llvm/Release/
@@ -307,7 +354,7 @@ cat >> %{buildroot}%{_sysconfdir}/ld.so.conf.d/llvm-%{_arch}.conf << EOF
 %{_libdir}/llvm
 EOF
 
-%if %{with_clang}
+%if %{with clang}
 # Static analyzer not installed by default:
 # http://clang-analyzer.llvm.org/installation#OtherPlatforms
 mkdir -p %{buildroot}%{_libdir}/clang-analyzer
@@ -327,14 +374,14 @@ rm -f moredocs/*.tar.gz
 rm -f moredocs/ocamldoc/html/*.tar.gz
 
 # and separate the apidoc
-%if 0%{?_with_doxygen}
+%if %{with doxygen}
 mv moredocs/html/doxygen apidoc
 mv tools/clang/docs/doxygen/html clang-apidoc
 %endif
 
 # And prepare Clang documentation
 #
-%if %{with_clang}
+%if %{with clang}
 mkdir clang-docs
 for f in LICENSE.TXT NOTES.txt README.txt; do # TODO.txt; do
   ln tools/clang/$f clang-docs/
@@ -366,29 +413,33 @@ find examples -name 'Makefile' | xargs -0r rm -f
 # the Koji build server does not seem to have enough RAM
 # for the default 16 threads
 
-# LLVM test suite failing on PPC64 and s390(x)
+# LLVM test suite failing on ARM, PPC64 and s390(x)
 make check LIT_ARGS="-v -j4" \
-%ifarch ppc64 s390 s390x
- || :
+%ifarch %{arm} ppc64 s390 s390x
+     | tee llvm-testlog-%{_arch}.txt
 %else
  %{nil}
 %endif
 
-%if %{with_clang}
+%if %{with clang}
 # clang test suite failing on PPC and s390(x)
+# FIXME:
+# unexpected failures on all platforms with GCC 4.7.0.
+# capture logs
 make -C tools/clang/test TESTARGS="-v -j4" \
-%ifarch ppc ppc64 s390 s390x
- || :
-%else
- %{nil}
-%endif
+     | tee clang-testlog-%{_arch}.txt
+#ifarch ppc ppc64 s390 s390x
+# || :
+#else
+# %{nil}
+#endif
 %endif
 
 
 %post libs -p /sbin/ldconfig
 %postun libs -p /sbin/ldconfig
 
-%if %{with_clang}
+%if %{with clang}
 %post -n clang -p /sbin/ldconfig
 %postun -n clang -p /sbin/ldconfig
 %endif
@@ -416,6 +467,9 @@ exit 0
 %files
 %defattr(-,root,root,-)
 %doc CREDITS.TXT LICENSE.TXT README.txt
+%ifarch %{arm} ppc64 s390 s390x
+%doc llvm-testlog-%{_arch}.txt
+%endif
 %{_bindir}/bugpoint
 %{_bindir}/llc
 %{_bindir}/lli
@@ -423,7 +477,7 @@ exit 0
 %{_bindir}/llvm*
 %{_bindir}/macho-dump
 %{_bindir}/opt
-%if %{with_clang}
+%if %{with clang}
 %exclude %{_mandir}/man1/clang.1.*
 %endif
 %doc %{_mandir}/man1/*.1.*
@@ -439,12 +493,12 @@ exit 0
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/ld.so.conf.d/llvm-%{_arch}.conf
 %dir %{_libdir}/%{name}
-%if %{with_clang}
+%if %{with clang}
 %exclude %{_libdir}/%{name}/libclang.so
 %endif
 %{_libdir}/%{name}/*.so
 
-%if %{with_clang}
+%if %{with clang}
 %files -n clang
 %defattr(-,root,root,-)
 %doc clang-docs/*
@@ -492,12 +546,12 @@ exit 0
 %doc moredocs/ocamldoc/html/*
 %endif
 
-%if 0%{?_with_doxygen}
+%if %{with doxygen}
 %files apidoc
 %defattr(-,root,root,-)
 %doc apidoc/*
 
-%if %{with_clang}
+%if %{with clang}
 %files -n clang-apidoc
 %defattr(-,root,root,-)
 %doc clang-apidoc/*
@@ -505,8 +559,87 @@ exit 0
 %endif
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0-2
-- 为 Magic 3.0 重建
+* Mon Oct 29 2012 Richard W.M. Jones <rjones@redhat.com> - 3.1-12
+- Rebuild for OCaml 4.00.1.
+
+* Mon Sep 24 2012 Michel Salim <salimma@fedoraproject.org> - 3.1-11
+- Actually build against GCC 4.7.2
+
+* Mon Sep 24 2012 Michel Salim <salimma@fedoraproject.org> - 3.1-10
+- Rebuild for GCC 4.7.2
+
+* Tue Aug 14 2012 Dan Horák <dan[at]danny.cz> - 3.1-9
+- Apply clang patches only when clang is being built
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.1-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jul 13 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 3.1-7
+- Rename patch as it actually fixes Haskell
+
+* Thu Jul 12 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 3.1-6
+- Add patch to fix building OCAML on ARM
+
+* Wed Jul  4 2012 Michel Salim <salimma@fedoraproject.org> - 3.1-5
+- Actually set runtime dependency on libstdc++ 4.7.1
+
+* Mon Jul  2 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 3.1-4
+- Rebuild for new libstdc++ bump
+
+* Sun Jun 10 2012 Richard W.M. Jones <rjones@redhat.com> - 3.1-3
+- Rebuild for OCaml 4.00.0.
+
+* Fri Jun  8 2012 Michel Salim <salimma@fedoraproject.org> - 3.1-2
+- Rebuild for ocaml 4.00.0 beta
+
+* Sun Jun 03 2012 Dave Airlie <airlied@redhat.com> 3.1-1
+- rebase to 3.1 + add r600 patches from Tom Stellar
+
+* Fri May 25 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 3.0-13
+- Add compiler build options for ARM hardfp
+
+* Sun May  6 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 3.0-12
+- Bump build
+
+* Fri Mar 30 2012 Michel Alexandre Salim <michel@hermione.localdomain> - 3.0-11
+- Replace overly-broad dependency on gcc-c++ with gcc and libstdc++-devel
+- Pin clang's dependency on libstdc++-devel to the version used for building
+- Standardize on bcond for conditional build options
+- Remove /lib from search path, everything is now in /usr/lib*
+
+* Mon Mar 26 2012 Kalev Lember <kalevlember@gmail.com> - 3.0-10
+- Build without -ftree-pre as a workaround for clang segfaulting
+  on x86_64 (#791365)
+
+* Sat Mar 17 2012 Karsten Hopp <karsten@redhat.com> 3.0-9
+- undefine PPC on ppc as a temporary workaround for 
+  http://llvm.org/bugs/show_bug.cgi?id=10969 and 
+  RHBZ#769803
+
+* Sat Feb 25 2012 Michel Salim <salimma@fedoraproject.org> - 3.0-8
+- Apply upstream patch to properly link LLVMgold against LTO
+
+* Fri Feb 24 2012 Michel Salim <salimma@fedoraproject.org> - 3.0-7
+- Build LLVMgold plugin on supported architectures
+
+* Tue Feb  7 2012 Michel Salim <salimma@fedoraproject.org> - 3.0-6
+- Make subpackage dependencies arch-specific
+- Make LLVM test failures non-fatal on ARM architectures as well (# 770208)
+- Save LLVM test log on platforms where it fails
+
+* Sun Feb  5 2012 Michel Salim <salimma@fedoraproject.org> - 3.0-5
+- Clang test suite yields unexpected failures with GCC 4.7.0. Make
+  this non-fatal and save the results
+- Multilib fix for harcoded ld search path in ./configure script
+
+* Sat Jan 07 2012 Richard W.M. Jones <rjones@redhat.com> - 3.0-4
+- Rebuild for OCaml 3.12.1.
+
+* Wed Dec 14 2011 Adam Jackson <ajax@redhat.com> 3.0-3
+- Also ExcludeArch: ppc* in RHEL
+
+* Tue Dec 13 2011 Adam Jackson <ajax@redhat.com> 3.0-2
+- ExcludeArch: s390* in RHEL since the native backend has disappeared in 3.0
 
 * Sun Dec 11 2011 Michel Salim <salimma@fedoraproject.org> - 3.0-1
 - Update to final 3.0 release

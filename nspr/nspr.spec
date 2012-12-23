@@ -1,8 +1,8 @@
 Summary:        Netscape Portable Runtime
 Name:           nspr
-Version:        4.9
-Release:        2%{?dist}
-License:        MPLv1.1 or GPLv2+ or LGPLv2+
+Version:        4.9.4
+Release:        1%{?dist}
+License:        MPLv2.0
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-root
@@ -12,8 +12,6 @@ Conflicts:      filesystem < 3
 # When CVS tag based snapshots are being used, refer to CVS documentation on
 # mozilla.org and check out subdirectory mozilla/nsprpub.
 Source0:        %{name}-%{version}.tar.bz2
-Source1:        nspr.pc.in
-Source2:        nspr-config-vars.in
 
 Patch1:         nspr-config-pc.patch
 
@@ -47,9 +45,11 @@ Header files for doing development with the Netscape Portable Runtime.
 cp ./mozilla/nsprpub/config/nspr-config.in ./mozilla/nsprpub/config/nspr-config-pc.in
 %patch1 -p0
 
-cp %{SOURCE2} ./mozilla/nsprpub/config/
-
 %build
+
+# partial RELRO support as a security enhancement
+LDFLAGS+=-Wl,-z,relro
+export LDFLAGS
 
 ./mozilla/nsprpub/configure \
                  --prefix=%{_prefix} \
@@ -90,21 +90,6 @@ NSPR_CFLAGS=`./config/nspr-config --cflags`
 NSPR_VERSION=`./config/nspr-config --version`
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 
-cat ./config/nspr-config-vars > \
-                     $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/nspr.pc
-
-cat %{SOURCE1} | sed -e "s,%%libdir%%,%{_libdir},g" \
-                     -e "s,%%prefix%%,%{_prefix},g" \
-                     -e "s,%%exec_prefix%%,%{_prefix},g" \
-                     -e "s,%%includedir%%,%{_includedir}/nspr4,g" \
-                     -e "s,%%NSPR_VERSION%%,$NSPR_VERSION,g" \
-                     -e "s,%%FULL_NSPR_LIBS%%,$NSPR_LIBS,g" \
-                     -e "s,%%FULL_NSPR_CFLAGS%%,$NSPR_CFLAGS,g" >> \
-                     $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/nspr.pc
-
-%{__mkdir_p} $RPM_BUILD_ROOT/%{_bindir}
-%{__cp} ./config/nspr-config-pc $RPM_BUILD_ROOT/%{_bindir}/nspr-config
-
 # Get rid of the things we don't want installed (per upstream)
 %{__rm} -rf \
    $RPM_BUILD_ROOT/%{_bindir}/compile-et.pl \
@@ -135,8 +120,39 @@ cat %{SOURCE1} | sed -e "s,%%libdir%%,%{_libdir},g" \
 %{_bindir}/nspr-config
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.9-2
-- 为 Magic 3.0 重建
+* Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.4-1
+- Update to NSPR_4_9_4_RTM
+
+* Mon Oct 01 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.3-0.1.beta1.1
+- Update to NSPR_4_9_5_BETA1
+
+* Sun Aug 26 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.2-1
+- Update to NSPR_4_9_2_RTM
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.9.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jul 11 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-5
+- Updated License: to MPLv2.0 per upstream
+
+* Fri Jun 22 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-4
+- Update the nspr-config-pc.patch to prevent multilib regressions
+
+* Thu Jun 21 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-3
+- Bump the release tag
+
+* Thu Jun 21 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-3
+- Resolves: rhbz#833529 - restore the good changes to nspr.pc
+
+* Thu Jun 21 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-2
+- Resolves: rhbz#833529 - revert unwanted change to nspr.pc
+- Removed nspr-config.pc.in.patch
+
+* Mon Jun 18 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.1-1
+- Update to NSPR_4_9_1_RTM
+
+* Wed Mar 21 2012 Elio Maldonado <emaldona@redhat.com> - 4.9-2
+- Resolves: Bug 805672 - Library needs partial RELRO support added
 
 * Wed Feb 29 2012 Elio Maldonado <emaldona@redhat.com> - 4.9-1
 - Update to NSPR_4_9_RTM

@@ -1,0 +1,19 @@
+diff -up ./mozilla/security/nss/lib/manifest.mn.softokenonly ./mozilla/security/nss/lib/manifest.mn
+--- ./mozilla/security/nss/lib/manifest.mn.softokenonly	2012-12-16 21:08:47.622870608 -0800
++++ ./mozilla/security/nss/lib/manifest.mn	2012-12-16 21:10:08.043398218 -0800
+@@ -16,14 +16,7 @@ DEPTH      = ../..
+ #  smime
+ #  ckfw (builtins module)
+ #  crmf jar (not dll's)
+-DIRS =  util freebl $(SQLITE_SRCDIR) softoken \
+-	base dev pki \
+-	libpkix \
+-	certdb certhigh pk11wrap cryptohi nss \
+-	$(ZLIB_SRCDIR) ssl \
+-	pkcs12 pkcs7 smime \
+-	crmf jar \
+-	ckfw $(SYSINIT_SRCDIR) \
++DIRS =  freebl $(SQLITE_SRCDIR) softoken \
+ 	$(NULL)
+ 
+ #  fortcrypt  is no longer built

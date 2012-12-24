@@ -1,10 +1,9 @@
-%global nspr_version 4.9
+%global nspr_version 4.9.4
 %global nss_name nss
-%global nss_util_version 3.13.3
+%global nss_util_version 3.14
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 %global saved_files_dir %{_libdir}/nss/saved
 
-# Produce .chk files for the final stripped binaries
 %define __spec_install_post \
     %{?__debug_package:%{__debug_install_post}} \
     %{__arch_install_post} \
@@ -16,9 +15,9 @@
 
 Summary:          Network Security Services Softoken Module
 Name:             nss-softokn
-Version:          3.13.3
+Version:          3.14.1
 Release:          2%{?dist}
-License:          MPLv1.1 or GPLv2+ or LGPLv2+
+License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
 Requires:         nspr >= %{nspr_version}
@@ -35,36 +34,41 @@ BuildRequires:    psmisc
 BuildRequires:    perl
 
 Source0:          %{name}-%{version}-stripped.tar.bz2
-# The nss-softokn tar ball is a subset of nss-{version}-stripped.tar.bz2, 
-# Therefore we use the nss-split-softokn.sh script to keep only what we need.
-# Download the nss tarball via git from the nss project and follow these
-# steps to make the tarball for nss-util out of the one for nss:
-# fedpkg clone nss
+# The nss-softokn tar ball is a subset of nss-{version}-stripped.tar.bz2.
+# We use the nss-split-softokn.sh script to keep only what we need.
+# We first produce the full source archive from from the upstream,
+# nss-{version}-stripped.tar.gz, by running mozilla-crypto-strip.sh
+# to remove any non-free sources and then split off nss-softokn from nss
+# via nss-split-util.sh ${version}
+# Detailed Steps:
 # fedpkg clone nss-softokn
 # cd nss-softokn
-# cp ../../nss/devel/${version}-stripped.tar.bz2  .
+# Download the nss-{version}-stripped.tar.gz tarball from upstream
+# Strip-off unwanted sources with
+# ./mozilla-crypto-srip.sh nss-{version}-stripped.tar.gz
+# which produces nss-{version}-stripped.tar.bz2
+# Make the source tarball for nss-softokn out of the nss stripped one:
 # sh ./nss-split-softokn.sh ${version}
 # A file named {name}-{version}-stripped.tar.bz2 should appear
-Source1:          nss-split-softokn.sh
-Source2:          nss-softokn.pc.in
-Source3:          nss-softokn-config.in
+# which is ready for uploading to the lookaside cache.
+Source1:          mozilla-crypto-strip.sh
+Source2:          nss-split-softokn.sh
+Source3:          nss-softokn.pc.in
+Source4:          nss-softokn-config.in
 
-Patch1:           add-relro-linker-option.patch
-# Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=562116
-Patch5:           drbg.patch
-# TODO: Open upstream bug and submmit a patch for this
+Patch1:           build-nss-softoken-only.patch
 Patch8:           softoken-minimal-test-dependencies.patch
-# This patch uses the gcc-iquote dir option  documented at
+# This patch uses the gcc-iquote dir option documented at
 # http://gcc.gnu.org/onlinedocs/gcc/Directory-Options.html#Directory-Options
 # to place the in-tree directories at the head of the list on list of directories
-# to be searched for for header files. This is ensures a build even when system freebl 
+# to be searched for for header files. This ensures a build even when system freebl 
 # headers are older. Such is the case when we are starting a major update.
 # NSSUTIL_INCLUDE_DIR, after all, contains both util and freebl headers. 
 # Once has been bootstapped the patch may be removed, but it doesn't hurt to keep it.
 Patch9:           iquote.patch
-# Fix gcc 4.7 c++ issue in secmodt.h
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50917
-Patch10:          nss-softokn-fix-gcc47-secmodt.patch
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=762198
+# Patch10:          Bug-829088-nss-3.13.4-fips-sha224-selftest.patch
+
 
 %description
 Network Security Services Softoken Cryptographic Module
@@ -109,21 +113,24 @@ BuildRequires:    nss-util-devel >= %{nss_util_version}
 BuildRequires:    nss-devel >= 3.12.2.99.3-11
 
 %description devel
-Header and Library files for doing development with Network Security Services.
+Header and library files for doing development with Network Security Services.
 
 
 %prep
 %setup -q
 
-%patch1 -p0 -b .relro
-%patch5 -p0 -b .drbg
+%patch1 -p0 -b .softokenonly
 %patch8 -p0 -b .crypto
 # activate if needed when doing a major update with new apis
-#%patch9 -p0 -b .iquote
-%patch10 -p0 -b .gcc47
+%patch9 -p0 -b .iquote
+#%patch10 -p0 -b .829088
 
 
 %build
+
+# partial RELRO support as a security enhancement
+LDFLAGS+=-Wl,-z,relro
+export LDFLAGS
 
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
@@ -174,7 +181,10 @@ export USE_64
 %endif
 
 # uncomment if the iguote patch is activated
-#export IN_TREE_FREEBL_HEADERS_FIRST=1
+export IN_TREE_FREEBL_HEADERS_FIRST=1
+
+# Use only the basicutil subset for sectools.a
+export NSS_BUILD_SOFTOKEN_ONLY=1
 
 # Compile softokn plus needed support
 %{__make} -C ./mozilla/security/coreconf
@@ -185,7 +195,7 @@ export USE_64
 # The nspr_version and nss_util_version globals used here
 # must match the ones nss-softokn has for its Requires. 
 %{__mkdir_p} ./mozilla/dist/pkgconfig
-%{__cat} %{SOURCE2} | sed -e "s,%%libdir%%,%{_libdir},g" \
+%{__cat} %{SOURCE3} | sed -e "s,%%libdir%%,%{_libdir},g" \
                           -e "s,%%prefix%%,%{_prefix},g" \
                           -e "s,%%exec_prefix%%,%{_prefix},g" \
                           -e "s,%%includedir%%,%{_includedir}/nss3,g" \
@@ -202,7 +212,7 @@ export SOFTOKEN_VMAJOR
 export SOFTOKEN_VMINOR
 export SOFTOKEN_VPATCH
 
-%{__cat} %{SOURCE3} | sed -e "s,@libdir@,%{_libdir},g" \
+%{__cat} %{SOURCE4} | sed -e "s,@libdir@,%{_libdir},g" \
                           -e "s,@prefix@,%{_prefix},g" \
                           -e "s,@exec_prefix@,%{_prefix},g" \
                           -e "s,@includedir@,%{_includedir}/nss3,g" \
@@ -213,15 +223,6 @@ export SOFTOKEN_VPATCH
 
 chmod 755 ./mozilla/dist/pkgconfig/nss-softokn-config
 
-
-# enable the following line to force a test failure
-# find ./mozilla -name \*.chk | xargs rm -f
-
-#
-# We can't run a subset of the tests because the tools have
-# dependencies on nss libraries outside of softokn. 
-# Let's leave this as a place holder.
-#
 
 %check
 
@@ -293,7 +294,7 @@ do
 done
 
 # Copy the binaries we ship as unsupported
-for file in shlibsign
+for file in bltest fipstest shlibsign
 do
   %{__install} -p -m 755 mozilla/dist/*.OBJ/bin/$file $RPM_BUILD_ROOT/%{unsupported_tools_directory}
 done
@@ -332,19 +333,21 @@ done
 %files
 %defattr(-,root,root)
 %{_libdir}/libnssdbm3.so
-%{_libdir}/libnssdbm3.chk
+#%{_libdir}/libnssdbm3.chk
 %{_libdir}/libsoftokn3.so
-%{_libdir}/libsoftokn3.chk
+#%{_libdir}/libsoftokn3.chk
 # shared with nss-tools
 %dir %{_libdir}/nss
 %dir %{saved_files_dir}
 %dir %{unsupported_tools_directory}
+%{unsupported_tools_directory}/bltest
+%{unsupported_tools_directory}/fipstest
 %{unsupported_tools_directory}/shlibsign
 
 %files freebl
 %defattr(-,root,root)
 %{_libdir}/libfreebl3.so
-%{_libdir}/libfreebl3.chk
+#%{_libdir}/libfreebl3.chk
 
 %files freebl-devel
 %defattr(-,root,root)
@@ -370,15 +373,75 @@ done
 # which installed them before us.
 #
 %{_includedir}/nss3/ecl-exp.h
-%{_includedir}/nss3/hasht.h
-%{_includedir}/nss3/sechash.h
 %{_includedir}/nss3/nsslowhash.h
-%{_includedir}/nss3/secmodt.h
 %{_includedir}/nss3/shsign.h
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.13.3-2
-- 为 Magic 3.0 重建
+* Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-2
+- Require nspr version >= 4.9.4
+
+* Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-1
+- Update to NSS_3_14_1_RTM
+
+* Mon Dec 03 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-6
+- Bug 883114 - Install bltest and fipstest as unsupported tools
+
+* Mon Nov 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-5
+- Truly apply the bug 829088 patch this time
+- Resolves: rhbz#829088 - Fix failure in sha244 self-test
+
+* Mon Nov 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-4
+- Apply the bug 829088 patch in question
+- Adjust the patch to account for code changes in nss-3.14
+- Resolves: rhbz#829088 - Fix failure in sha244 self-test
+
+* Sun Nov 18 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-3
+- Resolves: rhbz#829088 - Fix failure in sha244 self-test
+- Fixes login failures on fips mode
+
+* Sat Oct 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-2
+ - Update the license to MPLv2.0
+
+* Mon Oct 22 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-1
+- Update to NSS_3_14_RTM
+
+* Sun Oct 21 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-0.1.rc1.2
+- Update to NSS_3_14_RC
+- Remove the temporary bootstrapping modifications
+
+* Sun Oct 21 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-0.1.rc.1
+- Update to NSS_3_14_RC1
+- Remove patches rendered obsolete by this update and update others
+- Temporarily modifiy the spec file while bootstrapping the buildroot a follows:
+- Remove unwanted headers that we lo loger ship
+- Modified the post install scriplet to ensure the in-tree freebl library is loaded
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-2
+- Resolves: rhbz#833529 - revert unwanted change to nss-softokn.pc.in
+
+* Mon Jun 18 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-1
+- Update to NSS_3_13_5_RTM
+- Remove unneeded fix for gcc 4.7 c++ issue in secmodt.h which undoes the upstream fix
+- Fix Libs: line on nss-softokn.pc.in
+
+* Wed Jun 13 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-3
+- Resolves: rhbz#745224 - nss-softokn sha224 self-test fails in fips mode
+
+* Tue Apr 10 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-2
+- Resolves: Bug 801975 Restore use of NSS_NoDB_Init or alternate to fipstest
+
+* Fri Apr 06 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-1
+- Update to NSS_3_13_4
+
+* Sun Apr 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-0.1.beta.1
+- Update to NSS_3_13_4_BETA1
+- Improve steps for splitting off softokn from the full nss
+
+* Wed Mar 21 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-2
+- Resolves: Bug 805719 - Library needs partial RELRO support added
 
 * Thu Mar 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-1
 - Update to NSS_3_13_3_RTM

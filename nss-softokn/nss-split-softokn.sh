@@ -52,34 +52,45 @@ rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
 rm -rf ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/pkg
 # rstart with an empty lib directory and copy only what we need
 mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
+# copy the top files from mozilla/security/nss/lib/
+topFilesL=`find ${nss_source_dir}/mozilla/security/nss/lib/ -maxdepth 1 -mindepth 1 -type f`
+for f in $topFilesL; do
+  cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
+done
+mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib/util
 # copy entire freebl and softoken directories recursively
 cp -a ${nss_source_dir}/mozilla/security/nss/lib/freebl ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib/freebl
 cp -a ${nss_source_dir}/mozilla/security/nss/lib/softoken ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib/softoken
+# copy the top files from mozilla/security/nss/lib/util
+topFilesU=`find ${nss_source_dir}/mozilla/security/nss/lib/util -maxdepth 1 -mindepth 1 -type f`
+for f in $topFilesU; do
+  cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/
+done
 
-# and some Makefiles and related files
-cp ${nss_source_dir}/mozilla/security/nss/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/trademarks.txt ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss
-cp ${nss_source_dir}/mozilla/security/nss/lib/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
-cp ${nss_source_dir}/mozilla/security/nss/lib/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/lib
+# and some Makefiles and related files from mozilla/security/nss
+topFilesN=`find ${nss_source_dir}/mozilla/security/nss/ -maxdepth 1 -mindepth 1 -type f`
+for f in $topFilesN; do
+  cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/
+done
 
-# we do need bltest, lib, and shlibsign from cmd
+# we do need bltest, lib, lowhashtest, and shlibsign from mozilla/security/nss/cmd
 mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
 # copy some files at the top and the slhlib subdirectory
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/Makefile ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/manifest.mn ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platlibs.mk ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
-cp -p ${nss_source_dir}/mozilla/security/nss/cmd/platrules.mk ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd
+topFilesC=`find ${nss_source_dir}/mozilla/security/nss/cmd/ -maxdepth 1 -mindepth 1 -type f`
+for f in $topFilesC; do
+  cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/
+done
 
 cp -a ${nss_source_dir}/mozilla/security/nss/cmd/bltest ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/bltest
 cp -a ${nss_source_dir}/mozilla/security/nss/cmd/fipstest ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/fipstest
 cp -a ${nss_source_dir}/mozilla/security/nss/cmd/lib ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/lib
+cp -a ${nss_source_dir}/mozilla/security/nss/cmd/lowhashtest ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/lowhashtest
 cp -a ${nss_source_dir}/mozilla/security/nss/cmd/shlibsign ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/cmd/shlibsign
 
-# plus common and crypto from nss/tests
+# plus common and crypto from mozilla/security/nss/tests
 mkdir ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests
-topFiles=`find ${nss_source_dir}/mozilla/security/nss/tests/ -maxdepth 1 -mindepth 1 -type f`
-for f in $topFiles; do
+topFilesT=`find ${nss_source_dir}/mozilla/security/nss/tests/ -maxdepth 1 -mindepth 1 -type f`
+for f in $topFilesT; do
   cp -p $f ${SOFTOKN_WORK}/${softokn_dir}/mozilla/security/nss/tests/
 done
 keepers="cipher common"

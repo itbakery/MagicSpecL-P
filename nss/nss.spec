@@ -1,14 +1,14 @@
-%global nspr_version 4.9
-%global nss_util_version 3.13.3
+%global nspr_version 4.9.2
+%global nss_util_version 3.14
 %global nss_softokn_fips_version 3.12.9
-%global nss_softokn_version 3.13.3
+%global nss_softokn_version 3.14
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
 
 Summary:          Network Security Services
 Name:             nss
-Version:          3.13.3
-Release:          2%{?dist}
-License:          MPLv1.1 or GPLv2+ or LGPLv2+
+Version:          3.14.1
+Release:          1%{?dist}
+License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
 Requires:         nspr >= %{nspr_version}
@@ -52,30 +52,27 @@ Source7:          blank-key4.db
 Source8:          system-pkcs11.txt
 Source9:          setup-nsssysinit.sh
 Source10:         PayPalEE.cert
-Source12:         %{name}-pem-20101125.tar.bz2
+Source12:         %{name}-pem-20120811.tar.bz2
 
+Patch2:           add-relro-linker-option.patch
 Patch3:           renegotiate-transitional.patch
 Patch6:           nss-enable-pem.patch
-Patch7:           nsspem-642433.patch
-Patch8:           0001-Bug-695011-PEM-logging.patch
 Patch16:          nss-539183.patch
 Patch18:          nss-646045.patch
-Patch20:          nsspem-createobject-initialize-pointer.patch
-Patch21:          0001-libnsspem-rhbz-734760.patch
-Patch22:          nsspem-init-inform-not-thread-safe.patch
-# must statically link pem against the 3.12.x system freebl in the buildroot
+# must statically link pem against the freebl in the buildroot
+# Needed only when freebl on tree has newe APIS
 Patch25:          nsspem-use-system-freebl.patch
-# don't compile the fipstest application
-Patch26:          nofipstest.patch
-# include this patch in the upstream pem review
-Patch28:          nsspem-bz754771.patch
-# This patch is currently meant for f16 and f15 only
-#Patch29:          nss-ssl-cbc-random-iv-off-by-default.patch
-Patch30:          bz784672-protect-against-calls-before-nss_init.patch
-# Fix gcc 4.7 c++ issue in secmodt.h
-# http://gcc.gnu.org/bugzilla/show_bug.cgi?id=50917
-Patch31:          nss-fix-gcc47-secmodt.patch
+# This patch is currently meant for stable branches
+Patch29:          nss-ssl-cbc-random-iv-off-by-default.patch
+# Prevent users from trying to enable ssl pkcs11 bypass
+Patch39:          nss-ssl-enforce-no-pkcs11-bypass.path
+# TODO: Remove this patch when the ocsp test are fixed
+Patch40:          nss-3.14.0.0-disble-ocsp-test.patch
 
+# upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=807890
+Patch42:          0001-Add-extended-key-usage-for-MS-Authenticode-Code-Sign.patch
+
+Patch43:          no-softoken-freebl-tests.patch
 
 %description
 Network Security Services (NSS) is a set of libraries designed to
@@ -87,8 +84,7 @@ v3 certificates, and other security standards.
 %package tools
 Summary:          Tools for the Network Security Services
 Group:            System Environment/Base
-Requires:         nss = %{version}-%{release}
-Requires:         zlib
+Requires:         %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 Network Security Services (NSS) is a set of libraries designed to
@@ -101,7 +97,7 @@ Install the nss-tools package if you need command-line tools to
 manipulate the NSS certificate and key database.
 
 %package sysinit
-Summary:          System NSS Initilization
+Summary:          System NSS Initialization
 Group:            System Environment/Base
 # providing nss-system-init without version so that it can
 # be replaced by a better one, e.g. supplied by the os vendor
@@ -149,26 +145,24 @@ low level services.
 %{__cp} %{SOURCE10} -f ./mozilla/security/nss/tests/libpkix/certs
 %setup -q -T -D -n %{name}-%{version} -a 12
 
+%patch2 -p0 -b .relro
 %patch3 -p0 -b .transitional
 %patch6 -p0 -b .libpem
-%patch7 -p0 -b .642433
-%patch8 -p1 -b .695011
 %patch16 -p0 -b .539183
 %patch18 -p0 -b .646045
-%patch20 -p1 -b .717338
-%patch21 -p1 -b .734760
-%patch22 -p0 -b .736410
-# link pem against buildroot's 3.12 freebl
+# link pem against buildroot's freebl, essential when mixing and matching
 %patch25 -p0 -b .systemfreebl
-%patch26 -p0 -b .nofipstest
-%patch28 -p0 -b .754771
-# activate only if requested for f17
+# activate for stable and beta branches
 #%patch29 -p0 -b .770682
-%patch30 -p0 -b .784672
-%patch31 -p0 -b .gcc47
-
+%patch39 -p1 -b .nobypass
+%patch40 -p1 -b .noocsptest
+%patch42 -p0 -b .870864
+%patch43 -p0 -b .nosoftokentests
 
 %build
+
+NSS_NO_PKCS11_BYPASS=1
+export NSS_NO_PKCS11_BYPASS
 
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
@@ -200,8 +194,6 @@ export NSPR_LIB_DIR
 export FREEBL_INCLUDE_DIR=`/usr/bin/pkg-config --cflags-only-I nss-softokn | sed 's/-I//'`
 export FREEBL_LIB_DIR=%{_libdir}
 export USE_SYSTEM_FREEBL=1
-# prevents running the sha224 portion of the powerup selftest when testing
-export NO_SHA224_AVAILABLE=1
 
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
@@ -217,7 +209,19 @@ unset NSS_ENABLE_ECC
 # Compile softoken plus needed support
 %{__make} -C ./mozilla/security/coreconf
 %{__make} -C ./mozilla/security/dbm
-%{__make} -C ./mozilla/security/nss
+
+%{__make} -C ./mozilla/security/nss/lib/util export
+%{__make} -C ./mozilla/security/nss/lib/freebl export
+%{__make} -C ./mozilla/security/nss/lib/softoken export
+
+%{__make} -C ./mozilla/security/nss/lib/util
+%{__make} -C ./mozilla/security/nss/lib/freebl
+%{__make} -C ./mozilla/security/nss/lib/softoken
+
+# stash away the bltest and fipstest to build them last
+tar cf build_these_later.tar ./mozilla/security/nss/cmd/bltest ./mozilla/security/nss/cmd/fipstest
+rm -rf ./mozilla/security/nss/cmd/bltest
+rm -rf ./mozilla/security/nss/cmd/fipstest
 
 ##### phase 2: build the rest of nss
 # nss supports pluggable ecc
@@ -234,6 +238,12 @@ export NSS_ECC_MORE_THAN_SUITE_B
 %{__make} -C ./mozilla/security/coreconf
 %{__make} -C ./mozilla/security/dbm
 %{__make} -C ./mozilla/security/nss
+
+##### phase 3: build bltest and fipstest
+tar xf build_these_later.tar
+unset NSS_ENABLE_ECC; %{__make} -C ./mozilla/security/nss/cmd/bltest
+unset NSS_ENABLE_ECC; %{__make} -C ./mozilla/security/nss/cmd/fipstest
+%{__rm} -f build_these_later.tar
 
 # Set up our package file
 # The nspr_version and nss_{util|softokn}_version globals used
@@ -272,9 +282,10 @@ chmod 755 ./mozilla/dist/pkgconfig/nss-config
 %{__cat} %{SOURCE9} > ./mozilla/dist/pkgconfig/setup-nsssysinit.sh
 chmod 755 ./mozilla/dist/pkgconfig/setup-nsssysinit.sh
 
+%{__cp} ./mozilla/security/nss/lib/ckfw/nssck.api ./mozilla/dist/private/nss/
+
 %check
 
-%if 0
 # Begin -- copied from the build section
 FREEBL_NO_DEPEND=1
 export FREEBL_NO_DEPEND
@@ -329,7 +340,7 @@ cd ./mozilla/security/nss/tests/
 
 #  don't need to run all the tests when testing packaging
 #  nss_cycles: standard pkix upgradedb sharedb
-#  nss_tests: cipher libpkix cert dbtests tools fips sdr crmf smime ssl ocsp merge pkits chains
+nss_tests="cipher libpkix cert dbtests tools fips sdr crmf smime ssl merge pkits chains"
 #  nss_ssl_tests: crl bypass_normal normal_bypass normal_fips fips_normal iopr
 #  nss_ssl_run: cov auth stress
 #
@@ -353,7 +364,6 @@ if [ $TEST_FAILURES -ne 0 ]; then
 fi
 echo "test suite completed"
 %endif
-%endif
 
 %install
 
@@ -362,6 +372,7 @@ echo "test suite completed"
 # There is no make install target so we'll do it ourselves.
 
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/nss3
+%{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/nss3/templates
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_bindir}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{unsupported_tools_directory}
@@ -408,6 +419,12 @@ do
   %{__install} -p -m 644 $file $RPM_BUILD_ROOT/%{_includedir}/nss3
 done
 
+# Copy the template files we want
+for file in mozilla/dist/private/nss/nssck.api
+do
+  %{__install} -p -m 644 $file $RPM_BUILD_ROOT/%{_includedir}/nss3/templates
+done
+
 # Copy the package configuration files
 %{__install} -p -m 644 ./mozilla/dist/pkgconfig/nss.pc $RPM_BUILD_ROOT/%{_libdir}/pkgconfig/nss.pc
 %{__install} -p -m 755 ./mozilla/dist/pkgconfig/nss-config $RPM_BUILD_ROOT/%{_bindir}/nss-config
@@ -415,46 +432,47 @@ done
 %{__install} -p -m 755 ./mozilla/dist/pkgconfig/setup-nsssysinit.sh $RPM_BUILD_ROOT/%{_bindir}/setup-nsssysinit.sh
 
 #remove the nss-util-devel headers
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/base64.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/ciferfam.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssb64.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssb64t.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslocks.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssilock.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssilckt.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssrwlk.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssrwlkt.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nssutil.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11f.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11n.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11p.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11t.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11u.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/portreg.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secasn1.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secasn1t.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/seccomon.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secder.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secdert.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secdig.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secdigt.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secerr.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secitem.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secoid.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secoidt.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secport.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/utilrename.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/base64.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/ciferfam.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssb64.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssb64t.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslocks.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssilock.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssilckt.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssrwlk.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssrwlkt.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nssutil.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11f.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11n.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11p.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11t.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/pkcs11u.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/portreg.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secasn1.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secasn1t.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/seccomon.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secder.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secdert.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secdig.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secdigt.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secerr.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secitem.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secoid.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secoidt.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/secport.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/utilrename.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/utilmodt.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/utilpars.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/utilparst.h
 
-#remove the nss-softokn-devel and nss-softokn-freebl-devel headers
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/alghmac.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/blapit.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/ecl-exp.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/hasht.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/sechash.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/secmodt.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/shsign.h
-rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
+#remove headers shipped nss-softokn-devel and nss-softokn-freebl-devel
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/alghmac.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/blapit.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/ecl-exp.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/hasht.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/shsign.h
+rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -530,6 +548,7 @@ rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 %{_includedir}/nss3/crmft.h
 %{_includedir}/nss3/cryptohi.h
 %{_includedir}/nss3/cryptoht.h
+%{_includedir}/nss3/sechash.h
 %{_includedir}/nss3/jar-ds.h
 %{_includedir}/nss3/jar.h
 %{_includedir}/nss3/jarfile.h
@@ -556,6 +575,7 @@ rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 %{_includedir}/nss3/preenc.h
 %{_includedir}/nss3/secmime.h
 %{_includedir}/nss3/secmod.h
+%{_includedir}/nss3/secmodt.h
 %{_includedir}/nss3/secpkcs5.h
 %{_includedir}/nss3/secpkcs7.h
 %{_includedir}/nss3/smime.h
@@ -577,13 +597,133 @@ rm -rf $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 %{_includedir}/nss3/nssckg.h
 %{_includedir}/nss3/nssckmdt.h
 %{_includedir}/nss3/nssckt.h
+%{_includedir}/nss3/templates/nssck.api
 %{_libdir}/libnssb.a
 %{_libdir}/libnssckfw.a
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.13.3-2
-- 为 Magic 3.0 重建
+* Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-1
+- Update to NSS_3_14_1_RTM
+
+* Wed Dec 12 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-12
+- Bug 879978 - Install the nssck.api header template where mod_revocator can access it
+- Install nssck.api in /usr/includes/nss3/templates
+
+* Tue Nov 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-11
+- Bug 879978 - Install the nssck.api header template in a place where mod_revocator can access it
+- Install nssck.api in /usr/includes/nss3
+
+* Mon Nov 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-10
+- Bug 870864 - Add support in NSS for Secure Boot
+
+* Sat Nov 10 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-9
+- Disable bypass code at build time and return failure on attempts to enable at runtime
+- Bug 806588 - Disable SSL PKCS #11 bypass at build time
+
+* Sun Nov 04 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-8
+- Fix pk11wrap locking which fixes 'fedpkg new-sources' and 'fedpkg update' hangs
+- Bug 872124 - nss-3.14 breaks fedpkg new-sources
+- Fix should be considered preliminary since the patch may change upon upstream approval
+ 
+* Thu Nov 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-7
+- Add a dummy source file for testing /preventing fedpkg breakage
+- Helps test the fedpkg new-sources and upload commands for breakage by nss updates
+- Related to Bug 872124 - nss 3.14 breaks fedpkg new-sources
+
+* Thu Nov 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-6
+- Fix a previous unwanted merge from f18
+- Update the SS_SSL_CBC_RANDOM_IV patch to match new sources while
+- Keeping the patch disabled while we are still in rawhide and
+- State in comment that patch is needed for both stable and beta branches
+- Update .gitignore to download only the new sources
+
+* Wed Oct 31 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-5
+- Fix the spec file so sechash.h gets installed
+- Resolves: rhbz#871882 - missing header: sechash.h in nss 3.14
+
+* Sat Oct 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-4
+- Update the license to MPLv2.0
+
+* Wed Oct 24 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-3
+- Use only -f when removing unwanted headers
+
+* Tue Oct 23 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-2
+- Add secmodt.h to the headers installed by nss-devel
+- nss-devel must install secmodt.h which moved from softoken to pk11wrap with nss-3.14
+
+* Mon Oct 22 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-1
+- Update to NSS_3_14_RTM
+
+* Sun Oct 21 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-0.1.rc.1
+- Update to NSS_3_14_RC1
+- update nss-589636.patch to apply to httpdserv
+- turn off ocsp tests for now
+- remove no longer needed patches
+- remove headers shipped by nss-util
+
+* Fri Oct 05 2012 Kai Engert <kaie@redhat.com> - 3.13.6-1
+- Update to NSS_3_13_6_RTM
+
+* Mon Aug 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-8
+- Rebase pem sources to fedora-hosted upstream to pick up two fixes from rhel-6.3
+- Resolves: rhbz#847460 - Fix invalid read and free on invalid cert load
+- Resolves: rhbz#847462 - PEM module may attempt to free uninitialized pointer 
+- Remove unneeded fix gcc 4.7 c++ issue in secmodt.h that actually undoes the upstream fix
+
+* Mon Aug 13 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-7
+- Fix pluggable ecc support
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.5-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jul 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-5
+- Fix checkin comment to prevent unwanted expansions of percents
+
+* Sun Jul 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-4
+- Resolves: Bug 830410 - Missing Requires %%{?_isa}
+- Use Requires: %%{name}%%{?_isa} = %%{version}-%%{release} on tools
+- Drop zlib requires which rpmlint reports as error E: explicit-lib-dependency zlib
+- Enable sha224 portion of powerup selftest when running test suites
+- Require nspr 4.9.1
+
+* Wed Jun 20 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-3
+- Resolves: rhbz#833529 - revert unwanted change to nss.pc.in
+
+* Tue Jun 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-2
+- Resolves: rhbz#833529 - Remove unwanted space from the Libs: line on nss.pc.in
+
+* Mon Jun 18 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-1
+- Update to NSS_3_13_5_RTM
+
+* Fri Apr 13 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-3
+- Resolves: Bug 812423 - nss_Init leaks memory, fix from RHEL 6.3
+
+* Sun Apr 08 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-2
+- Resolves: Bug 805723 - Library needs partial RELRO support added
+- Patch coreconf/Linux.mk as done on RHEL 6.2
+
+* Fri Apr 06 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-1
+- Update to NSS_3_13_4_RTM
+- Update the nss-pem source archive to the latest version
+- Remove no longer needed patches
+- Resolves: Bug 806043 - use pem files interchangeably in a single process
+- Resolves: Bug 806051 - PEM various flaws detected by Coverity
+- Resolves: Bug 806058 - PEM pem_CreateObject leaks memory given a non-existing file name
+
+* Wed Mar 21 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-4
+- Resolves: Bug 805723 - Library needs partial RELRO support added
+
+* Fri Mar 09 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-3
+- Cleanup of the spec file
+- Add references to the upstream bugs
+- Fix typo in Summary for sysinit
+
+* Thu Mar 08 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-2
+- Pick up fixes from RHEL
+- Resolves: rhbz#800674 - Unable to contact LDAP Server during winsync
+- Resolves: rhbz#800682 - Qpid AMQP daemon fails to load after nss update
+- Resolves: rhbz#800676 - NSS workaround for freebl bug that causes openswan to drop connections
 
 * Thu Mar 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-1
 - Update to NSS_3_13_3_RTM

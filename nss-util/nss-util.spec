@@ -1,10 +1,10 @@
-%global nspr_version 4.8.9
+%global nspr_version 4.9.4
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.13.3
-Release:          2%{?dist}
-License:          MPLv1.1 or GPLv2+ or LGPLv2+
+Version:          3.14.1
+Release:          1%{?dist}
+License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
 Requires:         nspr >= %{nspr_version}
@@ -17,20 +17,29 @@ BuildRequires:    psmisc
 BuildRequires:    perl
 
 Source0:          %{name}-%{version}.tar.bz2
-# The nss-util tar ball is a subset of nss-{version}-stripped.tar.bz2, 
-# Therefore we use the nss-split-util.sh script to keeping only what we need.
-# Download the nss tarball via CVS from the nss propect and follow these
-# steps to make the r tarball for nss-util out of the for nss:
-# fedpkg clone nss
+# The nss-util tar ball is a subset of nss-{version}-stripped.tar.bz2.
+# We use the nss-split-util.sh script for keeping only what we need.
+# We first produce the full source archive from from the upstream,
+# nss-{version}-stripped.tar.gz, by running mozilla-crypto-strip.sh
+# to remove any non-free sources, none in this case but we want a bz2 archive, 
+# and then split off  nss-util from it via nss-split-util.sh {name}-{version}
+# Detailed Steps:
 # fedpkg clone nss-util
-# cd nss-util/master
-# cp ../../nss/devel/${version}-stripped.tar.bz2 .
+# cd nss-util
+# Download the nss-{version}-stripped.tar.gz tarball from upstream
+# Strip-off unwanted sources with
+# ./mozilla-crypto-srip.sh nss-{version}-stripped.tar.gz
+# which produces nss-{version}-stripped.tar.bz2
+# Make the source tarball for nss-util out of the nss one:
 # sh ./nss-split-util.sh ${version}
-# A file named {name}-{version}.tar.bz2 should appear
-Source1:          nss-split-util.sh
-Source2:          nss-util.pc.in
-Source3:          nss-util-config.in
+# A file named ${name}-${version}.tar.bz2 should appear
+# ready to upload to the lookaside cache.
+Source1:          mozilla-crypto-strip.sh
+Source2:          nss-split-util.sh
+Source3:          nss-util.pc.in
+Source4:          nss-util-config.in
 
+Patch1: build-nss-util-only.patch
 
 %description
 Utilities for Network Security Services and the Softoken module
@@ -45,12 +54,21 @@ Requires:         nss-util = %{version}-%{release}
 Requires:         nspr-devel >= %{nspr_version}
 Requires:         pkgconfig
 
+# Uncomment this if nededed to prevent install/update conflict with
+# installed nss-softoken as nss-util-devel now provides hasht.h
+# which prior to the update to 3.14 was provided by nss-softokn-devel.
+#Conflicts:        nss-softokn-devel < 3.14
+#Obsoletes:        nss-softokn-devel < 3.14
+#Provides:         /usr/include/nss3/hasht.h
+
 %description devel
 Header and library files for doing development with Network Security Services.
 
 
 %prep
 %setup -q
+%patch1 -p0 -b .utilonly
+
 
 %build
 
@@ -81,6 +99,9 @@ export NSPR_LIB_DIR
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
+NSS_BUILD_NSSUTIL=1
+export NSS_BUILD_NSSUTIL
+
 %ifarch x86_64 ppc64 ia64 s390x sparc64
 USE_64=1
 export USE_64
@@ -92,7 +113,7 @@ export USE_64
 
 # Set up our package file
 %{__mkdir_p} ./mozilla/dist/pkgconfig
-%{__cat} %{SOURCE2} | sed -e "s,%%libdir%%,%{_libdir},g" \
+%{__cat} %{SOURCE3} | sed -e "s,%%libdir%%,%{_libdir},g" \
                           -e "s,%%prefix%%,%{_prefix},g" \
                           -e "s,%%exec_prefix%%,%{_prefix},g" \
                           -e "s,%%includedir%%,%{_includedir}/nss3,g" \
@@ -108,7 +129,7 @@ export NSSUTIL_VMAJOR
 export NSSUTIL_VMINOR 
 export NSSUTIL_VPATCH
 
-%{__cat} %{SOURCE3} | sed -e "s,@libdir@,%{_libdir},g" \
+%{__cat} %{SOURCE4} | sed -e "s,@libdir@,%{_libdir},g" \
                           -e "s,@prefix@,%{_prefix},g" \
                           -e "s,@exec_prefix@,%{_prefix},g" \
                           -e "s,@includedir@,%{_includedir}/nss3,g" \
@@ -171,6 +192,7 @@ done
 # mozilla/security/nss/lib/util/manifest.mk
 %{_includedir}/nss3/base64.h
 %{_includedir}/nss3/ciferfam.h
+%{_includedir}/nss3/hasht.h
 %{_includedir}/nss3/nssb64.h
 %{_includedir}/nss3/nssb64t.h
 %{_includedir}/nss3/nsslocks.h
@@ -198,11 +220,57 @@ done
 %{_includedir}/nss3/secoid.h
 %{_includedir}/nss3/secoidt.h
 %{_includedir}/nss3/secport.h
+%{_includedir}/nss3/utilmodt.h
+%{_includedir}/nss3/utilpars.h
+%{_includedir}/nss3/utilparst.h
 %{_includedir}/nss3/utilrename.h
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.13.3-2
-- 为 Magic 3.0 重建
+* Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-1
+- Update to NSS_3_14_1_RTM
+
+* Sat Oct 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-2
+- Update the license to MPLv2.0
+
+* Mon Oct 22 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-1
+- Update to NSS_3_14_RTM
+
+* Fri Oct 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.14-0.1.rc1.1
+- Update to NSS_3_14_RC1
+- The hasht.h from now on is provided by nss-util-devel
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.13.5-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 20 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-3
+- Resolves: rhbz#833529 - revert unwanted change to nss-util.pc.in
+
+* Tue Jun 19 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-2
+- Resolves: rhbz#833529 - Remove space from Libs: line in nss-util.pc.in
+
+* Sat Jun 16 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.5-1
+- Update to NSS_3_13_5_RTM
+
+* Sun Apr 08 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-2
+- Resolves: Bug 805716 - Library needs partial RELRO support added
+- Patch coreconf/Linux.mk as done on RHEL 6.2
+
+* Fri Apr 06 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-1
+- Update to NSS_3_13_4
+
+* Sun Apr 01 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.4-0.1.beta.1
+- Update to NSS_3_13_4_BETA1
+- Improve steps to splitting off util from the nss
+- Add executable attribute to the splitting script
+
+* Tue Mar 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.13.3-4
+- Resolves: Bug 805716 - Library needs partial RELRO support added
+
+* Fri Mar 16 2012 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.3-3
+- Update the release tag to be higher than in f16
+
+* Fri Mar 09 2012 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.3-2
+- Require nspr 4.9
 
 * Thu Mar 01 2012 Elio Maldonado Batiz <emaldona@redhat.com> - 3.13.1-4
 - Update to NSS_3_13_3_RTM

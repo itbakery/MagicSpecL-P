@@ -1,0 +1,96 @@
+diff -up ./mozilla/security/nss/cmd/manifest.mn.utilonly ./mozilla/security/nss/cmd/manifest.mn
+--- ./mozilla/security/nss/cmd/manifest.mn.utilonly	2012-12-16 18:33:44.071375472 -0800
++++ ./mozilla/security/nss/cmd/manifest.mn	2012-12-16 18:34:37.124687871 -0800
+@@ -8,54 +8,7 @@ DEPTH	= ../..
+ 
+ REQUIRES = nss nspr libdbm
+ 
+-DIRS = lib  \
+- addbuiltin \
+- atob  \
+- bltest \
+- btoa  \
+- certcgi \
+- certutil  \
+- checkcert  \
+- chktest  \
+- crlutil  \
+- crmftest \
+- dbtest \
+- derdump  \
+- digest  \
+- httpserv  \
+- fipstest  \
+- $(LOWHASHTEST_SRCDIR)  \
+- listsuites \
+- makepqg  \
+- multinit \
+- ocspclnt  \
+- ocspresp \
+- oidcalc  \
+- p7content  \
+- p7env  \
+- p7sign  \
+- p7verify  \
+- pk12util \
+- pk11mode \
+- pk1sign  \
+- pkix-errcodes \
+- pp  \
+- pwdecrypt \
+- rsaperf \
+- sdrtest \
+- selfserv  \
+- signtool \
+- signver \
+- shlibsign \
+- smimetools  \
+- ssltap  \
+- strsclnt \
+- symkeyutil \
+- tests \
+- tstclnt  \
+- vfychain \
+- vfyserv \
+- modutil \
++DIRS =  \
+  $(NULL)
+ 
+ TEMPORARILY_DONT_BUILD = \
+diff -up ./mozilla/security/nss/lib/Makefile.utilonly ./mozilla/security/nss/lib/Makefile
+--- ./mozilla/security/nss/lib/Makefile.utilonly	2012-12-16 18:28:27.000000000 -0800
++++ ./mozilla/security/nss/lib/Makefile	2012-12-16 18:32:50.444057953 -0800
+@@ -42,6 +42,14 @@ SYSINIT_SRCDIR = sysinit  # Add the sysi
+ endif
+ endif
+ 
++ifndef MOZILLA_CLIENT
++ifeq ($(OS_ARCH),Linux)
++ifneq ($(NSS_BUILD_NSSUTIL),1)
++SYSINIT_SRCDIR=
++endif
++endif
++endif
++
+ #######################################################################
+ # (5) Execute "global" rules. (OPTIONAL)                              #
+ #######################################################################
+diff -up ./mozilla/security/nss/lib/manifest.mn.utilonly ./mozilla/security/nss/lib/manifest.mn
+--- ./mozilla/security/nss/lib/manifest.mn.utilonly	2012-12-16 17:42:05.000000000 -0800
++++ ./mozilla/security/nss/lib/manifest.mn	2012-12-16 18:17:41.627464015 -0800
+@@ -16,14 +16,7 @@ DEPTH      = ../..
+ #  smime
+ #  ckfw (builtins module)
+ #  crmf jar (not dll's)
+-DIRS =  util freebl $(SQLITE_SRCDIR) softoken \
+-	base dev pki \
+-	libpkix \
+-	certdb certhigh pk11wrap cryptohi nss \
+-	$(ZLIB_SRCDIR) ssl \
+-	pkcs12 pkcs7 smime \
+-	crmf jar \
+-	ckfw $(SYSINIT_SRCDIR) \
++DIRS =  util \
+ 	$(NULL)
+ 
+ #  fortcrypt  is no longer built

@@ -49,7 +49,13 @@ rm -rf ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
 rm -rf ${UTIL_WORK}/${util_dir}/mozilla/security/nss/tests
 rm -rf ${UTIL_WORK}/${util_dir}/mozilla/security/nss/lib
 
-# start with an empty lib directory to be filled
+# start with an empty cmd lib directories to be filled selectively
+mkdir ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
+cp ${nss_source_dir}/mozilla/security/nss/cmd/Makefile ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
+cp ${nss_source_dir}/mozilla/security/nss/cmd/manifest.mn ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
+cp ${nss_source_dir}/mozilla/security/nss/cmd/platlibs.mk ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
+cp ${nss_source_dir}/mozilla/security/nss/cmd/platrules.mk ${UTIL_WORK}/${util_dir}/mozilla/security/nss/cmd
+
 mkdir ${UTIL_WORK}/${util_dir}/mozilla/security/nss/lib
 # copy some files at the top and the util subdirectory recursively
 cp ${nss_source_dir}/mozilla/security/nss/lib/Makefile ${UTIL_WORK}/${util_dir}/mozilla/security/nss/lib

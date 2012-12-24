@@ -1,6 +1,6 @@
 Name:           p11-kit
-Version:        0.8
-Release:        2%{?dist}
+Version:        0.14
+Release:        1%{?dist}
 Summary:        Library for loading and sharing PKCS#11 modules
 
 License:        BSD
@@ -40,6 +40,10 @@ rm $RPM_BUILD_ROOT%{_libdir}/*.la
 rm $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/pkcs11.conf.example
 
 
+%check
+make check
+
+
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
@@ -62,8 +66,27 @@ rm $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/pkcs11.conf.example
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.8-2
-- 为 Magic 3.0 重建
+* Mon Sep 17 2012 Kalev Lember <kalevlember@gmail.com> - 0.14-1
+- Update to 0.14
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.13-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jul 16 2012 Kalev Lember <kalevlember@gmail.com> - 0.13-1
+- Update to 0.13
+
+* Tue Mar 27 2012 Kalev Lember <kalevlember@gmail.com> - 0.12-1
+- Update to 0.12
+- Run self tests in %%check
+
+* Sat Feb 11 2012 Kalev Lember <kalevlember@gmail.com> - 0.11-1
+- Update to 0.11
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Tue Dec 20 2011 Matthias Clasen <mclasen@redhat.com> - 0.9-1
+- Update to 0.9
 
 * Wed Oct 26 2011 Kalev Lember <kalevlember@gmail.com> - 0.8-1
 - Update to 0.8

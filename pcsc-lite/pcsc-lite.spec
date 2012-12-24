@@ -1,24 +1,18 @@
-%global upstream_build 3598
+%global upstream_build 3842
 
 Name:           pcsc-lite
-Version:        1.7.4
-Release:        7%{?dist}
+Version:        1.8.7
+Release:        1%{?dist}
 Summary:        PC/SC Lite smart card framework and applications
 
 Group:          System Environment/Daemons
 License:        BSD
 URL:            http://pcsclite.alioth.debian.org/
 Source0:        http://alioth.debian.org/download.php/%{upstream_build}/%{name}-%{version}.tar.bz2
-# Patches for systemd support
-# http://archives.neohapsis.com/archives/dev/muscle/2011-q2/0138.html
-Patch0:         0001-Support-systemd-socket-activation.patch
-Patch1:         0002-Add-disable-autostart-option.patch
-Patch2:         0003-Install-systemd-service-files.patch
 
-BuildRequires:  automake libtool
-BuildRequires:  libudev-devel
 BuildRequires:  doxygen
 BuildRequires:  graphviz
+BuildRequires:  systemd-devel
 BuildRequires:  systemd-units
 
 Requires(post): systemd-sysv
@@ -64,11 +58,6 @@ Requires:       %{name}-libs = %{version}-%{release}
 
 %prep
 %setup -q
-%patch0 -p2 -b .socket_activation
-%patch1 -p2 -b .noautostart
-%patch2 -p2 -b .service_files
-
-autoreconf -f
 
 # Convert to utf-8
 for file in ChangeLog; do
@@ -81,7 +70,6 @@ done
 %build
 %configure \
   --disable-static \
-  --disable-autostart \
   --enable-usbdropdir=%{_libdir}/pcsc/drivers
 make %{?_smp_mflags}
 doxygen doc/doxygen.conf ; rm -f doc/api/*.{map,md5}
@@ -161,17 +149,46 @@ fi
 %{_libdir}/libpcsclite.so.*
 
 %files devel
+%{_bindir}/pcsc-spy
 %{_includedir}/PCSC/
 %{_libdir}/libpcsclite.so
+%{_libdir}/libpcscspy.so*
 %{_libdir}/pkgconfig/libpcsclite.pc
+%{_mandir}/man1/pcsc-spy.1*
 
 %files doc
 %doc doc/api/ doc/example/pcsc_demo.c
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.7.4-7
-- 为 Magic 3.0 重建
+* Fri Nov 30 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.7-1
+- Update to 1.8.7
+
+* Tue Sep 18 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.6-1
+- Update to 1.8.6
+
+* Mon Aug 06 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.5-1
+- Update to 1.8.5
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 26 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.4-1
+- Update to 1.8.4
+
+* Thu Jun 14 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.3-2
+- Rebuild for new libudev (#831987)
+
+* Fri Mar 30 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.3-1
+- Update to 1.8.3
+
+* Mon Feb 06 2012 Kalev Lember <kalevlember@gmail.com> - 1.8.2-1
+- Update to 1.8.2
+- Drop the systemd support patches which are now upstreamed
+- Package the new pcsc-spay tool in -devel subpackage
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7.4-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Mon Oct 10 2011 Kalev Lember <kalevlember@gmail.com> - 1.7.4-6
 - Remove the automatic card power down disabling patch again;

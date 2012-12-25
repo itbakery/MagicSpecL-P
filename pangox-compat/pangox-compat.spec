@@ -1,6 +1,6 @@
 Name:           pangox-compat
-Version:        0.0.1
-Release:        2%{?dist}
+Version:        0.0.2
+Release:        1%{?dist}
 Summary:        Compatibility library for pangox
 
 License:        LGPLv2+
@@ -33,7 +33,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
-magic_rpm_clean.sh
 
 %post -p /sbin/ldconfig
 
@@ -51,8 +50,8 @@ magic_rpm_clean.sh
 %{_libdir}/pkgconfig/*
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.0.1-2
-- 为 Magic 3.0 重建
+* Fri Nov 09 2012 Kalev Lember <kalevlember@gmail.com> - 0.0.2-1
+- Update to 0.0.2
 
 * Tue Aug 28 2012 Parag Nemade <pnemade AT redhat DOT com> - 0.0.1-1
 - Initial package

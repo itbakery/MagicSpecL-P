@@ -1,23 +1,36 @@
 # From src/version.h:#define OCTAVE_API_VERSION
 %global octave_api api-v48+
 
+# For rc versions, change release manually
+#global rcver 2
+%if 0%{?rcver:1}
+%global rctag -rc%{?rcver}
+%endif
+
 Name:           octave
-Version:        3.6.1
+Version:        3.6.3
 Release:        2%{?dist}
 Summary:        A high-level language for numerical computations
 Epoch:          6
 Group:          Applications/Engineering
 License:        GPLv3+
+%if 0%{!?rcver:1}
 Source0:        ftp://ftp.gnu.org/gnu/octave/octave-%{version}.tar.bz2
+%else
+Source0:        ftp://alpha.gnu.org/gnu/octave/octave-%{version}%{rctag}.tar.bz2
+%endif
 # RPM macros for helping to build Octave packages
 Source1:        macros.octave
 # https://savannah.gnu.org/bugs/index.php?32839
 # Fix building packages from directories
 Patch2:         octave-3.4.0-pkgbuilddir.patch
+# Upstream patches to fix spase matrix handling
+Patch3:         octave-sparse.patch
 URL:            http://www.octave.org
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Provides:       octave(api) = %{octave_api}
+Provides:       bundled(gnulib)
 
 BuildRequires:  bison flex less tetex gcc-gfortran atlas-devel 
 BuildRequires:  ncurses-devel zlib-devel hdf5-devel texinfo qhull-devel
@@ -25,7 +38,7 @@ BuildRequires:  readline-devel glibc-devel fftw-devel gperf ghostscript
 BuildRequires:  curl-devel pcre-devel texinfo-tex arpack-devel libX11-devel
 BuildRequires:  suitesparse-devel glpk-devel gnuplot desktop-file-utils
 BuildRequires:  GraphicsMagick-c++-devel fltk-devel ftgl-devel qrupdate-devel
-BuildRequires:  tex(dvips)
+BuildRequires:  tex(dvips) mesa-libGL-devel mesa-libGLU-devel
 
 Requires:        epstool gnuplot gnuplot-common less info texinfo 
 Requires:        hdf5 = %{_hdf5_version}
@@ -71,8 +84,9 @@ BuildArch:      noarch
 This package contains documentation for Octave.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{?rctag}
 %patch2 -p1 -b .pkgbuilddir
+%patch3 -p1 -b .sparse
 
 # Check permissions
 find -name *.cc -exec chmod 644 {} \;
@@ -80,8 +94,7 @@ find -name *.cc -exec chmod 644 {} \;
 %build
 %global enable64 no
 export F77=gfortran
-# TODO: arpack (and others?) appear to be bundled in libcruft.. 
-#   --with-arpack is not an option anymore
+# TODO: some items appear to be bundled in libcruft.. 
 #   gl2ps.c is bundled.  Anything else?
 %configure --enable-shared --disable-static --enable-64=%enable64 \
  --with-blas="-L%{_libdir}/atlas -lf77blas -latlas" --with-qrupdate \
@@ -99,7 +112,7 @@ fi
 
 # SMP make still not working in Octave 3.6.0
 #make OCTAVE_RELEASE="Fedora %{version}-%{release}" %{?_smp_mflags}
-make OCTAVE_RELEASE="Fedora %{version}-%{release}"
+make OCTAVE_RELEASE="Fedora %{version}%{?rctag}-%{release}"
 
 %install
 rm -rf %{buildroot}
@@ -108,7 +121,7 @@ rm -f %{buildroot}%{_infodir}/dir
 
 # Make library links
 mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
-echo "%{_libdir}/octave/%{version}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
+echo "%{_libdir}/octave/%{version}%{?rctag}" > %{buildroot}%{_sysconfdir}/ld.so.conf.d/octave-%{_arch}.conf
 
 # Remove RPM_BUILD_ROOT from ls-R files
 perl -pi -e "s,%{buildroot},," %{buildroot}%{_libdir}/%{name}/ls-R
@@ -137,9 +150,9 @@ touch %{buildroot}%{_datadir}/%{name}/octave_packages
 # Fix multilib installs
 for include in config defaults oct-conf
 do
-   mv %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h \
-      %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}-%{__isa_bits}.h
-   cat > %{buildroot}%{_includedir}/%{name}-%{version}/%{name}/${include}.h <<EOF
+   mv %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}.h \
+      %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}-%{__isa_bits}.h
+   cat > %{buildroot}%{_includedir}/%{name}-%{version}%{?rctag}/%{name}/${include}.h <<EOF
 #include <bits/wordsize.h>
 
 #if __WORDSIZE == 32
@@ -151,9 +164,9 @@ do
 #endif
 EOF
 done
-for script in octave-config-%{version} mkoctfile-%{version}
+for script in octave-config-%{version}%{?rctag} mkoctfile-%{version}%{?rctag}
 do
-   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}/${script}
+   mv %{buildroot}%{_bindir}/${script} %{buildroot}%{_libdir}/%{name}/%{version}%{?rctag}/${script}
    cat > %{buildroot}%{_bindir}/${script} <<EOF
 #!/bin/bash
 ARCH=\$(uname -m)
@@ -168,22 +181,22 @@ x86_64 | ia64 | s390x) LIB_DIR=/usr/lib64
                        ;;
 esac
 
-if [ ! -x \$LIB_DIR/%{name}/%{version}/${script} ] ; then
-  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} ] ; then
-    echo "Error: \$LIB_DIR/%{name}/%{version}/${script} not found"
+if [ ! -x \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} ] ; then
+  if [ ! -x \$SECONDARY_LIB_DIR/%{name}/%{version}%{?rctag}/${script} ] ; then
+    echo "Error: \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} not found"
     if [ -d \$SECONDARY_LIB_DIR ] ; then
-      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}/${script} not found"
+      echo "   and \$SECONDARY_LIB_DIR/%{name}/%{version}%{?rctag}/${script} not found"
     fi
     exit 1
   fi
   LIB_DIR=\$SECONDARY_LIB_DIR
 fi
-exec \$LIB_DIR/%{name}/%{version}/${script} "\$@"
+exec \$LIB_DIR/%{name}/%{version}%{?rctag}/${script} "\$@"
 EOF
    chmod +x %{buildroot}%{_bindir}/${script}
 done
 # remove timestamp from doc-cache
-sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}/etc/doc-cache
+sed -i -e '/^# Created by Octave/d' %{buildroot}%{_datadir}/%{name}/%{version}%{?rctag}/etc/doc-cache
 
 # rpm macros
 mkdir -p %{buildroot}%{_sysconfdir}/rpm
@@ -222,7 +235,7 @@ fi
 %{_datadir}/applications/fedora-octave.desktop
 # octave_packages is %ghost, so need to list everything else separately
 %dir %{_datadir}/octave
-%{_datadir}/octave/%{version}/
+%{_datadir}/octave/%{version}%{?rctag}/
 %{_datadir}/octave/ls-R
 %ghost %{_datadir}/octave/octave_packages
 %{_datadir}/octave/packages/
@@ -233,8 +246,8 @@ fi
 %defattr(-,root,root,-)
 %config(noreplace) %{_sysconfdir}/rpm/macros.octave
 %{_bindir}/mkoctfile
-%{_bindir}/mkoctfile-%{version}
-%{_includedir}/octave-%{version}/
+%{_bindir}/mkoctfile-%{version}%{?rctag}
+%{_includedir}/octave-%{version}%{?rctag}/
 %{_mandir}/man1/mkoctfile.1.*
 
 %files doc
@@ -245,6 +258,35 @@ fi
 
 
 %changelog
+* Thu Sep 6 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-2
+- Add upstream patch to fix sparse matrix test crash
+
+* Wed Sep 5 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.3-1
+- Update to 3.6.3
+- Drop gets patch fixed upstream
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jul 5 2012 Jussi Lehtola <jussilehtola@fedoraproject.org> - 6:3.6.2-2
+- Build against OpenGL libraries.
+
+* Mon Jun 4 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-1
+- Update to 3.6.2 final
+
+* Thu May 24 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.4.rc2
+- Update to 3.6.2-rc2
+- Add patch to update gnulib to handle gets removal
+
+* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.3.rc0
+- Rebuild with hdf5 1.8.9
+
+* Tue May 15 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.2.rc0
+- Add Provides bundled(gnulib) (bug 821781)
+
+* Sat May 12 2012 Orion Poplawski <orion[AT]cora.nwra com> - 6:3.6.2-0.1.rc0
+- Update to 3.6.2-rc0.
+
 * Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6:3.6.1-2
 - Rebuilt for c++ ABI breakage
 

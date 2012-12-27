@@ -1,6 +1,6 @@
 Summary:	A sophisticated file transfer program
 Name:		lftp
-Version:	4.3.4
+Version:	4.4.0
 Release:	1%{?dist}
 License:	GPLv3+
 Group:		Applications/Internet
@@ -11,7 +11,7 @@ BuildRequires:	ncurses-devel, gnutls-devel, pkgconfig, readline-devel, gettext
 
 Patch1:  lftp-4.0.9-date_fmt.patch
 Patch2:  lftp-4.2.0-man.patch
-Patch3:  lftp-4.3.3-tmprec.patch
+Patch3:  lftp-4.3.8-gets.patch
 
 %description
 LFTP is a sophisticated ftp/http file transfer program. Like bash, it has job
@@ -33,7 +33,7 @@ Utility scripts for use with lftp.
 
 %patch1 -p1 -b .date_fmt
 %patch2 -p1 -b .man
-%patch3 -p1 -b .tmprec
+%patch3 -p1 -b .gets
 
 #sed -i.rpath -e '/lftp_cv_openssl/s|-R.*lib||' configure
 sed -i.norpath -e \
@@ -96,6 +96,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Oct 01 2012 Jiri Skala <jskala@redhat.com> - 4.4.0-1
+- updated to latest upstream 4.4.0
+
+* Sun Jul 21 2012 Jiri Skala <jskala@redhat.com> - 4.3.8-1
+- updated to latest upstream 4.3.8
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 04 2012 Jiri Skala <jskala@redhat.com> - 4.3.7-1
+- updated to latest upstream 4.3.7
+
+* Mon Apr 02 2012 Jiri Skala <jskala@redhat.com> - 4.3.6-1
+- updated to latest upstream 4.3.6
+
+* Tue Jan 24 2012 Jiri Skala <jskala@redhat.com> - 4.3.5-1
+- updated to latest upstream 4.3.5
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 4.3.4-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Jan 02 2012 Jiri Skala <jskala@redhat.com> - 4.3.4-1
 - updated to latest upstream 4.3.4
 

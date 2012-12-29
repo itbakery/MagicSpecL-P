@@ -7,7 +7,7 @@ Summary:	MPEG4IP - system for encoding, streaming and playing MPEG-4 audio/video
 Summary(zh_CN.UTF-8):	MPEG4IP - 编码，发布和播放 MPEG-4 音频/视频的系统
 Name:		mpeg4ip
 Version:	1.6.1
-Release:	8%{?dist}
+Release:	9%{?dist}
 Epoch:		1
 License:	MPL v1.1 (original code) and other licenses (included libraries)
 Group:		Applications/Multimedia
@@ -16,14 +16,15 @@ Group(zh_CN.UTF-8):	应用程序/多媒体
 # Source0:	http://dl.sourceforge.net/mpeg4ip/%{name}-%{version}.tar.gz
 Source0:	ftp://ftp.freebsd.org/pub/FreeBSD/ports/local-distfiles/ahze/%{name}-%{version}.tar.gz
 # Source0-md5:	59e9d9cb7aad0a9605fb6015e7f0b197
-Patch0:		%{name}-link.patch
-Patch1:		%{name}-ac.patch
-Patch2:		%{name}-gcc4.patch
-Patch3:		%{name}-configure.patch
-Patch4:		%{name}-audio_l16.cpp-typo.patch
-Patch5:		%{name}-ffmpeg.patch
-Patch6:		%{name}-gcc44.patch
+Patch0:		mpeg4ip-link.patch
+Patch1:		mpeg4ip-ac.patch
+Patch2:		mpeg4ip-gcc4.patch
+Patch3:		mpeg4ip-configure.patch
+Patch4:		mpeg4ip-audio_l16.cpp-typo.patch
+Patch5:		mpeg4ip-ffmpeg.patch
+Patch6:		mpeg4ip-gcc44.patch
 Patch7:		mpeg4ip-srtp.patch
+Patch8:		mpeg4ip-1.6.1-ffmpeg1.patch
 URL:		http://www.mpeg4ip.net/
 BuildRequires:	SDL-devel
 BuildRequires:	a52dec-devel
@@ -113,6 +114,7 @@ Static versions of base MPEG4IP libraries.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 cd lib/SDLAudio
@@ -251,4 +253,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libsrtpif.a
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:1.6.1-9
+- 为 Magic 3.0 重建
+
 

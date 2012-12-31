@@ -2,7 +2,7 @@
 Summary: A library for text mode user interfaces
 Name: newt
 Version: 0.52.14
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: LGPLv2
 Group: System Environment/Libraries
 URL: https://fedorahosted.org/newt/
@@ -104,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{python_sitearch}/*.py*
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.14-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.52.14-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

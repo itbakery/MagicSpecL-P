@@ -1,6 +1,6 @@
 %define name    mjpegtools
-%define version 2.0.0
-%define release 1%{?dist}
+%define version 2.0.1
+%define release 0.1%{?dist}
 
 %define infoentry "* mjpeg-howto: (mjpeg-howto).        How to use the mjpeg tools"
 %define infofile mjpeg-howto.info
@@ -16,7 +16,7 @@ License: GPL
 Url: http://mjpeg.sourceforge.net/
 Group: Applications/Multimedia
 Group(zh_CN): 应用程序/多媒体
-Source0: http://prdownloads.sourceforge.net/mjpeg/mjpegtools-%{version}.tar.gz
+Source0: http://prdownloads.sourceforge.net/mjpeg/mjpegtools-%{version}RC1.tar.gz
 BuildRoot: %{_tmppath}/%{name}-buildroot-%{version}-%{release}
 
 Requires: libX11 SDL
@@ -53,7 +53,7 @@ needed to compile applications that use part of the libraries
 of the mjpegtools package.
 
 %prep
-%setup -q -n %{name}-%{version} 
+%setup -q -n %{name}-%{version}RC1
 
 #mkdir usr
 
@@ -124,6 +124,9 @@ of the mjpegtools package.
 %{_libdir}/*.so
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.0-2
+- 为 Magic 3.0 重建
+
 * Tue Oct 2 2007 Ni Hui <shuizhuyuanluo@126.com> - 1.9.0rc2-0.1mgc
 - modify the spec to port to MagicLinux-2.1
 

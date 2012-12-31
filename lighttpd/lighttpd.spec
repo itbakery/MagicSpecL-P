@@ -54,8 +54,8 @@
 
 Summary: Lightning fast webserver with light system requirements
 Name: lighttpd
-Version: 1.4.29
-Release: 1%{?dist}
+Version: 1.4.31
+Release: 2%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.lighttpd.net/
@@ -72,8 +72,7 @@ Source14: lighttpd-empty.png
 Source100: lighttpd-mod_geoip.c
 Source101: lighttpd-mod_geoip.txt
 Patch0: lighttpd-1.4.28-defaultconf.patch
-Patch1: lighttpd-1.4.29-mod_geoip.patch
-Patch100: http://redmine.lighttpd.net/attachments/download/1294/lighttpd_1.4.29_ssl_no_ecdh.patch
+Patch1: lighttpd-1.4.31-mod_geoip.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 # For the target poweredby.png image (skip requirement + provide image on RHEL)
 %if %{with systemlogos}
@@ -151,7 +150,6 @@ Virtual host module for lighttpd that uses a MySQL database.
 %setup -q
 %patch0 -p1 -b .defaultconf
 %patch1 -p1 -b .mod_geoip
-%patch100 -p1
 install -p -m 0644 %{SOURCE100} src/mod_geoip.c
 install -p -m 0644 %{SOURCE101} mod_geoip.txt
 
@@ -334,6 +332,26 @@ fi
 
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.31-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun  6 2012 Matthias Saou <matthias@saou.eu> 1.4.31-1
+- Update to 1.4.31 (#828198).
+
+* Tue Apr 17 2012 Jon Ciesla <limburgher@gmail.com> - 1.4.30-2
+- service file patch per BZ 720210.
+
+* Mon Mar 26 2012 Matthias Saou <matthias@saou.eu> 1.4.30-1
+- Update to 1.4.30 (#768903).
+- Update mod_geoip patch.
+- Remove upstreamed ssl_no_ecdh patch.
+
+* Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 1.4.29-3
+- Rebuild against PCRE 8.30
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.4.29-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Sun Aug 21 2011 Matthias Saou <matthias@saou.eu> 1.4.29-1
 - Re-update to 1.4.29, including ssl_no_ecdh to fix build (#625737).
 

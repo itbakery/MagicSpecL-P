@@ -1,22 +1,16 @@
 %define python_sitelib %(%{__python} -c "from distutils import sysconfig; print sysconfig.get_python_lib()")
 %define python_sitearch %(%{__python} -c 'from distutils import sysconfig; print sysconfig.get_python_lib(1)')
-%define ruby_sitearch %(ruby -rrbconfig -e 'puts Config::CONFIG["sitearchdir"]')
-
-%define pre rc9
 
 Name: obexftp
 Summary: Tool to access devices via the OBEX protocol
-Summary(zh_CN.GB18030):	Õ®π˝ OBEX –≠“È∑√Œ …Ë±∏
 Group: Applications/File
-Group(zh_CN.GB18030): ”¶”√≥Ã–Ú/Œƒµµ
 Version: 0.23
-Release: 2%{?dist}
+Release: 11%{?dist}
 License: GPLv2+
 URL: http://openobex.triq.net/
 Source: http://triq.net/obexftp/%{name}-%{version}.tar.bz2
 Patch0: %{name}-norpath.patch
 Patch1: %{name}-perl.patch
-Patch2: %{name}-r9.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(id -u -n)
 BuildRequires: bluez-libs-devel
 BuildRequires: gettext-devel
@@ -35,14 +29,9 @@ implementation. The common usage for ObexFTP is to access your mobile phones
 memory to store and retrieve e.g. your phonebook, logos, ringtones, music,
 pictures and alike.
 
-%description -l zh_CN.GB18030
-Õ®π˝ OBEX –≠“È∑√Œ …Ë±∏
-
 %package -n python-%{name}
 Summary: Python library to access devices via the OBEX protocol
-Summary(zh_CN.GB18030): %{name} µƒ Python ø‚
 Group: Development/Libraries
-Group(zh_CN.GB18030): ø™∑¢/ø‚
 Requires: %{name} = %{version}-%{release}
 
 %description -n python-%{name}
@@ -52,14 +41,9 @@ implementation. The common usage for ObexFTP is to access your mobile phones
 memory to store and retrieve e.g. your phonebook, logos, ringtones, music,
 pictures and alike.
 
-%description -n python-%{name} -l zh_CN.GB18030
-%{name} µƒ Python ø‚
-
 %package -n perl-%{name}
 Summary: Perl library to access devices via the OBEX protocol
-Summary(zh_CN.GB18030): %{name} µƒ Perl ø‚
 Group: Development/Libraries
-Group(zh_CN.GB18030): ø™∑¢/ø‚
 Requires: %{name} = %{version}-%{release}
 Requires: perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
@@ -70,15 +54,10 @@ implementation. The common usage for ObexFTP is to access your mobile phones
 memory to store and retrieve e.g. your phonebook, logos, ringtones, music,
 pictures and alike.
 
-%description -n perl-%{name} -l zh_CN.GB18030
-%{name} µƒ Perl ø‚
-
 %package -n ruby-%{name}
 Summary: Ruby library to access devices via the OBEX protocol
-Summary(zh_CN.GB18030): %{name} µƒ Ruby ø‚
 Group: Development/Libraries
-Group(zh_CN.GB18030): ø™∑¢/ø‚
-Requires: ruby(abi) = 1.8
+Requires: ruby(abi) = 1.9.1
 Requires: %{name} = %{version}-%{release}
 
 %description -n ruby-%{name}
@@ -88,15 +67,22 @@ implementation. The common usage for ObexFTP is to access your mobile phones
 memory to store and retrieve e.g. your phonebook, logos, ringtones, music,
 pictures and alike.
 
-%description -n ruby-%{name} -l zh_CN.GB18030
-%{name} µƒ Ruby ø‚
+%package libs
+Summary: Shared libraries for %{name}
+Group: System Environment/Libraries
+Obsoletes: %{name} < 0.23-0.1
+
+%description libs
+The overall goal of this project is to make mobile devices featuring the OBEX
+protocol and adhering to the OBEX FTP standard accessible by an open source
+implementation. The common usage for ObexFTP is to access your mobile phones
+memory to store and retrieve e.g. your phonebook, logos, ringtones, music,
+pictures and alike.
 
 %package devel
 Summary: Header files and libraries for %{name}
-Summary(zh_CN.GB18030): %{name} µƒø™∑¢Œƒº˛
 Group: Development/Libraries
-Group(zh_CN.GB18030): ø™∑¢/ø‚
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs = %{version}-%{release}
 Requires: openobex-devel >= 1.2
 Requires: pkgconfig
 
@@ -105,35 +91,34 @@ This package contains the header files, static libraries and development
 documentation for %{name}. If you like to develop programs using %{name},
 you will need to install %{name}-devel.
 
-%description devel -l zh_CN.GB18030
-%{name} µƒø™∑¢Œƒº˛
-
 %prep
 %setup -q
 %patch0 -p1 -b .norpath
 %patch1 -p1 -b .p
-%patch2 -p1
 
 %build
-#mkdir m4
-libtoolize --force --copy && aclocal && automake && autoconf
+autoreconf -f -i
 %configure --disable-static --disable-dependency-tracking --disable-rpath
+# fix for Ruby 1.9
+sed -i 's|RSTRING(argv\[0\])->len|RSTRING_LEN(argv[0])|' swig/ruby/ruby_wrap.c
 %{__make} %{?_smp_mflags}
 
 %install
 %{__rm} -rf %{buildroot}
-%{__make} DESTDIR=%{buildroot} install
-chmod 755 %{buildroot}%{perl_vendorarch}/*/OBEXFTP/OBEXFTP.so
+%{__make} DESTDIR=%{buildroot} RUBYARCHDIR=%{buildroot}%{ruby_vendorarchdir} install
 
 %{__rm} %{buildroot}%{_libdir}/*.la
 %{__rm} %{buildroot}%{perl_archlib}/perllocal.pod
 %{__rm} -f %{buildroot}%{perl_vendorarch}/*/OBEXFTP/{.packlist,OBEXFTP.bs}
 
+chmod 755 %{buildroot}%{perl_vendorarch}/*/OBEXFTP/OBEXFTP.so
+chmod 755 %{buildroot}%{python_sitearch}/obexftp/_obexftp.so
+
 %clean
 %{__rm} -rf %{buildroot}
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post libs -p /sbin/ldconfig
+%postun libs -p /sbin/ldconfig
 
 %files
 %defattr(-, root, root, -)
@@ -142,6 +127,9 @@ chmod 755 %{buildroot}%{perl_vendorarch}/*/OBEXFTP/OBEXFTP.so
 %{_mandir}/man1/obexftpd.1*
 %{_bindir}/obexftp
 %{_bindir}/obexftpd
+
+%files libs
+%defattr(-, root, root, -)
 %{_libdir}/*.so.*
 
 %files devel
@@ -157,7 +145,9 @@ chmod 755 %{buildroot}%{perl_vendorarch}/*/OBEXFTP/OBEXFTP.so
 %dir %{python_sitearch}/obexftp
 %{python_sitearch}/obexftp/_obexftp.so*
 %{python_sitearch}/obexftp/__init__.py*
+%if 0%{?fedora} >= 9
 %{python_sitearch}/*.egg-info
+%endif
 
 %files -n perl-%{name}
 %defattr(-, root, root, -)
@@ -167,15 +157,105 @@ chmod 755 %{buildroot}%{perl_vendorarch}/*/OBEXFTP/OBEXFTP.so
 
 %files -n ruby-%{name}
 %defattr(-, root, root, -)
-%{ruby_sitearch}/obexftp.so
+%{ruby_vendorarchdir}/obexftp.so
 
 %changelog
-* Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 0.23-2
-- ‰∏∫ Magic 3.0 ÈáçÂª∫
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-11
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri Sep 05 2008 Liu Di <liudidi@gmail.com> - 0.22-1mgc
-- …˝º∂µΩ 0.22 ’˝ Ω∞Ê
-- ‘⁄ bluez 4.2 …œ÷ÿΩ®
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 0.23-10
+- Perl 5.16 rebuild
 
-* Tue Jun 10 2008 Liu Di <liudidi@gmail.com> - 0.22-0.9.rc9
-- Œ™ Magic ÷ÿΩ®
+* Wed Feb 08 2012 Bohuslav Kabrda <bkabrda@redhat.com> - 0.23-9
+- Rebuilt for Ruby 1.9.3.
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Fri Jun 17 2011 Marcela Ma≈°l√°≈àov√° <mmaslano@redhat.com> - 0.23-7
+- Perl mass rebuild
+
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
+* Wed Jul 21 2010 David Malcolm <dmalcolm@redhat.com> - 0.23-5
+- Rebuilt for https://fedoraproject.org/wiki/Features/Python_2.7/MassRebuild
+
+* Thu Apr 29 2010 Marcela Maslanova <mmaslano@redhat.com> - 0.23-4
+- Mass rebuild with perl-5.12.0
+
+* Mon Dec  7 2009 Stepan Kasal <skasal@redhat.com> - 0.23-3
+- rebuild against perl 5.10.1
+
+* Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
+
+* Sat Feb 28 2009 Dominik Mierzejewski <rpm@greysector.net> - 0.23-1
+- updated to 0.23 release
+
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.23-0.4.alpha
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
+* Sat Nov 29 2008 Ignacio Vazquez-Abrams <ivazqueznet+rpm@gmail.com> - 0.23-0.3.alpha
+- Rebuild for Python 2.6
+
+* Thu Sep 11 2008 - Bastien Nocera <bnocera@redhat.com> - 0.23-0.2.alpha
+- Rebuild
+
+* Mon Aug 18 2008 Dominik Mierzejewski <rpm@greysector.net> - 0.23-0.1.alpha
+- updated to 0.23-alpha
+- split libs into separate subpackage for multilib
+
+* Sun Jun 15 2008 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.10.uctest
+- latest test release, with iconv support
+- fix rpmlint warning
+
+* Thu Mar 06 2008 Tom "spot" Callaway <tcallawa@redhat.com> - 0.22-0.9.rc9
+Rebuild for new perl
+
+* Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 0.22-0.8.rc9
+- Autorebuild for GCC 4.3
+
+* Sun Jan 20 2008 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.7.rc9
+- include python egg-info in the file list
+
+* Tue Jan 01 2008 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.6.rc9
+- updated to 0.22-rc9
+
+* Thu Sep 06 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.5.rc7
+- updated to 0.22-rc7
+- added pkgconfig file
+- make perl BR more specific
+
+* Mon Aug 27 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.4.rc6
+- rebuilt for BuildID
+- updated license tag
+
+* Mon Aug 06 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.3.rc6
+- updated to 0.22-rc6
+- added ruby bindings (patch by Andy Shevchenko)
+- dropped upstreamed patch
+- added missing BRs for F7+
+
+* Mon Mar 26 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.2.pre4
+- fix segfault in obexftpd (patch by Jan Kratochvil), closes (#230991)
+
+* Fri Mar 23 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.22-0.1.pre4
+- updated to 0.22-pre4
+- updated patches
+
+* Fri Jan 26 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.20-3
+- add missing disttag
+
+* Thu Jan 25 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.20-2
+- added missing defattr
+- require openobex-devel > 1.2
+- added missing MODULE_COMPAT Requires: to perl subpackage
+- renamed subpackages to perl/python-obexftp
+- fixed rpaths
+
+* Mon Jan 01 2007 Dominik Mierzejewski <rpm@greysector.net> - 0.20-1
+- updated to 0.20
+
+* Sun Jan 29 2006 Dag Wieers <dag@wieers.com> - 0.18-1
+- Initial package. (using DAR)

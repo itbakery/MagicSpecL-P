@@ -2,15 +2,15 @@
 %bcond_without anthy
 
 Name:    m17n-lib
-Version:  1.6.3
-Release:  1%{?dist}
+Version:  1.6.4
+Release:  4%{?dist}
 Summary:  Multilingual text library
 
 Group:    System Environment/Libraries
-License:  LGPLv2
-URL:    http://www.m17n.org/m17n-lib/index.html
-Source0:  http://www.m17n.org/m17n-lib-download/%{name}-%{version}.tar.gz
-Patch0:  m17n-lib-1.6.1-multilib.patch
+License:  LGPLv2+
+URL:    http://www.nongnu.org/m17n/
+Source0:  http://download.savannah.gnu.org/releases/m17n/%{name}-%{version}.tar.gz
+Patch0:  %{name}-1.6.1-multilib.patch
 
 BuildRequires:  m17n-db-devel libthai
 %if %{with anthy}
@@ -20,8 +20,6 @@ BuildRequires:  libxml2-devel, libXft-devel, fontconfig-devel
 BuildRequires:  freetype-devel , fribidi-devel, gd-devel, libXaw-devel
 BuildRequires:  libotf-devel
 Requires:  m17n-db
-Obsoletes: m17n-lib-flt < 1.6.0-1.fc14
-Provides: m17n-lib-flt = %{version}-%{release}
 
 
 %description
@@ -33,6 +31,7 @@ The package provides the core and input method backend libraries.
 %package  anthy
 Summary:  Anthy module for m17n
 Group:    System Environment/Libraries
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description anthy
 Anthy module for %{name} allows ja-anthy.mim to support input conversion.
@@ -41,10 +40,8 @@ Anthy module for %{name} allows ja-anthy.mim to support input conversion.
 %package  devel
 Summary:  Development files for %{name}
 Group:    Development/Libraries
-Requires:  %{name} = %{version}-%{release}
-Requires:  %{name}-flt = %{version}-%{release}
-Requires:  %{name}-anthy = %{version}-%{release}
-Requires:  %{name}-tools = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-tools = %{version}-%{release}
 
 %description devel
 Development files for %{name}.
@@ -54,6 +51,7 @@ Development files for %{name}.
 Summary:  m17n GUI Library tools
 Group:    System Environment/Libraries
 Requires: m17n-db-extras
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 Tools to test M17n GUI widget library.
@@ -67,8 +65,9 @@ Tools to test M17n GUI widget library.
 %configure --disable-rpath --disable-static
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make
 
+# parallel make usage with make command fails build on koji
+make
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
@@ -80,22 +79,24 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
-
 %post tools -p /sbin/ldconfig
 %postun tools -p /sbin/ldconfig
 
 %files
-%doc AUTHORS COPYING NEWS
+%doc AUTHORS COPYING NEWS ChangeLog README
+#Own module directory path
+%dir %{_libdir}/m17n
+%dir %{_libdir}/m17n/1.0
 %{_bindir}/m17n-conv
 %{_libdir}/libm17n.so.*
 %{_libdir}/libm17n-core.so.*
 %{_libdir}/libm17n-flt.so.*
 
+#Anthy module
 %files anthy
 %{_libdir}/m17n/1.0/libmimx-anthy.so
 
 %files devel
-%doc ChangeLog README
 %{_bindir}/m17n-config
 %{_includedir}/*
 %{_libdir}/lib*.so
@@ -111,6 +112,26 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 %{_libdir}/libm17n-gui.so.*
 
 %changelog
+* Fri Nov 30 2012 Parag Nemade <pnemade AT redhat DOT com> - 1.6.4-4
+- Resolves:rh#880957 - m17n-lib doesn't uninstall properly
+
+* Tue Nov 20 2012 Parag Nemade <pnemade AT redhat DOT com> - 1.6.4-3
+- m17n-lib to own %%{_libdir}/m17n
+
+* Tue Nov 20 2012 Parag Nemade <pnemade AT redhat DOT com> - 1.6.4-2
+- Resolves:rh#877925 - drop m17n-lib-flt provides
+- Fix bogus date in %%changelog
+- Make sure not to attempt to use parallel make as it fails the build
+
+* Tue Sep 18 2012 Parag Nemade <pnemade AT redhat DOT com> - 1.6.4-1
+- update to 1.6.4
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.6.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Oct 11 2011 Parag Nemade <pnemade AT redhat DOT com> - 1.6.3-1
 - update to 1.6.3
 
@@ -165,7 +186,7 @@ find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 * Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
 
-* Thu Oct 21 2008 Parag Nemade <pnemade@redhat.com> -1.5.3-1.fc10
+* Tue Oct 21 2008 Parag Nemade <pnemade@redhat.com> -1.5.3-1.fc10
 - Update to new upstream release 1.5.3
 
 * Thu Jul 03 2008 Parag Nemade <pnemade@redhat.com> -1.5.2-1

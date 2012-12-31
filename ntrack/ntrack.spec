@@ -1,7 +1,7 @@
 Name:           ntrack
 Summary:        Network Connectivity Tracking library for Desktop Applications
 Version:        016
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        LGPLv3
 Url:            https://launchpad.net/%{name}
 Source:         http://launchpad.net/%{name}/main/%{version}/+download/%{name}-%{version}.tar.gz
@@ -28,6 +28,21 @@ Also its supposed to be lightweight, resource un-intensive and extensible.
 %{_libdir}/ntrack/modules/ntrack-libnl1.so
 %{_libdir}/ntrack/modules/ntrack-libnl3_x.so
 %{_libdir}/libntrack.so.*
+
+%package python
+Summary: Network Connectivity Tracking library for Desktop Applications
+Group: System/Libraries
+
+%description python
+ntrack aims to be a lightweight and easy to use library for application
+developers that want to get events on network online status changes such
+as online, offline or route changes.
+
+This packages provides the Python bindings for %{name}
+
+%files python
+%defattr(-,root,root)
+%{python_sitearch}/pyntrack.*
 
 #-------------------------------------------------------------------------------
 
@@ -183,4 +198,7 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Dec 31 2012 Liu Di <liudidi@gmail.com> - 016-2
+- 为 Magic 3.0 重建
+
 

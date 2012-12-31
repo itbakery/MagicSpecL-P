@@ -1,7 +1,7 @@
 Summary: An HTTP and WebDAV client library
 Name: neon
 Version: 0.29.6
-Release: 2%{?dist}
+Release: 4%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.webdav.org/neon/
@@ -76,6 +76,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
+* Mon Dec 31 2012 Liu Di <liudidi@gmail.com> - 0.29.6-4
+- 为 Magic 3.0 重建
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.29.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.29.6-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

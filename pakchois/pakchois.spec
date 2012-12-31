@@ -1,7 +1,7 @@
 Summary: A wrapper library for PKCS#11
 Name: pakchois
 Version: 0.4
-Release: 5
+Release: 6%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 URL: http://www.manyfish.co.uk/pakchois/
@@ -61,8 +61,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*.so
 
 %changelog
-* Sat Jan 21 2012 Liu Di <liudidi@gmail.com> - 0.4-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.4-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild

@@ -1,33 +1,48 @@
-# Review Request:
-# https://bugzilla.redhat.com/show_bug.cgi?id=219930
+# Review: https://bugzilla.redhat.com/show_bug.cgi?id=219930
 
 Name:           lxpanel
-Version:        0.5.8
-Release:        1%{?dist}
+Version:        0.5.10
+Release:        3%{?dist}
 Summary:        A lightweight X11 desktop panel
 
 Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            http://lxde.org/
+#VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/lxpanel
 Source0:        http://downloads.sourceforge.net/sourceforge/lxde/%{name}-%{version}.tar.gz
-# https://bugzilla.redhat.com/show_bug.cgi?id=564746
-Patch0:         lxpanel-0.5.5-dsofix.patch
-# distro specific patches
-Patch100:       lxpanel-0.5.4-default.patch
+
+# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=564746
+Patch0:         lxpanel-0.5.9-dsofix.patch
+
+# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=746063
+Patch1:         lxpanel-0.5.6-Fix-pager-scroll.patch
+
+# Fedora bug: https://bugzilla.redhat.com/show_bug.cgi?id=587430
+# Upstream bug: https://sourceforge.net/tracker/index.php?func=detail&aid=3573069&group_id=180858&atid=894871
+# Patch: http://lxde.git.sourceforge.net/git/gitweb.cgi?p=lxde/lxpanel;a=commit;h=3a02bd0
+Patch2:         lxpanel-0.5-10-taskbar-segfault-fix-ID-3573069.patch
+
+## distro specific patches
+# default configuration
+Patch100:       lxpanel-0.5.9-default.patch
+# use nm-connection-editor to edit network connections
 Patch101:       lxpanel-0.3.8.1-nm-connection-editor.patch
+
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #BuildRequires:  docbook-utils
 BuildRequires:  gettext
 BuildRequires:  gtk2-devel 
 BuildRequires:  intltool
-BuildRequires:  libXpm-devel
-BuildRequires:  startup-notification-devel
+BuildRequires:  pkgconfig(xpm)
+BuildRequires:  pkgconfig(libstartup-notification-1.0)
 # required for alsa mixer plugin
-BuildRequires:  alsa-lib-devel
+BuildRequires:  pkgconfig(alsa)
 # required for netstatus plugin
 BuildRequires:  wireless-tools-devel
-BuildRequires:  menu-cache-devel >= 0.3.0
+BuildRequires:  pkgconfig(libmenu-cache) >= 0.3.0
+BuildRequires:  pkgconfig(libwnck-1.0)
+
 
 %description
 lxpanel is a lightweight X11 desktop panel. It works with any ICCCM / NETWM 
@@ -49,6 +64,8 @@ developing applications that use %{name}.
 %prep
 %setup -q
 %patch0 -p1 -b .dsofix
+%patch1 -p1 -b .revert
+%patch2 -p1 -b .taskbar-segfault
 
 %patch100 -p1 -b .default
 %patch101 -p1 -b .system-config-network
@@ -56,7 +73,7 @@ developing applications that use %{name}.
 
 %build
 %configure
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 
 %install
@@ -83,7 +100,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
-* Sun Oct 10 2011 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.8-1
+* Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.10-3
+- Fix annoying crash of the taskbar (#587430)
+
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.10-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.10-1
+- Update to 0.5.10
+
+* Wed Jun 07 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.9-1
+- Update to 0.5.9 (#827779)
+- Fix the netstat plugin (#750400)
+- Correctly show 'Application launch bar' settings window (#830198)
+- Reverse scrolling direction in workspace switcher (#746063)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.5.8-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
+* Sun Oct 09 2011 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.8-1
 - Update to 0.5.8
 - Drop upstreamed fix-build-issue... patch
 

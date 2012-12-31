@@ -4,11 +4,11 @@
 
 Summary:  A collection of Python software tools
 Name: mx%{pybasever}
-Version: 3.2.1
+Version: 3.2.5
 Release: 1%{?dist}
 URL: http://www.lemburg.com/files/python/eGenix-mx-Extensions.html
 Source0: http://www.lemburg.com/python/egenix-mx-base-%{version}.tar.gz
-Patch1: mx-3.1.1-lib64.patch
+#Patch1: mx-3.1.1-lib64.patch
 License: Python
 Group: Development/Libraries
 BuildRequires: Distutils
@@ -33,7 +33,7 @@ Development files for %{name}
 
 %prep
 %setup -q -n egenix-mx-base-%{version}
-%patch1 -p1 -b .lib64
+#%patch1 -p1 -b .lib64
 
 %build
 # alter /usr/local/bin/python
@@ -106,6 +106,9 @@ rm -rf %{buildroot}
 %{_includedir}/mx/
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.2.1-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 18 2011 Brian C. Lane <bcl@redhat.com> - 3.2.1-1
 - Upstream v3.2.1
 

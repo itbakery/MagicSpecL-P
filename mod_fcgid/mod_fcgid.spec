@@ -27,7 +27,7 @@
 
 Name:		mod_fcgid
 Version:	2.3.7
-Release:	5%{?dist}
+Release:	6%{?dist}
 Summary:	FastCGI interface module for Apache 2
 Group:		System Environment/Daemons
 License:	ASL 2.0
@@ -161,7 +161,6 @@ done
 # Hardlink identical policy module packages together
 hardlink -cv %{buildroot}%{_datadir}/selinux
 %endif
-magic_rpm_clean.sh
 
 %clean
 rm -rf %{buildroot}
@@ -175,7 +174,7 @@ do
 		%{_datadir}/selinux/${selinuxvariant}/fastcgi.pp &> /dev/null || :
 done
 # Fix up non-standard directory context from earlier packages
-/usr/sbin/restorecon -R %{rundir}/mod_fcgid || :
+/sbin/restorecon -R %{rundir}/mod_fcgid || :
 
 %postun selinux
 # Clean up after package removal
@@ -206,6 +205,7 @@ exit 0
 %{_prefix}/lib/tmpfiles.d/mod_fcgid.conf
 %endif
 %dir %attr(0755,apache,apache) %{rundir}/mod_fcgid/
+%{_datadir}/httpd/manual/mod/
 
 %if %{selinux_module}
 %files selinux
@@ -215,6 +215,9 @@ exit 0
 %endif
 
 %changelog
+* Mon Dec 31 2012 Liu Di <liudidi@gmail.com> - 2.3.7-6
+- 为 Magic 3.0 重建
+
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3.7-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

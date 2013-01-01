@@ -1,7 +1,7 @@
 Summary: A DSSSL implementation
 Name: openjade
 Version: 1.3.2
-Release: 39%{?dist}
+Release: 41%{?dist}
 Requires: sgml-common
 URL: http://openjade.sourceforge.net/
 Source: http://download.sourceforge.net/openjade/openjade-%{version}.tar.gz
@@ -15,6 +15,8 @@ Patch2: openjade-deplibs.patch
 Patch3: openjade-nola.patch
 #upstream bug tracker fix for build with gcc46
 Patch4: openjade-1.3.2-gcc46.patch
+#use Getopt:Std to prevent build failure
+Patch5: openjade-getoptperl.patch
 License: BSD
 Group: Applications/Text
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -23,6 +25,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Provides: jade = %{version}-%{release}
 
 BuildRequires: opensp-devel
+
 
 %description
 OpenJade is an implementation of the ISO/IEC 10179:1996 standard DSSSL
@@ -40,6 +43,7 @@ XML, RTF, TeX, MIF (FrameMaker), SGML, or XML.
 %patch2 -p1 -b .deplibs
 %patch3 -p1 -b .nola
 %patch4 -p1 -b .gcc46
+%patch5 -p1 -b .getopt
 
 
 %build
@@ -96,8 +100,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sgml/%{name}-%{version}
 
 %changelog
-* Thu Jan 19 2012 Liu Di <liudidi@gmail.com> - 1.3.2-39
-- 为 Magic 3.0 重建
+* Fri Aug 10 2012 Ondrej Vasik <ovasik@redhat.com> 1.3.2-41
+- avoid build failure with using Getopt::Std;
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-40
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.3.2-39
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Wed Jun 08 2011 Ondrej Vasik <ovasik@redhat.com> 1.3.2-38
 - fix build with gcc46 (upstream bug tracker)

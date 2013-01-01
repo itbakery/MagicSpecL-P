@@ -2,14 +2,9 @@
 %define debug_package %{nil}
 %define _default_patch_fuzz 2
 
-%if 0%{?fedora} < 9
-# no ocaml (#438562)
-ExcludeArch: ppc64
-%endif
-
 Name:          ocaml-facile
 Version:       1.1
-Release:       14%{?dist}
+Release:       19%{?dist}
 Summary:       OCaml library for constraint programming
 Summary(fr):   Librairie OCaml de programmation par contraintes
 
@@ -17,21 +12,20 @@ Group:         Development/Libraries
 License:       LGPLv2+
 URL:           http://www.recherche.enac.fr/log/facile/
 Source0:       http://www.recherche.enac.fr/log/facile/distrib/facile-1.1.tar.gz
+
 # makefile fixes by Steffen Joeris <white@debian.org>:
 # * only build and install native binaries if ocamlopt is available
 # * install .mli files
 Patch0:        facile-1.1-makefile-fixes.patch
+
+# Fix for OCaml 4.00.0.
+Patch1:        ocaml-facile-ocaml-4.patch
+
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-ExcludeArch:    sparc64 s390 s390x
+ExclusiveArch: %{ocaml_arches}
 
 BuildRequires: ocaml >= 3.02
 BuildRequires: ocaml-findlib-devel
-
-%if 0%{?fedora} < 13
-%define _use_internal_dependency_generator 0
-%define __find_requires /usr/lib/rpm/ocaml-find-requires.sh
-%define __find_provides /usr/lib/rpm/ocaml-find-provides.sh
-%endif
 
 %description
 FaCiLe is a constraint programming library on integer and integer set finite
@@ -81,11 +75,12 @@ developing applications that use %{name}.
 %prep
 %setup -q -n facile-%{version}
 %patch0 -p1 -b .makefile-fixes
+%patch1 -p1 -b .ocaml4
+
+%build
 # This is not autoconf, but a simple custom configure script.
 # The --faciledir directory is only used for "make install".
 ./configure --faciledir $RPM_BUILD_ROOT%{_libdir}/ocaml/facile
-
-%build
 make
 
 %install
@@ -115,6 +110,22 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/ocaml/facile/*.mli
 
 %changelog
+* Sun Oct 28 2012 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.1-19
+- Rebuild for OCaml 4.00.1.
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-18
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 10 2012 Richard W.M. Jones <rjones@redhat.com> - 1.1-17
+- Rebuild for OCaml 4.00.0.
+- Add a patch for OCaml 4.00.0 (change in Hashtbl signature).
+- Move configure into build section.
+
+* Sat Jan 07 2012 Kevin Kofler <Kevin@tigcc.ticalc.org> - 1.1-15
+- Rebuild for OCaml 3.12.1
+- Drop obsolete conditionals
+- Use ocaml_arches macro instead of hardcoded ExcludeArch
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

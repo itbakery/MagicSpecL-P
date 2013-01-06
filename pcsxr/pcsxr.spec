@@ -1,4 +1,4 @@
-%define rver 73976
+%define rver 82044
 Name:           pcsxr
 BuildRequires:  gtk2-devel nasm libglade2-devel libXv-devel libX11-devel libXext-devel libXxf86vm-devel libXtst-devel gettext mesa-libGL-devel SDL-devel
 URL:            http://pcsxr.codeplex.com
@@ -62,7 +62,9 @@ CFLAGS="$RPM_OPT_FLAGS -fno-strict-aliasing -pthread -w" %configure --enable-ope
 make %{?_smp_mflags}
 
 %install
+mkdir -p %{buildroot}%{_datadir}/pixmaps
 make install DESTDIR=$RPM_BUILD_ROOT
+mkdir -p %{buildroot}%{_datadir}/pcsx
 install -m644 %{SOURCE1} $RPM_BUILD_ROOT/usr/share/pcsx
 magic_rpm_clean.sh
 
@@ -78,14 +80,17 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog INSTALL NEWS README doc/*.txt
 %{_bindir}/pcsxr
 %{_datadir}/applications/*.desktop
-%_libdir/games
+%_libdir/games/*
 %doc %_mandir/man1/pcsxr.1*
-%{_datadir}/pcsx
-%{_datadir}/pcsxr
-%{_datadir}/psemu
+%{_datadir}/pcsx/*
+%{_datadir}/pcsxr/*
+%{_datadir}/psemu/*
 %{_datadir}/locale/zh_CN/LC_MESSAGES/*
 %{_datadir}/locale/zh_TW/LC_MESSAGES/*
 %{_datadir}/pixmaps/*
 
 %changelog
+* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.9.92-svn73976.1
+- 为 Magic 3.0 重建
+
 

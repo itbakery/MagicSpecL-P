@@ -1,9 +1,7 @@
-%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))")}
-%global with_gcj %{!?_without_gcj:1}%{?_without_gcj:0}
 Summary:        Real-time Midi I/O Library
 Name:           portmidi
 Version:        217
-Release:        5%{?dist}
+Release:        7%{?dist}
 License:        MIT
 Group:          System Environment/Libraries
 URL:            http://portmedia.sourceforge.net/
@@ -11,16 +9,19 @@ Source0:        http://downloads.sourceforge.net/portmedia/%{name}-src-%{version
 Source1:        pmdefaults.desktop
 # Build fixes:
 Patch0:         portmidi-cmake.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+# Fix multilib conflict RHBZ#831432
+Patch1:         portmidi-no_date_footer.patch
+Patch2:		portmidi-nojava.patch
 BuildRequires:  alsa-lib-devel
 BuildRequires:  cmake
 BuildRequires:  desktop-file-utils
-BuildRequires:  java-devel >= 1.5
+%if 0%{?JAVA}
+BuildRequires:  java-devel >= 1.7
 BuildRequires:  jpackage-utils
+%endif
 BuildRequires:  python2-devel
 BuildRequires:  doxygen
 BuildRequires:  tex(latex)
-BuildRequires:    java-gcj-compat-devel >= 1.0.31
 
 %description
 PortMedia is a set of simple clean APIs and cross-platform library
@@ -31,7 +32,7 @@ libraries.
 %package devel
 Summary:        Headers for developing programs that will use %{name}
 Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 PortMedia is a set of simple clean APIs and cross-platform library
@@ -42,7 +43,7 @@ and the documentation of PortMidi libraries.
 %package -n python-%{name}
 Summary:        Python wrapper for %{name}
 Group:          System Environment/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description -n python-%{name}
 PortMedia is a set of simple clean APIs and cross-platform library
@@ -55,11 +56,11 @@ real-time from Python.
 Summary:          Tools to configure and use %{name}
 Group:            Applications/Multimedia
 Requires:         hicolor-icon-theme
-Requires:         java >= 1.5
+%if 0%{?JAVA}
+Requires:         java >= 1.7
 Requires:         jpackage-utils
-Requires:         %{name} = %{version}-%{release}
-Requires(post):   java-gcj-compat >= 1.0.31
-Requires(postun): java-gcj-compat >= 1.0.31
+%endif
+Requires:         %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
 PortMedia is a set of simple clean APIs and cross-platform library
@@ -69,8 +70,12 @@ configuration utility "pmdefaults" and some test applications.
 
 %prep
 %setup -q -n %{name}
-%patch0 -p1 -b .buildfix
+#%patch0 -p1 -b .buildfix
+%patch1 -p1 -b .no.date
 
+%if ! 0%{?JAVA}
+%patch2 -p1
+%endif
 # ewwww... binaries
 rm -f portmidi_cdt.zip */*.exe */*/*.exe
 
@@ -84,6 +89,7 @@ for i in *.txt */*.txt */*/*.txt ; do
    mv -f $i.tmp $i
 done
 
+%if 0%{?JAVA}
 # Fedora's jni library location is different
 sed -i 's|loadLibrary.*|load("%{_libdir}/%{name}/libpmjni.so");|' \
    pm_java/jportmidi/JPortMidiApi.java
@@ -93,17 +99,17 @@ sed -i -e 's|^java|#!/bin/sh\njava \\\
    -Djava.library.path=%{_libdir}/%{name}/|' \
    -e 's|/usr/share/java/|%{_libdir}/%{name}/|' \
    pm_java/pmdefaults/pmdefaults
+%endif
 
 %build
+%if 0%{?JAVA}
 export JAVA_HOME=%{java_home}
+%endif
 %cmake -DCMAKE_SKIP_BUILD_RPATH=1 -DCMAKE_CACHEFILE_DIR=%{_builddir}/%{name}/build -DVERSION=%{version} .
 make %{?_smp_flags}
 
 # Build the doxygen documentation:
 doxygen
-pushd latex
-   make %{?_smp_flags}
-popd
 
 # Build python modules
 PYTHON_VER=$(python -c "from sys import version; print (version[:3])")
@@ -116,8 +122,7 @@ pushd pm_python/pyportmidi
 popd
 
 %install
-rm -rf %{buildroot}
-make install DESTDIR=%{buildroot}
+%make_install
 
 # Install the test applications:
 install -d %{buildroot}%{_libdir}/%{name}
@@ -125,16 +130,20 @@ for app in latency midiclock midithread midithru mm qtest sysex test; do
    install -m 0755 build/Release/$app %{buildroot}%{_libdir}/%{name}/
 done
 
+%if 0%{?JAVA}
 # Fedora's jni library location is different
 mv %{buildroot}%{_libdir}/libpmjni.so \
    %{buildroot}%{_libdir}/%{name}/
 mv %{buildroot}%{_javadir}/pmdefaults.jar \
    %{buildroot}%{_libdir}/%{name}/
+%endif
 
 # pmdefaults icon
 mkdir -p %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/
+%if 0%{?JAVA}
 install -pm 644 pm_java/pmdefaults/pmdefaults-icon.png \
    %{buildroot}%{_datadir}/icons/hicolor/128x128/apps/
+%endif
 
 # desktop file
 mkdir -p %{buildroot}%{_desktopdir}/
@@ -161,63 +170,42 @@ popd
 # Remove duplicate library
 rm -f %{buildroot}%{_libdir}/libportmidi_s.so
 
-# AOT bits
-%if %{with_gcj}
-   %{_bindir}/aot-compile-rpm
-%endif
-
-%clean
-rm -rf %{buildroot}
-
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
-%post tools
-%if %{with_gcj}
-   if [ -x %{_bindir}/rebuild-gcj-db ] 
-      then
-      %{_bindir}/rebuild-gcj-db
-   fi
-%endif
-
-%postun tools
-%if %{with_gcj}
-   if [ -x %{_bindir}/rebuild-gcj-db ] 
-      then
-      %{_bindir}/rebuild-gcj-db
-   fi
-%endif
-
 %files
-%defattr(-,root,root,-)
 %doc CHANGELOG.txt license.txt
 %{_libdir}/lib*.so.*
 
 %files tools
-%defattr(-,root,root,-)
+%if 0%{?JAVA}
 %doc pm_java/pmdefaults/README.txt pm_cl/*
-%{_libdir}/%{name}/
-%{_bindir}/pmdefaults
-%{_datadir}/icons/hicolor/128x128/apps/pmdefaults-icon.png
-%{_desktopdir}/pmdefaults.desktop
-%if %{with_gcj}
-%{_libdir}/gcj/%{name}/
 %endif
+%{_libdir}/%{name}/
+#%{_bindir}/pmdefaults
+#%{_datadir}/icons/hicolor/128x128/apps/pmdefaults-icon.png
+%{_desktopdir}/pmdefaults.desktop
 
 %files -n python-%{name}
-%defattr(-,root,root,-)
 %doc pm_python/README_PYTHON.txt
 %{python_sitearch}/pyportmidi/
 
 %files devel
-%defattr(-,root,root,-)
 %doc README.txt
-%doc html latex/*.pdf
+%doc html
 %{_includedir}/*
 %{_libdir}/lib*.so
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 217-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jun 12 2012 Orcan Ogetbil <oget [DOT] fedora [AT] gmail [DOT] com> 217-6
+- Fix multilib conflict RHBZ#831432
+- Don't bulid PDF doc, as it causes another multilib conflict
+- Specfile cleanup. Drop old GCJ-Java and Python bits
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 217-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 

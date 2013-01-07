@@ -1,4 +1,4 @@
-%define		date	2011.06.16
+%define		date	2013.01.05
 %define		live_soversion 0
 
 Name:		live555
@@ -10,7 +10,7 @@ Group:		System Environment/Libraries
 License:	LGPLv2+
 URL:		http://live555.com/liveMedia/
 Source0:	http://live555.com/liveMedia/public/live.%{date}.tar.gz
-Patch0:		live.%{date}-unified.patch
+Patch0:		live.2013.01.05-unified.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
@@ -81,32 +81,35 @@ developing applications that use %{name}.
 %patch0 -p1 -b .unified
 
 %build
-./genMakefiles %{_target_os}.static
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC"
-rename .a _pic.a */*.a
-mv $(find BasicUsageEnvironment groupsock liveMedia UsageEnvironment -name "*.a" ) $(pwd)
-make clean
-make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS"
-mv $(find BasicUsageEnvironment groupsock liveMedia UsageEnvironment -name "*.a" ) $(pwd)
-make clean
+#沿江有staic?
+#./genMakefiles %{_target_os}.static
+#make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC"
+#rename .a _pic.a */*.a
+#mv $(find BasicUsageEnvironment groupsock liveMedia UsageEnvironment -name "*.a" ) $(pwd)
+#make clean
+#make %{?_smp_mflags} CFLAGS="$RPM_OPT_FLAGS"
+#mv $(find BasicUsageEnvironment groupsock liveMedia UsageEnvironment -name "*.a" ) $(pwd)
+#make clean
 # Hack to prevent undefined-non-weak-symbol
-for i in groupsock liveMedia ; do
-  pushd $i
-  LIBADD="-lstdc++ -lpthread"
-  for j in BasicUsageEnvironment groupsock liveMedia UsageEnvironment ; do
-    if [ $(grep $j Makefile.head |wc -l) = 1 ] ; then
-      LIBADD="$LIBADD -L../${j} -l${j}"
-    fi
-  done
-  echo -e LIBADDS = " $LIBADD " >> Makefile.head
-  popd
-  pushd UsageEnvironment
-    echo -e LIBADDS = -lstdc++ -L../BasicUsageEnvironment -lBasicUsageEnvironment >> Makefile.head
-  popd
-  pushd BasicUsageEnvironment
-    echo -e LIBADDS = -lstdc++ -lpthread  >> Makefile.head
-  popd
-done
+#for i in groupsock liveMedia ; do
+#  pushd $i
+#  LIBADD="-lstdc++ -lpthread"
+#  for j in BasicUsageEnvironment groupsock liveMedia UsageEnvironment ; do
+#    if [ $(grep $j Makefile.head |wc -l) = 1 ] ; then
+#      LIBADD="$LIBADD -L../${j} -l${j}"
+#    fi
+#  done
+#  echo -e LIBADDS = " $LIBADD " >> Makefile.head
+#  popd
+#  pushd UsageEnvironment
+#    echo -e LIBADDS = -lstdc++ -L../BasicUsageEnvironment -lBasicUsageEnvironment >> Makefile.head
+#  popd
+#  pushd BasicUsageEnvironment
+#    echo -e LIBADDS = -lstdc++ -lpthread  >> Makefile.head
+#  popd
+#done
+
+#注意64位的不一样
 ./genMakefiles %{_target_os}
 make CFLAGS="$RPM_OPT_FLAGS -fPIC -DPIC" SO_VERSION="%{live_soversion}"
 
@@ -123,8 +126,10 @@ install -dm 755 $RPM_BUILD_ROOT{%{_libdir},%{_bindir}}
 for i in BasicUsageEnvironment groupsock liveMedia UsageEnvironment ; do
   install -dm 755 $RPM_BUILD_ROOT%{_includedir}/$i
   install -pm 644 $i/include/*.h* $RPM_BUILD_ROOT%{_includedir}/$i/
+%if 0
   install -pm 644 lib${i}.a $RPM_BUILD_ROOT%{_libdir}/lib${i}.a
   install -pm 644 lib${i}_pic.a $RPM_BUILD_ROOT%{_libdir}/lib${i}_pic.a
+%endif
   install -pm 755 $i/lib${i}.so $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{date}
   ln -sf lib${i}.so.%{date} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so.%{live_soversion}
   ln -sf lib${i}.so.%{date} $RPM_BUILD_ROOT%{_libdir}/lib${i}.so
@@ -190,12 +195,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/liveMedia/
 %{_includedir}/UsageEnvironment/
 
+%if 0
 %files static
 %defattr(-,root,root,644)
 %{_libdir}/libBasicUsageEnvironment*.a
 %{_libdir}/libgroupsock*.a
 %{_libdir}/libliveMedia*.a
 %{_libdir}/libUsageEnvironment*.a
+%endif
 
 %changelog
 * Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0-0.25.2011.06.16

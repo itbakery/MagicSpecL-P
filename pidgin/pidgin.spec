@@ -112,14 +112,12 @@
 %endif
 # F18+ Disable evolution integration (temporarily?)
 # due to evolution-data-server 3.6 API changes
-%if 0%{?fedora} >= 18
 %global disable_evolution       1
 %global split_evolution         0
-%endif
 
 Name:           pidgin
 Version:        2.10.6
-Release:        4%{?dist}
+Release:        5%{?dist}
 License:        GPLv2+ and GPLv2 and MIT
 # GPLv2+ - libpurple, gnt, finch, pidgin, most prpls
 # GPLv2 - silc & novell prpls
@@ -565,7 +563,7 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/purple-2/libymsg.so
 # make sure that we can write to all the files we've installed
 # so that they are properly stripped
 chmod -R u+w $RPM_BUILD_ROOT/*
-magic_rpm_clean.sh
+
 %find_lang pidgin
 
 %if ! %{build_only_libs}
@@ -735,6 +733,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Mon Jan 07 2013 Liu Di <liudidi@gmail.com> - 2.10.6-5
+- 为 Magic 3.0 重建
+
 * Wed Sep 26 2012 Jan Synáček <jsynacek@redhat.com> - 2.10.6-4
 - Correctly obsolete pidgin-evolution if evolution integration is disabled,
   BZ 860285

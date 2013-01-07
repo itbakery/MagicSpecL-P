@@ -1,4 +1,3 @@
-%global contentdir  /var/www
 # API/ABI check
 %global apiver      20100412
 %global zendver     20100525
@@ -35,6 +34,8 @@
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
 %{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:     %{expand: %%global _httpd_moddir     %%{_libdir}/httpd/modules}}
+%{!?_httpd_contentdir: %{expand: %%global _httpd_contentdir /var/www}}
 
 %if 0%{?fedora} < 17 && 0%{?rhel} < 7
 %global with_zip     0
@@ -46,16 +47,14 @@
 %global zipmod       zip
 %endif
 
-%if 0%{?fedora} < 18 && 0%{?rhel} < 7
-%global db_devel  db4-devel
-%else
 %global db_devel  libdb-devel
-%endif
+
+#global rcver RC1
 
 Summary: PHP scripting language for creating dynamic web sites
 Name: php
-Version: 5.4.8
-Release: 6%{?dist}
+Version: 5.4.10
+Release: 1%{?dist}
 # All files licensed under PHP version 3.01, except
 # Zend is licensed under Zend
 # TSRM is licensed under BSD
@@ -79,18 +78,10 @@ Patch5: php-5.2.0-includedir.patch
 Patch6: php-5.2.4-embed.patch
 Patch7: php-5.3.0-recode.patch
 Patch8: php-5.4.7-libdb.patch
-# https://bugs.php.net/63361 - Header not installed
-Patch9: php-5.4.8-mysqli.patch
 
 # Fixes for extension modules
-# https://bugs.php.net/63126 - DISABLE_AUTHENTICATOR ignores array
-Patch20: php-5.4.7-imap.patch
 # https://bugs.php.net/63171 no odbc call during timeout
 Patch21: php-5.4.7-odbctimer.patch
-# https://bugs.php.net/63149 check sqlite3_column_table_name
-Patch22: php-5.4.7-sqlite.patch
-# https://bugs.php.net/61557 crash in libxml
-Patch23: php-5.4.8-libxml.patch
 
 # Functional changes
 Patch40: php-5.4.0-dlopen.patch
@@ -102,6 +93,10 @@ Patch43: php-5.4.0-phpize.patch
 Patch44: php-5.4.5-system-libzip.patch
 # Use -lldap_r for OpenLDAP
 Patch45: php-5.4.8-ldap_r.patch
+# Make php_config.h constant across builds
+Patch46: php-5.4.9-fixheader.patch
+# drop "Configure command" from phpinfo output
+Patch47: php-5.4.9-phpinfo.patch
 
 
 # Fixes for tests
@@ -114,7 +109,6 @@ BuildRequires: zlib-devel, smtpdaemon, libedit-devel
 BuildRequires: pcre-devel >= 6.6
 BuildRequires: bzip2, perl, libtool >= 1.4.3, gcc-c++
 BuildRequires: libtool-ltdl-devel
-BuildRequires: bison
 %if %{with_libzip}
 BuildRequires: libzip-devel >= 0.10
 %endif
@@ -133,13 +127,10 @@ Requires(pre): httpd
 
 
 # Don't provides extensions, which are not shared library, as .so
-# RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php/modules/.*\.so$}
 %{?filter_provides_in: %filter_provides_in %{_libdir}/php-zts/modules/.*\.so$}
+%{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_libdir}/php/modules/.*\\.so$
-%global __provides_exclude_from %{__provides_exclude_from}|%{_libdir}/php-zts/modules/.*\\.so$
 
 
 %description
@@ -661,12 +652,8 @@ support for using the enchant library to PHP.
 %patch6 -p1 -b .embed
 %patch7 -p1 -b .recode
 %patch8 -p1 -b .libdb
-%patch9 -p1 -b .mysqliheaders
 
-%patch20 -p1 -b .imap
 %patch21 -p1 -b .odbctimer
-%patch22 -p1 -b .tablename
-%patch23 -p1 -b .libxmlcrash
 
 %patch40 -p1 -b .dlopen
 %patch41 -p1 -b .easter
@@ -675,7 +662,11 @@ support for using the enchant library to PHP.
 %if %{with_libzip}
 %patch44 -p1 -b .systzip
 %endif
+%if 0%{?fedora} >= 18 || 0%{?rhel} >= 7
 %patch45 -p1 -b .ldap_r
+%endif
+%patch46 -p1 -b .fixheader
+%patch47 -p1 -b .phpinfo
 
 # Prevent %%doc confusion over LICENSE files
 cp Zend/LICENSE Zend/ZEND_LICENSE
@@ -805,8 +796,9 @@ PEAR_INSTALLDIR=%{_datadir}/pear; export PEAR_INSTALLDIR
 
 # Shell function to configure and build a PHP tree.
 build() {
-# bison-1.875-2 seems to produce a broken parser; workaround.
-# mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
+# Old/recent bison version seems to produce a broken parser;
+# upstream uses GNU Bison 2.3. Workaround:
+mkdir Zend && cp ../Zend/zend_{language,ini}_{parser,scanner}.[ch] Zend
 ln -sf ../configure
 %configure \
 	--cache-file=../config.cache \
@@ -1107,18 +1099,18 @@ make -C build-apache install-modules \
 # Install the default configuration file and icons
 install -m 755 -d $RPM_BUILD_ROOT%{_sysconfdir}/
 install -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/php.ini
-install -m 755 -d $RPM_BUILD_ROOT%{contentdir}/icons
-install -m 644 php.gif $RPM_BUILD_ROOT%{contentdir}/icons/php.gif
+install -m 755 -d $RPM_BUILD_ROOT%{_httpd_contentdir}/icons
+install -m 644 php.gif $RPM_BUILD_ROOT%{_httpd_contentdir}/icons/php.gif
 
 # For third-party packaging:
 install -m 755 -d $RPM_BUILD_ROOT%{_datadir}/php
 
 # install the DSO
-install -m 755 -d $RPM_BUILD_ROOT%{_libdir}/httpd/modules
-install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules
+install -m 755 -d $RPM_BUILD_ROOT%{_httpd_moddir}
+install -m 755 build-apache/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}
 
 # install the ZTS DSO
-install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/libphp5-zts.so
+install -m 755 build-zts/libs/libphp5.so $RPM_BUILD_ROOT%{_httpd_moddir}/libphp5-zts.so
 
 # Apache config fragment
 %if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
@@ -1161,8 +1153,6 @@ install -m 644 %{SOURCE8} $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/php-fpm
 %endif
 # Fix the link
 (cd $RPM_BUILD_ROOT%{_bindir}; ln -sfn phar.phar phar)
-
-magic_rpm_clean.sh
 
 # Generate files lists and stub .ini files for each subpackage
 for mod in pgsql mysql mysqli odbc ldap snmp xmlrpc imap \
@@ -1249,7 +1239,7 @@ getent group  apache >/dev/null || \
   groupadd -g 48 -r apache
 getent passwd apache >/dev/null || \
   useradd -r -u 48 -g apache -s /sbin/nologin \
-    -d %{contentdir} -c "Apache" apache
+    -d %{_httpd_contentdir} -c "Apache" apache
 exit 0
 
 %post fpm
@@ -1304,14 +1294,14 @@ fi
 %postun embedded -p /sbin/ldconfig
 
 %files
-%{_libdir}/httpd/modules/libphp5.so
-%{_libdir}/httpd/modules/libphp5-zts.so
+%{_httpd_moddir}/libphp5.so
+%{_httpd_moddir}/libphp5-zts.so
 %attr(0770,root,apache) %dir %{_localstatedir}/lib/php/session
 %config(noreplace) %{_httpd_confdir}/php.conf
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/10-php.conf
 %endif
-%{contentdir}/icons/php.gif
+%{_httpd_contentdir}/icons/php.gif
 
 %files common -f files.common
 %doc CODING_STANDARDS CREDITS EXTENSIONS LICENSE NEWS README*
@@ -1409,6 +1399,37 @@ fi
 
 
 %changelog
+* Wed Dec 19 2012 Remi Collet <rcollet@redhat.com> 5.4.10-1
+- update to 5.4.10
+- remove patches merged upstream
+
+* Tue Dec 11 2012 Remi Collet <rcollet@redhat.com> 5.4.9-3
+- drop "Configure Command" from phpinfo output
+
+* Tue Dec 11 2012 Joe Orton <jorton@redhat.com> - 5.4.9-2
+- prevent php_config.h changes across (otherwise identical) rebuilds
+
+* Thu Nov 22 2012 Remi Collet <rcollet@redhat.com> 5.4.9-1
+- update to 5.4.9
+
+* Thu Nov 15 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.5.RC1
+- switch back to upstream generated scanner/parser
+
+* Thu Nov 15 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.4.RC1
+- use _httpd_contentdir macro and fix php.gif path
+
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.3.RC1
+- improve system libzip patch to use pkg-config
+
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.2.RC1
+- use _httpd_moddir macro
+
+* Wed Nov 14 2012 Remi Collet <rcollet@redhat.com> 5.4.9-0.1.RC1
+- update to 5.4.9RC1
+- improves php.conf (use FilesMatch + SetHandler)
+- improves filter (httpd module)
+- apply ldap_r patch on fedora >= 18 only
+
 * Fri Nov  9 2012 Remi Collet <rcollet@redhat.com> 5.4.8-6
 - clarify Licenses
 - missing provides xmlreader and xmlwriter

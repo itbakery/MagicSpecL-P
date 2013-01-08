@@ -3,7 +3,7 @@
 %define pre_release rc1 
 Name:           python-xlib
 Version:        0.15
-Release:        0.6.%{pre_release}%{?dist}
+Release:        0.7.%{pre_release}%{?dist}
 Summary:        X client library for Python
 
 Group:          Development/Languages
@@ -52,7 +52,7 @@ that tell you how to program with python-xlib.
 %{__python} setup.py build
 cp %{SOURCE1} doc/src/ 
 cd doc
-make html ps
+#make html ps
 cd html
 rm Makefile texi2html
 
@@ -73,12 +73,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files doc
 %defattr(-,root,root,-)
-%doc COPYING examples doc/html doc/ps/python-xlib.ps
+%doc COPYING examples
 
 
 %changelog
-* Sun Jan 22 2012 Liu Di <liudidi@gmail.com> - 0.15-0.6.rc1
-- 为 Magic 3.0 重建
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-0.7.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.15-0.6.rc1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Sat Jun 04 2011 Luke Macken <lmacken@redhat.com> - 0.15-0.5.rc1
 - Apply a couple of patches from upstream:

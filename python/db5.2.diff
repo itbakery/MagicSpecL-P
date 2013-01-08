@@ -6,7 +6,7 @@ diff -ur Python-2.7.2.orig/Lib/bsddb/__init__.py Python-2.7.2/Lib/bsddb/__init__
  
  
 -"""Support for Berkeley DB 4.1 through 4.8 with a simple interface.
-+"""Support for Berkeley DB 4.2 through 5.2 with a simple interface.
++"""Support for Berkeley DB 4.2 through 5.3 with a simple interface.
  
  For the full featured object oriented interface use the bsddb.db module
  instead.  It mirrors the Oracle Berkeley DB C API.
@@ -1734,8 +1734,8 @@ diff -ur Python-2.7.2.orig/Modules/bsddb.h Python-2.7.2/Modules/bsddb.h
  #error "eek! DBVER can't handle minor versions > 9"
  #endif
  
--#define PY_BSDDB_VERSION "4.8.4.1"
-+#define PY_BSDDB_VERSION "5.1.2"
+-#define PY_BSDDB_VERSION "4.8.4.2"
++#define PY_BSDDB_VERSION "5.3.2"
  
  /* Python object definitions */
  
@@ -1804,7 +1804,7 @@ diff -ur Python-2.7.2.orig/setup.py Python-2.7.2/setup.py
          # versions of BerkeleyDB already installed.
  
 -        max_db_ver = (4, 8)
-+        max_db_ver = (5, 2)
++        max_db_ver = (5, 3)
          min_db_ver = (4, 1)
          db_setup_debug = False   # verbose debug prints from this script?
  

@@ -513,7 +513,7 @@ diff -up Python-2.7.2/Modules/_hashopenssl.c.hashlib-fips Python-2.7.2/Modules/_
          return NULL;
      }
  
-@@ -484,55 +556,116 @@ EVP_new(PyObject *self, PyObject *args,
+@@ -484,55 +556,118 @@ EVP_new(PyObject *self, PyObject *args,
      digest = EVP_get_digestbyname(name);
  
      ret_obj = EVPnew(name_obj, digest, NULL, (unsigned char*)view.buf,
@@ -601,6 +601,8 @@ diff -up Python-2.7.2/Modules/_hashopenssl.c.hashlib-fips Python-2.7.2/Modules/_
 +        }
 +    }
 +
++    PyBuffer_Release(&view);
++
 +    return ret_obj;
 +}
 +
@@ -658,7 +660,7 @@ diff -up Python-2.7.2/Modules/_hashopenssl.c.hashlib-fips Python-2.7.2/Modules/_
  GEN_CONSTRUCTOR(md5)
  GEN_CONSTRUCTOR(sha1)
  #ifdef _OPENSSL_SUPPORTS_SHA2
-@@ -565,13 +698,10 @@ init_hashlib(void)
+@@ -565,13 +700,10 @@ init_hashlib(void)
  {
      PyObject *m;
  

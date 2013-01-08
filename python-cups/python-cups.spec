@@ -5,7 +5,7 @@
 
 Summary:       Python bindings for CUPS
 Name:          python-cups
-Version:       1.9.60
+Version:       1.9.62
 Release:       2%{?dist}
 URL:           http://cyberelk.net/tim/software/pycups/
 Source:        http://cyberelk.net/tim/data/pycups/pycups-%{version}.tar.bz2
@@ -14,8 +14,6 @@ Group:         Development/Languages
 BuildRequires: cups-devel
 BuildRequires: python2-devel
 BuildRequires: epydoc
-
-Conflicts: rpm-build < 4.9.0
 
 %description
 This package provides Python bindings for the CUPS API,
@@ -40,7 +38,6 @@ make doc
 make install DESTDIR="%{buildroot}"
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING ChangeLog README NEWS TODO
 %{python_sitearch}/cups.so
 %{python_sitearch}/pycups*.egg-info
@@ -48,12 +45,26 @@ make install DESTDIR="%{buildroot}"
 %{_rpmconfigdir}/postscriptdriver.prov
 
 %files doc
-%defattr(-,root,root,-)
 %doc examples html
 
 %changelog
-* Mon Jan 23 2012 Liu Di <liudidi@gmail.com> - 1.9.60-2
-- 为 Magic 3.0 重建
+* Thu Sep 27 2012 Jiri Popelka <jpopelka@redhat.com> - 1.9.62-2
+- Remove unused statements.
+
+* Wed Aug  1 2012 Tim Waugh <twaugh@redhat.com> - 1.9.62-1
+- 1.9.62, including fixes for building against newer versions of CUPS.
+
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.61-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Apr 10 2012 Tim Waugh <twaugh@redhat.com> - 1.9.61-2
+- Apply upstream patch to fix crash on loading invalid PPDs (bug #811159).
+
+* Tue Mar  6 2012 Tim Waugh <twaugh@redhat.com> - 1.9.61-1
+- 1.9.61, fixing ref-counting bugs (bug #800143).
+
+* Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9.60-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Oct 11 2011 Tim Waugh <twaugh@redhat.com> - 1.9.60-1
 - 1.9.60.  Constants from CUPS 1.5.0.

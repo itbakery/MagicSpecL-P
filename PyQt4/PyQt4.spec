@@ -5,7 +5,7 @@
 
 Summary: Python bindings for Qt4
 Name: 	 PyQt4
-Version: 4.9.5
+Version: 4.9.6
 Release: 1%{?dist}
 
 # GPLv2 exceptions(see GPL_EXCEPTIONS*.txt)
@@ -30,7 +30,7 @@ Patch52:  PyQt-x11-gpl-4.9.2-pyuic_shbang.patch
 Patch60:  qreal_float_support.diff
 
 # rhel patches
-Patch300: PyQt-x11-gpl-4.9-webkit.patch
+Patch300: PyQt-x11-gpl-4.9.5-webkit.patch
 
 BuildRequires: findutils
 BuildRequires: pkgconfig(dbus-1) pkgconfig(dbus-python)
@@ -42,11 +42,11 @@ BuildRequires: pkgconfig(QtGui) pkgconfig(QtNetwork)
 BuildRequires: qscintilla
 BuildRequires: pkgconfig(QtWebKit)
 %endif
-BuildRequires: sip-devel >= 4.14
+BuildRequires: sip-devel >= 4.14.2
 
 %if 0%{?with_python3}
 BuildRequires: python3-devel 
-BuildRequires: python3-sip-devel >= 4.14
+BuildRequires: python3-sip-devel >= 4.14.2
 %endif # with_python3
 
 Requires: dbus-python
@@ -233,7 +233,7 @@ test -d %{buildroot}%{_datadir}/python3-sip/PyQt4/phonon
 # verify opengl_types.sip sanity
 diff -u ./sip/QtOpenGL/opengl_types.sip.orig \
         ./sip/QtOpenGL/opengl_types.sip ||:
-magic_rpm_clean.sh
+
 
 %clean
 rm -rf %{buildroot}
@@ -287,6 +287,15 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Dec 09 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.6-1
+- 4.9.6
+
+* Sun Oct 28 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.5-3
+- rebuild (sip)
+
+* Thu Oct 11 2012 Than Ngo <than@redhat.com> - 4.9.5-2
+- update webkit patch
+
 * Mon Oct 01 2012 Rex Dieter <rdieter@fedoraproject.org> 4.9.5-1
 - PyQt-4.9.5
 

@@ -1,6 +1,6 @@
-%global gitver 3937565
+%global gitver 455063d
 %global gcc_target_platform x86_64-nacl
-%global bootstrap 0
+%global bootstrap 1
 
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
@@ -8,13 +8,13 @@ Version:	4.4.3
 Release:	6.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
-# (Checkout ID taken from chromium-19.0.1084.56/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-23.0.1271.95/native_client/tools/REVISIONS)
 # cd nacl-gcc
-# git checkout 3937565daab5e845fe8a8a1a7d9a5cb9cf62ecd4
+# git checkout 455063da0a22a7a099d80efda2fff25bda15420a
 # cd ..
 # For gcc version, cat gcc/BASE-VER
-# mv nacl-gcc nacl-gcc-4.4.3-git3937565
-# tar cfj nacl-gcc-4.4.3-git3937565.tar.bz2 nacl-gcc-4.4.3-git3937565
+# mv nacl-gcc nacl-gcc-4.4.3-git455063d
+# tar --exclude-vcs -cjf nacl-gcc-4.4.3-git455063d.tar.bz2 nacl-gcc-4.4.3-git455063d
 License:	GPLv3+ and GPLv3+ with exceptions and GPLv2+ with exceptions
 Source0:	nacl-gcc-%{version}-git%{gitver}.tar.bz2
 URL:		http://sourceware.org/gcc/
@@ -82,7 +82,7 @@ GCC_DEFINES="-Dinhibit_libc -D__gthr_posix_h"
 	--with-newlib \
 %endif
 	--target=%{gcc_target_platform} \
-	--with-host-libstdcxx="-lpwl -lstdc++ -lm" \
+	--with-host-libstdcxx="-lstdc++ -lm" \
 	--disable-ppl-version-check \
 	--disable-libgcj
 
@@ -130,8 +130,8 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 4.4.3-6.git3937565
-- 为 Magic 3.0 重建
+* Thu Dec 13 2012 Tom Callaway <spot@fedoraproject.org> 4.4.3-6.git455063d
+- update for chromium 23
 
 * Tue Aug 28 2012 Tom Callaway <spot@fedoraproject.org> 4.4.3-5.git3937565
 - update for chromium 21

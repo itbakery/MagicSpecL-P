@@ -7,7 +7,7 @@
 # For NaCl, the crossarch is x86_64-nacl
 
 %global binutils_target x86_64-nacl
-%global gitver f412ed5
+%global gitver e0648d3
 
 ExclusiveArch: i686 x86_64
 
@@ -24,19 +24,19 @@ ExclusiveArch: i686 x86_64
 Summary: A GNU collection of binary utilities
 Name: nacl-binutils%{?_with_debug:-debug}
 Version: 2.20.1
-Release: 5.git%{gitver}%{?dist}
+Release: 6.git%{gitver}%{?dist}
 License: GPLv3+
 Group: Development/Tools
 URL: http://sources.redhat.com/binutils
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-binutils.git
-# (Checkout ID taken from chromium-19.0.1084.56/native_client/tools/REVISIONS)
+# (Checkout ID taken from chromium-23.0.1271.95/native_client/tools/REVISIONS)
 # cd nacl-binutils
-# git checkout f412ed57de094c8c33ff23e523e977a67d19fa5d
+# git checkout e0648d331e12a691e41645592005e72ace44667b
 # cd ..
 # For binutils version, grep "AM_INIT_AUTOMAKE(bfd, " bfd/configure.in
-# mv nacl-binutils nacl-binutils-2.20.1-gitf412ed5
-# tar cfj nacl-binutils-2.20.1-gitf412ed5.tar.bz2 nacl-binutils-2.20.1-gitf412ed5
+# mv nacl-binutils nacl-binutils-2.20.1-gite0648d3
+# tar --exclude-vcs -cjf nacl-binutils-2.20.1-gite0648d3.tar.bz2 nacl-binutils-2.20.1-gite0648d3
 Source: nacl-binutils-%{version}-git%{gitver}.tar.bz2
 Source2: binutils-2.19.50.0.1-output-format.sed
 
@@ -314,7 +314,7 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 # This one comes from gcc
 rm -f %{buildroot}%{_infodir}/dir
 # rm -rf %{buildroot}%{_prefix}/%{binutils_target}
-magic_rpm_clean.sh
+
 %find_lang %{?cross}binutils
 %find_lang %{?cross}opcodes
 %find_lang %{?cross}bfd
@@ -355,7 +355,7 @@ rm -rf %{buildroot}
 %{_sbindir}/alternatives --auto %{?cross}ld 
 %endif
 %if %{isnative}
-/usr/sbin/ldconfig
+/sbin/ldconfig
 # For --excludedocs:
 if [ -e %{_infodir}/binutils.info.gz ]
 then
@@ -392,7 +392,7 @@ fi
 exit 0
 
 %if %{isnative}
-%postun -p /usr/sbin/ldconfig
+%postun -p /sbin/ldconfig
 %endif # %{isnative}
 
 %files -f %{?cross}binutils.lang
@@ -427,8 +427,11 @@ exit 0
 %endif # %{isnative}
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 2.20.1-5.gitf412ed5
+* Thu Jan 10 2013 Liu Di <liudidi@gmail.com> - 2.20.1-6.gite0648d3
 - 为 Magic 3.0 重建
+
+* Thu Dec 13 2012 Tom Callaway <spot@fedoraproject.org> - 2.20.1-5.gite0648d3
+- update to chromium 23 nacl-binutils
 
 * Tue Jun 12 2012 Tom Callaway <spot@fedoraproject.org> - 2.20.1-4.gitf412ed5
 - update to chromium 19 nacl-binutils

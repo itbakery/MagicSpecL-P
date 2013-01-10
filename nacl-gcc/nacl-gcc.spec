@@ -1,11 +1,11 @@
 %global gitver 455063d
 %global gcc_target_platform x86_64-nacl
-%global bootstrap 1
+%global bootstrap 0
 
 Name:		nacl-gcc
 Summary:	Various compilers (C, C++) for nacl
 Version:	4.4.3
-Release:	6.git%{gitver}%{?dist}
+Release:	7.git%{gitver}%{?dist}
 # Generated from git
 # git clone http://git.chromium.org/native_client/nacl-gcc.git
 # (Checkout ID taken from chromium-23.0.1271.95/native_client/tools/REVISIONS)
@@ -130,6 +130,9 @@ rm -rf %{buildroot}%{_libdir}/libiberty.a
 %endif
 
 %changelog
+* Thu Jan 10 2013 Liu Di <liudidi@gmail.com> - 4.4.3-7.git455063d
+- 为 Magic 3.0 重建
+
 * Thu Dec 13 2012 Tom Callaway <spot@fedoraproject.org> 4.4.3-6.git455063d
 - update for chromium 23
 

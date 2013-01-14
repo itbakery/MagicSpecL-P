@@ -1,6 +1,6 @@
 Name:           perl-Math-Random-MT-Auto
-Version:        6.17
-Release:        3%{?dist}
+Version:        6.22
+Release:        1%{?dist}
 Summary:        Auto-seeded Mersenne Twister PRNGs
 License:        BSD 
 Group:          Development/Libraries
@@ -13,7 +13,7 @@ BuildRequires:  perl(Carp)
 BuildRequires:  perl(Config)
 BuildRequires:  perl(Exception::Class) >= 1.32
 BuildRequires:  perl(Fcntl)
-BuildRequires:  perl(Object::InsideOut) >= 3.85
+BuildRequires:  perl(Object::InsideOut) >= 3.88
 BuildRequires:  perl(Object::InsideOut::Util)
 BuildRequires:  perl(Scalar::Util) >= 1.23
 BuildRequires:  perl(strict)
@@ -28,7 +28,7 @@ BuildRequires:  perl(LWP::UserAgent)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 Requires:       perl(Exception::Class) >= 1.32
 Requires:       perl(Fcntl)
-Requires:       perl(Object::InsideOut) >= 3.85
+Requires:       perl(Object::InsideOut) >= 3.88
 Requires:       perl(Scalar::Util) >= 1.23
 
 %{?perl_default_filter}
@@ -62,7 +62,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes README examples
@@ -71,11 +71,23 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 6.17-3
-- 为 Magic 3.0 重建
+* Wed Sep 05 2012 Petr Pisar <ppisar@redhat.com> - 6.22-1
+- 6.22 bump
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 6.17-2
-- 为 Magic 3.0 重建
+* Wed Aug 08 2012 Petr Pisar <ppisar@redhat.com> - 6.21-1
+- 6.21 bump
+
+* Tue Aug 07 2012 Petr Pisar <ppisar@redhat.com> - 6.19-2
+- 6.19 bump
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 6.18-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jun 15 2012 Petr Pisar <ppisar@redhat.com> - 6.18-2
+- Perl 5.16 rebuild
+
+* Fri Jan 27 2012 Petr Pisar <ppisar@redhat.com> - 6.18-1
+- 6.18 bump
 
 * Thu Jan 19 2012 Petr Pisar <ppisar@redhat.com> - 6.17-1
 - 6.17 bump

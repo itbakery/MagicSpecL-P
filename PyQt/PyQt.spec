@@ -65,7 +65,7 @@ ldconfig
 %build
 QTDIR="" && . /etc/profile.d/qt.sh
 
-echo yes | python configure.py -y qt-mt -d %{python_sitearch} CXXFLAGS="%{optflags}" CFLAGS="%{optflags}"
+echo yes | python configure.py -y qt-mt -d %{python_sitearch} CXXFLAGS="%{optflags} -DANY=void" CFLAGS="%{optflags} -DANY=void"
 
 # Makefiles are broken, workaround
 make -C qt %{?_smp_mflags}
@@ -77,12 +77,12 @@ mv examples3 examples
 
 %files
 %defattr(-,root,root)
-%{_bindir}
+%{_bindir}/*
 %python_sitearch
 
 %files devel
 %defattr(-,root,root)
-%{_datadir}/sip
+%{_datadir}/sip/*
 %doc doc/PyQt.html
 
 %files examples

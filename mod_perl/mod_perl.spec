@@ -4,7 +4,7 @@
 
 Name:           mod_perl
 Version:        2.0.7
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
@@ -178,6 +178,9 @@ magic_rpm_clean.sh
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.7-8
+- 为 Magic 3.0 重建
+
 * Wed Jul 25 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-7
 - updated httpd-2.4 patch
 

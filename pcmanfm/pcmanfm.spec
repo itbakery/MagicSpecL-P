@@ -2,7 +2,12 @@
 # git://pcmanfm.git.sourceforge.net/gitroot/pcmanfm/pcmanfm
 
 %global         usegit      0
-%global         mainrel     2
+%global         mainrel     1
+
+%global         usegtk3     0
+%if 0%{?fedora} >= 18
+%global         usegtk3     1
+%endif
 
 %global         githash     07ddaf9cdeedc5f86a03b28b3d686aa82c59b38e
 %global         shorthash   %(TMP=%githash ; echo ${TMP:0:10})
@@ -15,11 +20,11 @@
 %global         fedorarel   %{mainrel}
 %endif
 
-%global	libfm_minver	0.1.15-7
+%global	libfm_minver	1.1.0
 
 Name:		pcmanfm
-Version:	0.9.10
-Release:	%{fedorarel}%{?dist}.1
+Version:	1.1.0
+Release:	%{fedorarel}%{?dist}
 Summary:	Extremly fast and lightweight file manager
 
 Group:		User Interface/Desktops
@@ -40,13 +45,6 @@ BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 BuildRequires:	intltool
 
-BuildRequires:  automake
-BuildRequires:  libtool
-
-# For compatibility
-%if 0%{?fedora} <= 13
-BuildRequires:	lxde-icon-theme
-%endif
 # Still needed for removable media - still now really?
 %if 0%{?fedora} < 16
 Requires:	hal-storage-addon
@@ -70,7 +68,10 @@ chmod 0644 [A-Z]*
 %build
 # src/desktop.c
 export LDFLAGS="-lm"
-%configure
+%configure \
+%if %{usegtk3}
+	--with-gtk=3
+%endif
 
 make -C po -j1 GMSGFMT="msgfmt --statistics"
 make  %{?_smp_mflags} -k
@@ -86,15 +87,6 @@ desktop-file-install \
 	--remove-category 'Application' \
 	--vendor 'fedora' \
 	$RPM_BUILD_ROOT%{_datadir}/applications/%{name}*.desktop
-
-# compatibility
-%if 0%{?fedora} <= 13
-mkdir %{buildroot}%{_datadir}/pixmaps
-# No link but copy so that non-LXDE user won't require
-# LXDE stuff
-cp -p %{_datadir}/icons/nuoveXT2/128x128/apps/system-file-manager.png \
-	%{buildroot}%{_datadir}/pixmaps/%{name}.png
-%endif
 
 %find_lang %{name}
 
@@ -115,18 +107,24 @@ exit 0
 %doc	README
 
 %{_bindir}/%{name}
+%{_mandir}/man1/%{name}.1*
 
 %{_datadir}/%{name}/
-%{_datadir}/applications/fedora-%{name}.desktop
+%{_datadir}/applications/fedora-%{name}*.desktop
 %config(noreplace) %{_sysconfdir}/xdg/%{name}/
 
-%if 0%{?fedora} <= 13
-%{_datadir}/pixmaps/%{name}.png
-%endif
-
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.10-2.1
-- 为 Magic 3.0 重建
+* Sun Nov  4 2012 Mamoru TASAKA <mtasaka@fedoraproject.org> - 1.1.0-1
+- 1.1.0
+
+* Wed Sep 27 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1.0.1-1
+- 1.0.1
+
+* Wed Aug 15 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 1.0-1
+- 1.0 release
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.10-2.1
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
 * Thu Jan  5 2012 Mamoru Tasaka <mtasaka@fedoraproject.org> - 0.9.10-2
 - F-17: rebuild against gcc47

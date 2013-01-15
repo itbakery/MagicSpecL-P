@@ -1,15 +1,15 @@
 Summary: MagicLinux BugPatch Package
 Summary(zh_CN.UTF-8): MagicLinux Java 配置包
 Name: magic-java-config
-Version: 2.5
-Release: 4%{?dist}
+Version: 3.0
+Release: 1%{?dist}
 Source0: %{name}.tar.gz
 License: GPL
 Group: Development/Libraries
 Group(zh_CN.UTF-8): 开发/库
 BuildRoot:%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Obsoletes: mgc-patch
-Requires:  jre = 1.6.0_14
+Requires:  jdk = 2000:1.7.0_11
 
 %description
 - Config java chinese font;
@@ -34,8 +34,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-/etc
-/usr
+/etc/*
+/usr/*
 
 
 %changelog

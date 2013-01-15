@@ -1,9 +1,9 @@
 
-%define soversion 0.7
+%define soversion 0.8
 
 Name: OpenGTL
-Version: 0.9.15.2
-Release: 2%{?dist}
+Version: 0.9.17
+Release: 3%{?dist}
 Summary: Graphics Transformation Languages
 License: LGPLv2
 Group: Development/Languages
@@ -13,18 +13,14 @@ Source0: http://download.opengtl.org/OpenGTL-%{version}.tar.bz2
 ## local patches
 
 ## upstreamable patches
-Patch50: OpenGTL-0.9.15.2-version.patch
 Patch52: OpenGTL-0.9.15.2-gcc47.patch
 
 ## upstream patches
-# Sync to tip (95a8c6853b97)
-# Fixes llvm3 compile
-Patch51: OpenGTL-0.9.15.2-95a8c6853b97-20120110.patch
 
 BuildRequires: cmake
 BuildRequires: doxygen graphviz
-BuildRequires: libpng-devel
-BuildRequires: llvm-devel >= 3.0
+BuildRequires: llvm-devel >= 3.1
+BuildRequires: pkgconfig(libpng)
 # docs 
 BuildRequires: ImageMagick ghostscript texlive-latex texlive-dvips
 BuildRequires: zlib-devel
@@ -57,15 +53,15 @@ native programs that use the OpenGTL libraries.
 %prep
 %setup -q
 
-%patch50 -p1 -b .version
-%patch51 -p1 -b .95a8c6853b97
 %patch52 -p1 -b .gcc47
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
+CFLAGS="${RPM_OPT_FLAGS} -pthread"
+CXXFLAGS="${RPM_OPT_FLAGS} -pthread"
 %{cmake} \
-  -DOPENGTL_BUILD_TESTS:BOOL=ON \
+  -DOPENGTL_BUILD_TESTS:BOOL=ON -DCMAKE_USE_PTHREADS_INIT:BOOL=ON \
   ..
 popd
 
@@ -75,14 +71,9 @@ doxygen OpenGTL.doxy
 
 
 %install
-rm -rf %{buildroot}
-
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
 rm -rf %{buildroot}%{_docdir}/OpenGTL
-
-# omit exe from docs
-rm -v html/installdox
 
 
 %check
@@ -94,10 +85,6 @@ test "$(pkg-config --modversion OpenShiva)" = "%{version}"
 # some known failures due to missing test data 
 # 91% tests passed, 16 tests failed out of 172
 make test -C  %{_target_platform} ||:
-
-
-%clean
-rm -rf %{buildroot}
 
 
 %files
@@ -153,8 +140,29 @@ rm -rf %{buildroot}
 
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 0.9.15.2-2
+* Mon Jan 14 2013 Liu Di <liudidi@gmail.com> - 0.9.17-3
 - 为 Magic 3.0 重建
+
+* Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.17-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Wed Jun 06 2012 Rex Dieter <rdieter@fedoraproject.org> 0.9.17-1
+- 0.9.17
+
+* Mon May 21 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.9.16-4
+- Re-add unintentinal change
+
+* Mon May 21 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 0.9.16-3
+- Fix build with new doxygen, cleanup spec
+
+* Tue Feb 28 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.16-2
+- Rebuilt for c++ ABI breakage
+
+* Sat Jan 28 2012 Rex Dieter <rdieter@fedoraproject.org> 0.9.16-1
+- 0.9.16
+
+* Thu Jan 12 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.15.2-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
 * Tue Jan 10 2012 Tom Callaway <spot@fedoraproject.org> - 0.9.15.2-1
 - update to 0.9.15.2

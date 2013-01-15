@@ -1,7 +1,7 @@
 Name:           perl-Getopt-Long-Descriptive
 Summary:        Getopt::Long with usage text
-Version:        0.090
-Release:        6%{?dist}
+Version:        0.093
+Release:        1%{?dist}
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 Source0:        http://search.cpan.org/CPAN/authors/id/R/RJ/RJBS/Getopt-Long-Descriptive-%{version}.tar.gz 
@@ -11,6 +11,8 @@ BuildArch:      noarch
 
 BuildRequires:  perl(Carp)
 BuildRequires:  perl(File::Basename)
+BuildRequires:  perl(File::Find)
+BuildRequires:  perl(File::Temp)
 BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(Getopt::Long) >= 2.33
 BuildRequires:  perl(List::Util)
@@ -45,12 +47,11 @@ make %{?_smp_mflags}
 make pure_install DESTDIR=%{buildroot}
 
 find %{buildroot} -type f -name .packlist -exec rm -f {} \;
-find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 
 %{_fixperms} %{buildroot}/*
 
 %check
-
+make test
 
 %files
 %doc Changes README t/
@@ -58,11 +59,20 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.090-6
-- 为 Magic 3.0 重建
+* Fri Nov 02 2012 Iain Arnell <iarnell@gmail.com> 0.093-1
+- update to latest upstream version
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.090-5
-- 为 Magic 3.0 重建
+* Fri Aug 03 2012 Iain Arnell <iarnell@gmail.com> 0.092-1
+- update to latest upstream version
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.091-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Thu Jun 14 2012 Petr Pisar <ppisar@redhat.com> - 0.091-2
+- Perl 5.16 rebuild
+
+* Thu Feb 23 2012 Iain Arnell <iarnell@gmail.com> 0.091-1
+- update to latest upstream version
 
 * Sun Jan 22 2012 Iain Arnell <iarnell@gmail.com> 0.090-4
 - drop tests subpackage; move tests to main package documentation

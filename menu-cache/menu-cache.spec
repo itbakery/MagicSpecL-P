@@ -1,16 +1,16 @@
 Name:           menu-cache
-Version:        0.3.2
-Release:        2%{?dist}
+Version:        0.4.1
+Release:        1%{?dist}
 Summary:        Caching mechanism for freedesktop.org compliant menus
 
 Group:          System Environment/Libraries
 License:        LGPLv2+ and GPLv2+
 URL:            http://lxde.org
+#VCS: git:git://lxde.git.sourceforge.net/gitroot/lxde/menu-cache
 Source0:        http://downloads.sourceforge.net/lxde/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  glib2-devel >= 2.16.0
-Requires:       redhat-menus
 
 %description
 Menu-cache is a caching mechanism for freedesktop.org compliant menus to 
@@ -38,17 +38,17 @@ developing applications that use %{name}.
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
-make %{?_smp_mflags}
+make %{?_smp_mflags} V=1
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
+rm -rf %{buildroot}
+make install DESTDIR=%{buildroot}
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 
 %post -p /sbin/ldconfig
@@ -75,6 +75,21 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.4.1-1
+- Update to 0.4.1
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Sun Jun 03 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.3.3-2
+- No longer require redhat-menus
+
+* Sun Jun 03 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.3.3-1
+- Update to 0.3.3 (#827783)
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.2-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.3.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

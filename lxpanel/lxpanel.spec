@@ -2,7 +2,7 @@
 
 Name:           lxpanel
 Version:        0.5.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A lightweight X11 desktop panel
 
 Group:          User Interface/Desktops
@@ -100,6 +100,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/lxpanel.pc
 
 %changelog
+* Tue Jan 15 2013 Liu Di <liudidi@gmail.com> - 0.5.10-4
+- 为 Magic 3.0 重建
+
 * Sun Nov 25 2012 Christoph Wickert <cwickert@fedoraproject.org> - 0.5.10-3
 - Fix annoying crash of the taskbar (#587430)
 

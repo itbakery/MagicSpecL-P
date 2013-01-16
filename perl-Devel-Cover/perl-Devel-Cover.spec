@@ -1,5 +1,5 @@
 Name:           perl-Devel-Cover
-Version:        0.78
+Version:        0.89
 Release:        5%{?dist}
 Summary:        Code coverage metrics for Perl
 
@@ -8,11 +8,29 @@ License:        GPL+ or Artistic
 URL:            http://search.cpan.org/dist/Devel-Cover/
 Source0:        http://www.cpan.org/authors/id/P/PJ/PJCJ/Devel-Cover-%{version}.tar.gz
 
+BuildRequires:  perl(autodie)
+BuildRequires:  perl(base)
+BuildRequires:  perl(B::Debug)
+BuildRequires:  perl(Browser::Open)
+BuildRequires:  perl(Carp)
+BuildRequires:  perl(CGI)
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(Digest::MD5)
+BuildRequires:  perl(DynaLoader)
+BuildRequires:  perl(Exporter)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(JSON::PP)
-BuildRequires:  perl(Template)
+BuildRequires:  perl(Template) >= 2.00
 BuildRequires:  perl(PPI::HTML) >= 1.07
+BuildRequires:  perl(Parallel::Iterator)
 BuildRequires:  perl(Perl::Tidy) >= 20060719
-BuildRequires:  perl(Pod::Coverage)
+BuildRequires:  perl(Pod::Coverage) >= 0.06
+BuildRequires:  perl(Pod::Coverage::CountParents)
+BuildRequires:  perl(Pod::Usage)
+BuildRequires:  perl(Template::Provider)
+BuildRequires:  perl(Test)
 BuildRequires:  perl(Test::Differences)
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(Test::Warn)
@@ -25,6 +43,9 @@ Requires:       perl(Test::Differences)
 # Requires:       perl(Perl::Tidy) >= 20060719
 
 %{?perl_default_filter}
+
+# Filter private modules
+%global __requires_exclude %{?__requires_exclude:%__requires_exclude|}^perl\\(Devel::Cover::Dumper\\)
 
 %description
 This module provides code coverage metrics for Perl.
@@ -49,11 +70,11 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %check
-
+make test
 
 
 %files
-%doc CHANGES README docs/BUGS docs/TODO
+%doc Changes README docs/BUGS docs/TODO
 %{_bindir}/*
 %{perl_vendorarch}/Devel/
 %{perl_vendorarch}/auto/Devel/
@@ -62,11 +83,22 @@ chmod -R u+w $RPM_BUILD_ROOT/*
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.78-5
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.89-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.78-4
-- 为 Magic 3.0 重建
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 0.89-4
+- Perl 5.16 rebuild
+
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 0.89-3
+- Do not require private Devel::Cover::Dumper module
+
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 0.89-2
+- Perl 5.16 rebuild
+
+* Thu Jun 21 2012 Jitka Plesnikova <jplesnik@redhat.com> 0.89-1
+- update to 0.89
+* Thu Jun 21 2012 Petr Pisar <ppisar@redhat.com> - 0.78-4
+- Perl 5.16 rebuild
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.78-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

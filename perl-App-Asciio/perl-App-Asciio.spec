@@ -1,13 +1,12 @@
 Name:       perl-App-Asciio 
 Version:    1.02.71 
-Release:    12%{?dist}
+Release:    13%{?dist}
 # see lib/App/Asciio.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
-Summary:    Asciio backend libraries 
+Summary:    Asciio back-end libraries 
 Source:     http://search.cpan.org/CPAN/authors/id/N/NK/NKH/App-Asciio-%{version}.tar.gz 
 Url:        http://search.cpan.org/dist/App-Asciio
-BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n) 
 Requires:   perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 BuildArch:  noarch
 
@@ -62,6 +61,8 @@ Provides: perl(App::Asciio::Menues)      = %{version}
 Provides: perl(App::Asciio::Options)     = %{version}
 Provides: perl(App::Asciio::Setup)       = %{version}
 Provides: perl(App::Asciio::Undo)        = %{version}
+
+%{?perl_default_filter}
 
 %description
 This gtk2-perl application allows you to draw ASCII diagrams in a modern
@@ -119,8 +120,6 @@ chmod +x %{__perl_provides}
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
-
 make pure_install PERL_INSTALL_ROOT=%{buildroot}
 find %{buildroot} -type f -name .packlist -exec rm -f {} ';'
 find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
@@ -132,13 +131,9 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications asciio.desktop
 
 %check
 # passes outside of rpm, but fails in rpmbuild F-10+ (no $DISPLAY)
-#
-
-%clean
-rm -rf %{buildroot} 
+#make test
 
 %files
-%defattr(-,root,root,-)
 %doc README Changes documentation/ 
 %{perl_vendorlib}/*
 %{_mandir}/man3/*.3*
@@ -148,15 +143,18 @@ rm -rf %{buildroot}
 %doc README
 %{_bindir}/*
 %{_datadir}/applications/*
-#%{_mandir}/man1/*.1*
 
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 1.02.71-12
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02.71-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 1.02.71-11
-- 为 Magic 3.0 重建
+* Sun Jun 24 2012 Petr Pisar <ppisar@redhat.com> - 1.02.71-12
+- Perl 5.16 rebuild
+
+* Sun Mar 11 2012 Emmanuel Seyman <emmanuel.seyman@club-internet.fr - 1.02.71-11
+- Add perl default filter
+- Clean up spec file
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.02.71-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

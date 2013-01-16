@@ -1,6 +1,6 @@
 Name:       perl-Data-TreeDumper 
-Version:    0.35 
-Release:    13%{?dist}
+Version:    0.40 
+Release:    3%{?dist}
 # see TreeDumper.pm
 License:    GPL+ or Artistic
 Group:      Development/Libraries
@@ -70,7 +70,7 @@ find %{buildroot} -depth -type d -exec rmdir {} 2>/dev/null ';'
 find %{buildroot} -name '*.pl' -exec rm -v {} +
 
 %check
-
+make test
 
 %clean
 rm -rf %{buildroot} 
@@ -82,11 +82,14 @@ rm -rf %{buildroot}
 %{_mandir}/man3/*.3*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.35-13
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.40-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.35-12
-- 为 Magic 3.0 重建
+* Fri Jun 22 2012 Petr Pisar <ppisar@redhat.com> - 0.40-2
+- Perl 5.16 rebuild
+
+* Fri Jan 27 2012 Marcela Maslanova <mmaslano@redhat.com> - 0.40-1
+- update to 0.40
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.35-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

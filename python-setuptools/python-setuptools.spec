@@ -123,8 +123,6 @@ install -p -m 0644 %{SOURCE1} %{SOURCE2} .
 find %{buildroot}%{python_sitelib} -name '*.exe' | xargs rm -f
 chmod +x %{buildroot}%{python_sitelib}/setuptools/command/easy_install.py
 
-magic_rpm_clean.sh
-
 %check
 %{__python} setup.py test
 
@@ -154,7 +152,7 @@ rm -rf %{buildroot}
 %endif # with_python3
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.6.28-4
+* Wed Jan 16 2013 Liu Di <liudidi@gmail.com> - 0.6.28-4
 - 为 Magic 3.0 重建
 
 * Fri Aug 03 2012 David Malcolm <dmalcolm@redhat.com> - 0.6.28-3

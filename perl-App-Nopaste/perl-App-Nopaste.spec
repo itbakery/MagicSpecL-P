@@ -1,20 +1,20 @@
 Name:           perl-App-Nopaste
-Version:        0.33
-Release:        6%{?dist}
+Version:        0.90
+Release:        1%{?dist}
 Summary:        Easy access to any pastebin
 License:        GPL+ or Artistic
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/App-Nopaste/
 Source0:        http://www.cpan.org/authors/id/S/SA/SARTAK/App-Nopaste-%{version}.tar.gz
 BuildArch:      noarch
+BuildRequires:  perl(inc::Module::Install)
 BuildRequires:  perl(Browser::Open)
 BuildRequires:  perl(Class::Load)
-BuildRequires:  perl(ExtUtils::MakeMaker)
 BuildRequires:  perl(File::Spec)
 BuildRequires:  perl(File::Temp)
+BuildRequires:  perl(Getopt::Long::Descriptive) >= 0.090
+BuildRequires:  perl(JSON)
 BuildRequires:  perl(Module::Pluggable)
-BuildRequires:  perl(Moose) >= 0.74
-BuildRequires:  perl(MooseX::Getopt) >= 0.17
 BuildRequires:  perl(Test::More)
 BuildRequires:  perl(WWW::Mechanize)
 # necessary for optional modules
@@ -24,7 +24,6 @@ BuildRequires:  perl(WWW::Pastebin::PastebinCom::Create)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 # autoreq doesn't catch this
 Requires:       perl(Browser::Open)
-Requires:       perl(MooseX::Getopt)
 # necessary for optional modules
 Requires:       perl(Clipboard)
 Requires:       perl(Config::GitLike)
@@ -71,7 +70,7 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_fixperms} $RPM_BUILD_ROOT/*
 
 %check
-
+make test
 
 %files
 %doc Changes
@@ -83,20 +82,18 @@ find $RPM_BUILD_ROOT -depth -type d -exec rmdir {} 2>/dev/null \;
 %{_mandir}/man1/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.33-6
-- 为 Magic 3.0 重建
+* Fri Nov 02 2012 Iain Arnell <iarnell@gmail.com> 1:0.90-1
+- update to latest upstream version
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-5
-- 为 Magic 3.0 重建
+* Sat Jul 21 2012 Iain Arnell <iarnell@gmail.com> 1:0.35-1
+- update to latest upstream version
+- BR inc::Module::Install
 
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 0.33-4
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.33-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
-* Sat Jan 28 2012 Liu Di <liudidi@gmail.com> - 0.33-3
-- 为 Magic 3.0 重建
-
-* Fri Jan 27 2012 Liu Di <liudidi@gmail.com> - 0.33-2
-- 为 Magic 3.0 重建
+* Sat Jun 23 2012 Petr Pisar <ppisar@redhat.com> - 0.33-2
+- Perl 5.16 rebuild
 
 * Thu Jan 05 2012 Iain Arnell <iarnell@gmail.com> 0.33-1
 - update to latest upstream version

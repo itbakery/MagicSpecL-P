@@ -1,9 +1,15 @@
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
+%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+
 %define pkgname CGI-SpeedyCGI
 
 Summary:        Speed up perl scripts by running them persistently
 Name:           perl-CGI-SpeedyCGI
 Version:        2.22
-Release:        13%{?dist}
+Release:        15%{?dist}
 License:        GPLv3+
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/%{pkgname}/
@@ -33,7 +39,7 @@ Summary:	SpeedyCGI module for the Apache HTTP Server
 Group:		System Environment/Daemons
 BuildRequires:	httpd-devel
 Requires:	%{name}%{?_isa} = %{version}-%{release}, httpd >= 2.0.40
-Requires:	httpd-mmn = %(cat %{_includedir}/httpd/.mmn || echo missing)
+Requires:	httpd-mmn = %{_httpd_mmn}
 
 %description -n mod_speedycgi
 The SpeedyCGI module for the Apache HTTP Server. It can be used to run
@@ -50,9 +56,9 @@ perl scripts for web application persistently to make them more quickly.
 %patch6 -p1 -b .c99_inline
 
 %build
-sed -i 's@apxs -@%{_sbindir}/apxs -@g' Makefile.PL src/SpeedyMake.pl \
+sed -i 's@apxs -@%{_httpd_apxs} -@g' Makefile.PL src/SpeedyMake.pl \
   mod_speedycgi/t/ModTest.pm mod_speedycgi/t/mod_perl.t
-sed -i 's@APXS=apxs@APXS=%{_sbindir}/apxs@g' mod_speedycgi/Makefile.tmpl
+sed -i 's@APXS=apxs@APXS=%{_httpd_apxs}@g' mod_speedycgi/Makefile.tmpl
 
 echo yes | perl Makefile.PL INSTALLDIRS=vendor
 make OPTIMIZE="$RPM_OPT_FLAGS" # doesn't understand %{?_smp_mflags}
@@ -65,27 +71,46 @@ find $RPM_BUILD_ROOT \( -name perllocal.pod -o -name .packlist \) -exec rm -f {}
 find $RPM_BUILD_ROOT -type f -name '*.bs' -empty -exec rm -f {} ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
-mkdir -p $RPM_BUILD_ROOT{%{_libdir}/httpd/modules,%{_sysconfdir}/httpd/conf.d}
+mkdir -p $RPM_BUILD_ROOT{%{_libdir}/httpd/modules,%{_httpd_modconfdir},%{_httpd_confdir}}
 install -m 755 mod_speedycgi2/mod_speedycgi.so $RPM_BUILD_ROOT%{_libdir}/httpd/modules/
-install -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/
+
+%if "%{_httpd_modconfdir}" == "%{_httpd_confdir}"
+# httpd <= 2.2.x
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}/
+%else
+# httpd >= 2.4.x
+sed -n /^LoadModule/p %{SOURCE1} > 10-speedycgi.conf
+sed    /^LoadModule/d %{SOURCE1} > example.conf
+touch -c -r %{SOURCE1} 10-speedycgi.conf example.conf
+install -p -m 644 10-speedycgi.conf $RPM_BUILD_ROOT%{_httpd_modconfdir}/
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
+%defattr(-,root,root,-)
 %doc Changes COPYING README docs/*
 %{_bindir}/speedy*
 %{perl_vendorlib}/CGI
 
 %files -n mod_speedycgi
-%defattr(-,root,root)
+%defattr(-,root,root,-)
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%doc example.conf
+%endif
 %{_libdir}/httpd/modules/mod_speedycgi.so
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/speedycgi.conf
+%config(noreplace) %{_httpd_modconfdir}/*.conf
 
 %changelog
-* Sun Jan 29 2012 Liu Di <liudidi@gmail.com> - 2.22-13
-- 为 Magic 3.0 重建
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.22-15
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Jun 11 2012 Petr Pisar <ppisar@redhat.com> - 2.22-14
+- Perl 5.16 rebuild
+
+* Wed Apr 18 2012 Joe Orton <jorton@redhat.com> - 2.22-13
+- update for httpd 2.4 (with Jan Kaluza, #810133)
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.22-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild

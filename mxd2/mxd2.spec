@@ -2,7 +2,7 @@ Summary: Magic xDSL Dialer
 Summary(zh_CN): Magic xDSL 拨号器
 Name: mxd2
 Version: 1.0
-Release: 2%{dist}
+Release: 3%{dist}
 License: GPL
 URL: http://ftp.magiclinux.org.cn/haulm
 Group: Applications/Internet
@@ -77,6 +77,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /usr/share/polkit-1/actions/org.polkit.mxd2.policy
 
 %changelog
+* Thu Jan 17 2013 Liu Di <liudidi@gmail.com> - 1.0-3
+- 为 Magic 3.0 重建
+
 * Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.0-2
 - 为 Magic 3.0 重建
 

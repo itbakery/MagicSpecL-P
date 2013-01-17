@@ -1,10 +1,13 @@
-%global contentdir /var/www
-%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
-%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+%{!?_httpd_apxs:       %{expand: %%global _httpd_apxs       %%{_sbindir}/apxs}}
+%{!?_httpd_mmn:        %{expand: %%global _httpd_mmn        %%(cat %{_includedir}/httpd/.mmn 2>/dev/null || echo missing-httpd-devel)}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
 Name:           mod_perl
 Version:        2.0.7
-Release:        8%{?dist}
+Release:        10%{?dist}
 Summary:        An embedded Perl interpreter for the Apache HTTP Server
 
 Group:          System Environment/Daemons
@@ -18,6 +21,7 @@ Patch1:         mod_perl-2.0.4-inline.patch
 Patch2:         mod_perl-2.0.5-nolfs.patch
 Patch3:         mod_perl-short-name.patch
 Patch4:         mod_perl-httpd24.patch
+Patch5:         mod_perl-httpd24-maps.patch
 
 BuildRequires:  perl-devel, perl(ExtUtils::Embed)
 BuildRequires:  httpd-devel >= 2.4.0, httpd, gdbm-devel
@@ -36,6 +40,8 @@ Requires:       perl(Linux::Pid)
 %global __provides_exclude %__provides_exclude|perl\\(Apache2::RequestRec\\)$
 %global __provides_exclude %__provides_exclude|perl\\(warnings\\)$
 %global __provides_exclude %__provides_exclude|perl\\(HTTP::Request::Common\\)$
+%global __provides_exclude %__provides_exclude|mod_perl\\.so\\(.*$
+%global __provides_exclude %__provides_exclude|mod_perl\\.so$
 %global __requires_exclude %{?__requires_exclude:%__requires_exclude|}perl\\(Apache::Test.*\\)
 %global __requires_exclude %__requires_exclude|perl\\(Data::Flow\\)
 %global __requires_exclude %__requires_exclude|perl\\(Apache2::FunctionTable\\)
@@ -59,7 +65,7 @@ like for it to directly incorporate a Perl interpreter.
 %package devel
 Summary:        Files needed for building XS modules that use mod_perl
 Group:          Development/Libraries
-Requires:       mod_perl = %{version}-%{release}, httpd-devel
+Requires:       %{name}%{?_isa} = %{version}-%{release}, httpd-devel%{?_isa}
 
 %description devel 
 The mod_perl-devel package contains the files needed for building XS
@@ -69,10 +75,11 @@ modules that use mod_perl.
 %prep
 %setup -q -n %{name}-%{version}
 %patch0 -p1
-%patch1 -p1 -b .inline
+%patch1 -p1
 %patch2 -p1
-%patch3 -p1 -b .short-name
+%patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 
@@ -104,15 +111,13 @@ CFLAGS="$RPM_OPT_FLAGS -fpic" %{__perl} Makefile.PL </dev/null \
          MP_APXS=%{_httpd_apxs} \
          MP_APR_CONFIG=%{_bindir}/apr-1-config
 
-
 make -C src/modules/perl %{?_smp_mflags} OPTIMIZE="$RPM_OPT_FLAGS -fpic"
 make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-install -d -m 755 $RPM_BUILD_ROOT%{_libdir}/httpd/modules
+install -d -m 755 $RPM_BUILD_ROOT%{_httpd_moddir}
 make install \
-    MODPERL_AP_LIBEXECDIR=$RPM_BUILD_ROOT%{_libdir}/httpd/modules \
+    MODPERL_AP_LIBEXECDIR=$RPM_BUILD_ROOT%{_httpd_moddir} \
     MODPERL_AP_INCLUDEDIR=$RPM_BUILD_ROOT%{_includedir}/httpd
 
 # Remove the temporary files.
@@ -125,10 +130,10 @@ find $RPM_BUILD_ROOT -type d -depth -exec rmdir {} 2>/dev/null ';'
 chmod -R u+w $RPM_BUILD_ROOT/*
 
 # Install the config file
-install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d
-install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d
-install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.d/
-install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd/conf.modules.d/02-perl.conf
+install -d -m 755 $RPM_BUILD_ROOT%{_httpd_confdir}
+install -d -m 755 $RPM_BUILD_ROOT%{_httpd_modconfdir}
+install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_httpd_confdir}
+install -p -m 644 %{SOURCE2} $RPM_BUILD_ROOT%{_httpd_modconfdir}/02-perl.conf
 
 # Move set of modules to -devel
 devmods="ModPerl::Code ModPerl::BuildMM ModPerl::CScan \
@@ -151,15 +156,17 @@ for m in $devmods; do
         echo %{perl_vendorarch}/auto/${fn}
 done | tee devel.files | sed 's/^/%%exclude /' > exclude.files
 echo "%%exclude %{_mandir}/man3/Apache::Test*.3pm*" >> exclude.files
-magic_rpm_clean.sh
+
+# perl build script generates *.orig files, they get installed and later they
+# break provides so mod_perl requires mod_perl-devel. We remove them here.
+find "$RPM_BUILD_ROOT" -type f -name *.orig -exec rm -f {} \;
 
 %files -f exclude.files
-%defattr(-,root,root,-)
 %doc Changes LICENSE NOTICE README* STATUS SVN-MOVE docs/
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/*.conf
-%config(noreplace) %{_sysconfdir}/httpd/conf.modules.d/*.conf
+%config(noreplace) %{_httpd_confdir}/perl.conf
+%config(noreplace) %{_httpd_modconfdir}/02-perl.conf
 %{_bindir}/*
-%{_libdir}/httpd/modules/mod_perl.so
+%{_httpd_moddir}/mod_perl.so
 %{perl_vendorarch}/auto/*
 %dir %{perl_vendorarch}/Apache/
 %{perl_vendorarch}/Apache/Reload.pm
@@ -172,14 +179,21 @@ magic_rpm_clean.sh
 %{_mandir}/man3/*.3*
 
 %files devel -f devel.files
-%defattr(-,root,root,-)
 %{_includedir}/httpd/*
 %{perl_vendorarch}/Apache/Test*.pm
 %{_mandir}/man3/Apache::Test*.3pm*
 
 %changelog
-* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.0.7-8
-- 为 Magic 3.0 重建
+* Tue Nov 20 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-10
+- do not install .orig file generated by make xs_generate
+- filter unversioned mod_perl.so from provides
+
+* Mon Nov 19 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-9
+- clean up spec file
+- do not require -devel when installing main package
+
+* Mon Nov 19 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-8
+- add wrappers for new fields added in httpd-2.4 structures
 
 * Wed Jul 25 2012 Jan Kaluza <jkaluza@redhat.com> - 2.0.7-7
 - updated httpd-2.4 patch

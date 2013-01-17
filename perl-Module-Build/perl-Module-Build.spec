@@ -5,7 +5,7 @@
 Name:           perl-Module-Build
 Epoch:          2
 Version:        %{cpan_version_major}%{?cpan_version_minor:.%cpan_version_minor}
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Build and install Perl modules
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -111,6 +111,9 @@ LANG=C TEST_SIGNATURE=1 MB_TEST_EXPERIMENTAL=1 ./Build test
 %{_mandir}/man3/*
 
 %changelog
+* Thu Jan 17 2013 Liu Di <liudidi@gmail.com> - 2:0.40.03-5
+- 为 Magic 3.0 重建
+
 * Mon Dec 10 2012 Petr Pisar <ppisar@redhat.com> - 2:0.40.03-4
 - YAML::Tiny is not needed at build time (bug #885146)
 

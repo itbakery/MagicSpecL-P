@@ -1,6 +1,6 @@
 Name:           mono
 Version:        2.10.8
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        A .NET runtime environment
 
 Group:          Development/Languages
@@ -12,7 +12,11 @@ Source0:        http://origin-download.mono-project.com/sources/mono/mono-%{vers
 # sn -k mono.snk
 # You should not regenerate this unless you have a really, really, really good reason.
 Source2:        mono.snk
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+Patch0: mono-2.8-ppc-thread.patch
+Patch1: mono-281-libgdiplusconfig.patch
+Patch2: mono-2.10-monodis.patch
+Patch3: mono-2.10-armhfp.patch
 
 BuildRequires:  bison 
 BuildRequires:  glib2-devel
@@ -35,10 +39,6 @@ BuildRequires: mono-core
 
 # JIT only availible on these:
 ExclusiveArch: %ix86 x86_64 ia64 %{arm} sparcv9 alpha s390x ppc ppc64
-
-Patch0: mono-2.8-ppc-thread.patch
-Patch6: mono-281-libgdiplusconfig.patch
-Patch7: mono-2.10-monodis.patch
 
 %description
 The Mono runtime implements a JIT engine for the ECMA CLI
@@ -256,8 +256,11 @@ Development file for monodoc
 %setup -q
 
 %patch0 -p1 -b .ppc-threading
-%patch6 -F 1 -p1 -b .libgdiplus
-%patch7 -p1 -b .monodis
+%patch1 -F 1 -p1 -b .libgdiplus
+%patch2 -p1 -b .monodis
+%ifarch armv7hl
+%patch3 -p1 -b .armhfp
+%endif
 
 # Add undeclared Arg
 sed -i "61a #define ARG_MAX     _POSIX_ARG_MAX" mono/io-layer/wapi_glob.h
@@ -289,30 +292,30 @@ make DESTDIR=%{buildroot}  install
 mkdir -p %{buildroot}%{_sysconfdir}/pki/mono
 install -p -m0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/pki/mono/
 
-%{__rm} %{buildroot}%{_libdir}/*.la
-%{__rm} %{buildroot}%{_libdir}/*.a
+rm %{buildroot}%{_libdir}/*.la
+rm %{buildroot}%{_libdir}/*.a
 
 # We put these inside rpm
-%{__rm} %{buildroot}%{_bindir}/mono-find-provides
-%{__rm} %{buildroot}%{_bindir}/mono-find-requires
+rm %{buildroot}%{_bindir}/mono-find-provides
+rm %{buildroot}%{_bindir}/mono-find-requires
 
 # This was removed upstream:
-%{__rm} -rf %{buildroot}%{monodir}/gac/Mono.Security.Win32
-%{__rm} -rf %{buildroot}%{monodir}/2.0/Mono.Security.Win32.dll
-%{__rm} -rf %{buildroot}%{monodir}/4.0/Mono.Security.Win32.dll
-%{__rm} %{buildroot}%{_datadir}/libgc-mono/README*
-%{__rm} %{buildroot}%{_datadir}/libgc-mono/barrett_diagram
-%{__rm} %{buildroot}%{_datadir}/libgc-mono/*.html
-%{__rm} %{buildroot}%{_datadir}/libgc-mono/gc.man
-%{__rm} -f %{buildroot}%{monodir}/2.0/mscorlib.dll.so
-%{__rm} -f %{buildroot}%{monodir}/2.0/mcs.exe.so
-%{__rm} -f %{buildroot}%{monodir}/2.0/gmcs.exe.so
-%{__rm} -rf %{buildroot}%{monodir}/xbuild/Microsoft
-%{__rm} -f %{buildroot}%{monodir}/4.0/mscorlib.dll.so
-%{__rm} -f %{buildroot}%{monodir}/4.0/dmcs.exe.so
-%{__rm} -rf %{buildroot}%{monodir}/4.0/Mono.Security.Win32
-%{__rm} -rf %{buildroot}%{_bindir}/mono-configuration-crypto
-%{__rm} -rf %{buildroot}%{_mandir}/man?/mono-configuration-crypto*
+rm -rf %{buildroot}%{monodir}/gac/Mono.Security.Win32
+rm -rf %{buildroot}%{monodir}/2.0/Mono.Security.Win32.dll
+rm -rf %{buildroot}%{monodir}/4.0/Mono.Security.Win32.dll
+rm %{buildroot}%{_datadir}/libgc-mono/README*
+rm %{buildroot}%{_datadir}/libgc-mono/barrett_diagram
+rm %{buildroot}%{_datadir}/libgc-mono/*.html
+rm %{buildroot}%{_datadir}/libgc-mono/gc.man
+rm -f %{buildroot}%{monodir}/2.0/mscorlib.dll.so
+rm -f %{buildroot}%{monodir}/2.0/mcs.exe.so
+rm -f %{buildroot}%{monodir}/2.0/gmcs.exe.so
+rm -rf %{buildroot}%{monodir}/xbuild/Microsoft
+rm -f %{buildroot}%{monodir}/4.0/mscorlib.dll.so
+rm -f %{buildroot}%{monodir}/4.0/dmcs.exe.so
+rm -rf %{buildroot}%{monodir}/4.0/Mono.Security.Win32
+rm -rf %{buildroot}%{_bindir}/mono-configuration-crypto
+rm -rf %{buildroot}%{_mandir}/man?/mono-configuration-crypto*
 
 %find_lang mcs
 
@@ -712,6 +715,13 @@ install -p -m0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/pki/mono/
 
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.10.8-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Mon Apr 16 2012 Peter Robinson <pbrobinson@fedoraproject.org> - 2.10.8-2
+- Add build work around for building on ARM hardfp
+- spec cleanups
+
 * Tue Jan 03 2012 Christian Krause <chkr@fedoraproject.org> - 2.10.8-1
 - Update to 2.10.8
 

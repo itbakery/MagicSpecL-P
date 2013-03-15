@@ -86,6 +86,9 @@ cp -p %{_datadir}/libtool/config/config.{guess,sub} ${RPM_BUILD_ROOT}/usr/lib/rp
 install -m 0444 %{SOURCE1} %{SOURCE2} ${RPM_BUILD_ROOT}/usr/lib/rpm/redhat
 mkdir -p ${RPM_BUILD_ROOT}%{_sbindir}/
 install -m 0755 %{SOURCE3} ${RPM_BUILD_ROOT}%{_sbindir}/
+
+ln -sf redhat ${RPM_BUILD_ROOT}/usr/lib/rpm/magic
+
 find ${RPM_BUILD_ROOT} -name \*.orig -delete
 # buggy makefile in 9.1.0 leaves changelog in wrong place
 find ${RPM_BUILD_ROOT} -name ChangeLog -delete
@@ -96,6 +99,7 @@ rm -rf ${RPM_BUILD_ROOT}
 %files
 %defattr(-,root,root)
 %doc ChangeLog
+%{_prefix}/lib/rpm/magic
 %{_prefix}/lib/rpm/redhat
 %{_sysconfdir}/rpm/*
 %{_sbindir}/*

@@ -1,6 +1,6 @@
 Name:	mate-conf	
 Version:	1.4.0
-Release:	20%{?dist}
+Release:	21%{?dist}
 Summary:	MATE Desktop configuration tool
 License:	GPLv2+	
 URL:		http://mate-desktop.org
@@ -138,6 +138,9 @@ gio-querymodules-%{__isa_bits} %{_libdir}/gio/modules || :
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-21
+- 为 Magic 3.0 重建
+
 * Sat Oct 06 2012 Rex Dieter <rdieter@fedoraproject.org> 1.4.0-20
 - own %%{_localstatedir}/lib/rpm-state/mateconf/
 

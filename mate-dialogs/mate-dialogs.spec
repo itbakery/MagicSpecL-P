@@ -1,6 +1,6 @@
 Name:	mate-dialogs	
 Version:	1.4.0
-Release:	2%{?dist}
+Release:	3%{?dist}
 Summary:	Displays dialog boxes from shell scripts
 License:	LGPLv2+ and GPLv2+
 URL:		http://mate-desktop.org
@@ -38,6 +38,9 @@ magic_rpm_clean.sh
 %{_datadir}/matedialog/
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-3
+- 为 Magic 3.0 重建
+
 * Sat Aug 11 2012 Dan Mashal <dan.mashal@fedoraproject.org> 1.4.0-2
 - Remove unnecessary require fields, update description, make package own mate and matedialog datadirs and add V=1 to make field.
 

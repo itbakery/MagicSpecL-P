@@ -1,6 +1,6 @@
 Name:		mate-icon-theme
 Version:	1.4.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Icon theme for MATE Desktop
 License:	GPLv2+ and LGPLv2+
 URL:		http://mate-desktop.org
@@ -56,6 +56,9 @@ fi
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-7
+- 为 Magic 3.0 重建
+
 * Mon Aug 13 2012 Wolfgang Ulbrich <chat-to-me@raveit.de> - 1.4.0-6
 - add obsolete mate-icon-theme-legacy
 - bump version to 1.4.0-6 for updating external repo

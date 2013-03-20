@@ -1,7 +1,7 @@
 Name:	mate-common
 Summary:	mate common build files
 Version:	1.5.0
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 License:	GPLv3+
 URL:		http://mate-desktop.org
@@ -36,6 +36,9 @@ magic_rpm_clean.sh
 %{_mandir}/man1/mate-*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.5.0-2
+- 为 Magic 3.0 重建
+
 * Thu Oct 11 2012 Dan Mashal <dan.mashal@fedoraproject.org> 1.5.0-1
 - New upstream release 1.5
 

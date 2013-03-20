@@ -3,7 +3,7 @@
 Summary: Unobtrusive window manager
 Name: metacity
 Version: 2.34.13
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://download.gnome.org/sources/metacity/
 Source0: http://download.gnome.org/sources/metacity/2.34/metacity-%{version}.tar.xz
 # http://bugzilla.gnome.org/show_bug.cgi?id=558723
@@ -181,6 +181,9 @@ fi
 %{_mandir}/man1/metacity-window-demo.1.gz
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.34.13-2
+- 为 Magic 3.0 重建
+
 * Mon Oct 15 2012 Florian Müllner <fmuellner@redhat.com> - 2.34.13-1
 - Update to 2.34.13
 

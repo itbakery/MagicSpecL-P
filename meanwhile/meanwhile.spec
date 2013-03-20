@@ -7,7 +7,7 @@ Summary:	Lotus Sametime Community Client library
 License:	LGPLv2+
 Group:		Applications/Internet
 Version:	1.1.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 # The source for this package was pulled from upstream's vcs.  Use the
 # following commands to generate the tarball:
 # cvs -d:pserver:anonymous@meanwhile.cvs.sourceforge.net:/cvsroot/meanwhile login
@@ -92,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/doc/%{name}-doc-%{version}/
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.1.0-7
+- 为 Magic 3.0 重建
+
 * Sun Dec 18 2011 Liu Di <liudidi@gmail.com> - 1.1.0-6
 - 为 Magic 3.0 重建
 

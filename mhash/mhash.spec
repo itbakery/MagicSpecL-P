@@ -4,7 +4,7 @@
 Summary: Thread-safe hash algorithms library
 Name: mhash
 Version: 0.9.9.9
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://mhash.sourceforge.net/
 License: LGPLv2+
 Group: System Environment/Libraries
@@ -124,6 +124,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.9.9.9-5
+- 为 Magic 3.0 重建
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.9.9-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

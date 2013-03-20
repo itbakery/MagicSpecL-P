@@ -3,7 +3,7 @@
 Summary: Mercurial -- a distributed SCM
 Name: mercurial
 Version: 2.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 #Release: 1.rc1%{?dist}
 
 #%define upstreamversion %{version}-rc
@@ -192,6 +192,9 @@ rm -rf $RPM_BUILD_ROOT
 ##cd tests && %{__python} run-tests.py
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.4-2
+- 为 Magic 3.0 重建
+
 * Sun Nov  4 2012 Neal Becker <ndbecker2@gmail.com> - 2.4-1
 - Update to 2.4
 

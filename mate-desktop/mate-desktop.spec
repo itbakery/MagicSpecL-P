@@ -1,7 +1,7 @@
 Summary:	Shared code among gnome-panel, gnome-session, nautilus, etc
 Name:		mate-desktop
 Version:	1.4.1
-Release:	12%{?dist}
+Release:	13%{?dist}
 URL:		http://mate-desktop.org
 Source0:	http://pub.mate-desktop.org/releases/1.4/%{name}-%{version}.tar.xz
 
@@ -103,6 +103,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.1-13
+- 为 Magic 3.0 重建
+
 * Wed Oct 17 2012 Dan Mashal <dan.mashal@fedoraproject.org> - 1.4.1-12
 - Add runtime requirements to avoid confusion
 

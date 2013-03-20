@@ -1,7 +1,7 @@
 
 Name:		mate-settings-daemon
 Version:	1.4.0
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	MATE Desktop settings daemon
 License:	GPLv2+
 URL:		http://mate-desktop.org
@@ -112,6 +112,9 @@ gtk-update-icon-cache %{_datadir}/icons/mate &>/dev/null || :
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-7
+- 为 Magic 3.0 重建
+
 * Wed Oct 10 2012 Rex Dieter <rdieter@fedoraproject.org> 1.4.0-6
 - fix icon scriptlets
 

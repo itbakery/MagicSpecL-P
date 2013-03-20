@@ -1,20 +1,15 @@
 Summary: A text-based modem control and terminal emulation program
 Name: minicom
-Version: 2.5
-Release: 7%{?dist}
+Version: 2.6.2
+Release: 1%{?dist}
 URL: http://alioth.debian.org/projects/minicom/
-License: GPLv2+
+License: GPL+ and GPLv2+ and GPLv2 and Public Domain and Copyright only
 Group: Applications/Communications
 ExcludeArch: s390 s390x
 BuildRequires: lockdev-devel ncurses-devel autoconf automake gettext-devel
 Requires: lockdev lrzsz
 
-Source0: http://alioth.debian.org/frs/download.php/3487/minicom-2.5.tar.gz
-
-Patch1: minicom-2.5-rh.patch
-Patch2: minicom-2.5-non-readable-dir.patch
-Patch3: minicom-2.5-man-minicom.patch
-Patch4: minicom-2.5-man-runscript.patch
+Source0: https://alioth.debian.org/frs/download.php/3869/minicom-2.6.2.tar.gz
 
 %description
 Minicom is a simple text-based modem control and terminal emulation
@@ -24,10 +19,6 @@ language, and other features.
 
 %prep
 %setup -q
-%patch1 -p1 -b .rh
-%patch2 -p1 -b .dir
-%patch3 -p1 -b .man
-%patch4 -p1 -b .man
 
 cp -pr doc doc_
 rm -f doc_/Makefile*
@@ -39,8 +30,8 @@ autoreconf --verbose --force --install
 make %{?_smp_mflags}
 
 %install
-make DESTDIR=$RPM_BUILD_ROOT install
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
+make DESTDIR=%{buildroot} install
+mkdir -p %{buildroot}%{_sysconfdir}
 
 %find_lang %{name}
 
@@ -54,6 +45,27 @@ mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}
 %{_mandir}/man1/*
 
 %changelog
+* Thu Feb 07 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.2-1
+- Update to 2.6.2
+
+* Wed Jan 23 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.1-2
+- Disable lock path config when built with lockdev (#754235)
+
+* Tue Jan 22 2013 Jaromir Capik <jcapik@redhat.com> - 2.6.1-1
+- Update to 2.6.1
+
+* Thu Nov 22 2012 Jaromir Capik <jcapik@redhat.com> 2.5-11
+- Fixing the license tag
+
+* Wed Nov 21 2012 Jaromir Capik <jcapik@redhat.com> 2.5-10
+- Removing de-ANSI-fication (obsolete - support removed from autotools)
+
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-9
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
+
 * Mon Oct 24 2011 Jaromir Capik <jcapik@redhat.com> 2.5-7
 - applying modified lockdev patch made by Jiri Popelka (#747936)
 - minor spec file changes according to the latest guidelines

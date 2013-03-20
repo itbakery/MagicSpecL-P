@@ -3,7 +3,7 @@ Summary: A GNU tool which simplifies the build process for users
 Name: make
 Epoch: 1
 Version: 3.82
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPLv2+
 Group: Development/Tools
 URL: http://www.gnu.org/software/make/
@@ -87,6 +87,9 @@ fi
 %{_infodir}/*.info*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1:3.82-8
+- 为 Magic 3.0 重建
+
 * Sun Jan 15 2012 Liu Di <liudidi@gmail.com> - 1:3.82-7
 - 为 Magic 3.0 重建
 

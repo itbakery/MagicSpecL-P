@@ -4,7 +4,7 @@
 Summary: Enhanced implementation of the mailx command
 Name: mailx
 Version: 12.5
-Release: 7%{?dist}
+Release: 8%{?dist}
 # MPLv1.1 .. nss.c, nsserr.c
 License: BSD with advertising and MPLv1.1
 Group: Applications/Internet
@@ -130,6 +130,9 @@ popd
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 12.5-8
+- 为 Magic 3.0 重建
+
 * Mon Nov  5 2012 Peter Schiffer <pschiffe@redhat.com> - 12.5-7
 - cleaned .spec file
 - resolves: #805410

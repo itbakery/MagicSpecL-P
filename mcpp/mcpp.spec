@@ -3,7 +3,7 @@
 Summary:    Alternative C/C++ preprocessor
 Name:       mcpp
 Version:    2.7.2
-Release:    6%{?dist}
+Release:    7%{?dist}
 License:    BSD
 Group:      Development/Languages
 Source:     http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -97,6 +97,9 @@ This package provides an html manual for mcpp.
 rm -rf $RPM_BUILD_ROOT
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.7.2-7
+- 为 Magic 3.0 重建
+
 * Sun Jan 15 2012 Liu Di <liudidi@gmail.com> - 2.7.2-6
 - 为 Magic 3.0 重建
 

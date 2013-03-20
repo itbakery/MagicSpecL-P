@@ -1,6 +1,6 @@
 Name:           mate-themes
 Version:        1.4.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        MATE Desktop themes
 License:        GPLv2+
 URL:            http://mate-desktop.org
@@ -99,6 +99,9 @@ done
 %{_datadir}/themes/TraditionalOkTest
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-8
+- 为 Magic 3.0 重建
+
 * Sat Oct 20 2012 Leigh Scott <leigh123linux@googlemail.com> - 1.4.0-7
 - add requires gtk2-engines and mate-icon-theme 
 

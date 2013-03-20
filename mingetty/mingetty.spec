@@ -2,7 +2,7 @@ Summary: A compact getty program for virtual consoles only
 Name: mingetty
 Version: 1.08
 License: GPLv2+
-Release: 8%{?dist}
+Release: 9%{?dist}
 Group: System Environment/Base
 BuildRoot: %{_tmppath}/%{name}-root
 URL: http://sourceforge.net/projects/mingetty/
@@ -51,6 +51,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/mingetty.*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.08-9
+- 为 Magic 3.0 重建
+
 * Fri Apr 20 2012 Liu Di <liudidi@gmail.com> - 1.08-8
 - 为 Magic 3.0 重建
 

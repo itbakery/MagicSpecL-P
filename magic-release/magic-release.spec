@@ -5,7 +5,7 @@ Summary(zh_CN.UTF-8): MagicLinux的发行文件
 #Summary(zh): (translated summary goes here)
 Name: magic-release
 Version: 3.0
-Release: 1%{?dist}
+Release: 3%{?dist}
 Group: System Environment/Base
 Group(zh_CN.UTF-8): 系统环境/基本
 #Group(zh): (translated group goes here)
@@ -30,7 +30,7 @@ for system Version
 %description -l zh_CN.UTF-8
 描述系统版本的发行文件
 
-%define fedora_version 16
+%define fedora_version 17
 %define dist_version 30
 
 %prep
@@ -57,6 +57,8 @@ cat >> $RPM_BUILD_ROOT/etc/rpm/macros.dist << EOF
 %%fc%{fedora_version}             1
 EOF
 
+magic_rpm_clean.sh
+
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf "$RPM_BUILD_ROOT"
 
@@ -66,6 +68,12 @@ EOF
 /usr
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.0-3
+- 为 Magic 3.0 重建
+
+* Tue Jul 31 2012 Liu Di <liudidi@gmail.com> - 3.0-2
+- 为 Magic 3.0 重建
+
 * Fri Apr 22 2011 Liu Di <liudidi@gmail.com> - 3.0-0.1
 - 2.9999
 

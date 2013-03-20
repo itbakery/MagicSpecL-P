@@ -1,6 +1,6 @@
 Name:           mailcap
 Version:        2.1.38
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Helper application and MIME type associations for file types
 
 Group:          System Environment/Base
@@ -52,6 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1.38-2
+- 为 Magic 3.0 重建
+
 * Tue Aug 16 2011 Ville Skyttä <ville.skytta@iki.fi> - 2.1.38-1
 - Update to 2.1.38.
 

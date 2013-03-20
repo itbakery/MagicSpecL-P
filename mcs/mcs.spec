@@ -1,6 +1,6 @@
 Name:           mcs
 Version:        0.7.2
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A configuration file abstraction library
 Summary(zh_CN.UTF-8): 配置文件抽象层库
 
@@ -130,6 +130,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/libmcs.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.7.2-3
+- 为 Magic 3.0 重建
+
 * Tue Oct 30 2012 Liu Di <liudidi@gmail.com> - 0.7.2-2
 - 为 Magic 3.0 重建
 

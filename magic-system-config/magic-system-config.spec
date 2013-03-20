@@ -2,7 +2,7 @@ Summary: MagicLinux BugPatch Package
 Summary(zh_CN.UTF-8): MagicLinux 补丁包
 Name: magic-system-config
 Version: 2.6
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: %{name}.tar.gz
 #already include in alsa-lib
 #Source1: asound.conf
@@ -93,6 +93,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.6-2
+- 为 Magic 3.0 重建
+
 * Tue Apr 19 2011 Liu Di <liudidi@gmail.com> - 2.6-1
 - 修改默认 Locale 为 UTF-8
 

@@ -1,6 +1,6 @@
 Name:	mate-menus
 Version:	1.4.0
-Release:	3%{?dist}
+Release:	4%{?dist}
 Summary:	Displays menus for MATE Desktop
 License:	GPLv2+ and LGPLv2+
 URL:		http://mate-desktop.org
@@ -72,6 +72,9 @@ magic_rpm_clean.sh
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-4
+- 为 Magic 3.0 重建
+
 * Thu Aug 16 2012 Dan Mashal <dan.mashal@fedoraproject.org> 1.4.0-3
 - Fix devel package requirements. Removed libs requirement.
 

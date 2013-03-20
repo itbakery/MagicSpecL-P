@@ -1,7 +1,7 @@
 Name:	mate-doc-utils
 Summary:	MATE Desktop doc utils
 Version:	1.4.0
-Release:	13%{?dist}
+Release:	14%{?dist}
 
 License:	GPLv2+ and LGPLv2+
 URL:		http://mate-desktop.org
@@ -70,6 +70,9 @@ rm -rf $RPM_BUILD_ROOT/%{_datadir}/mate-doc-utils/mate-debian.sh
 %{_datadir}/pkgconfig/mate-doc-utils.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-14
+- 为 Magic 3.0 重建
+
 * Mon Jul 23 2012 Dan Mashal <dan.mashal@fedoraproject.org> 1.4.0-12
 - Make changes per package review.
 

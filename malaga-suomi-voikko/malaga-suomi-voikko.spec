@@ -1,6 +1,6 @@
 Name:           malaga-suomi-voikko
 Version:        1.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A description of Finnish morphology written in Malaga (Voikko edition)
 
 Group:          Applications/Text
@@ -45,6 +45,9 @@ make voikko-install DESTDIR=$RPM_BUILD_ROOT%{_libdir}/voikko
 
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.10-2
+- 为 Magic 3.0 重建
+
 * Fri Sep 16 2011 Ville-Pekka Vainio <vpvainio AT iki.fi> - 1.10-1
 - Suomi-malaga 1.10
 

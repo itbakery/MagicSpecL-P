@@ -24,6 +24,7 @@ Author:
 %setup -q
 
 %build
+qmake-qt4
 make
 
 %install

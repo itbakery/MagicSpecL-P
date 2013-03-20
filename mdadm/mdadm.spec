@@ -1,7 +1,7 @@
 Summary:     The mdadm program controls Linux md devices (software RAID arrays)
 Name:        mdadm
 Version:     3.2.3
-Release:     3%{?dist}
+Release:     4%{?dist}
 Source:      http://www.kernel.org/pub/linux/utils/raid/mdadm/mdadm-%{version}.tar.bz2
 Source1:     mdmonitor.init
 Source2:     raid-check
@@ -123,6 +123,9 @@ fi
 %{_initrddir}/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.2.3-4
+- 为 Magic 3.0 重建
+
 * Thu Jan 12 2012 Jes Sorensen <Jes.Sorensen@redhat.com> - 3.2.3-3
 - Fix case where we have to retry in case a remove fails due to an array
   being busy

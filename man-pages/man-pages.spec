@@ -4,7 +4,7 @@
 Summary: Man (manual) pages from the Linux Documentation Project
 Name: man-pages
 Version: 3.35
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+ and GPL+ and BSD and MIT and Copyright only and IEEE
 Group: Documentation
 URL: http://man7.org/linux/man-pages/
@@ -149,6 +149,9 @@ rm -rf $RPM_BUILD_ROOT
 %lang(en) %{_mandir}/en/man*/*
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 3.35-2
+- 为 Magic 3.0 重建
+
 * Fri Nov 11 2011 Peter Schiffer <pschiffe@redhat.com> - 3.35-1
 - resolves: #751620
   update to 3.35

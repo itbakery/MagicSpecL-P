@@ -12,7 +12,7 @@ Name: kde4-%{real_name}
 Name: %{real_name}
 %endif
 Version: 2.1
-Release: 7%{?dist}
+Release: 8%{?dist}
 License: GPL
 Group: Applications/System
 Group(zh_CN.UTF-8): 应用程序/系统
@@ -69,6 +69,9 @@ rm -rf %{buildroot} %{_builddir}/%{buildsubdir}
 /root
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 2.1-8
+- 为 Magic 3.0 重建
+
 * Tue Oct 14 2008 Liu Di <liudidi@Gmail.com> - 2.1-2mgc
 - 如果设定网卡随启动激活，则开启 network 服务。
 

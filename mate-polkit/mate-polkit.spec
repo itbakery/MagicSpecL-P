@@ -1,6 +1,6 @@
 Name:		mate-polkit
 Version:	1.4.0
-Release:	4%{?dist}
+Release:	5%{?dist}
 Summary:	Integrates polkit authentication for MATE desktop
 License:	LGPLv2+
 URL:		http://mate-desktop.org
@@ -64,6 +64,9 @@ find %{buildroot} -name '*.la' -exec rm -fv {} ';'
 
 
 %changelog 
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.4.0-5
+- 为 Magic 3.0 重建
+
 * Mon Aug 27 2012 Rex Dieter <rdieter@fedoraproject.org> - 1.4.0-4
 - drop extraneous update-desktop-database scriptlet
 - don't mark .desktop file %%config

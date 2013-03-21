@@ -333,9 +333,9 @@ done
 %files
 %defattr(-,root,root)
 %{_libdir}/libnssdbm3.so
-#%{_libdir}/libnssdbm3.chk
+%{_libdir}/libnssdbm3.chk
 %{_libdir}/libsoftokn3.so
-#%{_libdir}/libsoftokn3.chk
+%{_libdir}/libsoftokn3.chk
 # shared with nss-tools
 %dir %{_libdir}/nss
 %dir %{saved_files_dir}
@@ -347,7 +347,7 @@ done
 %files freebl
 %defattr(-,root,root)
 %{_libdir}/libfreebl3.so
-#%{_libdir}/libfreebl3.chk
+%{_libdir}/libfreebl3.chk
 
 %files freebl-devel
 %defattr(-,root,root)

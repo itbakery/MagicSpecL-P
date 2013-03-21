@@ -1,6 +1,6 @@
 Name:          mutter
-Version:       3.7.1
-Release:       2%{?dist}
+Version:       3.7.5
+Release:       1%{?dist}
 Summary:       Window and compositing manager based on Clutter
 
 Group:         User Interface/Desktops
@@ -31,8 +31,8 @@ BuildRequires: libcanberra-devel
 BuildRequires: gsettings-desktop-schemas-devel
 
 # Make sure this can't be installed with an old gnome-shell build because of
-# an ABI change in mutter 3.4.1 / gnome-shell 3.4.1
-Conflicts: gnome-shell < 3.4.1
+# an ABI change.
+Conflicts: gnome-shell < 3.7.2
 
 Requires: control-center-filesystem
 Requires: startup-notification
@@ -89,7 +89,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 #Remove libtool archives.
 rm -rf %{buildroot}/%{_libdir}/*.la
 
-magic_rpm_clean.sh
 %find_lang %{name}
 
 # Mutter contains a .desktop file so we just need to validate it
@@ -119,7 +118,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_libdir}/mutter/
 %{_datadir}/GConf/gsettings/mutter-schemas.convert
 %{_datadir}/glib-2.0/schemas/org.gnome.mutter.gschema.xml
-%{_datadir}/gnome-control-center/keybindings/50-mutter-windows.xml
+%{_datadir}/gnome-control-center/keybindings/50-mutter-*.xml
 
 
 %files devel
@@ -132,8 +131,20 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %doc %{_mandir}/man1/mutter-window-demo.1.gz
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.7.1-2
-- 为 Magic 3.0 重建
+* Tue Feb 05 2013 Florian Müllner <fmuellner@redhat.com> - 3.7.5-1
+- Update to 3.7.5
+
+* Fri Jan 25 2013 Peter Robinson <pbrobinson@fedoraproject.org> 3.7.4-2
+- Rebuild for new cogl
+
+* Tue Jan 15 2013 Florian Müllner <fmuellner@redhat.com> - 3.7.4-1
+- Update to 3.7.4
+
+* Tue Dec 18 2012 Florian Müllner <fmuellner@redhat.com> - 3.7.3-1
+- Update to 3.7.3
+
+* Mon Nov 19 2012 Florian Müllner <fmuellner@redhat.com> - 3.7.2-1
+- Update to 3.7.2
 
 * Fri Nov 09 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.1-1
 - Update to 3.7.1

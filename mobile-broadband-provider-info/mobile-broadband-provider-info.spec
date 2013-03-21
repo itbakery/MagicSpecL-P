@@ -3,7 +3,7 @@
 Summary: Mobile broadband provider database
 Name: mobile-broadband-provider-info
 Version: 1.%{upstream_version}
-Release: 2%{?dist}
+Release: 3%{?dist}
 #
 # Source from git://git.gnome.org/mobile-broadband-provider-info
 # tarball built with:
@@ -61,6 +61,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pkgconfig/%{name}.pc
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 1.20110218-3
+- 为 Magic 3.0 重建
+
 * Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 1.20110218-2
 - 为 Magic 3.0 重建
 

@@ -1,7 +1,7 @@
 Name:           nautilus-sendto
 Epoch:          1
-Version:        3.6.0
-Release:        3%{?dist}
+Version:        3.6.1
+Release:        2%{?dist}
 Summary:        Nautilus context menu for sending files
 
 Group:          User Interface/Desktops
@@ -54,7 +54,7 @@ find $RPM_BUILD_ROOT \( -name '*.a' -o -name '*.la' \) -exec rm -f {} \;
 rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus-sendto/plugins/libnstbluetooth.so
 # now shipped with nautilus itself
 rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
-magic_rpm_clean.sh
+
 %find_lang %{name}
 
 %posttrans
@@ -83,11 +83,17 @@ fi
 %{_includedir}/nautilus-sendto/nautilus-sendto-plugin.h
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1:3.6.0-3
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.6.1-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
-* Wed Nov 21 2012 Liu Di <liudidi@gmail.com> - 1:3.6.0-2
-- 为 Magic 3.0 重建
+* Thu Dec 20 2012 Kalev Lember <kalevlember@gmail.com> - 1:3.6.1-1
+- Update to 3.6.1
+
+* Tue Nov 20 2012 Milan Crha <mcrha@redhat.com> - 1:3.6.0-3
+- Rebuild against newer evolution-data-server
+
+* Thu Oct 25 2012 Milan Crha <mcrha@redhat.com> - 1:3.6.0-2
+- Rebuild against newer evolution-data-server
 
 * Wed Sep 26 2012 Kalev Lember <kalevlember@gmail.com> - 1:3.6.0-1
 - Update to 3.6.0

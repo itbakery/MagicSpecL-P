@@ -39,7 +39,7 @@ developing applications that use %{name}.
 %setup -q
 
 %build
-%cmake . -DENABLE_GETTEXT:BOOL=ON
+%cmake . -DENABLE_GETTEXT:BOOL=ON -DCMAKE_INSTALL_LIBDIR=%{_libdir}
 make VERBOSE=1 %{?_smp_mflags}
 
 %install

@@ -2,6 +2,8 @@
 %define without_pybasever 1
 %{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
+%define _unpackaged_files_terminate_build	0
+
 Summary:  A collection of Python software tools
 Name: mx%{pybasever}
 Version: 3.2.5

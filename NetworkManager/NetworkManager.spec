@@ -3,11 +3,11 @@
 
 %define glib2_version	2.24.0
 %define wireless_tools_version 1:28-0pre9
-%define libnl3_version 3.2.6
+%define libnl3_version 3.2.7
 %define ppp_version 2.4.5
 
-%define snapshot .git20121004
-%define realversion 0.9.7.0
+%define snapshot %{nil}
+%define realversion 0.9.8.0
 
 %if 0%{?fedora} && 0%{?fedora} < 17
 %define systemd_dir /lib/systemd/system
@@ -18,8 +18,8 @@
 Name: NetworkManager
 Summary: Network connection manager and user applications
 Epoch: 1
-Version: 0.9.7.0
-Release: 8%{snapshot}%{?dist}
+Version: 0.9.8.0
+Release: 1%{snapshot}%{?dist}
 Group: System Environment/Base
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
@@ -28,16 +28,15 @@ Source: %{name}-%{realversion}%{snapshot}.tar.bz2
 Source1: NetworkManager.conf
 Patch1: explain-dns1-dns2.patch
 Patch2: nss-error.patch
-Patch3: finish-connecting.patch
-Patch4: gvaluearray-crash.patch
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires(post): chkconfig
 Requires(preun): chkconfig
 Requires(post): systemd-sysv
-Requires(post): /usr/bin/systemctl
-Requires(preun): /usr/bin/systemctl
-Requires(postun): /usr/bin/systemctl
+Requires(post): /bin/systemctl
+Requires(preun): /bin/systemctl
+Requires(postun): /bin/systemctl
 
 Requires: dbus >= %{dbus_version}
 Requires: dbus-glib >= %{dbus_glib_version}
@@ -51,6 +50,7 @@ Requires: ppp = %{ppp_version}
 Requires: avahi-autoipd
 Requires: dnsmasq
 Requires: udev
+Requires: iptables
 Obsoletes: dhcdbd
 
 Conflicts: NetworkManager-vpnc < 1:0.7.0.99-1
@@ -80,6 +80,8 @@ BuildRequires: gtk-doc
 BuildRequires: libudev-devel
 BuildRequires: libuuid-devel
 BuildRequires: libgudev1-devel >= 143
+BuildRequires: vala-tools
+BuildRequires: iptables
 # No wimax or bluetooth on s390
 %ifnarch s390 s390x
 BuildRequires: wimax-devel
@@ -153,8 +155,6 @@ NetworkManager functionality from applications that use glib.
 
 %patch1 -p1 -b .explain-dns1-dns2
 %patch2 -p1 -b .nss-error
-%patch3 -p1 -b .finish-connecting
-%patch4 -p1 -b .gvaluearray
 
 %build
 
@@ -166,17 +166,19 @@ autopoint --force
 intltoolize --force
 %configure \
 	--disable-static \
-	--with-distro=redhat \
 	--with-dhclient=yes \
 	--with-dhcpcd=no \
 	--with-crypto=nss \
 	--enable-more-warnings=yes \
+	--enable-ppp=yes \
+	--enable-vala=yes \
 %ifnarch s390 s390x
 	--enable-wimax=yes \
 %endif
 	--enable-polkit=yes \
 	--enable-modify-system=yes \
 	--with-session-tracking=systemd \
+	--with-suspend-resume=systemd \
 	--with-docs=yes \
 	--with-system-ca-path=/etc/pki/tls/certs \
 	--with-tests=yes \
@@ -199,15 +201,19 @@ make install DESTDIR=$RPM_BUILD_ROOT
 # create a keyfile plugin system settings directory
 %{__mkdir_p} $RPM_BUILD_ROOT%{_sysconfdir}/NetworkManager/system-connections
 
+# create a dnsmasq.d directory
+%{__mkdir_p} $RPM_BUILD_ROOT%{_sysconfdir}/NetworkManager/dnsmasq.d
+
 %{__mkdir_p} $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties
 
 %{__mkdir_p} $RPM_BUILD_ROOT%{_localstatedir}/lib/NetworkManager
-magic_rpm_clean.sh
+
 %find_lang %{name}
 
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/*.la
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/pppd/%{ppp_version}/*.la
 %{__rm} -f $RPM_BUILD_ROOT%{_libdir}/NetworkManager/*.la
+%{__rm} -f $RPM_BUILD_ROOT%{_datadir}/NetworkManager/gdb-cmd
 
 install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 
@@ -218,8 +224,6 @@ install -m 0755 test/.libs/nm-online %{buildroot}/%{_bindir}
 mkdir -p $RPM_BUILD_ROOT%{systemd_dir}/remote-fs-pre.target.wants
 ln -s ../NetworkManager-wait-online.service $RPM_BUILD_ROOT%{systemd_dir}/remote-fs-pre.target.wants
 
-mv -f %{buildroot}/lib/* %{buildroot}/usr/lib 
-
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
 
@@ -227,24 +231,24 @@ mv -f %{buildroot}/lib/* %{buildroot}/usr/lib
 %post
 if [ $1 -eq 1 ] ; then 
     # Initial installation
-    /usr/bin/systemctl enable NetworkManager.service >/dev/null 2>&1 || :
+    /bin/systemctl enable NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %preun
 if [ $1 -eq 0 ]; then
     # Package removal, not upgrade
-    /usr/bin/systemctl --no-reload disable NetworkManager.service >/dev/null 2>&1 || :
+    /bin/systemctl --no-reload disable NetworkManager.service >/dev/null 2>&1 || :
 
     # Don't kill networking entirely just on package remove
-    #/usr/bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
+    #/bin/systemctl stop NetworkManager.service >/dev/null 2>&1 || :
 fi
 
 %postun
-/usr/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
 if [ $1 -ge 1 ] ; then
     # Package upgrade, not uninstall
     # Don't restart networking to prevent hiccups
-    #/usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+    #/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
     true
 fi
 
@@ -253,19 +257,19 @@ fi
 # User must manually run systemd-sysv-convert --apply NetworkManager
 # to migrate them to systemd targets
 /usr/bin/systemd-sysv-convert --save NetworkManager >/dev/null 2>&1 ||:
-/usr/bin/systemctl --no-reload enable NetworkManager.service >/dev/null 2>&1 ||:
+/bin/systemctl --no-reload enable NetworkManager.service >/dev/null 2>&1 ||:
 # Run these because the SysV package being removed won't do them
-/usr/sbin/chkconfig --del NetworkManager >/dev/null 2>&1 || :
-/usr/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
+/sbin/chkconfig --del NetworkManager >/dev/null 2>&1 || :
+/bin/systemctl try-restart NetworkManager.service >/dev/null 2>&1 || :
 
 
 %triggerun -- NetworkManager < 1:0.7.0-0.9.2.svn3614
-/usr/sbin/service NetworkManagerDispatcher stop >/dev/null 2>&1
-/usr/sbin/chkconfig --del NetworkManagerDispatcher
+/sbin/service NetworkManagerDispatcher stop >/dev/null 2>&1
+/sbin/chkconfig --del NetworkManagerDispatcher
 exit 0
 
-%post	glib -p /usr/sbin/ldconfig
-%postun	glib -p /usr/sbin/ldconfig
+%post	glib -p /sbin/ldconfig
+%postun	glib -p /sbin/ldconfig
 
 
 %files -f %{name}.lang
@@ -278,8 +282,10 @@ exit 0
 %{_sysconfdir}/dbus-1/system.d/nm-ifcfg-rh.conf
 %{_sbindir}/%{name}
 %{_bindir}/nmcli
+%{_datadir}/bash-completion/completions/nmcli
 %dir %{_sysconfdir}/%{name}/
 %dir %{_sysconfdir}/%{name}/dispatcher.d
+%dir %{_sysconfdir}/%{name}/dnsmasq.d
 %dir %{_sysconfdir}/%{name}/VPN
 %config(noreplace) %{_sysconfdir}/%{name}/NetworkManager.conf
 %{_bindir}/nm-tool
@@ -293,14 +299,11 @@ exit 0
 %{_mandir}/man5/*
 %{_mandir}/man8/*
 %dir %{_localstatedir}/lib/NetworkManager
-%{_prefix}/libexec/nm-crash-logger
-%dir %{_datadir}/NetworkManager
-%{_datadir}/NetworkManager/gdb-cmd
 %dir %{_sysconfdir}/NetworkManager/system-connections
 %{_datadir}/dbus-1/system-services/org.freedesktop.nm_dispatcher.service
 %{_libdir}/pppd/%{ppp_version}/nm-pppd-plugin.so
 %{_datadir}/polkit-1/actions/*.policy
-/usr/lib/udev/rules.d/*.rules
+/lib/udev/rules.d/*.rules
 # systemd stuff
 %{systemd_dir}/NetworkManager.service
 %{systemd_dir}/NetworkManager-wait-online.service
@@ -323,7 +326,8 @@ exit 0
 %{_libdir}/pkgconfig/%{name}.pc
 %dir %{_datadir}/gtk-doc/html/NetworkManager
 %{_datadir}/gtk-doc/html/NetworkManager/*
-%{_datadir}/vala/vapi/libnm-util.*
+%{_datadir}/vala/vapi/*.deps
+%{_datadir}/vala/vapi/*.vapi
 
 %files glib
 %defattr(-,root,root,0755)
@@ -353,14 +357,39 @@ exit 0
 %{_datadir}/gtk-doc/html/libnm-glib/*
 %dir %{_datadir}/gtk-doc/html/libnm-util
 %{_datadir}/gtk-doc/html/libnm-util/*
-%{_datadir}/vala/vapi/libnm-glib.*
 
 %changelog
-* Sun Dec 09 2012 Liu Di <liudidi@gmail.com> - 1:0.9.7.0-8.git20121004
-- 为 Magic 3.0 重建
+* Thu Feb 21 2013 Dan Williams <dcbw@redhat.com> - 0.9.8.0
+- Update to the 0.9.8.0 release
 
-* Thu Nov 15 2012 Liu Di <liudidi@gmail.com> - 1:0.9.7.0-7.git20121004
-- 为 Magic 3.0 重建
+* Sat Feb  9 2013 Dan Williams <dcbw@redhat.com> - 0.9.7.997-2
+- core: use systemd for suspend/resume, not upower
+
+* Fri Feb  8 2013 Dan Williams <dcbw@redhat.com> - 0.9.7.997-1
+- Update to 0.9.8-beta2
+- core: ignore bridges managed by other tools (rh #905035)
+- core: fix libnl assert (rh #894653)
+- wifi: always use Proactive Key Caching with WPA Enterprise (rh #834444)
+- core: don't crash when Internet connection sharing fails to start (rh #883142)
+
+* Fri Jan  4 2013 Dan Winship <danw@redhat.com> - 0.9.7.0-12.git20121004
+- Set correct systemd KillMode to fix anaconda shutdown hangs (rh #876218)
+
+* Tue Dec 18 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-11.git20121004
+- ifcfg-rh: write missing IPv6 setting as IPv6 with "auto" method (rh #830434)
+
+* Wed Dec  5 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-10.git20121004
+- Build vapi files and add them to the devel package
+
+* Wed Dec  5 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-9.git20121004
+- Apply patch from master to read hostname from /etc/hostname (rh #831735)
+
+* Tue Nov 27 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-8.git20121004
+- Apply patch from master to update hostname (rh #875085)
+- spec: create /etc/NetworkManager/dnsmasq.d (rh #873621)
+
+* Tue Nov 27 2012 Daniel Drake <dsd@laptop.org> - 0.9.7.0-7.git20121004
+- Don't bring up uninitialized devices (fd #56929)
 
 * Mon Oct 15 2012 Dan Winship <danw@redhat.com> - 0.9.7.0-6.git20121004
 - Actually apply the patch from the previous commit...

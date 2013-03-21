@@ -1,7 +1,7 @@
 Summary: An utility for finding files by name
 Name: mlocate
 Version: 0.24
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2
 URL: https://fedorahosted.org/mlocate/
 Group: Applications/System
@@ -63,6 +63,9 @@ fi
 %ghost %{_localstatedir}/lib/mlocate/mlocate.db
 
 %changelog
+* Fri Dec 07 2012 Liu Di <liudidi@gmail.com> - 0.24-3
+- 为 Magic 3.0 重建
+
 * Mon Jan 16 2012 Liu Di <liudidi@gmail.com> - 0.24-2
 - 为 Magic 3.0 重建
 

@@ -99,7 +99,9 @@ Mplayer 的 GUI 支持文件。
         --enable-radio \
         --enable-radio-capture \
         --enable-runtime-cpudetection \
+%ifarch %{ix86}
         --enable-qtx \
+%endif
         --enable-fbdev \
         --enable-tdfxfb \
         --enable-png \

@@ -164,7 +164,7 @@ chmod 644 src/networks/fasttrack/fst_crypt_ml.c
 
 
 %build
-%configure --enable-pthread \
+%configure --enable-pthread --disable-option-checking \
 %if 0%{?fedora}%{?el6}
            --enable-ocamlver=%(rpm -q --qf '%%{version}' ocaml) \
            --enable-gui=newgui2 \

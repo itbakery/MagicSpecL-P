@@ -1,21 +1,20 @@
-%define glib2_base_version 2.26.0
-%define glib2_version %{glib2_base_version}-1
+%define glib2_version 2.33.12
 %define pkgconfig_version 0.12
-%define freetype_version 2.1.3-3
-%define fontconfig_version 2.6
+%define freetype_version 2.1.5
+%define fontconfig_version 2.10.91
 %define cairo_version 1.7.6
 %define libthai_version 0.1.9
-%define harfbuzz_version 0.9.3
+%define harfbuzz_version 0.9.9
 %define bin_version 1.8.0
 
 Summary: System for layout and rendering of internationalized text
 Name: pango
-Version: 1.32.1
-Release: 2%{?dist}
+Version: 1.33.7
+Release: 1%{?dist}
 License: LGPLv2+
 Group: System Environment/Libraries
 #VCS: git:git://git.gnome.org/pango
-Source: http://download.gnome.org/sources/pango/1.31/pango-%{version}.tar.xz
+Source: http://download.gnome.org/sources/pango/1.33/pango-%{version}.tar.xz
 URL: http://www.pango.org
 
 Requires: glib2 >= %{glib2_version}
@@ -95,14 +94,13 @@ fi
 mv $RPM_BUILD_ROOT%{_bindir}/pango-querymodules $RPM_BUILD_ROOT%{_bindir}/pango-querymodules-%{__isa_bits}
 
 touch $RPM_BUILD_ROOT%{_libdir}/pango/%{bin_version}/modules.cache
-magic_rpm_clean.sh
 
 %post
-/usr/sbin/ldconfig
+/sbin/ldconfig
 /usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
 
 %postun
-/usr/sbin/ldconfig
+/sbin/ldconfig
 if test $1 -gt 0; then
   /usr/bin/pango-querymodules-%{__isa_bits} --update-cache || :
 fi
@@ -135,8 +133,20 @@ fi
 
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 1.32.1-2
-- 为 Magic 3.0 重建
+* Tue Feb 05 2013 Kalev Lember <kalevlember@gmail.com> - 1.33.7-1
+- Update to 1.33.7
+
+* Tue Jan 15 2013 Matthias Clasen <mclasen@redhat.com> - 1.32.6-1
+- Update to 1.32.6
+
+* Thu Dec 20 2012 Kalev Lember <kalevlember@gmail.com> - 1.32.5-1
+- Update to 1.32.5
+
+* Wed Nov 21 2012 Richard Hughes <hughsient@gmail.com> - 1.32.3-1
+- Update to 1.32.3
+
+* Wed Nov 14 2012 Kalev Lember <kalevlember@gmail.com> - 1.32.2-1
+- Update to 1.32.2
 
 * Thu Sep 27 2012 Matthias Clasen <mclasen@redhat.com> - 1.32.1-1
 - Update to 1.32.1

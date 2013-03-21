@@ -1,6 +1,6 @@
 Name:           perl-CPAN-Meta-Requirements
 Version:        2.122
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Set of version requirements for a CPAN dist
 License:        GPL+ or Artistic
 Group:          Development/Libraries
@@ -18,7 +18,7 @@ BuildRequires:  perl(Test::Script)
 %endif
 BuildRequires:  perl(version) >= 0.77
 # for author/release tests
-%if !%{defined perl_bootstrap}
+%if !%{defined perl_bootstrap} && ! ( 0%{?rhel} )
 BuildRequires:  perl(Perl::Critic::Policy::Lax::ProhibitStringyEval::ExceptForRequire)
 BuildRequires:  perl(Pod::Coverage::TrustPod)
 BuildRequires:  perl(Pod::Wordlist::hanekomu)
@@ -63,10 +63,10 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}/*
 
 %check
-%if %{defined perl_bootstrap}
+%if %{defined perl_bootstrap} || ( 0%{?rhel} )
 rm -rf xt
 %endif
- TEST_FILES="t/*.t xt/*/*.t"
+make test TEST_FILES="t/*.t xt/*/*.t"
 
 %files
 %doc Changes LICENSE perlcritic.rc README README.PATCHING
@@ -74,8 +74,11 @@ rm -rf xt
 %{_mandir}/man3/*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 2.122-6
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.122-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Fri Jul 20 2012 Marcela Mašláňová <mmaslano@redhat.com> - 2.122-6
+- Conditionalize Test::*
 
 * Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.122-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

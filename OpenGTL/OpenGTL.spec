@@ -1,25 +1,29 @@
 
 %define soversion 0.8
+#define test_data 1
 
 Name: OpenGTL
-Version: 0.9.17
-Release: 3%{?dist}
 Summary: Graphics Transformation Languages
+Version: 0.9.18
+Release: 2%{?dist}
+
 License: LGPLv2
-Group: Development/Languages
 URL: http://opengtl.org/
 Source0: http://download.opengtl.org/OpenGTL-%{version}.tar.bz2
+%if 0%{?test_data}
+Source1: http://download.opengtl.org/tests-data-%{version}.tar.bz2
+%endif
 
 ## local patches
-
-## upstreamable patches
-Patch52: OpenGTL-0.9.15.2-gcc47.patch
 
 ## upstream patches
 
 BuildRequires: cmake
+%if 0%{?fedora} > 17
+BuildRequires: doxygen-latex
+%endif
 BuildRequires: doxygen graphviz
-BuildRequires: llvm-devel >= 3.1
+BuildRequires: llvm-devel >= 3.0
 BuildRequires: pkgconfig(libpng)
 # docs 
 BuildRequires: ImageMagick ghostscript texlive-latex texlive-dvips
@@ -44,24 +48,21 @@ Summary: Libraries and header files for %{name}
 Group: Development/Languages
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 Requires: llvm-devel 
-Requires: pkgconfig
 %description devel
 This package contains library and header files needed to develop new
 native programs that use the OpenGTL libraries.
 
 
 %prep
-%setup -q
+%setup -q %{?test_data: -a 1}
 
-%patch52 -p1 -b .gcc47
 
 %build
 mkdir -p %{_target_platform}
 pushd %{_target_platform}
-CFLAGS="${RPM_OPT_FLAGS} -pthread"
-CXXFLAGS="${RPM_OPT_FLAGS} -pthread"
 %{cmake} \
-  -DOPENGTL_BUILD_TESTS:BOOL=ON -DCMAKE_USE_PTHREADS_INIT:BOOL=ON \
+  -DOPENGTL_BUILD_TESTS:BOOL=ON \
+  %{?test_data:-DOPENGTL_TESTS_DATA:PATH=$PWD/../tests-data} \
   ..
 popd
 
@@ -73,6 +74,7 @@ doxygen OpenGTL.doxy
 %install
 make install/fast DESTDIR=%{buildroot} -C %{_target_platform}
 
+## unpackaged files
 rm -rf %{buildroot}%{_docdir}/OpenGTL
 
 
@@ -82,19 +84,22 @@ test "$(pkg-config --modversion GTLCore)" = "%{version}"
 test "$(pkg-config --modversion GTLImageIO)" = "%{version}"
 test "$(pkg-config --modversion OpenCTL)" = "%{version}"
 test "$(pkg-config --modversion OpenShiva)" = "%{version}"
-# some known failures due to missing test data 
-# 91% tests passed, 16 tests failed out of 172
+# some known failures due to missing test data , 17 tests failed out of 189
+# *with* test data, down to 2:
+# The following tests FAILED:
+#        177 - PerlinNoise.shiva (Failed)
+#        189 - grayscaliser.shiva (Failed)
 make test -C  %{_target_platform} ||:
 
 
 %files
-%defattr(-,root,root,-)
 %doc COPYING OpenGTL/README
 %{_bindir}/ctli
 %{_bindir}/ctltc
 %{_bindir}/gtlconvert
 %{_bindir}/imagecompare
 %{_bindir}/shiva
+%{_bindir}/shivacheck
 %{_bindir}/shivainfo
 %{_bindir}/shivanimator
 %{_datadir}/OpenGTL/
@@ -103,7 +108,6 @@ make test -C  %{_target_platform} ||:
 %postun libs -p /sbin/ldconfig
 
 %files libs
-%defattr(-,root,root,-)
 %{_libdir}/libGTLCore.so.%{version}
 %{_libdir}/libGTLFragment.so.%{version}
 %{_libdir}/libGTLImageIO.so.%{version}
@@ -117,7 +121,6 @@ make test -C  %{_target_platform} ||:
 %{_libdir}/GTLImageIO/                                                     
 
 %files devel
-%defattr(-,root,root,-)
 %doc html/*
 %doc %{_target_platform}/OpenShiva/doc/reference/ShivaRef.pdf
 %{_bindir}/ctlc
@@ -140,8 +143,17 @@ make test -C  %{_target_platform} ||:
 
 
 %changelog
-* Mon Jan 14 2013 Liu Di <liudidi@gmail.com> - 0.9.17-3
-- 为 Magic 3.0 重建
+* Tue Feb 19 2013 Jens Petersen <petersen@redhat.com> - 0.9.18-2
+- F19 rebuild against llvm-3.2
+
+* Mon Feb 18 2013 Rex Dieter <rdieter@fedoraproject.org> 0.9.18-1
+- 0.9.18
+
+* Wed Feb 13 2013 Rex Dieter <rdieter@fedoraproject.org> 0.9.17-4
+- BR: doxygen-latex
+
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.17-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
 * Wed Jul 18 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.17-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

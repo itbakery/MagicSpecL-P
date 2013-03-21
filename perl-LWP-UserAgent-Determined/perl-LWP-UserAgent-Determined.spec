@@ -51,7 +51,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{perl_vendorlib}/LWP
 %dir %{perl_vendorlib}/LWP/UserAgent
 %{perl_vendorlib}/LWP/UserAgent/Determined.pm
-%{_mandir}/man3/LWP::UserAgent::Determined.3pm.gz
+%{_mandir}/man3/LWP::UserAgent::Determined.3pm*
 
 
 %changelog

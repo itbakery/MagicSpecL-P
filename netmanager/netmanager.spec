@@ -12,23 +12,6 @@ Packager: stronghill <stronghill {at} 163 {dot} com>
 Distribution: MagicLinux
 URL: http://www.linuxfans.org/
 Vendor: MGC Group
-Requires: libQtCore.so.4
-Requires: libQtGui.so.4
-Requires: libc.so.6
-Requires: libc.so.6(GLIBC_2.0)
-Requires: libc.so.6(GLIBC_2.1)
-Requires: libc.so.6(GLIBC_2.1.3)
-Requires: libgcc_s.so.1
-Requires: libgcc_s.so.1(GCC_3.0)
-Requires: libm.so.6
-Requires: libpthread.so.0
-Requires: libpthread.so.0(GLIBC_2.0)
-Requires: libstdc++.so.6
-Requires: libstdc++.so.6(CXXABI_1.3)
-Requires: libstdc++.so.6(GLIBCXX_3.4)
-Requires: rtld(GNU_HASH)
-Requires: libstdc++.so.6(GLIBCXX_3.4.9)
-Requires: libstdc++.so.6(GLIBCXX_3.4.11)
 
 %description
 Netmanager Tools
@@ -43,6 +26,7 @@ Author:
 %setup -q
 
 %build
+qmake4
 make clean
 qmake4
 make

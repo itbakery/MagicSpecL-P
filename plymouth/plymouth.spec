@@ -284,7 +284,8 @@ rm -rf $RPM_BUILD_ROOT%{_datadir}/plymouth/themes/glow
 cp $RPM_SOURCE_DIR/plymouth-set-default-plugin $RPM_BUILD_ROOT%{_sbindir}
 chmod +x $RPM_BUILD_ROOT%{_sbindir}/plymouth-set-default-plugin
 
-cp -rf %{buildroot}/lib/systemd %{buildroot}%{_prefix}/lib/
+mkdir -p  %{buildroot}%{_prefix}/lib/systemd
+cp -rf %{buildroot}/lib/systemd/* %{buildroot}%{_prefix}/lib/systemd
 rm -rf %{buildroot}/lib
 magic_rpm_clean.sh
 

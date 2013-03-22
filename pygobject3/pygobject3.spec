@@ -1,6 +1,6 @@
-# Last updated for version 3.4.1.1
-%define glib2_version                  2.31.0
-%define gobject_introspection_version  1.34.1.1
+# Last updated for version 3.7.5.1
+%define glib2_version                  2.35.7
+%define gobject_introspection_version  1.34.2
 %define python2_version                2.3.5
 
 %if 0%{?fedora} > 12
@@ -21,8 +21,8 @@
 ### Abstract ###
 
 Name: pygobject3
-Version: 3.7.1
-Release: 2%{?dist}
+Version: 3.7.5.1
+Release: 1%{?dist}
 License: LGPLv2+ and MIT
 Group: Development/Languages
 Summary: Python 2 bindings for GObject Introspection
@@ -69,9 +69,6 @@ Patch2: pygobject-3.3.4-known-failures.patch
 # Not yet sent upstream:
 Patch3: test-list-marshalling.patch
 
-# upstream fix for property type lookup, needed for basic Sugar operation
-Patch4: property-lookup.patch
-
 ### Build Dependencies ###
 
 BuildRequires: chrpath
@@ -103,14 +100,23 @@ BuildRequires: dejavu-serif-fonts
 BuildRequires: dbus-x11
 %endif # with_check
 
+Requires: %{name}-base = %{version}-%{release}
+
 # The cairo override module depends on this
 Requires: pycairo
-
-Requires: gobject-introspection >= %{gobject_introspection_version}
 
 %description
 The %{name} package provides a convenient wrapper for the GObject library
 for use in Python programs.
+
+%package base
+Summary: Python 2 bindings for GObject Introspection base package
+Group: Development/Languages
+Requires: gobject-introspection >= %{gobject_introspection_version}
+
+%description base
+This package provides the non-cairo specific bits of the GObject Introspection
+library.
 
 %package devel
 Summary: Development files for embedding PyGObject introspection support
@@ -144,7 +150,6 @@ for use in Python 3 programs.
 %patch1 -p1 -b .ignore-more-pep8-errors
 %patch2 -p1 -b .known-failures
 %patch3 -p1 -b .test-list-marshalling
-%patch4 -p1 -b .property-lookup
 
 %if 0%{?with_python3}
 rm -rf %{py3dir}
@@ -170,8 +175,6 @@ popd
 %endif # with_python3
 
 %install
-rm -rf $RPM_BUILD_ROOT
-
 %if 0%{?with_python3}
 pushd %{py3dir}
 PYTHON=%{__python3}
@@ -226,11 +229,17 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check %{verbosity}
 
 %files
 %defattr(644, root, root, 755)
+%{python_sitearch}/gi/_gi_cairo.so
+
+%files base
+%defattr(644, root, root, 755)
 %doc AUTHORS NEWS README COPYING
 %{_libdir}/libpyglib-gi-2.0-python.so*
 %dir %{python_sitearch}/gi
 %{python_sitearch}/gi/*
+%exclude %{python_sitearch}/gi/_gi_cairo.so
 %{python_sitearch}/pygobject-*.egg-info
+%{python_sitearch}/pygtkcompat/
 
 %files devel
 %defattr(644, root, root, 755)
@@ -247,10 +256,28 @@ xvfb-run make DESTDIR=$RPM_BUILD_ROOT check %{verbosity}
 %dir %{python3_sitearch}/gi
 %{python3_sitearch}/gi/*
 %{python3_sitearch}/pygobject-*.egg-info
+%{python3_sitearch}/pygtkcompat/
 
 %endif # with_python3
 
 %changelog
+* Wed Feb 06 2013 Kalev Lember <kalevlember@gmail.com> - 3.7.5.1-1
+- Update to 3.7.5.1
+- Re-enable tests
+
+* Wed Jan 16 2013 Matthias Clasen <mclasen@redhat.com> - 3.7.4-1
+- Update to 3.7.4
+
+* Fri Dec 28 2012 Dan Horák <dan[at]danny.cz> - 3.7.3-2
+- Fix GBytes test (gnome#690837)
+
+* Thu Dec 20 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.3-1
+- Update to 3.7.3
+- Drop upstreamed patches; rebase the ignore-more-pep8-errors patch
+
+* Thu Dec 13 2012 Ray Strode <rstrode@redhat.com> 3.7.1-3
+- Split non-cairo parts into a subpackage
+
 * Mon Nov 12 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.1-2
 - Remove lib64 rpaths (#817701)
 - Move code examples to the -devel subpackage and fix the multilib

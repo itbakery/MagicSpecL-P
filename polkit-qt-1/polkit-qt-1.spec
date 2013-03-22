@@ -63,7 +63,7 @@ make %{?_smp_mflags} -C %{_target_platform}
 
 doxygen %{SOURCE1}
 # Remove installdox file - it is not necessary here
-rm html/installdox
+rm -f html/installdox
 
 
 %install

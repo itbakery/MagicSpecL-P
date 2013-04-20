@@ -13,7 +13,7 @@ BuildRequires: fontpackages-devel
 Summary: WYSIWYM (What You See Is What You Mean) document processor
 Name:	 lyx
 Version: 2.0.5
-Release: 3%{?dist}
+Release: 4%{?dist}
 
 License: GPLv2+
 Group: 	 Applications/Publishing
@@ -289,6 +289,9 @@ fc-cache %{_fontdir} 2> /dev/null ||:
 
 
 %changelog
+* Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 2.0.5-4
+- 为 Magic 3.0 重建
+
 * Mon Nov 26 2012 José Matos <jamatos@fedoraproject.org> - 2.0.5-3
 - Install bash completion (#802149)
 

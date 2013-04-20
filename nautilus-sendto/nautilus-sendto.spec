@@ -1,7 +1,7 @@
 Name:           nautilus-sendto
 Epoch:          1
 Version:        3.6.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Nautilus context menu for sending files
 
 Group:          User Interface/Desktops
@@ -83,6 +83,9 @@ fi
 %{_includedir}/nautilus-sendto/nautilus-sendto-plugin.h
 
 %changelog
+* Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 1:3.6.1-3
+- 为 Magic 3.0 重建
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

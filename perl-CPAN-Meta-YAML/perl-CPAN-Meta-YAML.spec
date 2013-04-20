@@ -3,7 +3,7 @@
 
 Name:		perl-CPAN-Meta-YAML
 Version:	0.008
-Release:	13%{?dist}
+Release:	14%{?dist}
 Summary:	Read and write a subset of YAML for CPAN Meta files
 License:	GPL+ or Artistic
 Group:		Development/Libraries
@@ -12,9 +12,13 @@ Source0:	http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/CPAN-Meta-YAML-%{v
 Patch1:		CPAN-Meta-YAML-0.006-old-Test::More.patch
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(id -nu)
 BuildArch:	noarch
+BuildRequires:	perl(Carp)
+BuildRequires:	perl(Exporter)
 BuildRequires:	perl(ExtUtils::MakeMaker)
 BuildRequires:	perl(File::Spec)
 # Tests:
+BuildRequires:	perl(File::Spec::Functions)
+BuildRequires:	perl(File::Temp)
 BuildRequires:	perl(Test::More)
 BuildRequires:	perl(YAML)
 # Don't run extra tests when bootstrapping as many of those
@@ -37,6 +41,8 @@ BuildRequires:	perl(Test::Version)
 %endif
 %endif
 Requires:	perl(:MODULE_COMPAT_%(eval "`perl -V:version`"; echo $version))
+Requires:	perl(Carp)
+Requires:	perl(Exporter)
 
 %description
 This module implements a subset of the YAML specification for use in reading
@@ -62,9 +68,9 @@ find %{buildroot} -type f -name .packlist -exec rm -f {} \;
 %{_fixperms} %{buildroot}
 
 %check
-
+make test
 %if 0%{!?perl_bootstrap:1}
- TEST_FILES="xt/*/*.t"
+make test TEST_FILES="xt/*/*.t"
 %endif
 
 %clean
@@ -76,8 +82,11 @@ rm -rf %{buildroot}
 %{_mandir}/man3/CPAN::Meta::YAML.3pm*
 
 %changelog
-* Wed Dec 12 2012 Liu Di <liudidi@gmail.com> - 0.008-13
-- 为 Magic 3.0 重建
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.008-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
+* Tue Nov 13 2012 Jitka Plesnikova <jplesnik@redhat.com> - 0.008-13
+- Update dependencies
 
 * Thu Oct 11 2012 Paul Howarth <paul@city-fan.org> - 0.008-12
 - Never BR: perl(Test::Version) for EL builds as perl(version) is too old

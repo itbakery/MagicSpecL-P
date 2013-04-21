@@ -109,6 +109,10 @@ make -C %{_target_platform}/autotests/test test  ||:
 %else
 %doc nepomuk-inotify.conf 
 %endif
+%{_kde4_bindir}/nepomuk2-rcgen
+%{_kde4_bindir}/nepomukcleaner
+%{kde4_xdgappsdir}/nepomukcleaner.desktop
+%{kde4_servicetypesdir}/nepomukextractor.desktop
 %{_kde4_appsdir}/fileindexerservice/
 %{_kde4_appsdir}/nepomukfilewatch/
 %{_kde4_appsdir}/nepomukstorage/
@@ -127,7 +131,7 @@ make -C %{_target_platform}/autotests/test test  ||:
 %{_datadir}/dbus-1/interfaces/*.xml
 
 %files devel
-%{_kde4_libdir}/libnepomuksync.so
+#%{_kde4_libdir}/libnepomuksync.so
 %{_kde4_libdir}/libnepomukcore.so
 %{_kde4_libdir}/cmake/NepomukCore/
 %{_kde4_includedir}/nepomuk2/
@@ -140,7 +144,7 @@ make -C %{_target_platform}/autotests/test test  ||:
 %{_kde4_libdir}/kde4/*.so
 %{_kde4_libdir}/libnepomukcommon.so
 %{_kde4_libdir}/libnepomukcore.so.4*
-%{_kde4_libdir}/libnepomuksync.so.4*
+#%{_kde4_libdir}/libnepomuksync.so.4*
 
 
 %changelog

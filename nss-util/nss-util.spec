@@ -1,8 +1,8 @@
-%global nspr_version 4.9.4
+%global nspr_version 4.9.5
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.14.1
+Version:          3.14.3
 Release:          1%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
@@ -54,13 +54,6 @@ Requires:         nss-util = %{version}-%{release}
 Requires:         nspr-devel >= %{nspr_version}
 Requires:         pkgconfig
 
-# Uncomment this if nededed to prevent install/update conflict with
-# installed nss-softoken as nss-util-devel now provides hasht.h
-# which prior to the update to 3.14 was provided by nss-softokn-devel.
-#Conflicts:        nss-softokn-devel < 3.14
-#Obsoletes:        nss-softokn-devel < 3.14
-#Provides:         /usr/include/nss3/hasht.h
-
 %description devel
 Header and library files for doing development with Network Security Services.
 
@@ -102,7 +95,7 @@ export NSS_USE_SYSTEM_SQLITE
 NSS_BUILD_NSSUTIL=1
 export NSS_BUILD_NSSUTIL
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -148,6 +141,7 @@ chmod 755 ./mozilla/dist/pkgconfig/nss-util-config
 # There is no make install target so we'll do it ourselves.
 
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/nss3
+%{__mkdir_p} $RPM_BUILD_ROOT/%{_includedir}/nss3/templates
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/nss3
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
@@ -163,6 +157,12 @@ done
 for file in mozilla/dist/public/nss/*.h
 do
   %{__install} -p -m 644 $file $RPM_BUILD_ROOT/%{_includedir}/nss3
+done
+
+# Copy the template files we want
+for file in mozilla/dist/private/nss/templates.c
+do
+  %{__install} -p -m 644 $file $RPM_BUILD_ROOT/%{_includedir}/nss3/templates
 done
 
 # Copy the package configuration files
@@ -224,8 +224,23 @@ done
 %{_includedir}/nss3/utilpars.h
 %{_includedir}/nss3/utilparst.h
 %{_includedir}/nss3/utilrename.h
+%{_includedir}/nss3/templates/templates.c
 
 %changelog
+* Fri Feb 15 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.3-1
+- Update to NSS_3_14_3_RTM
+- Resolves: rhbz#909782 - specfile support for AArch64
+
+* Sat Feb 02 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.2-2
+- Retagging to prevent nvr update problems with f18
+
+* Fri Feb 01 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.2-1
+- Update to NSS_3_14_2_RTM
+
+* Thu Dec 27 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-2
+- Install templates.c in /usr/includes/nss3/templates
+- Fix bogus date warnings
+
 * Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-1
 - Update to NSS_3_14_1_RTM
 
@@ -287,7 +302,7 @@ done
 * Sat Oct 15 2011 Elio Maldonado <emaldona@redhat.com> - 3.13-1
 - Update to NSS_3_13_RTM
 
-* Thu Oct 07 2011 Elio Maldonado <emaldona@redhat.com> - 3.13-0.1.rc0.1
+* Fri Oct 07 2011 Elio Maldonado <emaldona@redhat.com> - 3.13-0.1.rc0.1
 - Update to NSS_3_13_RC0
 
 * Thu Sep  8 2011 Ville Skyttä <ville.skytta@iki.fi> - 3.12.11-2
@@ -329,7 +344,7 @@ done
 * Sat Sep 04 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7.99.3-1
 - NSS 3.12.8 Beta 3
 
-* Sat Aug 29 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7-2
+* Sun Aug 29 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7-2
 - Define NSS_USE_SYSTEM_SQLITE and remove nolocalsql patch 
 
 * Mon Aug 16 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7-1
@@ -388,8 +403,8 @@ done
 * Thu Aug 20 2009 Dennis Gilmore <dennis@ausil.us> 3.12.3.99.3-9
 - Provide nss-devel since we obsolete it
 
-* Thu Aug 19 2009 Elio Maldonado <emaldona@redhat.com> 3.12.3.99.3-8.1
+* Wed Aug 19 2009 Elio Maldonado <emaldona@redhat.com> 3.12.3.99.3-8.1
 - nss-util-devel obsoletes nss-devel < 3.12.3.99.3-8
 
-* Thu Aug 19 2009 Elio Maldonado <emaldona@redhat.com> 3.12.3.99.3-8
+* Wed Aug 19 2009 Elio Maldonado <emaldona@redhat.com> 3.12.3.99.3-8
 - Initial build

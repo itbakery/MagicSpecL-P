@@ -1,11 +1,13 @@
 Name:           p11-kit
-Version:        0.14
+Version:        0.18.0
 Release:        1%{?dist}
 Summary:        Library for loading and sharing PKCS#11 modules
 
 License:        BSD
 URL:            http://p11-glue.freedesktop.org/p11-kit.html
 Source0:        http://p11-glue.freedesktop.org/releases/p11-kit-%{version}.tar.gz
+Source1:	p11-kit-extract-trust
+BuildRequires:  libtasn1-devel >= 2.14
 
 %description
 p11-kit provides a way to load and enumerate PKCS#11 modules, as well
@@ -22,20 +24,43 @@ The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
 
 
+%package        trust
+Summary:        System trust module from %{name}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+Requires(post):   %{_sbindir}/update-alternatives
+Requires(postun): %{_sbindir}/update-alternatives
+Conflicts:        nss < 3.14.3-9
+
+%description    trust
+The %{name}-trust package contains a system trust PKCS#11 module which
+contains certificate anchors and black lists.
+
+
+# solution taken from icedtea-web.spec
+%define multilib_arches ppc64 sparc64 x86_64
+%ifarch %{multilib_arches}
+%define alt_ckbi  libnssckbi.so.%{_arch}
+%else
+%define alt_ckbi  libnssckbi.so
+%endif
+
+
 %prep
 %setup -q
 
-
 %build
-%configure --disable-static
+# These paths are the source paths that  come from the plan here:
+# https://fedoraproject.org/wiki/Features/SharedSystemCertificates:SubTasks
+%configure --disable-static --with-trust-paths=%{_sysconfdir}/pki/ca-trust/source:%{_datadir}/pki/ca-trust-source
 make %{?_smp_mflags} V=1
 
 
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/modules
-
-rm $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/pkcs11/*.la
+install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT%{_datadir}/p11-kit/
 # Install the example conf with %%doc instead
 rm $RPM_BUILD_ROOT%{_sysconfdir}/pkcs11/pkcs11.conf.example
 
@@ -46,7 +71,17 @@ make check
 
 %post -p /sbin/ldconfig
 
+%post trust
+%{_sbindir}/update-alternatives --install %{_libdir}/libnssckbi.so \
+	%{alt_ckbi} %{_libdir}/pkcs11/p11-kit-trust.so 30
+
 %postun -p /sbin/ldconfig
+
+%postun trust
+if [ $1 -eq 0 ] ; then
+	# package removal
+	%{_sbindir}/update-alternatives --remove %{alt_ckbi} %{_libdir}/pkcs11/p11-kit-trust.so
+fi
 
 
 %files
@@ -54,6 +89,8 @@ make check
 %doc p11-kit/pkcs11.conf.example
 %dir %{_sysconfdir}/pkcs11
 %dir %{_sysconfdir}/pkcs11/modules
+%dir %{_datadir}/p11-kit
+%dir %{_datadir}/p11-kit/modules
 %{_bindir}/p11-kit
 %{_libdir}/libp11-kit.so.*
 %{_libdir}/p11-kit-proxy.so
@@ -64,8 +101,52 @@ make check
 %{_libdir}/pkgconfig/p11-kit-1.pc
 %doc %{_datadir}/gtk-doc/
 
+%files trust
+%{_libdir}/pkcs11/p11-kit-trust.so
+%{_datadir}/p11-kit/modules/p11-kit-trust.module
+%{_datadir}/p11-kit/p11-kit-extract-trust
+
 
 %changelog
+* Thu Apr 04 2013 Stef Walter <stefw@redhat.com> - 0.18.0-1
+- Update to new upstream stable release
+- Various logging tweaks (#928914, #928750)
+- Make the 'p11-kit extract-trust' explicitly reject
+  additional arguments
+
+* Thu Mar 28 2013 Stef Walter <stefw@redhat.com> - 0.17.5-1
+- Make 'p11-kit extract-trust' call update-ca-trust
+- Work around 32-bit oveflow of certificate dates
+- Build fixes
+
+* Tue Mar 26 2013 Stef Walter <stefw@redhat.com> - 0.17.4-2
+- Pull in patch from upstream to fix build on ppc (#927394)
+
+* Wed Mar 20 2013 Stef Walter <stefw@redhat.com> - 0.17.4-1
+- Update to upstream version 0.17.4
+
+* Mon Mar 18 2013 Stef Walter <stefw@redhat.com> - 0.17.3-1
+- Update to upstream version 0.17.3
+- Put the trust input paths in the right order
+
+* Tue Mar 12 2013 Stef Walter <stefw@redhat.com> - 0.16.4-1
+- Update to upstream version 0.16.4
+
+* Fri Mar 08 2013 Stef Walter <stefw@redhat.com> - 0.16.3-1
+- Update to upstream version 0.16.3
+- Split out system trust module into its own package.
+- p11-kit-trust provides an alternative to an nss module
+
+* Tue Mar 05 2013 Stef Walter <stefw@redhat.com> - 0.16.1-1
+- Update to upstream version 0.16.1
+- Setup source directories as appropriate for Shared System Certificates feature
+
+* Tue Mar 05 2013 Stef Walter <stefw@redhat.com> - 0.16.0-1
+- Update to upstream version 0.16.0
+
+* Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.14-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Sep 17 2012 Kalev Lember <kalevlember@gmail.com> - 0.14-1
 - Update to 0.14
 

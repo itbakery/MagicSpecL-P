@@ -1,13 +1,31 @@
+diff -up ./mozilla/security/nss/cmd/Makefile.crypto ./mozilla/security/nss/cmd/Makefile
+--- ./mozilla/security/nss/cmd/Makefile.crypto	2012-12-22 11:53:10.493563258 -0800
++++ ./mozilla/security/nss/cmd/Makefile	2012-12-22 11:56:09.472669390 -0800
+@@ -18,6 +18,14 @@ LOWHASHTEST_SRCDIR=
+ ifeq ($(FREEBL_LOWHASH),1)
+ LOWHASHTEST_SRCDIR = lowhashtest  # Add the lowhashtest directory to DIRS.
+ endif
++ 
++# compiled only as part of the nss-softoken build
++BLTEST_SRCDIR=
++FIPSTEST_SRCDIR=
++ifeq ($(NSS_BUILD_SOFTOKEN_ONLY),1)
++BLTEST_SRCDIR=bltest              # Add the bltest directory to DIRS.
++FIPSTEST_SRCDIR=fipstest          # Add the fipstest directory to DIRS.
++endif
+ 
+ INCLUDES += \
+ 	-I$(DIST)/../public/security \
 diff -up ./mozilla/security/nss/cmd/manifest.mn.crypto ./mozilla/security/nss/cmd/manifest.mn
---- ./mozilla/security/nss/cmd/manifest.mn.crypto	2012-12-16 19:25:37.765914728 -0800
-+++ ./mozilla/security/nss/cmd/manifest.mn	2012-12-16 19:27:26.978561206 -0800
+--- ./mozilla/security/nss/cmd/manifest.mn.crypto	2012-11-17 03:52:36.000000000 -0800
++++ ./mozilla/security/nss/cmd/manifest.mn	2012-12-22 11:51:35.171495546 -0800
 @@ -9,53 +9,10 @@ DEPTH	= ../..
  REQUIRES = nss nspr libdbm
  
  DIRS = lib  \
 - addbuiltin \
 - atob  \
-  bltest \
+- bltest \
 - btoa  \
 - certcgi \
 - certutil  \
@@ -19,7 +37,9 @@ diff -up ./mozilla/security/nss/cmd/manifest.mn.crypto ./mozilla/security/nss/cm
 - derdump  \
 - digest  \
 - httpserv  \
-  fipstest  \
+- fipstest  \
++ $(BLTEST_SRCDIR) \
++ $(FIPSTEST_SRCDIR)  \
   $(LOWHASHTEST_SRCDIR)  \
 - listsuites \
 - makepqg  \
@@ -56,8 +76,8 @@ diff -up ./mozilla/security/nss/cmd/manifest.mn.crypto ./mozilla/security/nss/cm
  
  TEMPORARILY_DONT_BUILD = \
 diff -up ./mozilla/security/nss/cmd/platlibs.mk.crypto ./mozilla/security/nss/cmd/platlibs.mk
---- ./mozilla/security/nss/cmd/platlibs.mk.crypto	2012-12-16 19:27:51.157703769 -0800
-+++ ./mozilla/security/nss/cmd/platlibs.mk	2012-12-16 20:03:35.615006804 -0800
+--- ./mozilla/security/nss/cmd/platlibs.mk.crypto	2012-11-13 17:14:08.000000000 -0800
++++ ./mozilla/security/nss/cmd/platlibs.mk	2012-12-22 11:51:35.175495549 -0800
 @@ -38,43 +38,13 @@ DEFINES += -DNSS_USE_STATIC_LIBS
  # $(PROGRAM) has explicit dependencies on $(EXTRA_LIBS)
  CRYPTOLIB=$(SOFTOKEN_LIB_DIR)/$(LIB_PREFIX)freebl.$(LIB_SUFFIX)
@@ -154,8 +174,8 @@ diff -up ./mozilla/security/nss/cmd/platlibs.mk.crypto ./mozilla/security/nss/cm
  	-lnssutil3 \
  	-L$(NSPR_LIB_DIR) \
 diff -up ./mozilla/security/nss/tests/all.sh.crypto ./mozilla/security/nss/tests/all.sh
---- ./mozilla/security/nss/tests/all.sh.crypto	2012-12-16 19:56:30.345259712 -0800
-+++ ./mozilla/security/nss/tests/all.sh	2012-12-16 20:04:52.709493293 -0800
+--- ./mozilla/security/nss/tests/all.sh.crypto	2012-06-13 11:16:39.000000000 -0700
++++ ./mozilla/security/nss/tests/all.sh	2012-12-22 11:51:35.178495551 -0800
 @@ -295,13 +295,13 @@ if [ -z "${INIT_SOURCED}" -o "${INIT_SOU
  fi
  

@@ -2,22 +2,22 @@
 %define glib2_version   2.26.0
 %define dbus_version    1.4
 %define dbus_glib_version 0.86
-%define nm_version      1:0.9.7.0
+%define nm_version      1:0.9.8.0
 %define obsoletes_ver   1:0.9.7
 
-%define snapshot .git20121016
-%define realversion 0.9.7.0
+%define snapshot %{nil}
+%define realversion 0.9.8.0
 
 Name: network-manager-applet
 Summary: A network control and status applet for NetworkManager
-Version: 0.9.7.0
-Release: 5%{snapshot}%{?dist}
+Version: 0.9.8.0
+Release: 1%{snapshot}%{?dist}
 Group: Applications/System
 License: GPLv2+
 URL: http://www.gnome.org/projects/NetworkManager/
 Obsoletes: NetworkManager-gnome < %{obsoletes_ver}
 
-Source: http://ftp.gnome.org/pub/GNOME/sources/network-manager-applet/0.9/%{name}-%{realversion}%{snapshot}.tar.bz2
+Source: http://ftp.gnome.org/pub/GNOME/sources/network-manager-applet/0.9/%{name}-%{realversion}%{snapshot}.tar.xz
 Patch0: nm-applet-no-notifications.patch
 Patch1: nm-applet-wifi-dialog-ui-fixes.patch
 Patch2: applet-ignore-deprecated.patch
@@ -54,7 +54,7 @@ BuildRequires: gnome-bluetooth-libs-devel >= 2.27.7.1-1
 %endif
 BuildRequires: iso-codes-devel
 BuildRequires: libgudev1-devel >= 147
-
+BuildRequires: libsecret-devel >= 0.12
 
 %description
 This package contains a network control and status notification area applet
@@ -121,7 +121,7 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/gnome-vpn-properties
-magic_rpm_clean.sh
+
 %find_lang nm-applet
 cat nm-applet.lang >> %{name}.lang
 
@@ -186,6 +186,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/icons/hicolor/22x22/apps/nm-wwan-tower.png
 %{_datadir}/GConf/gsettings/nm-applet.convert
 %{_sysconfdir}/xdg/autostart/nm-applet.desktop
+%{_mandir}/man1/nm-applet*
 
 # Yes, lang files for the applet go in nm-connection-editor RPM since it
 # is the RPM that everything else depends on
@@ -202,6 +203,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/icons/hicolor/*/apps/nm-no-connection.*
 %{_datadir}/icons/hicolor/16x16/apps/nm-vpn-standalone-lock.png
 %{_datadir}/glib-2.0/schemas/org.gnome.nm-applet.gschema.xml
+%{_mandir}/man1/nm-connection-editor*
 %dir %{_datadir}/gnome-vpn-properties
 %ifnarch s390 s390x
 %{_libdir}/gnome-bluetooth/plugins/*
@@ -223,8 +225,34 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
 %{_datadir}/gir-1.0/NMGtk-1.0.gir
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 0.9.7.0-5.git20121016
-- 为 Magic 3.0 重建
+* Wed Mar 27 2013 Dan Williams <dcbw@redhat.com> - 0.9.8.1-1.git20130327
+- Update to 0.9.8.2 snapshot
+- Updated translations
+- editor: don't overwrite bridge/bond master interface name with UUID
+- applet: fix WWAN PIN dialog invalid "label1" entry widget
+- editor: fix allowed values for VLAN ID and MTU
+- editor: preserve existing PPP connection LCP echo failure and reply values
+- editor: ensure changes to the STP checkbox are saved
+- editor: hide BSSID for AdHoc connection (rh #906133)
+- editor: fix random data sneaking into IPv6 route gateway fields
+- editor: fix handling of initial entry for MAC address widgets
+
+* Wed Feb 27 2013 Jiří Klimeš <jklimes@redhat.com> - 0.9.8.0-1
+- Update to 0.9.8.0
+
+* Fri Feb  8 2013 Dan Williams <dcbw@redhat.com> - 0.9.7.997-1
+- Update to 0.9.7.997 (0.9.8-beta2)
+- editor: better handling of gateway entry for IPv4
+- editor: fix some mnemonics (rh #893466)
+- editor: fix saving connection when ignoring CA certificate
+- editor: enable Bridge connection editing
+- editor: hide widgets not relevant for VPN connections
+
+* Tue Dec 11 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-6.git20121211
+- editor: fix populating Firewall zone in 'General' tab
+
+* Tue Dec 11 2012 Jiří Klimeš <jklimes@redhat.com> - 0.9.7.0-5.git20121211
+- Update to git snapshot (git20121211) without bridges
 
 * Thu Nov 08 2012 Kalev Lember <kalevlember@gmail.com> - 0.9.7.0-4.git20121016
 - Update the versioned obsoletes for the new F17 NM build

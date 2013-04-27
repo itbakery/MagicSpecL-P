@@ -1,7 +1,7 @@
 Summary:        Netscape Portable Runtime
 Name:           nspr
-Version:        4.9.4
-Release:        1%{?dist}
+Version:        4.9.5
+Release:        2%{?dist}
 License:        MPLv2.0
 URL:            http://www.mozilla.org/projects/nspr/
 Group:          System Environment/Libraries
@@ -55,7 +55,7 @@ export LDFLAGS
                  --prefix=%{_prefix} \
                  --libdir=%{_libdir} \
                  --includedir=%{_includedir}/nspr4 \
-%ifarch x86_64 ppc64 ia64 s390x sparc64
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64
                  --enable-64bit \
 %endif
 %ifarch armv7l armv7hl armv7nhl
@@ -120,6 +120,12 @@ NSPR_VERSION=`./config/nspr-config --version`
 %{_bindir}/nspr-config
 
 %changelog
+* Mon Feb 18 2013 Elio Maldonado <emaldona@redhat.com> - 4.9.5-2
+- Resolves: rhbz#912483 - Add spec file support for AArch64
+
+* Fri Feb 01 2013 Elio Maldonado <emaldona@redhat.com> - 4.9.5-1
+- Update to NSPR_4_9_5_RTM
+
 * Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 4.9.4-1
 - Update to NSPR_4_9_4_RTM
 

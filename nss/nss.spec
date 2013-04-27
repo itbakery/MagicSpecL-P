@@ -1,13 +1,25 @@
-%global nspr_version 4.9.2
-%global nss_util_version 3.14
+%global nspr_version 4.9.5
+%global nss_util_version 3.14.3
 %global nss_softokn_fips_version 3.12.9
-%global nss_softokn_version 3.14
+%global nss_softokn_version 3.14.3
 %global unsupported_tools_directory %{_libdir}/nss/unsupported-tools
+
+# solution taken from icedtea-web.spec
+%define multilib_arches ppc64 sparc64 x86_64
+%ifarch %{multilib_arches}
+%define alt_ckbi  libnssckbi.so.%{_arch}
+%else
+%define alt_ckbi  libnssckbi.so
+%endif
+
+# Define if using a source archive like "nss-version.with.ckbi.version".
+# To "disable", add "#" to start of line, AND a space after "%".
+#% define nss_ckbi_suffix .with.ckbi.1.93
 
 Summary:          Network Security Services
 Name:             nss
-Version:          3.14.1
-Release:          1%{?dist}
+Version:          3.14.3
+Release:          11%{?dist}
 License:          MPLv2.0
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -16,6 +28,8 @@ Requires:         nss-util >= %{nss_util_version}
 # TODO: revert to same version as nss once we are done with the merge
 Requires:         nss-softokn%{_isa} >= %{nss_softokn_version}
 Requires:         nss-system-init
+Requires(post):   %{_sbindir}/update-alternatives
+Requires(postun): %{_sbindir}/update-alternatives
 BuildRoot:        %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:    nspr-devel >= %{nspr_version}
 # TODO: revert to same version as nss once we are done with the merge
@@ -29,7 +43,11 @@ BuildRequires:    gawk
 BuildRequires:    psmisc
 BuildRequires:    perl
 
-Source0:          %{name}-%{version}-stripped.tar.bz2
+%{!?nss_ckbi_suffix:%define full_nss_version %{version}}
+%{?nss_ckbi_suffix:%define full_nss_version %{version}%{nss_ckbi_suffix}}
+
+Source0:          %{name}-%{full_nss_version}-stripped.tar.bz2
+
 # The stripped tar ball is a subset of the upstream sources with
 # patent-encumbered cryptographic algorithms removed.
 # Use this script to remove them and create the stripped archive.
@@ -53,6 +71,9 @@ Source8:          system-pkcs11.txt
 Source9:          setup-nsssysinit.sh
 Source10:         PayPalEE.cert
 Source12:         %{name}-pem-20120811.tar.bz2
+Source17:         TestCA.ca.cert
+Source18:         TestUser50.cert
+Source19:         TestUser51.cert
 
 Patch2:           add-relro-linker-option.patch
 Patch3:           renegotiate-transitional.patch
@@ -60,7 +81,7 @@ Patch6:           nss-enable-pem.patch
 Patch16:          nss-539183.patch
 Patch18:          nss-646045.patch
 # must statically link pem against the freebl in the buildroot
-# Needed only when freebl on tree has newe APIS
+# Needed only when freebl on tree has new APIS
 Patch25:          nsspem-use-system-freebl.patch
 # This patch is currently meant for stable branches
 Patch29:          nss-ssl-cbc-random-iv-off-by-default.patch
@@ -68,11 +89,10 @@ Patch29:          nss-ssl-cbc-random-iv-off-by-default.patch
 Patch39:          nss-ssl-enforce-no-pkcs11-bypass.path
 # TODO: Remove this patch when the ocsp test are fixed
 Patch40:          nss-3.14.0.0-disble-ocsp-test.patch
-
-# upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=807890
-Patch42:          0001-Add-extended-key-usage-for-MS-Authenticode-Code-Sign.patch
-
+# Upstream: https://bugzilla.mozilla.org/show_bug.cgi?id=835919
 Patch43:          no-softoken-freebl-tests.patch
+Patch44:          0001-sync-up-with-upstream-softokn-changes.patch
+Patch45:          Bug-896651-pem-dont-trash-keys-on-failed-login.patch
 
 %description
 Network Security Services (NSS) is a set of libraries designed to
@@ -143,6 +163,9 @@ low level services.
 %prep
 %setup -q
 %{__cp} %{SOURCE10} -f ./mozilla/security/nss/tests/libpkix/certs
+%{__cp} %{SOURCE17} -f ./mozilla/security/nss/tests/libpkix/certs
+%{__cp} %{SOURCE18} -f ./mozilla/security/nss/tests/libpkix/certs
+%{__cp} %{SOURCE19} -f ./mozilla/security/nss/tests/libpkix/certs
 %setup -q -T -D -n %{name}-%{version} -a 12
 
 %patch2 -p0 -b .relro
@@ -153,11 +176,12 @@ low level services.
 # link pem against buildroot's freebl, essential when mixing and matching
 %patch25 -p0 -b .systemfreebl
 # activate for stable and beta branches
-#%patch29 -p0 -b .770682
+#%patch29 -p0 -b .cbcrandomivoff
 %patch39 -p1 -b .nobypass
 %patch40 -p1 -b .noocsptest
-%patch42 -p0 -b .870864
 %patch43 -p0 -b .nosoftokentests
+%patch44 -p1 -b .syncupwithupstream
+%patch45 -p0 -b .notrash
 
 %build
 
@@ -198,7 +222,7 @@ export USE_SYSTEM_FREEBL=1
 NSS_USE_SYSTEM_SQLITE=1
 export NSS_USE_SYSTEM_SQLITE
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -285,6 +309,10 @@ chmod 755 ./mozilla/dist/pkgconfig/setup-nsssysinit.sh
 %{__cp} ./mozilla/security/nss/lib/ckfw/nssck.api ./mozilla/dist/private/nss/
 
 %check
+if [ $DISABLETEST -eq 1 ]; then
+  echo "testing disabled"
+  exit 0
+fi
 
 # Begin -- copied from the build section
 FREEBL_NO_DEPEND=1
@@ -293,7 +321,7 @@ export FREEBL_NO_DEPEND
 BUILD_OPT=1
 export BUILD_OPT
 
-%ifarch x86_64 ppc64 ia64 s390x sparc64
+%ifarch x86_64 ppc64 ia64 s390x sparc64 aarch64
 USE_64=1
 export USE_64
 %endif
@@ -378,8 +406,11 @@ echo "test suite completed"
 %{__mkdir_p} $RPM_BUILD_ROOT/%{unsupported_tools_directory}
 %{__mkdir_p} $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 
+touch $RPM_BUILD_ROOT%{_libdir}/libnssckbi.so
+%{__install} -p -m 755 mozilla/dist/*.OBJ/lib/libnssckbi.so $RPM_BUILD_ROOT/%{_libdir}/nss/libnssckbi.so
+
 # Copy the binary libraries we want
-for file in libnss3.so libnssckbi.so libnsspem.so libnsssysinit.so libsmime3.so libssl3.so
+for file in libnss3.so libnsspem.so libnsssysinit.so libsmime3.so libssl3.so
 do
   %{__install} -p -m 755 mozilla/dist/*.OBJ/lib/$file $RPM_BUILD_ROOT/%{_libdir}
 done
@@ -482,9 +513,53 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 # from previous versions of nss.spec
 /usr/bin/setup-nsssysinit.sh on
 
-%post -p /sbin/ldconfig
+%post
+# If we upgrade, and the shared filename is a regular file, then we must
+# remove it, before we can install the alternatives symbolic link.
+if [ $1 -gt 1 ] ; then
+  # when upgrading or downgrading
+  if ! test -L %{_libdir}/libnssckbi.so; then
+    rm -f %{_libdir}/libnssckbi.so
+  fi
+fi
+# Install the symbolic link
+# FYI: Certain other packages use alternatives --set to enforce that the first
+# installed package is preferred. We don't do that. Highest priority wins.
+%{_sbindir}/update-alternatives --install %{_libdir}/libnssckbi.so \
+  %{alt_ckbi} %{_libdir}/nss/libnssckbi.so 10
+/sbin/ldconfig
 
-%postun -p /sbin/ldconfig
+%postun
+if [ $1 -eq 0 ] ; then
+  # package removal
+  %{_sbindir}/update-alternatives --remove %{alt_ckbi} %{_libdir}/nss/libnssckbi.so
+else
+  # upgrade or downgrade
+  # If the new installed package uses a regular file (not a symblic link),
+  # then cleanup the alternatives link.
+  if ! test -L %{_libdir}/libnssckbi.so; then
+    %{_sbindir}/update-alternatives --remove %{alt_ckbi} %{_libdir}/nss/libnssckbi.so
+  fi
+fi
+/sbin/ldconfig
+
+%posttrans
+# An earlier version of this package had an incorrect %postun script (3.14.3-9).
+# (The incorrect %postun always called "update-alternatives --remove",
+# because it incorrectly assumed that test -f returns false for symbolic links.)
+# The only possible remedy to fix the mistake that "always removes on upgrade"
+# made by the older %postun script, is to repair it in %posttrans of the new package.
+# Strategy:
+# %posttrans is never called when uninstalling.
+# %posttrans is only called when installing or upgrading a package.
+# Because %posttrans is the very last action of a package install,
+# %{_libdir}/libnssckbi.so must exist.
+# If it does not, it's the result of the incorrect removal from a broken %postun.
+# In this case, we repeat installation of the alternatives link.
+if ! test -e %{_libdir}/libnssckbi.so; then
+  %{_sbindir}/update-alternatives --install %{_libdir}/libnssckbi.so \
+    %{alt_ckbi} %{_libdir}/nss/libnssckbi.so 10
+fi
 
 
 %files
@@ -492,7 +567,8 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 %{_libdir}/libnss3.so
 %{_libdir}/libssl3.so
 %{_libdir}/libsmime3.so
-%{_libdir}/libnssckbi.so
+%ghost %{_libdir}/libnssckbi.so
+%{_libdir}/nss/libnssckbi.so
 %{_libdir}/libnsspem.so
 %dir %{_sysconfdir}/pki/nssdb
 %config(noreplace) %verify(not md5 size mtime) %{_sysconfdir}/pki/nssdb/cert8.db
@@ -603,6 +679,37 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 
 
 %changelog
+* Sun Mar 24 2013 Kai Engert <kaie@redhat.com> - 3.14.3-11
+- Update expired test certificates (fixed in upstream bug 852781)
+
+* Fri Mar 08 2013 Kai Engert <kaie@redhat.com> - 3.14.3-10
+- Fix incorrect post/postun scripts. Fix broken links in posttrans.
+
+* Wed Mar 06 2013 Kai Engert <kaie@redhat.com> - 3.14.3-9
+- Configure libnssckbi.so to use the alternatives system
+  in order to prepare for a drop in replacement.
+
+* Fri Feb 15 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.3-1
+- Update to NSS_3_14_3_RTM
+- sync up pem rsawrapr.c with softoken upstream changes for nss-3.14.3
+- Resolves: rhbz#908257 - CVE-2013-1620 nss: TLS CBC padding timing attack
+- Resolves: rhbz#896651 - PEM module trashes private keys if login fails
+- Resolves: rhbz#909775 - specfile support for AArch64
+- Resolves: rhbz#910584 - certutil -a does not produce ASCII output
+
+* Mon Feb 04 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.2-2
+- Allow building nss against older system sqlite
+
+* Fri Feb 01 2013 Elio Maldonado <emaldona@redhat.com> - 3.14.2-1
+- Update to NSS_3_14_2_RTM
+
+* Wed Jan 02 2013 Kai Engert <kaie@redhat.com> - 3.14.1-3
+- Update to NSS_3_14_1_WITH_CKBI_1_93_RTM
+
+* Sat Dec 22 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-2
+- Require nspr >= 4.9.4
+- Fix changelog invalid dates
+
 * Mon Dec 17 2012 Elio Maldonado <emaldona@redhat.com> - 3.14.1-1
 - Update to NSS_3_14_1_RTM
 
@@ -824,7 +931,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 * Wed Mar 23 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-14
 - Update to NSS_3.12.9_WITH_CKBI_1_82_RTM
 
-* Wed Feb 24 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-13
+* Thu Feb 24 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-13
 - Short-term fix for ssl test suites hangs on ipv6 type connections (#539183)
 
 * Fri Feb 18 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-12
@@ -889,7 +996,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 * Sun Oct 31 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.8-7
 - Tell rpm not to verify md5, size, and modtime of configurations file
 
-* Wed Oct 18 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.8-6
+* Mon Oct 18 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.8-6
 - Fix certificates trust order (#643134)
 - Apply nss-sysinit-userdb-first.patch last
 
@@ -943,7 +1050,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 * Mon Aug 09 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-10
 - Add support for PKCS#8 encoded PEM RSA private key files (#614532)
 
-* Fri Jul 31 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-9
+* Sat Jul 31 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-9
 - Fix nsssysinit to return userdb ahead of systemdb (#603313)
 
 * Tue Jun 08 2010 Dennis Gilmore <dennis@ausil.us> - 3.12.6-8
@@ -955,7 +1062,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 * Sun Jun 06 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-6
 - Fix SIGSEGV within CreateObject (#596674)
 
-* Sat Apr 12 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-5
+* Mon Apr 12 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.6-5
 - Update pem source tar to pick up the following bug fixes:
 - PEM - Allow collect objects to search through all objects
 - PEM - Make CopyObject return a new shallow copy
@@ -1036,7 +1143,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 - Require nss-softoken of same architecture as nss (#527867)
 - Merge setup-nsssysinit.sh improvements from F-12 (#527051)
 
-* Mon Oct 03 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.4-13
+* Sat Oct 03 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.4-13
 - User no longer prompted for a password when listing keys an empty system db (#527048)
 - Fix setup-nsssysinit to handle more general formats (#527051)
 
@@ -1110,13 +1217,13 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 - Fix nss-config not to include nssutil
 - Add BuildRequires on nss-softokn and nss-util since build also runs the test suite
 
-* Wed Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-21
+* Thu Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-21
 - disabling all tests while we investigate a buffer overflow bug
 
-* Wed Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-20
+* Thu Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-20
 - disabling some tests while we investigate a buffer overflow bug - 519766
 
-* Wed Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-19
+* Thu Aug 27 2009 Elio Maldonado<emaldona@redhat.com> - 3.12.3.99.3-19
 - remove patches that are now in nss-softokn and
 - remove spurious exec-permissions for nss.pc per rpmlint
 - single requires line in nss.pc.in
@@ -1153,7 +1260,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 * Thu Aug 20 2009 Dennis Gilmore <dennis@ausil.us> - 3.12.3.99.3-9
 - dont install libnssutil3.so since its now in nss-util
 
-* Sat Aug 06 2009 Elio Maldonado <emaldona@redhat.com> - 3.12.3.99.3-7.1
+* Thu Aug 06 2009 Elio Maldonado <emaldona@redhat.com> - 3.12.3.99.3-7.1
 - Fix spec file problems uncovered by Fedora_12_Mass_Rebuild
 
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.12.3.99.3-7
@@ -1171,7 +1278,7 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 - fix numerous gcc warnings. (500815)
 - fix to support arbitrarily long password while loading a private key. (500180) 
 - fix memory leak in make_key and memory leaks and return values in pem_mdSession_Login (501191)
-* Fri Jun 08 2009 Elio Maldonado <emaldona@redhat.com> - 3.12.3.99.3-4
+* Mon Jun 08 2009 Elio Maldonado <emaldona@redhat.com> - 3.12.3.99.3-4
 - add patch for bug 502133 upstream bug 496997
 * Fri Jun 05 2009 Kai Engert <kaie@redhat.com> - 3.12.3.99.3-3
 - rebuild with higher release number for upgrade sanity
@@ -1369,5 +1476,5 @@ rm -f $RPM_BUILD_ROOT/%{_includedir}/nss3/nsslowhash.h
 - Adressed review comments by Wan-Teh Chang, Bob Relyea,
   Christopher Aillon.
 
-* Tue Jul  9 2005 Rob Crittenden <rcritten@redhat.com> 3.10-1
+* Sat Jul  9 2005 Rob Crittenden <rcritten@redhat.com> 3.10-1
 - Initial build

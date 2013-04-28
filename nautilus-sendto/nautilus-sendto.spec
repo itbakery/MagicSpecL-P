@@ -1,42 +1,30 @@
 Name:           nautilus-sendto
 Epoch:          1
-Version:        3.6.1
-Release:        3%{?dist}
+Version:        3.8.0
+Release:        1%{?dist}
 Summary:        Nautilus context menu for sending files
 
 Group:          User Interface/Desktops
 License:        GPLv2+
 URL:            ftp://ftp.gnome.org/pub/gnome/sources/%{name}
-Source0:        http://download.gnome.org/sources/%{name}/3.6/%{name}-%{version}.tar.xz
+Source0:        http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
 
-BuildRequires:  gtk3-devel
-BuildRequires:  evolution-data-server-devel >= 1.9.1
-BuildRequires:  nautilus-devel >= 2.31.3
 BuildRequires:  gettext
+BuildRequires:  gobject-introspection-devel
+BuildRequires:  gtk3-devel
 BuildRequires:  perl-XML-Parser intltool
-BuildRequires:  dbus-glib-devel >= 0.70
-BuildRequires:  gupnp-devel >= 0.13
 
 # For compat with old nautilus-sendto packaging
 Provides: nautilus-sendto-gaim
 Obsoletes: nautilus-sendto-bluetooth
 Provides: nautilus-sendto-bluetooth
+Obsoletes: nautilus-sendto-devel < 1:3.7.92
 
 %description
 The nautilus-sendto package provides a Nautilus context menu for
 sending files via other desktop applications.  These functions are
 implemented as plugins, so nautilus-sendto can be extended with
 additional features.
-
-%package devel
-Summary:        Development files for %{name}
-Group:          Development/Libraries
-License:        LGPLv2+
-Requires:       %{name} = %{epoch}:%{version}-%{release}
-
-%description devel
-This package contains the libraries amd header files that are needed
-for writing plugins for nautilus-sendto.
 
 %prep
 %setup -q
@@ -51,40 +39,19 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 find $RPM_BUILD_ROOT \( -name '*.a' -o -name '*.la' \) -exec rm -f {} \;
 
-rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus-sendto/plugins/libnstbluetooth.so
-# now shipped with nautilus itself
-rm -f $RPM_BUILD_ROOT/%{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
-
 %find_lang %{name}
-
-%posttrans
-/usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-   /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &>/dev/null || :
-fi
 
 %files -f %{name}.lang
 %doc AUTHORS ChangeLog ChangeLog.pre-1.1.4.1 COPYING NEWS
-%dir %{_libdir}/nautilus-sendto
-%dir %{_libdir}/nautilus-sendto/plugins
-%{_libdir}/nautilus-sendto/plugins/*.so
-%{_datadir}/nautilus-sendto
 %{_bindir}/nautilus-sendto
 %{_mandir}/man1/nautilus-sendto.1.gz
-%{_datadir}/glib-2.0/schemas/org.gnome.Nautilus.Sendto.gschema.xml
-%{_datadir}/GConf/gsettings/nautilus-sendto-convert
-
-%files devel
-%{_datadir}/gtk-doc
-%{_libdir}/pkgconfig/nautilus-sendto.pc
-%dir %{_includedir}/nautilus-sendto
-%{_includedir}/nautilus-sendto/nautilus-sendto-plugin.h
 
 %changelog
-* Sat Apr 20 2013 Liu Di <liudidi@gmail.com> - 1:3.6.1-3
-- 为 Magic 3.0 重建
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.8.0-1
+- Update to 3.8.0
+
+* Thu Mar 21 2013 Kalev Lember <kalevlember@gmail.com> - 1:3.7.92-1
+- Update to 3.7.92
 
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1:3.6.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild

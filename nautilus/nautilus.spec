@@ -1,7 +1,7 @@
-%define glib2_version 2.31.9
+%define glib2_version 2.35.3
 %define gnome_desktop3_version 3.0.0
 %define pango_version 1.28.3
-%define gtk3_version 3.3.17
+%define gtk3_version 3.5.12
 %define libxml2_version 2.7.8
 %define libexif_version 0.6.20
 %define exempi_version 2.1.0
@@ -9,16 +9,15 @@
 
 Name:           nautilus
 Summary:        File manager for GNOME
-Version:        3.5.3
-Release:        2%{?dist}
+Version:        3.8.1
+Release:        1%{?dist}
 License:        GPLv2+
 Group:          User Interface/Desktops
-Source:         http://download.gnome.org/sources/%{name}/3.5/%{name}-%{version}.tar.xz
+Source:         http://download.gnome.org/sources/%{name}/3.8/%{name}-%{version}.tar.xz
 
 URL:            http://projects.gnome.org/nautilus/
 Requires:       magic-menus
 Requires:       gvfs
-Requires:       gnome-icon-theme
 Requires:       libexif >= %{libexif_version}
 Requires:       gsettings-desktop-schemas
 
@@ -38,6 +37,7 @@ BuildRequires:  gettext
 BuildRequires:  gobject-introspection-devel >= %{gobject_introspection_version}
 BuildRequires:  gsettings-desktop-schemas-devel
 BuildRequires:  libnotify-devel
+BuildRequires:  tracker-devel
 
 # the main binary links against libnautilus-extension.so
 # don't depend on soname, rather on exact version
@@ -78,6 +78,7 @@ Summary: Support for developing nautilus extensions
 License: LGPLv2+
 Group: Development/Libraries
 Requires:   %{name} = %{version}-%{release}
+Requires:   nautilus-extensions = %{version}-%{release}
 Obsoletes:      eel2-devel < 2.26.0-3
 Provides:       eel2-devel = 2.26.0-3
 
@@ -98,7 +99,8 @@ CFLAGS="$RPM_OPT_FLAGS -g -DNAUTILUS_OMIT_SELF_CHECK" %configure --disable-more-
 sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' libtool
 
 export tagname=CC
-LANG=en_US make %{?_smp_mflags} V=1
+# disabled %{?_smp_mflags} due to racy intltool-merge
+LANG=en_US make -j1 V=1
 
 %install
 export tagname=CC
@@ -111,25 +113,23 @@ desktop-file-install --delete-original       \
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/nautilus/extensions-3.0/*.la
-magic_rpm_clean.sh
+
 %find_lang %name
 
 %post
-/usr/sbin/ldconfig
 %{_bindir}/update-mime-database %{_datadir}/mime &> /dev/null
 
 %postun
-/usr/sbin/ldconfig
-
 if [ $1 -eq 0 ]; then
-  touch --no-create %{_datadir}/icons/hicolor >&/dev/null || :
-  gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
   glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 fi
 
 %posttrans
-gtk-update-icon-cache %{_datadir}/icons/hicolor >&/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
+
+%post extensions -p /sbin/ldconfig
+
+%postun extensions -p /sbin/ldconfig
 
 %files  -f %{name}.lang
 %doc AUTHORS COPYING COPYING-DOCS COPYING.LIB NEWS README
@@ -137,9 +137,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_datadir}/applications/*
 %{_datadir}/mime/packages/nautilus.xml
 %{_bindir}/*
-%{_datadir}/icons/hicolor/*/apps/nautilus.png
-%{_datadir}/icons/hicolor/scalable/apps/nautilus.svg
 %{_datadir}/dbus-1/services/org.gnome.Nautilus.service
+%{_datadir}/dbus-1/services/org.freedesktop.FileManager1.service
+%{_datadir}/gnome-shell/search-providers/nautilus-search-provider.ini
+%{_datadir}/dbus-1/services/org.gnome.Nautilus.SearchProvider.service
 %{_mandir}/man1/nautilus-connect-server.1.gz
 %{_mandir}/man1/nautilus.1.gz
 %{_libexecdir}/nautilus-convert-metadata
@@ -148,7 +149,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %dir %{_libdir}/nautilus/extensions-3.0
 %{_libdir}/nautilus/extensions-3.0/libnautilus-sendto.so
 %{_sysconfdir}/xdg/autostart/nautilus-autostart.desktop
-%{_datadir}/dbus-1/services/org.freedesktop.FileManager1.service
 
 %files extensions
 %{_libdir}/libnautilus-extension.so.*
@@ -160,11 +160,83 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 %{_libdir}/pkgconfig/*
 %{_libdir}/*.so
 %{_datadir}/gir-1.0/*.gir
-%doc %{_datadir}/gtk-doc/html/libnautilus-extension/*
+%dir %{_datadir}/gtk-doc/
+%dir %{_datadir}/gtk-doc/html/
+%doc %{_datadir}/gtk-doc/html/libnautilus-extension/
 
 %changelog
-* Sat Dec 08 2012 Liu Di <liudidi@gmail.com> - 3.5.3-2
-- 为 Magic 3.0 重建
+* Tue Apr 16 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.1-1
+- Update to 3.8.1
+
+* Tue Mar 26 2013 Kalev Lember <kalevlember@gmail.com> - 3.8.0-1
+- Update to 3.8.0
+
+* Wed Mar 20 2013 Richard Hughes <rhughes@redhat.com> - 3.7.92-1
+- Update to 3.7.92
+
+* Thu Mar  7 2013 Matthias Clasen <mclasen@redhat.com> - 3.7.91-1
+- Update to 3.7.91
+
+* Wed Feb 20 2013 Kalev Lember <kalevlember@gmail.com> - 3.7.90-2
+- Rebuilt for libgnome-desktop soname bump
+
+* Tue Feb 19 2013 Richard Hughes <rhughes@redhat.com> - 3.7.90-1
+- Update to 3.7.90
+
+* Fri Feb  8 2013 Tomas Bzatek <tbzatek@redhat.com> - 3.7.5-2
+- Disable smp build to fix intltool issues
+
+* Thu Feb 07 2013 Richard Hughes <rhughes@redhat.com> - 3.7.5-1
+- Update to 3.7.5
+
+* Sun Jan 27 2013 Kalev Lember <kalevlember@gmail.com> - 3.7.4-2
+- Rebuilt for tracker 0.16 ABI
+
+* Wed Jan 16 2013 Richard Hughes <hughsient@gmail.com> - 3.7.4-1
+- Update to 3.7.4
+
+* Fri Dec 21 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.3-1
+- Update to 3.7.3
+
+* Thu Dec  6 2012 Tomas Bzatek <tbzatek@redhat.com> - 3.7.2-2
+- nautilus-devel should require nautilus-extensions
+
+* Tue Nov 20 2012 Richard Hughes <hughsient@gmail.com> - 3.7.2-1
+- Update to 3.7.2
+
+* Fri Nov 09 2012 Kalev Lember <kalevlember@gmail.com> - 3.7.1-1
+- Update to 3.7.1
+- Own the gtk-doc directories
+
+* Mon Oct 15 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.6.1-1
+- Update to 3.6.1
+
+* Tue Sep 25 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.6.0-1
+- Update to 3.6.0
+
+* Tue Sep 18 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.5.92-1
+- Update to 3.5.92
+
+* Tue Sep 04 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.5.91-1
+- Update to 3.5.91
+
+* Tue Aug 21 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.5.90-1
+- Update to 3.5.90
+
+* Fri Aug 10 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.5.5-1
+- Update to 3.5.5
+
+* Fri Jul 27 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 3.5.4-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
+* Tue Jul 17 2012 Cosimo Cecchi <cosimoc@redhat.com> - 3.5.4-2
+- Enable tracker support
+
+* Tue Jul 17 2012 Richard Hughes <hughsient@gmail.com> - 3.5.4-1
+- Update to 3.5.4
+
+* Sat Jul 14 2012 Ville Skyttä <ville.skytta@iki.fi> - 3.5.3-2
+- Move ldconfig calls from main package to -extensions.
 
 * Tue Jun 26 2012 Richard Hughes <hughsient@gmail.com> - 3.5.3-1
 - Update to 3.5.3
@@ -1646,7 +1718,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas >&/dev/null || :
 * Tue Apr 17 2001 Gregory Leblanc <gleblanc@grego1.cu-portland.edu>
 - Added BuildRequires lines
 - Changed Source to point to ftp.gnome.org instead of just the tarball name
-- Moved %%description sections closer to their %package sections
+- Moved %%description sections closer to their %%package sections
 - Moved %%changelog to the end, where so that it's not in the way
 - Changed configure and make install options to allow moving of
   libraries, includes, binaries more easily
